@@ -1,0 +1,17 @@
+# Copy to .dev.vars for local development. Never commit .dev.vars.
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=your_auth_token
+# Optional: number to send SMS from. Defaults to the number the farmer called.
+TWILIO_FROM_NUMBER=+15555550123
+# Optional: USDA NASS Quick Stats key (free): https://quickstats.nass.usda.gov/api
+NASS_API_KEY=
+# Optional: public URL Twilio calls (e.g. your tunnel URL) so signature checks match.
+PUBLIC_BASE_URL=
+# Set to false only for local testing without Twilio.
+TWILIO_VALIDATE=false
+# Scout chat agent: Google Gemini API key (https://aistudio.google.com/apikey)
+GEMINI_API_KEY=
+# Optional model override
+GEMINI_MODEL=gemini-3.8-flash
+# Optional: OpenET key (free, https://etdata.org) to check the water model against measured field water use
+OPENET_API_KEY=

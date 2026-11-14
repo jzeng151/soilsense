@@ -1,0 +1,615 @@
+{
+ "ranAt": "2026-11-14T21:25:50.569Z",
+ "sites": [
+  {
+   "region": "High Plains (dry)",
+   "label": "Perkins Co., NE",
+   "lat": 40.86,
+   "lon": -101.62
+  },
+  {
+   "region": "High Plains (dry)",
+   "label": "Kit Carson Co., CO",
+   "lat": 39.27,
+   "lon": -102.48
+  },
+  {
+   "region": "High Plains (dry)",
+   "label": "Thomas Co., KS",
+   "lat": 39.45,
+   "lon": -101.15
+  },
+  {
+   "region": "Northern Plains",
+   "label": "Sully Co., SD",
+   "lat": 44.72,
+   "lon": -100.05
+  },
+  {
+   "region": "Southern Plains",
+   "label": "Garfield Co., OK",
+   "lat": 36.43,
+   "lon": -97.95
+  },
+  {
+   "region": "Central Plains",
+   "label": "Saline Co., KS",
+   "lat": 38.86,
+   "lon": -97.75
+  },
+  {
+   "region": "Central Plains",
+   "label": "Sumner Co., KS",
+   "lat": 37.25,
+   "lon": -97.45
+  },
+  {
+   "region": "Corn Belt",
+   "label": "Sioux Co., IA",
+   "lat": 43.05,
+   "lon": -96.1
+  },
+  {
+   "region": "Corn Belt",
+   "label": "McLean Co., IL",
+   "lat": 40.52,
+   "lon": -88.75
+  },
+  {
+   "region": "Corn Belt",
+   "label": "Tippecanoe Co., IN",
+   "lat": 40.33,
+   "lon": -86.98
+  },
+  {
+   "region": "Corn Belt",
+   "label": "Blue Earth Co., MN",
+   "lat": 44.05,
+   "lon": -94.1
+  },
+  {
+   "region": "Eastern Corn Belt",
+   "label": "Wood Co., OH",
+   "lat": 41.36,
+   "lon": -83.62
+  },
+  {
+   "region": "Lower Midwest",
+   "label": "Saline Co., MO",
+   "lat": 39.15,
+   "lon": -93.2
+  }
+ ],
+ "rows": [
+  {
+   "region": "High Plains (dry)",
+   "county": "Perkins County, NE",
+   "crop": "Corn",
+   "series": "rain-fed",
+   "years": 27,
+   "r": 0.7,
+   "rainOnlyR": 0.74,
+   "sameDirection": "20/27",
+   "worstFlagged": 5
+  },
+  {
+   "region": "High Plains (dry)",
+   "county": "Perkins County, NE",
+   "crop": "Soybean",
+   "series": "rain-fed",
+   "years": 12,
+   "r": 0.82,
+   "rainOnlyR": 0.88,
+   "sameDirection": "9/12",
+   "worstFlagged": 4
+  },
+  {
+   "region": "High Plains (dry)",
+   "county": "Perkins County, NE",
+   "crop": "Winter wheat",
+   "series": "rain-fed",
+   "years": 20,
+   "r": 0.54,
+   "rainOnlyR": 0.45,
+   "sameDirection": "13/20",
+   "worstFlagged": 3
+  },
+  {
+   "region": "High Plains (dry)",
+   "county": "Perkins County, NE",
+   "crop": "Grain sorghum",
+   "series": "rain-fed",
+   "years": 12,
+   "r": 0.22,
+   "rainOnlyR": 0.27,
+   "sameDirection": "7/12",
+   "worstFlagged": 3
+  },
+  {
+   "region": "High Plains (dry)",
+   "county": "Kit Carson County, CO",
+   "crop": "Corn",
+   "series": "rain-fed",
+   "years": 27,
+   "r": 0.63,
+   "rainOnlyR": 0.57,
+   "sameDirection": "22/27",
+   "worstFlagged": 5
+  },
+  {
+   "region": "High Plains (dry)",
+   "county": "Kit Carson County, CO",
+   "crop": "Winter wheat",
+   "series": "rain-fed",
+   "years": 16,
+   "r": 0.76,
+   "rainOnlyR": 0.66,
+   "sameDirection": "12/16",
+   "worstFlagged": 4
+  },
+  {
+   "region": "High Plains (dry)",
+   "county": "Kit Carson County, CO",
+   "crop": "Grain sorghum",
+   "series": "rain-fed",
+   "years": 13,
+   "r": 0.15,
+   "rainOnlyR": 0.17,
+   "sameDirection": "7/13",
+   "worstFlagged": 3
+  },
+  {
+   "region": "High Plains (dry)",
+   "county": "Thomas County, KS",
+   "crop": "Corn",
+   "series": "rain-fed",
+   "years": 21,
+   "r": 0.47,
+   "rainOnlyR": 0.55,
+   "sameDirection": "15/21",
+   "worstFlagged": 4
+  },
+  {
+   "region": "High Plains (dry)",
+   "county": "Thomas County, KS",
+   "crop": "Soybean",
+   "series": "rain-fed (Northwest district)",
+   "years": 15,
+   "r": 0.3,
+   "rainOnlyR": 0.25,
+   "sameDirection": "7/15",
+   "worstFlagged": 2
+  },
+  {
+   "region": "High Plains (dry)",
+   "county": "Thomas County, KS",
+   "crop": "Winter wheat",
+   "series": "rain-fed",
+   "years": 17,
+   "r": 0.16,
+   "rainOnlyR": 0.09,
+   "sameDirection": "12/17",
+   "worstFlagged": 3
+  },
+  {
+   "region": "High Plains (dry)",
+   "county": "Thomas County, KS",
+   "crop": "Grain sorghum",
+   "series": "rain-fed",
+   "years": 16,
+   "r": 0.37,
+   "rainOnlyR": 0.32,
+   "sameDirection": "11/16",
+   "worstFlagged": 4
+  },
+  {
+   "region": "Northern Plains",
+   "county": "Sully County, SD",
+   "crop": "Corn",
+   "series": "rain-fed",
+   "years": 17,
+   "r": 0.23,
+   "rainOnlyR": 0.3,
+   "sameDirection": "11/17",
+   "worstFlagged": 3
+  },
+  {
+   "region": "Northern Plains",
+   "county": "Sully County, SD",
+   "crop": "Soybean",
+   "series": "all",
+   "years": 30,
+   "r": 0.22,
+   "rainOnlyR": 0.07,
+   "sameDirection": "18/30",
+   "worstFlagged": 3
+  },
+  {
+   "region": "Northern Plains",
+   "county": "Sully County, SD",
+   "crop": "Winter wheat",
+   "series": "rain-fed",
+   "years": 17,
+   "r": 0.6,
+   "rainOnlyR": 0.67,
+   "sameDirection": "11/17",
+   "worstFlagged": 4
+  },
+  {
+   "region": "Northern Plains",
+   "county": "Sully County, SD",
+   "crop": "Grain sorghum",
+   "series": "rain-fed",
+   "years": 15,
+   "r": 0.13,
+   "rainOnlyR": -0.34,
+   "sameDirection": "8/15",
+   "worstFlagged": 3
+  },
+  {
+   "region": "Southern Plains",
+   "county": "Garfield County, OK",
+   "crop": "Corn",
+   "series": "rain-fed (North Central district)",
+   "years": 17,
+   "r": 0.13,
+   "rainOnlyR": 0.03,
+   "sameDirection": "7/17",
+   "worstFlagged": 4
+  },
+  {
+   "region": "Southern Plains",
+   "county": "Garfield County, OK",
+   "crop": "Soybean",
+   "series": "all",
+   "years": 29,
+   "r": 0.64,
+   "rainOnlyR": 0.53,
+   "sameDirection": "23/29",
+   "worstFlagged": 4
+  },
+  {
+   "region": "Southern Plains",
+   "county": "Garfield County, OK",
+   "crop": "Winter wheat",
+   "series": "rain-fed (North Central district)",
+   "years": 19,
+   "r": 0.37,
+   "rainOnlyR": -0.03,
+   "sameDirection": "12/19",
+   "worstFlagged": 3
+  },
+  {
+   "region": "Southern Plains",
+   "county": "Garfield County, OK",
+   "crop": "Grain sorghum",
+   "series": "rain-fed (North Central district)",
+   "years": 15,
+   "r": 0.59,
+   "rainOnlyR": 0.48,
+   "sameDirection": "10/15",
+   "worstFlagged": 4
+  },
+  {
+   "region": "Central Plains",
+   "county": "Saline County, KS",
+   "crop": "Corn",
+   "series": "rain-fed",
+   "years": 24,
+   "r": 0.72,
+   "rainOnlyR": 0.33,
+   "sameDirection": "18/24",
+   "worstFlagged": 4
+  },
+  {
+   "region": "Central Plains",
+   "county": "Saline County, KS",
+   "crop": "Soybean",
+   "series": "rain-fed",
+   "years": 16,
+   "r": 0.78,
+   "rainOnlyR": 0.53,
+   "sameDirection": "12/16",
+   "worstFlagged": 4
+  },
+  {
+   "region": "Central Plains",
+   "county": "Saline County, KS",
+   "crop": "Winter wheat",
+   "series": "rain-fed",
+   "years": 17,
+   "r": -0.23,
+   "rainOnlyR": -0.6,
+   "sameDirection": "10/17",
+   "worstFlagged": 2
+  },
+  {
+   "region": "Central Plains",
+   "county": "Saline County, KS",
+   "crop": "Grain sorghum",
+   "series": "rain-fed (Central district)",
+   "years": 17,
+   "r": 0.7,
+   "rainOnlyR": 0.39,
+   "sameDirection": "14/17",
+   "worstFlagged": 4
+  },
+  {
+   "region": "Central Plains",
+   "county": "Sumner County, KS",
+   "crop": "Corn",
+   "series": "rain-fed",
+   "years": 24,
+   "r": 0.75,
+   "rainOnlyR": 0.64,
+   "sameDirection": "19/24",
+   "worstFlagged": 4
+  },
+  {
+   "region": "Central Plains",
+   "county": "Sumner County, KS",
+   "crop": "Soybean",
+   "series": "rain-fed",
+   "years": 20,
+   "r": 0.59,
+   "rainOnlyR": 0.37,
+   "sameDirection": "13/20",
+   "worstFlagged": 4
+  },
+  {
+   "region": "Central Plains",
+   "county": "Sumner County, KS",
+   "crop": "Winter wheat",
+   "series": "rain-fed",
+   "years": 17,
+   "r": 0.28,
+   "rainOnlyR": -0.28,
+   "sameDirection": "13/17",
+   "worstFlagged": 3
+  },
+  {
+   "region": "Central Plains",
+   "county": "Sumner County, KS",
+   "crop": "Grain sorghum",
+   "series": "rain-fed (South Central district)",
+   "years": 18,
+   "r": 0.66,
+   "rainOnlyR": 0.53,
+   "sameDirection": "15/18",
+   "worstFlagged": 5
+  },
+  {
+   "region": "Corn Belt",
+   "county": "Sioux County, IA",
+   "crop": "Corn",
+   "series": "all",
+   "years": 33,
+   "r": 0.52,
+   "rainOnlyR": 0.16,
+   "sameDirection": "21/33",
+   "worstFlagged": 3
+  },
+  {
+   "region": "Corn Belt",
+   "county": "Sioux County, IA",
+   "crop": "Soybean",
+   "series": "all",
+   "years": 31,
+   "r": 0.28,
+   "rainOnlyR": 0.04,
+   "sameDirection": "16/31",
+   "worstFlagged": 2
+  },
+  {
+   "region": "Corn Belt",
+   "county": "McLean County, IL",
+   "crop": "Corn",
+   "series": "all",
+   "years": 35,
+   "r": 0.35,
+   "rainOnlyR": 0.1,
+   "sameDirection": "18/35",
+   "worstFlagged": 3
+  },
+  {
+   "region": "Corn Belt",
+   "county": "McLean County, IL",
+   "crop": "Soybean",
+   "series": "all",
+   "years": 35,
+   "r": 0.06,
+   "rainOnlyR": 0.07,
+   "sameDirection": "16/35",
+   "worstFlagged": 2
+  },
+  {
+   "region": "Corn Belt",
+   "county": "McLean County, IL",
+   "crop": "Winter wheat",
+   "series": "all",
+   "years": 26,
+   "r": 0.24,
+   "rainOnlyR": -0.11,
+   "sameDirection": "14/26",
+   "worstFlagged": 3
+  },
+  {
+   "region": "Corn Belt",
+   "county": "Tippecanoe County, IN",
+   "crop": "Corn",
+   "series": "all",
+   "years": 34,
+   "r": 0.52,
+   "rainOnlyR": 0.27,
+   "sameDirection": "19/34",
+   "worstFlagged": 3
+  },
+  {
+   "region": "Corn Belt",
+   "county": "Tippecanoe County, IN",
+   "crop": "Soybean",
+   "series": "all",
+   "years": 34,
+   "r": 0.46,
+   "rainOnlyR": 0.12,
+   "sameDirection": "23/34",
+   "worstFlagged": 3
+  },
+  {
+   "region": "Corn Belt",
+   "county": "Tippecanoe County, IN",
+   "crop": "Winter wheat",
+   "series": "all",
+   "years": 32,
+   "r": 0.06,
+   "rainOnlyR": -0.14,
+   "sameDirection": "17/32",
+   "worstFlagged": 3
+  },
+  {
+   "region": "Corn Belt",
+   "county": "Blue Earth County, MN",
+   "crop": "Corn",
+   "series": "all",
+   "years": 35,
+   "r": 0.18,
+   "rainOnlyR": -0.4,
+   "sameDirection": "18/35",
+   "worstFlagged": 1
+  },
+  {
+   "region": "Corn Belt",
+   "county": "Blue Earth County, MN",
+   "crop": "Soybean",
+   "series": "all",
+   "years": 35,
+   "r": 0.31,
+   "rainOnlyR": -0.15,
+   "sameDirection": "22/35",
+   "worstFlagged": 2
+  },
+  {
+   "region": "Eastern Corn Belt",
+   "county": "Wood County, OH",
+   "crop": "Corn",
+   "series": "all",
+   "years": 34,
+   "r": 0.26,
+   "rainOnlyR": 0.37,
+   "sameDirection": "21/34",
+   "worstFlagged": 4
+  },
+  {
+   "region": "Eastern Corn Belt",
+   "county": "Wood County, OH",
+   "crop": "Soybean",
+   "series": "all",
+   "years": 33,
+   "r": 0.13,
+   "rainOnlyR": 0.18,
+   "sameDirection": "16/33",
+   "worstFlagged": 2
+  },
+  {
+   "region": "Eastern Corn Belt",
+   "county": "Wood County, OH",
+   "crop": "Winter wheat",
+   "series": "all",
+   "years": 32,
+   "r": 0.29,
+   "rainOnlyR": -0.04,
+   "sameDirection": "20/32",
+   "worstFlagged": 3
+  },
+  {
+   "region": "Lower Midwest",
+   "county": "Saline County, MO",
+   "crop": "Corn",
+   "series": "all",
+   "years": 33,
+   "r": 0.76,
+   "rainOnlyR": 0.18,
+   "sameDirection": "28/33",
+   "worstFlagged": 5
+  },
+  {
+   "region": "Lower Midwest",
+   "county": "Saline County, MO",
+   "crop": "Soybean",
+   "series": "all",
+   "years": 33,
+   "r": 0.68,
+   "rainOnlyR": 0.33,
+   "sameDirection": "25/33",
+   "worstFlagged": 5
+  },
+  {
+   "region": "Lower Midwest",
+   "county": "Saline County, MO",
+   "crop": "Winter wheat",
+   "series": "all",
+   "years": 23,
+   "r": 0.19,
+   "rainOnlyR": -0.41,
+   "sameDirection": "15/23",
+   "worstFlagged": 3
+  }
+ ],
+ "summary": {
+  "cases": 43,
+  "meanR": 0.41,
+  "meanRainOnlyR": 0.21,
+  "modelBeatsRainOnly": 33,
+  "positiveR": 42,
+  "worstFlaggedAvg": 3.4,
+  "byRegion": {
+   "High Plains (dry)": {
+    "cases": 11,
+    "meanR": 0.47
+   },
+   "Northern Plains": {
+    "cases": 4,
+    "meanR": 0.3
+   },
+   "Southern Plains": {
+    "cases": 4,
+    "meanR": 0.43
+   },
+   "Central Plains": {
+    "cases": 8,
+    "meanR": 0.53
+   },
+   "Corn Belt": {
+    "cases": 10,
+    "meanR": 0.3
+   },
+   "Eastern Corn Belt": {
+    "cases": 3,
+    "meanR": 0.23
+   },
+   "Lower Midwest": {
+    "cases": 3,
+    "meanR": 0.54
+   }
+  },
+  "byCrop": {
+   "Corn": {
+    "cases": 13,
+    "meanR": 0.48
+   },
+   "Soybean": {
+    "cases": 12,
+    "meanR": 0.44
+   },
+   "Winter wheat": {
+    "cases": 11,
+    "meanR": 0.3
+   },
+   "Grain sorghum": {
+    "cases": 7,
+    "meanR": 0.4
+   }
+  },
+  "failures": []
+ }
+}

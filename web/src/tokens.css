@@ -1,0 +1,228 @@
+/* =====================================================================================
+   SoilSense design tokens — brand guide v1.0
+   THE single source of truth for color, type, radius and elevation.
+   Rules:
+     • Components use the semantic tokens (--color-*, --font-*, --radius-*, --shadow-*), never raw hex.
+     • Raw brand values (--canopy-*, --soil-*, --night-*, --gold-*, --clay-*) are only referenced here.
+     • Light is the default. Dark applies when the OS asks for it (unless data-theme="light"),
+       when <html data-theme="dark">, and always inside .theme-dark (the sidebar and Scout).
+   ===================================================================================== */
+
+:root {
+  /* ---------- Brand palette (raw values) ---------- */
+  --canopy-50: #f1f6f1;
+  --canopy-100: #e1ece2;
+  --canopy-200: #c3d9c6;
+  --canopy-300: #86bb90;
+  --canopy-400: #6f9a77;
+  --canopy-500: #4a7c54;
+  --canopy-600: #2f5d3a; /* primary */
+  --canopy-700: #244a2e;
+  --canopy-800: #1f3324;
+  --canopy-900: #142a1a;
+  --gold-500: #e9c46a; /* harvest gold: logo, focus ring */
+  --clay-400: #e8775a; /* CTA on dark */
+  --clay-600: #c2502c; /* CTA on light (4.7:1 with white) */
+
+  --soil-0: #ffffff;
+  --soil-25: #fafbf9;
+  --soil-50: #f4f5f2;
+  --soil-100: #e8eae5;
+  --soil-200: #d5d9d2;
+  --soil-400: #9aa297;
+  --soil-500: #646b65;
+  --soil-700: #3d4640;
+  --soil-900: #1a211c;
+
+  --night-950: #0e1410;
+  --night-900: #151d17;
+  --night-850: #1c261f;
+  --night-800: #26322a;
+  --night-700: #334037;
+  --night-500: #6f7c6c;
+  --night-400: #93a08f;
+  --night-200: #c5cfc3;
+  --night-100: #e8eee6;
+
+  /* ---------- Crop colors (data fills only; text on them is always --color-on-crop) ---------- */
+  --crop-corn: #f2cf6b;
+  --crop-soybean: #9cc77f;
+  --crop-winter-wheat: #e0b07e;
+  --crop-oats: #d8cb9c;
+  --crop-alfalfa: #6fb08a;
+  --crop-sorghum: #d18a4a;
+  --crop-fallow: #d9d4c7;
+  --color-on-crop: #1a211c;
+  --crop-tint: 28%; /* how much crop color tints a card (lower on dark) */
+
+  /* ---------- Type ---------- */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --text-xs: 0.75rem;   /* 12px labels */
+  --text-sm: 0.8125rem; /* 13px captions */
+  --text-md: 0.9375rem; /* 15px dense UI */
+  --text-base: 1rem;    /* 16px body */
+  --text-lg: 1.125rem;  /* 18px H3 */
+  --text-xl: 1.5rem;    /* 24px H2 */
+  --text-2xl: 2rem;     /* 32px H1 */
+  --tracking-tight: -0.02em;
+  --tracking-label: 0.06em;
+
+  /* ---------- Shape ---------- */
+  --radius-sm: 6px;   /* tags, chips */
+  --radius-md: 10px;  /* buttons, inputs */
+  --radius-lg: 12px;  /* cards */
+  --radius-xl: 16px;  /* hero panels */
+  --radius-full: 999px;
+
+  /* ---------- Semantic colors: LIGHT ---------- */
+  --color-bg: var(--soil-25);
+  --color-surface: var(--soil-0);
+  --color-subtle: var(--soil-50);
+  --color-border: var(--soil-100);
+  --color-border-strong: var(--soil-200);
+  --color-text: var(--soil-900);
+  --color-text-2: var(--soil-700);
+  --color-muted: var(--soil-500);
+  --color-faint: var(--soil-400);
+
+  --color-primary: var(--canopy-600);
+  --color-primary-soft: var(--canopy-100);
+  --color-primary-border: var(--canopy-200);
+  --color-on-primary: #ffffff;
+  --color-cta: var(--clay-600);
+  --color-on-cta: #ffffff;
+  --color-accent: var(--gold-500);
+  --color-on-accent: var(--soil-900);
+  --color-focus: var(--gold-500);
+  --color-brand-tile: var(--canopy-600); /* logo tile, same in both themes */
+  /* Brand panel (sign-in hero): always deep canopy, same in both themes */
+  --color-brand-panel: var(--canopy-900);
+  --color-brand-panel-text: var(--night-100);
+  --color-brand-panel-muted: var(--night-200);
+  --color-brand-panel-faint: var(--night-400);
+  --color-brand-highlight: var(--gold-500);
+  --color-brand-arc-2: var(--canopy-500);
+  --color-brand-arc-3: var(--canopy-600);
+
+  --color-success: #2f7d4a;
+  --color-success-soft: #e3f1e7;
+  --color-warning: #9a6412;
+  --color-warning-soft: #fbf0d9;
+  --color-danger: #b4492a;
+  --color-danger-soft: #fbe7df;
+  --color-info: #2d5f93;
+  --color-info-soft: #e2ecf7;
+
+  --color-trend-up: var(--color-danger);    /* warming / rising */
+  --color-trend-up-soft: var(--color-danger-soft);
+  --color-trend-down: var(--color-info);    /* cooling / falling */
+  --color-trend-down-soft: var(--color-info-soft);
+  --color-chart-grid: var(--soil-100);
+  --color-chart-series: #b7beb3;
+  --color-chart-dot: #7d8a78;
+
+  --color-inverse-bg: var(--soil-900);
+  --color-inverse-text: #ffffff;
+  --color-scrim: rgba(14, 20, 16, 0.5);
+
+  --shadow-sm: 0 1px 2px rgba(20, 42, 26, 0.06);
+  --shadow-md: 0 1px 2px rgba(20, 42, 26, 0.05), 0 8px 24px rgba(20, 42, 26, 0.07);
+  --shadow-lg: 0 10px 30px rgba(20, 42, 26, 0.16);
+
+  color-scheme: light;
+}
+
+/* ---------- Semantic colors: DARK (OS preference) ---------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: var(--night-950);
+    --color-surface: var(--night-900);
+    --color-subtle: var(--night-850);
+    --color-border: var(--night-800);
+    --color-border-strong: var(--night-700);
+    --color-text: var(--night-100);
+    --color-text-2: var(--night-200);
+    --color-muted: var(--night-400);
+    --color-faint: var(--night-500);
+    --color-primary: var(--canopy-300);
+    --color-primary-soft: var(--canopy-800);
+    --color-primary-border: #2b4a33;
+    --color-on-primary: var(--night-950);
+    --color-cta: var(--clay-400);
+    --color-on-cta: var(--soil-900);
+    --color-success: #6cc08a;
+    --color-success-soft: #173322;
+    --color-warning: #e3b45c;
+    --color-warning-soft: #33280f;
+    --color-danger: #f08a6e;
+    --color-danger-soft: #3a1d14;
+    --color-info: #7ab0e6;
+    --color-info-soft: #152a40;
+    --crop-tint: 18%;
+  --color-chart-grid: var(--night-800);
+    --color-chart-series: #4d5a4f;
+    --color-chart-dot: #8a978a;
+    --color-inverse-bg: var(--night-100);
+    --color-inverse-text: var(--night-950);
+    --color-scrim: rgba(0, 0, 0, 0.55);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+}
+
+/* ---------- Semantic colors: DARK (explicit choice, and always-dark areas) ---------- */
+:root[data-theme="dark"],
+.theme-dark {
+  --color-bg: var(--night-950);
+  --color-surface: var(--night-900);
+  --color-subtle: var(--night-850);
+  --color-border: var(--night-800);
+  --color-border-strong: var(--night-700);
+  --color-text: var(--night-100);
+  --color-text-2: var(--night-200);
+  --color-muted: var(--night-400);
+  --color-faint: var(--night-500);
+  --color-primary: var(--canopy-300);
+  --color-primary-soft: var(--canopy-800);
+  --color-primary-border: #2b4a33;
+  --color-on-primary: var(--night-950);
+  --color-cta: var(--clay-400);
+  --color-on-cta: var(--soil-900);
+  --color-success: #6cc08a;
+  --color-success-soft: #173322;
+  --color-warning: #e3b45c;
+  --color-warning-soft: #33280f;
+  --color-danger: #f08a6e;
+  --color-danger-soft: #3a1d14;
+  --color-info: #7ab0e6;
+  --color-info-soft: #152a40;
+  --crop-tint: 18%;
+  --color-chart-grid: var(--night-800);
+  --color-chart-series: #4d5a4f;
+  --color-chart-dot: #8a978a;
+  --color-inverse-bg: var(--night-100);
+  --color-inverse-text: var(--night-950);
+  --color-scrim: rgba(0, 0, 0, 0.55);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+/* ---------- Base ---------- */
+html, body { background: var(--color-bg); color: var(--color-text); }
+body { font-family: var(--font-sans); }
+.mono, code, kbd, samp { font-family: var(--font-mono); }
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+::selection { background: color-mix(in srgb, var(--color-accent) 45%, transparent); }
+
+/* Logo (components/Logo.tsx) */
+.logo-mark { flex-shrink: 0; }
+.logo-tile { fill: var(--color-brand-tile); }
+.logo-furrow { stroke: var(--color-brand-highlight); }
+.furrow-arcs .arc-1 { stroke: var(--color-brand-highlight); }
+.furrow-arcs .arc-2 { stroke: var(--color-brand-arc-2); }
+.furrow-arcs .arc-3 { stroke: var(--color-brand-arc-3); }

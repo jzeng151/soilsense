@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import type { User } from "../auth";
 import type { ScoutChat } from "../chats";
 import { LogoMark } from "./Logo";
@@ -20,10 +21,32 @@ interface Props {
 }
 
 export function Sidebar({ route, user, onSignOut, open, onClose, chats, activeChatId, onNavigate, onNewChat, onOpenChat, onDeleteChat }: Props) {
+  const panel = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!open || !window.matchMedia("(max-width: 860px)").matches) return;
+    const previous = document.activeElement as HTMLElement | null;
+    panel.current?.querySelector<HTMLButtonElement>(".sb-close")?.focus();
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); onClose(); }
+      if (event.key === "Tab") {
+        const controls = [...(panel.current?.querySelectorAll<HTMLElement>('a[href], button:not(:disabled)') ?? [])].filter(el => el.getClientRects().length > 0);
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
+    };
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("keydown", escape);
+      previous?.focus();
+    };
+  }, [open, onClose]);
   return (
     <>
       <div className={`sb-scrim ${open ? "show" : ""}`} onClick={onClose} aria-hidden="true" />
-      <aside className={`sidebar theme-canopy ${open ? "open" : ""}`} aria-label="Main navigation">
+      <aside ref={panel} className={`sidebar theme-canopy ${open ? "open" : ""}`} aria-label="Main navigation" role={open ? "dialog" : undefined} aria-modal={open ? true : undefined}>
+        <button type="button" className="sb-close" onClick={onClose}>Close navigation</button>
         <a className="sb-brand" href="#/" onClick={() => onNavigate("planner")}>
           <LogoMark size={36} />
           <span className="sb-wordmark">

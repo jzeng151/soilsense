@@ -1,0 +1,20 @@
+/* Shared interaction guarantees. Loaded last so compact variants keep usable hit areas. */
+button, [role="button"], select, input:not([type="checkbox"]):not([type="radio"]),
+summary { min-height: 44px; }
+.jr-main { grid-template-columns: minmax(0, 1fr); }
+.jr-main > * { min-width: 0; }
+.jr-main a { overflow-wrap: anywhere; }
+.sb-close { display: none; }
+@media (max-width: 860px) {
+  .sb-close { display: block; background: var(--color-subtle); color: var(--color-text); border: 1px solid currentColor; border-radius: var(--radius-md); }
+}
+button, [role="button"] { min-width: 44px; }
+.leaflet-touch .leaflet-bar a, .leaflet-bar a { width: 44px; height: 44px; line-height: 44px; }
+.leaflet-control-layers-toggle { min-width: 44px; min-height: 44px; }
+.leaflet-control-attribution { background: var(--color-surface) !important; color: var(--color-text); }
+.leaflet-control-attribution a { color: var(--color-data); text-decoration: underline; }
+:focus-visible, .jr-zip input:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+.theme-canopy :focus-visible { outline-color: var(--light-gold); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

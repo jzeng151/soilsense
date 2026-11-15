@@ -7,7 +7,7 @@
 }
 .usdm-attrib {
   font-size: 0.78rem;
-  opacity: 0.8;
+  color: var(--color-muted);
 }
 .usdm-year {
   margin: 0.75rem 0;

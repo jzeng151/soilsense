@@ -5,10 +5,13 @@
 //   GET  /api/fieldwatch/agent/options    → fields and replay windows the scheduled check accepts
 //   POST /api/fieldwatch/agent/:field/check { mode: "live" | "replay", replayId? } → schedule one check ~45 s ahead
 //   GET  /api/fieldwatch/agent/:field/runs → that field's scheduled checks and results (from its FieldAgent)
+//   GET  /api/fieldwatch/agent/:field/watch → recurring watch settings (weekly + crop window), next runs, recent results
+//   PUT  /api/fieldwatch/agent/:field/watch { enabled?: boolean, crop?: CropId | null } → change them
 
 import { Hono } from "hono";
 import { getAgentByName } from "agents";
 import { CHECK_DELAY_SECONDS, REPLAY_PRESETS, type AgentRun } from "../fieldwatch/agentCore";
+import { FRESH_DAYS, WATCHABLE_CROPS, WEEKLY_DESCRIPTION } from "../fieldwatch/watchCore";
 import type { FieldAgent } from "../fieldwatch/agent";
 import { RULE_TEXT, THRESHOLDS } from "../fieldwatch/rule";
 import { latestRuns, runFieldWatch, runHistory, WATCHED_FIELDS } from "../fieldwatch/run";
@@ -80,7 +83,7 @@ fieldWatch.post("/run", async (c) => {
 
 // ---------- Scheduled checks by the field's own agent (Agents SDK Durable Object) ----------
 
-type AgentRpc = Pick<FieldAgent, "requestCheck" | "listRuns">;
+type AgentRpc = Pick<FieldAgent, "requestCheck" | "listRuns" | "getWatch" | "updateWatch">;
 const noAgent = { error: "Scheduled checks need the FIELD_AGENT Durable Object binding. Deploy with the FieldAgent migration, then try again." };
 
 async function agentFor(env: { FIELD_AGENT?: DurableObjectNamespace }, fieldId: string): Promise<AgentRpc> {
@@ -92,6 +95,7 @@ fieldWatch.get("/agent/options", (c) =>
     delaySeconds: CHECK_DELAY_SECONDS,
     fields: WATCHED_FIELDS.map(({ id, name }) => ({ id, name })),
     replays: REPLAY_PRESETS,
+    weekly: { schedule: WEEKLY_DESCRIPTION, freshDays: FRESH_DAYS, crops: WATCHABLE_CROPS },
     rule: RULE_TEXT,
     available: Boolean(c.env.FIELD_AGENT),
   }),
@@ -125,4 +129,32 @@ fieldWatch.get("/agent/:field/runs", async (c) => {
   const limit = Math.min(50, Math.max(1, Number(c.req.query("limit") ?? 10) || 10));
   const runs: AgentRun[] = await (await agentFor(c.env, fieldId)).listRuns(limit);
   return c.json({ runs, now: Date.now() });
+});
+
+fieldWatch.get("/agent/:field/watch", async (c) => {
+  const fieldId = c.req.param("field");
+  if (!WATCHED_FIELDS.some((f) => f.id === fieldId)) return c.json({ error: "Unknown field." }, 400);
+  if (!c.env.FIELD_AGENT) return c.json(noAgent, 503);
+  return c.json(await (await agentFor(c.env, fieldId)).getWatch(fieldId));
+});
+
+fieldWatch.put("/agent/:field/watch", async (c) => {
+  const fieldId = c.req.param("field");
+  if (!WATCHED_FIELDS.some((f) => f.id === fieldId)) return c.json({ error: "Unknown field." }, 400);
+  if (!c.env.FIELD_AGENT) return c.json(noAgent, 503);
+  const raw = await c.req.text();
+  if (raw.length > 200) return c.json({ error: "Request too large." }, 413);
+  let body: { enabled?: unknown; crop?: unknown };
+  try {
+    body = JSON.parse(raw || "{}") as typeof body;
+  } catch {
+    return c.json({ error: "Send JSON: { enabled?: boolean, crop?: string | null }" }, 400);
+  }
+  if (body.enabled !== undefined && typeof body.enabled !== "boolean") return c.json({ error: "enabled must be true or false" }, 400);
+  if (body.crop !== undefined && body.crop !== null && !WATCHABLE_CROPS.includes(body.crop as never)) {
+    return c.json({ error: `crop must be null or one of: ${WATCHABLE_CROPS.join(", ")}` }, 400);
+  }
+  const agent = await agentFor(c.env, fieldId);
+  await agent.updateWatch(fieldId, { enabled: body.enabled, crop: body.crop });
+  return c.json(await agent.getWatch(fieldId));
 });

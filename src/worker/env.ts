@@ -36,4 +36,8 @@ export interface Env {
   FIELD_AGENT?: DurableObjectNamespace;
   /** Vectorize index for cited research passages (#7): soilsense-research-v1, 768 dims, cosine. Optional. */
   RESEARCH_INDEX?: Vectorize;
+  /** NASA POWER refresh Workflow (PowerRefreshWorkflow): fetch -> validate -> publish current snapshots (optional). */
+  POWER_REFRESH?: Workflow<{ trigger?: "cron" | "manual" }>;
+  /** R2 bucket for immutable, content-addressed evidence bundles (optional; D1 still indexes snapshots without it). */
+  EVIDENCE?: R2Bucket;
 }

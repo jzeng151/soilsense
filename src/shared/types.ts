@@ -124,6 +124,8 @@ export interface PlanYear {
 }
 
 export interface RotationPlan {
+  /** Factual crop-phase metadata; never a universal pest-protection claim. */
+  includes_non_corn_year?: boolean;
   id: string;
   label: string;
   years: PlanYear[];
@@ -182,6 +184,19 @@ export interface PlanResponse {
   waterOptions?: WaterOption[];
   /** The field's own worst past years, replayed for the current crops and the plan. */
   droughtReplays?: DroughtReplay[];
+  /** Original POWER request provenance, never the plan generation timestamp. */
+  powerEvidence?: PowerEvidence;
+}
+
+export interface PowerEvidence {
+  url: string;
+  version: string | null;
+  retrievedAt: string | null;
+  period: string;
+  observedThrough: string | null;
+  validValues: number;
+  expectedValues: number;
+  cached: boolean;
 }
 
 /** Model hindcast vs. USDA NASS county yields for one crop. */
@@ -377,4 +392,184 @@ export interface SecondOpinion {
   rotations: KStateRotation[];
   /** Rankings limited to rotations that include the crop the farmer grows now. */
   byCurrentCrop: Partial<Record<"corn" | "sorghum" | "soybean" | "wheat", { message: string | null; rotations: KStateRotation[] }>>;
+}
+
+// ---- U.S. Drought Monitor context (GitHub issue #31) ----
+
+/** USDM categories: none (no drought), D0 abnormally dry, D1–D4 drought. */
+export type UsdmCategory = "none" | "D0" | "D1" | "D2" | "D3" | "D4";
+
+/** One weekly USDM map, summarised for one county (categorical = exclusive % of county area). */
+export interface UsdmWeek {
+  /** Map valid date (Tuesday data cutoff), YYYY-MM-DD. Snapshot id: usdm-county-<fips>-<validStart>. */
+  validStart: string;
+  /** Last day this map is the current one (the following Monday), YYYY-MM-DD. */
+  validEnd: string;
+  /** % of the county's area in each category; exclusive, so they add up to ~100. */
+  pct: Record<UsdmCategory, number>;
+  /** Category covering the largest share of the county. */
+  predominant: UsdmCategory;
+  /** Most severe category present anywhere in the county (> 0% area). */
+  worst: UsdmCategory;
+  /** True when a USDM category boundary crosses the county, so a field could sit in more than one category. */
+  mixed: boolean;
+  /** Official dated state map image for this week. */
+  mapUrl: string;
+}
+
+export interface UsdmSourceInfo {
+  name: string;
+  attribution: string;
+  /** Exact request URL that returned these weeks. */
+  requestUrl: string;
+  docsUrl: string;
+  statistics: string;
+  spatial: string;
+  crs: string;
+  publication: string;
+  retrievedAt: string;
+}
+
+/** A run of weekly USDM maps for one county and date window. */
+export interface UsdmTimeline {
+  fips: string;
+  countyName: string | null;
+  stateCode: string | null;
+  window: { start: string; end: string };
+  /** Map weeks the window should contain (Tuesdays whose valid week overlaps it, up to the newest possible map). */
+  expectedWeeks: number;
+  observedWeeks: number;
+  /** Valid dates (Tuesdays) with no map returned: unavailable, never counted as "no drought". */
+  missingWeeks: string[];
+  weeks: UsdmWeek[];
+  /** Observed weeks by predominant category; each week counted once (no cumulative double counting). */
+  counts: Record<UsdmCategory, number>;
+  /** Observed weeks where D1 or worse covered most of the county. */
+  droughtWeeks: number;
+  mixedWeeks: number;
+  status: "complete" | "partial" | "unavailable";
+  note: string;
+  /** For replayed bad years: whether USDM also showed drought. Agreement and disagreement are both valid. */
+  agreement?: { kind: "drought" | "no-drought" | "mixed" | "unknown"; text: string };
+  source: UsdmSourceInfo;
+}
+
+/** Dated USDM category for a county on one date (for Field Watch results and messages). */
+export interface UsdmCategoryResult {
+  fips: string;
+  date: string;
+  /**
+   * matched: a released map's valid week contains the date. latest: the date is after the newest map but within the
+   * normal release lag. stale: the newest map we could get is too old for this date. unavailable: no map.
+   */
+  status: "matched" | "latest" | "stale" | "unavailable";
+  /** True when the date is in the past (replay/history); such messages must stay marked historical. */
+  historical: boolean;
+  week: UsdmWeek | null;
+  countyName: string | null;
+  stateCode: string | null;
+  /** Plain-language one-liner, e.g. "D1 moderate drought over 58% of Finney County, KS (USDM map valid 2026-11-10)". */
+  label: string;
+  /** Days between the date and the end of the chosen map's valid week (0 when matched). */
+  ageDays: number | null;
+  snapshotId: string | null;
+  source: UsdmSourceInfo;
+}
+
+// ---- Wind inputs and wind-erosion exposure screen (GitHub issues #17, #40) ----
+
+/** Provenance of the NASA POWER daily wind snapshot. */
+export interface WindMeta {
+  source: string;
+  parameters: { id: "WS10M" | "WS10M_MAX"; name: string; definition: string; units: "m/s"; heightM: 10; aggregation: string }[];
+  grid: { lat: number; lon: number; resolution: string };
+  timeStandard: string;
+  fillValue: number;
+  start: string;
+  end: string;
+  validDays: { WS10M: number; WS10M_MAX: number };
+  missingDays: { WS10M: number; WS10M_MAX: number };
+  requestUrl: string;
+  retrievedAt: string;
+  apiVersion: string | null;
+  /** Version of this cached snapshot's content layout. */
+  contentVersion: string;
+}
+
+/** One SSURGO component's wind-erodibility attributes (categorical WEG kept as-is, never averaged). */
+export interface WindSoilComponent {
+  componentKey: string;
+  name: string;
+  pct: number | null;
+  major: boolean;
+  /** Wind erodibility group, "1" (most susceptible) … "8"; null when SSURGO has none. Categorical. */
+  weg: string | null;
+  /** Wind erodibility index, tons/acre/yr, a REFERENCE value for a bare, smooth, unsheltered, non-crusted soil in Garden City, KS climate. */
+  wei: number | null;
+  surfaceTexture: string | null;
+}
+
+export interface WindSoil {
+  available: boolean;
+  mapUnitKey: string | null;
+  mapUnitName: string | null;
+  surveyArea: string | null;
+  /** Survey area version date (SSURGO sacatalog.saverest). */
+  surveyVersion: string | null;
+  components: WindSoilComponent[];
+  source: string;
+  sourceUrl: string;
+  retrievedAt: string | null;
+}
+
+export type ProtectionState = "living-cover" | "unknown";
+
+export interface WindMonthStat {
+  month: number;
+  validDays: number;
+  windyDays: number;
+  /** windyDays / validDays (null when no valid day). */
+  share: number | null;
+}
+
+export interface WindRotationYear {
+  year: number;
+  crop: CropId;
+  state: ProtectionState;
+  reason: string;
+  /** Expected windy days (climatological) in the screened months under this state. */
+  windyDays: number | null;
+}
+
+export interface WindRotationScreen {
+  label: string;
+  years: WindRotationYear[];
+  /** Mean per plan year of expected windy days in the screened months without assured living cover. */
+  windyDaysWithoutLivingCover: number | null;
+  /** Mean per plan year of expected windy days while living cover is assumed. */
+  windyDaysWithLivingCover: number | null;
+}
+
+export interface WindScreen {
+  rule: {
+    version: string;
+    parameter: "WS10M_MAX";
+    thresholdMs: number;
+    thresholdMph: number;
+    comparison: ">=";
+    months: number[];
+    monthsSource: string;
+    thresholdSource: string;
+    adaptation: string;
+  };
+  wind: WindMeta | null;
+  /** Climatology over the baseline for the screened months. */
+  months: WindMonthStat[];
+  baseline: { startYear: number; endYear: number; seasons: number } | null;
+  /** Most recent complete screened season: daily WS10M_MAX (m/s, null = missing). */
+  recentSeason: { year: number; dates: string[]; ws10mMax: (number | null)[]; ws10m: (number | null)[]; windyDays: number; validDays: number } | null;
+  soil: WindSoil;
+  rotations: WindRotationScreen[];
+  limitations: string[];
+  status: "ok" | "partial" | "unavailable";
 }

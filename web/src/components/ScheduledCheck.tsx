@@ -4,7 +4,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-type Status = "pending" | "ok" | "watch" | "dry" | "insufficient" | "error";
+type Status = "pending" | "ok" | "watch" | "dry" | "insufficient" | "inactive" | "error";
 interface Reason {
   id: string;
   text: string;
@@ -14,7 +14,7 @@ interface AgentRun {
   runId: string;
   fieldId: string;
   fieldName: string;
-  mode: "live" | "replay";
+  mode: "live" | "replay" | "weekly" | "window";
   replayId: string | null;
   status: Status;
   ruleVersion: number;
@@ -31,9 +31,19 @@ interface Options {
   fields: { id: string; name: string }[];
   replays: { id: string; windowEnd: string; label: string }[];
   available: boolean;
+  weekly?: { schedule: string; freshDays: number; crops: string[] };
 }
+interface WatchSettings {
+  enabled: boolean;
+  crop: string | null;
+  nextWeeklyAt: number | null;
+  nextWindow: { crop: string; from: string; to: string; at: number; source: string } | null;
+}
+const CROP_NAME: Record<string, string> = { corn: "Corn", soybean: "Soybean", winter_wheat: "Winter wheat", oats: "Oats", alfalfa: "Alfalfa", sorghum: "Grain sorghum" };
+const MODE_LABEL: Record<AgentRun["mode"], string> = { live: "Current conditions", replay: "Historical replay", weekly: "Weekly check", window: "Crop window opened" };
 
-const LABEL: Record<Status, string> = { pending: "Scheduled", ok: "OK", watch: "Watch", dry: "Dry spell", insufficient: "No data", error: "Error" };
+const LABEL: Record<Status, string> = { pending: "Scheduled", ok: "OK", watch: "Watch", dry: "Dry spell", insufficient: "No data", inactive: "Off season", error: "Error" };
+const fmtDay = (t: number) => new Date(t).toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
 const fmtTime = (t: number) => new Date(t).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", second: "2-digit" });
 
 export function ScheduledCheck() {
@@ -44,6 +54,7 @@ export function ScheduledCheck() {
   const [note, setNote] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [now, setNow] = useState(() => Date.now());
+  const [watch, setWatch] = useState<WatchSettings | null>(null);
 
   useEffect(() => {
     fetch("/api/fieldwatch/agent/options")
@@ -59,6 +70,8 @@ export function ScheduledCheck() {
       if (!res.ok) throw new Error(body.error ?? `Unavailable (${res.status}).`);
       setRuns(body.runs ?? []);
       setError(null);
+      const w = await fetch(`/api/fieldwatch/agent/${encodeURIComponent(fieldId)}/watch`);
+      if (w.ok) setWatch(((await w.json()) as { settings: WatchSettings }).settings);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Scheduled checks are unavailable.");
     }
@@ -93,6 +106,24 @@ export function ScheduledCheck() {
       await load();
     } catch (e) {
       setNote(e instanceof Error ? e.message : "Couldn't schedule the check.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const saveWatch = async (change: { enabled?: boolean; crop?: string | null }) => {
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/fieldwatch/agent/${encodeURIComponent(fieldId)}/watch`, {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(change),
+      });
+      const body = (await res.json().catch(() => ({}))) as { settings?: WatchSettings; error?: string };
+      if (!res.ok || !body.settings) throw new Error(body.error ?? `Couldn't save (${res.status}).`);
+      setWatch(body.settings);
+    } catch (e) {
+      setNote(e instanceof Error ? e.message : "Couldn't save the weekly watch.");
     } finally {
       setBusy(false);
     }
@@ -150,6 +181,36 @@ export function ScheduledCheck() {
               {note}
             </p>
           )}
+          {watch && opts.weekly && (
+            <fieldset className="fw-watch-settings">
+              <legend>Weekly watch for this farm</legend>
+              <label className="fw-switch">
+                <input type="checkbox" checked={watch.enabled} disabled={busy} onChange={(e) => saveWatch({ enabled: e.target.checked })} />
+                Check every week ({opts.weekly.schedule}) using only NASA data from the last {opts.weekly.freshDays} days
+              </label>
+              <label>
+                Crop in this field this season{" "}
+                <select value={watch.crop ?? ""} disabled={busy} onChange={(e) => saveWatch({ crop: e.target.value || null })}>
+                  <option value="">Not confirmed</option>
+                  {opts.weekly.crops.map((c) => (
+                    <option key={c} value={c}>
+                      {CROP_NAME[c] ?? c}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <p className="fw-meta">
+                {watch.enabled
+                  ? <>Next weekly check: <b>{watch.nextWeeklyAt ? fmtDay(watch.nextWeeklyAt) : "being scheduled"}</b>.</>
+                  : "Weekly checks are off (the default)."}
+                {watch.enabled && watch.nextWindow && (
+                  <>
+                    {" "}Extra check when {CROP_NAME[watch.nextWindow.crop] ?? watch.nextWindow.crop}'s heat-sensitive window opens: <b>{fmtDay(watch.nextWindow.at)}</b> (window {watch.nextWindow.from} to {watch.nextWindow.to}; an estimate from crop defaults, not an observed crop stage).
+                  </>
+                )}
+              </p>
+            </fieldset>
+          )}
           {error && <p className="fw-empty">{error}</p>}
           {runs && runs.length === 0 && <p className="fw-empty">No scheduled checks for this farm yet.</p>}
           {runs && runs.length > 0 && (
@@ -161,7 +222,7 @@ export function ScheduledCheck() {
                       <span className={`fw-status fw-${r.status === "pending" ? "insufficient" : r.status}`}>{LABEL[r.status]}</span>
                       <span className="fw-main">
                         <span className="fw-name">
-                          {r.snapshot?.label ?? (r.mode === "replay" ? "Historical replay" : "Current conditions")}
+                          {MODE_LABEL[r.mode]}
                           {r.mode === "replay" && <span className="fw-tag">not current conditions</span>}
                         </span>
                         <span className="fw-headline">{r.headline ? r.headline.replace(/^Historical replay: /, "") : "Waiting for its scheduled time…"}</span>

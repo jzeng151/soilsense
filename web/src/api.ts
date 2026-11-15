@@ -52,3 +52,16 @@ export function getLastPlan(): PlanResponse | null {
 export async function fetchExplanation(req: ExplainRequest, signal?: AbortSignal): Promise<ExplanationResponse> {
   return handle(await fetch("/api/research/explain", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req), signal }));
 }
+
+/** Weekly U.S. Drought Monitor context (May–Sep) for each replayed year in the field's county (issue #31). */
+export async function fetchUsdmReplay(countyFips: string, years: number[], signal?: AbortSignal): Promise<{ timelines: import("../../src/shared/types").UsdmTimeline[] }> {
+  return handle(await fetch(`/api/usdm/replay?fips=${encodeURIComponent(countyFips)}&years=${years.join(",")}`, { signal }));
+}
+
+/** Wind-erosion exposure screen for the field and rotation calendars (issues #40, #17). */
+export async function fetchWindScreen(
+  body: { lat: number; lon: number; lastCrop: string | null; rotations: { label: string; years: { year: number; crop: string; cover: string }[] }[] },
+  signal?: AbortSignal,
+): Promise<import("../../src/shared/types").WindScreen> {
+  return handle(await fetch("/api/wind-screen", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal }));
+}

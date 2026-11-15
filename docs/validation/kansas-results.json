@@ -1,0 +1,333 @@
+{
+  "version": "recorded-kansas-summary-v1",
+  "input_sha256": {
+    "rows.json": "e5b0250d200123620a282aefac287f04798d7926bee34f79f463733dc4178659",
+    "fixrows.json": "6c81f00424c5164d458369f06e2cc6c836987228abbd324fe7327052300f9a15",
+    "yield_validation.csv": "bd6d66b7168a68467786b599e012ac15986c11979cc195907f0738ce4fc3399a",
+    "usdm_district_weekly.csv": "396c259c00346eaca3edfd70dd917e9a3d9c1d3e06e68e03269e3890ebab593e"
+  },
+  "scope": "Exploratory recorded Kansas candidate rows; not current-rule or live validation",
+  "weeks": 5166,
+  "districts": [
+    "ks_central",
+    "ks_east_central",
+    "ks_north_central",
+    "ks_northeast",
+    "ks_northwest",
+    "ks_south_central",
+    "ks_southeast",
+    "ks_southwest",
+    "ks_west_central"
+  ],
+  "growing_weeks": 2583,
+  "growing_drought_weeks": 676,
+  "window_mismatches": 0,
+  "rules": {
+    "A_rain_below_half_mean": {
+      "tp": 254,
+      "fp": 437,
+      "fn": 422,
+      "tn": 1470,
+      "n": 2583,
+      "skipped": 0,
+      "alert_rate": 0.267518389469609,
+      "hit_rate": 0.3757396449704142,
+      "false_positive_rate": 0.2291557420031463,
+      "precision": 0.3675832127351664,
+      "hit_ci_district_year": [
+        0.332541567695962,
+        0.4190093708165997
+      ],
+      "false_positive_ci_district_year": [
+        0.20507399577167018,
+        0.2528856243441763
+      ],
+      "yield_associations": {
+        "corn": {
+          "n": 89,
+          "rho": -0.22949216352167534
+        },
+        "sorghum": {
+          "n": 84,
+          "rho": -0.3608320933369752
+        },
+        "soybeans": {
+          "n": 78,
+          "rho": -0.4776092585831115
+        }
+      }
+    },
+    "B_rain_driest_fifth": {
+      "tp": 197,
+      "fp": 341,
+      "fn": 479,
+      "tn": 1566,
+      "n": 2583,
+      "skipped": 0,
+      "alert_rate": 0.20828493999225706,
+      "hit_rate": 0.29142011834319526,
+      "false_positive_rate": 0.17881489250131097,
+      "precision": 0.36617100371747213,
+      "hit_ci_district_year": [
+        0.24533715925394547,
+        0.3337129840546697
+      ],
+      "false_positive_ci_district_year": [
+        0.15623327982878546,
+        0.20094438614900315
+      ],
+      "yield_associations": {
+        "corn": {
+          "n": 89,
+          "rho": -0.20896105570669107
+        },
+        "sorghum": {
+          "n": 84,
+          "rho": -0.3332051785470243
+        },
+        "soybeans": {
+          "n": 78,
+          "rho": -0.43056168592964017
+        }
+      }
+    },
+    "C_recorded_v1_dry": {
+      "tp": 179,
+      "fp": 147,
+      "fn": 497,
+      "tn": 1760,
+      "n": 2583,
+      "skipped": 0,
+      "alert_rate": 0.1262098335269067,
+      "hit_rate": 0.26479289940828404,
+      "false_positive_rate": 0.07708442579968537,
+      "precision": 0.549079754601227,
+      "hit_ci_district_year": [
+        0.2169230769230769,
+        0.3086053412462908
+      ],
+      "false_positive_ci_district_year": [
+        0.059886422302529684,
+        0.09673971138428648
+      ],
+      "yield_associations": {
+        "corn": {
+          "n": 89,
+          "rho": -0.3979778672145302
+        },
+        "sorghum": {
+          "n": 84,
+          "rho": -0.5654088118381817
+        },
+        "soybeans": {
+          "n": 78,
+          "rho": -0.5773448607447298
+        }
+      }
+    },
+    "D_recorded_v1_watch_or_dry": {
+      "tp": 418,
+      "fp": 632,
+      "fn": 258,
+      "tn": 1275,
+      "n": 2583,
+      "skipped": 0,
+      "alert_rate": 0.4065040650406504,
+      "hit_rate": 0.6183431952662722,
+      "false_positive_rate": 0.33141059255374933,
+      "precision": 0.3980952380952381,
+      "hit_ci_district_year": [
+        0.5586854460093896,
+        0.6788154897494305
+      ],
+      "false_positive_ci_district_year": [
+        0.3,
+        0.3603053435114504
+      ],
+      "yield_associations": {
+        "corn": {
+          "n": 89,
+          "rho": -0.44291645772795285
+        },
+        "sorghum": {
+          "n": 84,
+          "rho": -0.44107841897851785
+        },
+        "soybeans": {
+          "n": 78,
+          "rho": -0.6028151889781213
+        }
+      }
+    },
+    "E_recorded_v1_rain_only": {
+      "tp": 189,
+      "fp": 343,
+      "fn": 487,
+      "tn": 1564,
+      "n": 2583,
+      "skipped": 0,
+      "alert_rate": 0.20596205962059622,
+      "hit_rate": 0.27958579881656803,
+      "false_positive_rate": 0.17986366019926586,
+      "precision": 0.35526315789473684,
+      "hit_ci_district_year": [
+        0.23397435897435898,
+        0.32047477744807124
+      ],
+      "false_positive_ci_district_year": [
+        0.15678449258836943,
+        0.20271800679501698
+      ],
+      "yield_associations": {
+        "corn": {
+          "n": 89,
+          "rho": -0.24777180533134624
+        },
+        "sorghum": {
+          "n": 84,
+          "rho": -0.29171474976918976
+        },
+        "soybeans": {
+          "n": 78,
+          "rho": -0.3899392796750034
+        }
+      }
+    },
+    "proposed_33_25": {
+      "tp": 262,
+      "fp": 169,
+      "fn": 414,
+      "tn": 1738,
+      "n": 2583,
+      "skipped": 0,
+      "alert_rate": 0.16686024003097175,
+      "hit_rate": 0.3875739644970414,
+      "false_positive_rate": 0.0886208704771893,
+      "precision": 0.6078886310904872,
+      "hit_ci_district_year": [
+        0.32616487455197135,
+        0.44243792325056436
+      ],
+      "false_positive_ci_district_year": [
+        0.06798131811105346,
+        0.11330839123463389
+      ],
+      "yield_associations": {
+        "corn": {
+          "n": 89,
+          "rho": -0.4847733742806877
+        },
+        "sorghum": {
+          "n": 84,
+          "rho": -0.6332078402602779
+        },
+        "soybeans": {
+          "n": 78,
+          "rho": -0.5465346634561722
+        }
+      }
+    },
+    "soil_only_25": {
+      "tp": 379,
+      "fp": 246,
+      "fn": 297,
+      "tn": 1661,
+      "n": 2583,
+      "skipped": 0,
+      "alert_rate": 0.24196670538133952,
+      "hit_rate": 0.5606508875739645,
+      "false_positive_rate": 0.12899842684845306,
+      "precision": 0.6064,
+      "hit_ci_district_year": [
+        0.487279843444227,
+        0.6275626423690205
+      ],
+      "false_positive_ci_district_year": [
+        0.10015487867836861,
+        0.16107784431137726
+      ],
+      "yield_associations": {
+        "corn": {
+          "n": 89,
+          "rho": -0.5311910161079741
+        },
+        "sorghum": {
+          "n": 84,
+          "rho": -0.6473399113948305
+        },
+        "soybeans": {
+          "n": 78,
+          "rho": -0.5421159050216395
+        }
+      }
+    },
+    "anchored_dry_20_20": {
+      "tp": 171,
+      "fp": 92,
+      "fn": 505,
+      "tn": 1815,
+      "n": 2583,
+      "skipped": 0,
+      "alert_rate": 0.10181958962446767,
+      "hit_rate": 0.2529585798816568,
+      "false_positive_rate": 0.048243314105925535,
+      "precision": 0.6501901140684411,
+      "hit_ci_district_year": [
+        0.2021604938271605,
+        0.2969187675070028
+      ],
+      "false_positive_ci_district_year": [
+        0.03271028037383177,
+        0.06727664155005382
+      ],
+      "yield_associations": {
+        "corn": {
+          "n": 89,
+          "rho": -0.4545304595275743
+        },
+        "sorghum": {
+          "n": 84,
+          "rho": -0.5677984354817825
+        },
+        "soybeans": {
+          "n": 78,
+          "rho": -0.5349600425814026
+        }
+      }
+    },
+    "anchored_watch_30_or_30": {
+      "tp": 461,
+      "fp": 638,
+      "fn": 215,
+      "tn": 1269,
+      "n": 2583,
+      "skipped": 0,
+      "alert_rate": 0.4254742547425474,
+      "hit_rate": 0.6819526627218935,
+      "false_positive_rate": 0.33455689564761404,
+      "precision": 0.4194722474977252,
+      "hit_ci_district_year": [
+        0.6194690265486725,
+        0.7425149700598802
+      ],
+      "false_positive_ci_district_year": [
+        0.3024466423737637,
+        0.3683360258481422
+      ],
+      "yield_associations": {
+        "corn": {
+          "n": 89,
+          "rho": -0.47870976802892656
+        },
+        "sorghum": {
+          "n": 84,
+          "rho": -0.4908251812792437
+        },
+        "soybeans": {
+          "n": 78,
+          "rho": -0.626647340291355
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2472 @@
+[
+  {
+    "irrigated": false,
+    "priority": "balanced",
+    "plans": [
+      {
+        "id": "plan-1",
+        "label": "Fallow (no crop) \u2192 Winter wheat \u2192 Grain sorghum",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          },
+          {
+            "year": 2028,
+            "crop": "winter_wheat",
+            "cropName": "Winter wheat",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.632,
+            "reliability": 0.533,
+            "mainStress": "water",
+            "expectedYield": 47,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 56,
+            "netReturnPerAcre": 24,
+            "waterPumpedIn": 0
+          },
+          {
+            "year": 2029,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.594,
+            "reliability": 0.467,
+            "mainStress": "water",
+            "expectedYield": 79,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 72,
+            "netReturnPerAcre": 11,
+            "waterPumpedIn": 0
+          }
+        ],
+        "scores": {
+          "climate": 0.613,
+          "reliability": 0.5,
+          "soil": 0.36,
+          "profit": 0.535,
+          "total": 0.504
+        },
+        "avgNetReturnPerAcre": -3,
+        "totalNitrogenLbPerAcre": 128,
+        "coverYears": 0,
+        "notes": [
+          "Fall 2027: sow winter wheat after fallow (no crop) harvest."
+        ],
+        "badYearsIn10": 5,
+        "waterPumpedIn": 0,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-2",
+        "label": "Grain sorghum \u2192 Fallow (no crop) \u2192 Grain sorghum",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.58,
+            "reliability": 0.467,
+            "mainStress": "water",
+            "expectedYield": 77,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 71,
+            "netReturnPerAcre": 8,
+            "waterPumpedIn": 0
+          },
+          {
+            "year": 2028,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          },
+          {
+            "year": 2029,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.73,
+            "reliability": 0.711,
+            "mainStress": "water",
+            "expectedYield": 97,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 89,
+            "netReturnPerAcre": 34,
+            "waterPumpedIn": 0
+          }
+        ],
+        "scores": {
+          "climate": 0.655,
+          "reliability": 0.589,
+          "soil": 0.18,
+          "profit": 0.547,
+          "total": 0.491
+        },
+        "avgNetReturnPerAcre": -1,
+        "totalNitrogenLbPerAcre": 160,
+        "coverYears": 0,
+        "notes": [],
+        "badYearsIn10": 4,
+        "waterPumpedIn": 0,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-3",
+        "label": "Fallow (no crop) \u2192 Grain sorghum \u2192 Fallow (no crop)",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          },
+          {
+            "year": 2028,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.74,
+            "reliability": 0.756,
+            "mainStress": "water",
+            "expectedYield": 99,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 90,
+            "netReturnPerAcre": 36,
+            "waterPumpedIn": 0
+          },
+          {
+            "year": 2029,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          }
+        ],
+        "scores": {
+          "climate": 0.74,
+          "reliability": 0.756,
+          "soil": 0.06,
+          "profit": 0.462,
+          "total": 0.49
+        },
+        "avgNetReturnPerAcre": -18,
+        "totalNitrogenLbPerAcre": 90,
+        "coverYears": 0,
+        "notes": [],
+        "badYearsIn10": 2,
+        "waterPumpedIn": 0,
+        "includes_non_corn_year": true
+      }
+    ],
+    "currentPractice": {
+      "id": "current",
+      "label": "Current pattern: Corn \u2192 Winter wheat \u2192 Corn",
+      "years": [
+        {
+          "year": 2027,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.228,
+          "reliability": 0,
+          "mainStress": "water",
+          "expectedYield": 84,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 63,
+          "netReturnPerAcre": 2,
+          "waterPumpedIn": 0
+        },
+        {
+          "year": 2028,
+          "crop": "winter_wheat",
+          "cropName": "Winter wheat",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.377,
+          "reliability": 0.067,
+          "mainStress": "water",
+          "expectedYield": 28,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 36,
+          "netReturnPerAcre": -19,
+          "waterPumpedIn": 0
+        },
+        {
+          "year": 2029,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.228,
+          "reliability": 0,
+          "mainStress": "water",
+          "expectedYield": 84,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 63,
+          "netReturnPerAcre": 2,
+          "waterPumpedIn": 0
+        }
+      ],
+      "scores": {
+        "climate": 0.278,
+        "reliability": 0.022,
+        "soil": 0.48,
+        "profit": 0.527,
+        "total": 0.352
+      },
+      "avgNetReturnPerAcre": -5,
+      "totalNitrogenLbPerAcre": 162,
+      "coverYears": 0,
+      "notes": [
+        "Fall 2027: sow winter wheat after corn harvest."
+      ],
+      "badYearsIn10": 10,
+      "waterPumpedIn": 0,
+      "includes_non_corn_year": true
+    },
+    "waterOptions": [
+      {
+        "water": "rain",
+        "bestLabel": "Fallow (no crop) \u2192 Winter wheat \u2192 Grain sorghum",
+        "crops": [
+          "fallow",
+          "winter_wheat",
+          "sorghum"
+        ],
+        "badYearsIn10": 5,
+        "avgNetReturnPerAcre": -3,
+        "waterPumpedIn": 0
+      },
+      {
+        "water": "limited",
+        "bestLabel": "Soybean \u2192 Winter wheat \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "winter_wheat",
+          "soybean"
+        ],
+        "badYearsIn10": 3,
+        "avgNetReturnPerAcre": 135,
+        "waterPumpedIn": 9.5
+      },
+      {
+        "water": "full",
+        "bestLabel": "Soybean \u2192 Corn \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "corn",
+          "soybean"
+        ],
+        "badYearsIn10": 0,
+        "avgNetReturnPerAcre": 194,
+        "waterPumpedIn": 14.2
+      }
+    ]
+  },
+  {
+    "irrigated": false,
+    "priority": "profit",
+    "plans": [
+      {
+        "id": "plan-1",
+        "label": "Grain sorghum \u2192 Fallow (no crop) \u2192 Grain sorghum",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.58,
+            "reliability": 0.467,
+            "mainStress": "water",
+            "expectedYield": 77,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 71,
+            "netReturnPerAcre": 8,
+            "waterPumpedIn": 0
+          },
+          {
+            "year": 2028,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          },
+          {
+            "year": 2029,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.73,
+            "reliability": 0.711,
+            "mainStress": "water",
+            "expectedYield": 97,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 89,
+            "netReturnPerAcre": 34,
+            "waterPumpedIn": 0
+          }
+        ],
+        "scores": {
+          "climate": 0.655,
+          "reliability": 0.589,
+          "soil": 0.18,
+          "profit": 0.547,
+          "total": 0.525
+        },
+        "avgNetReturnPerAcre": -1,
+        "totalNitrogenLbPerAcre": 160,
+        "coverYears": 0,
+        "notes": [],
+        "badYearsIn10": 4,
+        "waterPumpedIn": 0,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-2",
+        "label": "Fallow (no crop) \u2192 Winter wheat \u2192 Grain sorghum",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          },
+          {
+            "year": 2028,
+            "crop": "winter_wheat",
+            "cropName": "Winter wheat",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.632,
+            "reliability": 0.533,
+            "mainStress": "water",
+            "expectedYield": 47,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 56,
+            "netReturnPerAcre": 24,
+            "waterPumpedIn": 0
+          },
+          {
+            "year": 2029,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.594,
+            "reliability": 0.467,
+            "mainStress": "water",
+            "expectedYield": 79,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 72,
+            "netReturnPerAcre": 11,
+            "waterPumpedIn": 0
+          }
+        ],
+        "scores": {
+          "climate": 0.613,
+          "reliability": 0.5,
+          "soil": 0.36,
+          "profit": 0.535,
+          "total": 0.523
+        },
+        "avgNetReturnPerAcre": -3,
+        "totalNitrogenLbPerAcre": 128,
+        "coverYears": 0,
+        "notes": [
+          "Fall 2027: sow winter wheat after fallow (no crop) harvest."
+        ],
+        "badYearsIn10": 5,
+        "waterPumpedIn": 0,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-3",
+        "label": "Fallow (no crop) \u2192 Grain sorghum \u2192 Fallow (no crop)",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          },
+          {
+            "year": 2028,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.74,
+            "reliability": 0.756,
+            "mainStress": "water",
+            "expectedYield": 99,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 90,
+            "netReturnPerAcre": 36,
+            "waterPumpedIn": 0
+          },
+          {
+            "year": 2029,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          }
+        ],
+        "scores": {
+          "climate": 0.74,
+          "reliability": 0.756,
+          "soil": 0.06,
+          "profit": 0.462,
+          "total": 0.515
+        },
+        "avgNetReturnPerAcre": -18,
+        "totalNitrogenLbPerAcre": 90,
+        "coverYears": 0,
+        "notes": [],
+        "badYearsIn10": 2,
+        "waterPumpedIn": 0,
+        "includes_non_corn_year": true
+      }
+    ],
+    "currentPractice": {
+      "id": "current",
+      "label": "Current pattern: Corn \u2192 Winter wheat \u2192 Corn",
+      "years": [
+        {
+          "year": 2027,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.228,
+          "reliability": 0,
+          "mainStress": "water",
+          "expectedYield": 84,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 63,
+          "netReturnPerAcre": 2,
+          "waterPumpedIn": 0
+        },
+        {
+          "year": 2028,
+          "crop": "winter_wheat",
+          "cropName": "Winter wheat",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.377,
+          "reliability": 0.067,
+          "mainStress": "water",
+          "expectedYield": 28,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 36,
+          "netReturnPerAcre": -19,
+          "waterPumpedIn": 0
+        },
+        {
+          "year": 2029,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.228,
+          "reliability": 0,
+          "mainStress": "water",
+          "expectedYield": 84,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 63,
+          "netReturnPerAcre": 2,
+          "waterPumpedIn": 0
+        }
+      ],
+      "scores": {
+        "climate": 0.278,
+        "reliability": 0.022,
+        "soil": 0.48,
+        "profit": 0.527,
+        "total": 0.382
+      },
+      "avgNetReturnPerAcre": -5,
+      "totalNitrogenLbPerAcre": 162,
+      "coverYears": 0,
+      "notes": [
+        "Fall 2027: sow winter wheat after corn harvest."
+      ],
+      "badYearsIn10": 10,
+      "waterPumpedIn": 0,
+      "includes_non_corn_year": true
+    },
+    "waterOptions": [
+      {
+        "water": "rain",
+        "bestLabel": "Grain sorghum \u2192 Fallow (no crop) \u2192 Grain sorghum",
+        "crops": [
+          "sorghum",
+          "fallow",
+          "sorghum"
+        ],
+        "badYearsIn10": 4,
+        "avgNetReturnPerAcre": -1,
+        "waterPumpedIn": 0
+      },
+      {
+        "water": "limited",
+        "bestLabel": "Soybean \u2192 Grain sorghum \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "sorghum",
+          "soybean"
+        ],
+        "badYearsIn10": 3,
+        "avgNetReturnPerAcre": 147,
+        "waterPumpedIn": 9.7
+      },
+      {
+        "water": "full",
+        "bestLabel": "Soybean \u2192 Corn \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "corn",
+          "soybean"
+        ],
+        "badYearsIn10": 0,
+        "avgNetReturnPerAcre": 194,
+        "waterPumpedIn": 14.2
+      }
+    ]
+  },
+  {
+    "irrigated": false,
+    "priority": "soil",
+    "plans": [
+      {
+        "id": "plan-1",
+        "label": "Grain sorghum \u2192 Fallow (no crop) \u2192 Winter wheat",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.58,
+            "reliability": 0.467,
+            "mainStress": "water",
+            "expectedYield": 77,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 71,
+            "netReturnPerAcre": 8,
+            "waterPumpedIn": 0
+          },
+          {
+            "year": 2028,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          },
+          {
+            "year": 2029,
+            "crop": "winter_wheat",
+            "cropName": "Winter wheat",
+            "cover": "crimson_clover",
+            "coverName": "Crimson clover",
+            "climateScore": 0.611,
+            "reliability": 0.489,
+            "mainStress": "water",
+            "expectedYield": 45,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 54,
+            "netReturnPerAcre": -24,
+            "waterPumpedIn": 0
+          }
+        ],
+        "scores": {
+          "climate": 0.595,
+          "reliability": 0.478,
+          "soil": 0.47,
+          "profit": 0.45,
+          "total": 0.492
+        },
+        "avgNetReturnPerAcre": -20,
+        "totalNitrogenLbPerAcre": 125,
+        "coverYears": 1,
+        "notes": [
+          "Fall 2028: sow winter wheat after fallow (no crop) harvest.",
+          "Fall 2029: seed crimson clover after winter wheat harvest."
+        ],
+        "badYearsIn10": 5,
+        "waterPumpedIn": 0,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-2",
+        "label": "Grain sorghum \u2192 Fallow (no crop) \u2192 Alfalfa (hay)",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.58,
+            "reliability": 0.467,
+            "mainStress": "water",
+            "expectedYield": 77,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 71,
+            "netReturnPerAcre": 8,
+            "waterPumpedIn": 0
+          },
+          {
+            "year": 2028,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          },
+          {
+            "year": 2029,
+            "crop": "alfalfa",
+            "cropName": "Alfalfa (hay)",
+            "cover": "cereal_rye",
+            "coverName": "Cereal rye",
+            "climateScore": 0.548,
+            "reliability": 0.444,
+            "mainStress": "water",
+            "expectedYield": 1.58,
+            "yieldUnit": "tons/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -179,
+            "waterPumpedIn": 0
+          }
+        ],
+        "scores": {
+          "climate": 0.564,
+          "reliability": 0.456,
+          "soil": 0.49,
+          "profit": 0.192,
+          "total": 0.44
+        },
+        "avgNetReturnPerAcre": -72,
+        "totalNitrogenLbPerAcre": 71,
+        "coverYears": 1,
+        "notes": [
+          "Fall 2029: seed cereal rye after alfalfa (hay) harvest."
+        ],
+        "badYearsIn10": 5,
+        "waterPumpedIn": 0,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-3",
+        "label": "Grain sorghum \u2192 Fallow (no crop) \u2192 Grain sorghum",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.58,
+            "reliability": 0.467,
+            "mainStress": "water",
+            "expectedYield": 77,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 71,
+            "netReturnPerAcre": 8,
+            "waterPumpedIn": 0
+          },
+          {
+            "year": 2028,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          },
+          {
+            "year": 2029,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "cereal_rye",
+            "coverName": "Cereal rye",
+            "climateScore": 0.73,
+            "reliability": 0.711,
+            "mainStress": "water",
+            "expectedYield": 97,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 89,
+            "netReturnPerAcre": -6,
+            "waterPumpedIn": 0
+          }
+        ],
+        "scores": {
+          "climate": 0.655,
+          "reliability": 0.589,
+          "soil": 0.26,
+          "profit": 0.48,
+          "total": 0.432
+        },
+        "avgNetReturnPerAcre": -14,
+        "totalNitrogenLbPerAcre": 160,
+        "coverYears": 1,
+        "notes": [
+          "Fall 2029: seed cereal rye after grain sorghum harvest."
+        ],
+        "badYearsIn10": 4,
+        "waterPumpedIn": 0,
+        "includes_non_corn_year": true
+      }
+    ],
+    "currentPractice": {
+      "id": "current",
+      "label": "Current pattern: Corn \u2192 Winter wheat \u2192 Corn",
+      "years": [
+        {
+          "year": 2027,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.228,
+          "reliability": 0,
+          "mainStress": "water",
+          "expectedYield": 84,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 63,
+          "netReturnPerAcre": 2,
+          "waterPumpedIn": 0
+        },
+        {
+          "year": 2028,
+          "crop": "winter_wheat",
+          "cropName": "Winter wheat",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.377,
+          "reliability": 0.067,
+          "mainStress": "water",
+          "expectedYield": 28,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 36,
+          "netReturnPerAcre": -19,
+          "waterPumpedIn": 0
+        },
+        {
+          "year": 2029,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.228,
+          "reliability": 0,
+          "mainStress": "water",
+          "expectedYield": 84,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 63,
+          "netReturnPerAcre": 2,
+          "waterPumpedIn": 0
+        }
+      ],
+      "scores": {
+        "climate": 0.278,
+        "reliability": 0.022,
+        "soil": 0.48,
+        "profit": 0.527,
+        "total": 0.38
+      },
+      "avgNetReturnPerAcre": -5,
+      "totalNitrogenLbPerAcre": 162,
+      "coverYears": 0,
+      "notes": [
+        "Fall 2027: sow winter wheat after corn harvest."
+      ],
+      "badYearsIn10": 10,
+      "waterPumpedIn": 0,
+      "includes_non_corn_year": true
+    },
+    "waterOptions": [
+      {
+        "water": "rain",
+        "bestLabel": "Grain sorghum \u2192 Fallow (no crop) \u2192 Winter wheat",
+        "crops": [
+          "sorghum",
+          "fallow",
+          "winter_wheat"
+        ],
+        "badYearsIn10": 5,
+        "avgNetReturnPerAcre": -20,
+        "waterPumpedIn": 0
+      },
+      {
+        "water": "limited",
+        "bestLabel": "Soybean \u2192 Grain sorghum \u2192 Winter wheat",
+        "crops": [
+          "soybean",
+          "sorghum",
+          "winter_wheat"
+        ],
+        "badYearsIn10": 2,
+        "avgNetReturnPerAcre": 34,
+        "waterPumpedIn": 9.5
+      },
+      {
+        "water": "full",
+        "bestLabel": "Soybean \u2192 Corn \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "corn",
+          "soybean"
+        ],
+        "badYearsIn10": 0,
+        "avgNetReturnPerAcre": 161,
+        "waterPumpedIn": 14.2
+      }
+    ]
+  },
+  {
+    "irrigated": false,
+    "priority": "risk",
+    "plans": [
+      {
+        "id": "plan-1",
+        "label": "Fallow (no crop) \u2192 Grain sorghum \u2192 Fallow (no crop)",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          },
+          {
+            "year": 2028,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.74,
+            "reliability": 0.756,
+            "mainStress": "water",
+            "expectedYield": 99,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 90,
+            "netReturnPerAcre": 36,
+            "waterPumpedIn": 0
+          },
+          {
+            "year": 2029,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          }
+        ],
+        "scores": {
+          "climate": 0.74,
+          "reliability": 0.756,
+          "soil": 0.06,
+          "profit": 0.462,
+          "total": 0.609
+        },
+        "avgNetReturnPerAcre": -18,
+        "totalNitrogenLbPerAcre": 90,
+        "coverYears": 0,
+        "notes": [],
+        "badYearsIn10": 2,
+        "waterPumpedIn": 0,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-2",
+        "label": "Grain sorghum \u2192 Fallow (no crop) \u2192 Grain sorghum",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.58,
+            "reliability": 0.467,
+            "mainStress": "water",
+            "expectedYield": 77,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 71,
+            "netReturnPerAcre": 8,
+            "waterPumpedIn": 0
+          },
+          {
+            "year": 2028,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          },
+          {
+            "year": 2029,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.73,
+            "reliability": 0.711,
+            "mainStress": "water",
+            "expectedYield": 97,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 89,
+            "netReturnPerAcre": 34,
+            "waterPumpedIn": 0
+          }
+        ],
+        "scores": {
+          "climate": 0.655,
+          "reliability": 0.589,
+          "soil": 0.18,
+          "profit": 0.547,
+          "total": 0.554
+        },
+        "avgNetReturnPerAcre": -1,
+        "totalNitrogenLbPerAcre": 160,
+        "coverYears": 0,
+        "notes": [],
+        "badYearsIn10": 4,
+        "waterPumpedIn": 0,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-3",
+        "label": "Fallow (no crop) \u2192 Winter wheat \u2192 Grain sorghum",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "fallow",
+            "cropName": "Fallow (no crop)",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 1,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 0,
+            "yieldUnit": "",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": -45
+          },
+          {
+            "year": 2028,
+            "crop": "winter_wheat",
+            "cropName": "Winter wheat",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.632,
+            "reliability": 0.533,
+            "mainStress": "water",
+            "expectedYield": 47,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 56,
+            "netReturnPerAcre": 24,
+            "waterPumpedIn": 0
+          },
+          {
+            "year": 2029,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.594,
+            "reliability": 0.467,
+            "mainStress": "water",
+            "expectedYield": 79,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 72,
+            "netReturnPerAcre": 11,
+            "waterPumpedIn": 0
+          }
+        ],
+        "scores": {
+          "climate": 0.613,
+          "reliability": 0.5,
+          "soil": 0.36,
+          "profit": 0.535,
+          "total": 0.523
+        },
+        "avgNetReturnPerAcre": -3,
+        "totalNitrogenLbPerAcre": 128,
+        "coverYears": 0,
+        "notes": [
+          "Fall 2027: sow winter wheat after fallow (no crop) harvest."
+        ],
+        "badYearsIn10": 5,
+        "waterPumpedIn": 0,
+        "includes_non_corn_year": true
+      }
+    ],
+    "currentPractice": {
+      "id": "current",
+      "label": "Current pattern: Corn \u2192 Winter wheat \u2192 Corn",
+      "years": [
+        {
+          "year": 2027,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.228,
+          "reliability": 0,
+          "mainStress": "water",
+          "expectedYield": 84,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 63,
+          "netReturnPerAcre": 2,
+          "waterPumpedIn": 0
+        },
+        {
+          "year": 2028,
+          "crop": "winter_wheat",
+          "cropName": "Winter wheat",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.377,
+          "reliability": 0.067,
+          "mainStress": "water",
+          "expectedYield": 28,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 36,
+          "netReturnPerAcre": -19,
+          "waterPumpedIn": 0
+        },
+        {
+          "year": 2029,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.228,
+          "reliability": 0,
+          "mainStress": "water",
+          "expectedYield": 84,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 63,
+          "netReturnPerAcre": 2,
+          "waterPumpedIn": 0
+        }
+      ],
+      "scores": {
+        "climate": 0.278,
+        "reliability": 0.022,
+        "soil": 0.48,
+        "profit": 0.527,
+        "total": 0.258
+      },
+      "avgNetReturnPerAcre": -5,
+      "totalNitrogenLbPerAcre": 162,
+      "coverYears": 0,
+      "notes": [
+        "Fall 2027: sow winter wheat after corn harvest."
+      ],
+      "badYearsIn10": 10,
+      "waterPumpedIn": 0,
+      "includes_non_corn_year": true
+    },
+    "waterOptions": [
+      {
+        "water": "rain",
+        "bestLabel": "Fallow (no crop) \u2192 Grain sorghum \u2192 Fallow (no crop)",
+        "crops": [
+          "fallow",
+          "sorghum",
+          "fallow"
+        ],
+        "badYearsIn10": 2,
+        "avgNetReturnPerAcre": -18,
+        "waterPumpedIn": 0
+      },
+      {
+        "water": "limited",
+        "bestLabel": "Soybean \u2192 Grain sorghum \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "sorghum",
+          "soybean"
+        ],
+        "badYearsIn10": 3,
+        "avgNetReturnPerAcre": 147,
+        "waterPumpedIn": 9.7
+      },
+      {
+        "water": "full",
+        "bestLabel": "Soybean \u2192 Corn \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "corn",
+          "soybean"
+        ],
+        "badYearsIn10": 0,
+        "avgNetReturnPerAcre": 194,
+        "waterPumpedIn": 14.2
+      }
+    ]
+  },
+  {
+    "irrigated": true,
+    "priority": "balanced",
+    "plans": [
+      {
+        "id": "plan-1",
+        "label": "Soybean \u2192 Corn \u2192 Soybean",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "hairy_vetch",
+            "coverName": "Hairy vetch",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 198,
+            "waterPumpedIn": 13.2
+          },
+          {
+            "year": 2028,
+            "crop": "corn",
+            "cropName": "Corn",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.818,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 202,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 81,
+            "netReturnPerAcre": 140,
+            "waterPumpedIn": 16.2
+          },
+          {
+            "year": 2029,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 64,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 244,
+            "waterPumpedIn": 13.2
+          }
+        ],
+        "scores": {
+          "climate": 0.851,
+          "reliability": 1,
+          "soil": 0.59,
+          "profit": 0.967,
+          "total": 0.85
+        },
+        "avgNetReturnPerAcre": 194,
+        "totalNitrogenLbPerAcre": 81,
+        "coverYears": 1,
+        "notes": [
+          "Fall 2027: seed hairy vetch after soybean harvest, terminate before planting corn in 2028."
+        ],
+        "badYearsIn10": 0,
+        "waterPumpedIn": 14.2,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-2",
+        "label": "Soybean \u2192 Winter wheat \u2192 Soybean",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 258,
+            "waterPumpedIn": 13.2
+          },
+          {
+            "year": 2028,
+            "crop": "winter_wheat",
+            "cropName": "Winter wheat",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.963,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 65,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 78,
+            "netReturnPerAcre": -22,
+            "waterPumpedIn": 10.7
+          },
+          {
+            "year": 2029,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 258,
+            "waterPumpedIn": 13.2
+          }
+        ],
+        "scores": {
+          "climate": 0.899,
+          "reliability": 1,
+          "soil": 0.58,
+          "profit": 0.82,
+          "total": 0.816
+        },
+        "avgNetReturnPerAcre": 165,
+        "totalNitrogenLbPerAcre": 78,
+        "coverYears": 0,
+        "notes": [
+          "Fall 2027: sow winter wheat after soybean harvest."
+        ],
+        "badYearsIn10": 0,
+        "waterPumpedIn": 12.4,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-3",
+        "label": "Soybean \u2192 Grain sorghum \u2192 Soybean",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 258,
+            "waterPumpedIn": 13.2
+          },
+          {
+            "year": 2028,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.97,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 149,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 108,
+            "netReturnPerAcre": 23,
+            "waterPumpedIn": 12.9
+          },
+          {
+            "year": 2029,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 64,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 244,
+            "waterPumpedIn": 13.2
+          }
+        ],
+        "scores": {
+          "climate": 0.901,
+          "reliability": 1,
+          "soil": 0.48,
+          "profit": 0.872,
+          "total": 0.807
+        },
+        "avgNetReturnPerAcre": 175,
+        "totalNitrogenLbPerAcre": 108,
+        "coverYears": 0,
+        "notes": [],
+        "badYearsIn10": 0,
+        "waterPumpedIn": 13.1,
+        "includes_non_corn_year": true
+      }
+    ],
+    "currentPractice": {
+      "id": "current",
+      "label": "Current pattern: Corn \u2192 Winter wheat \u2192 Corn",
+      "years": [
+        {
+          "year": 2027,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.818,
+          "reliability": 1,
+          "mainStress": null,
+          "expectedYield": 208,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 156,
+          "netReturnPerAcre": 105,
+          "waterPumpedIn": 16.2
+        },
+        {
+          "year": 2028,
+          "crop": "winter_wheat",
+          "cropName": "Winter wheat",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.963,
+          "reliability": 1,
+          "mainStress": null,
+          "expectedYield": 65,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 78,
+          "netReturnPerAcre": -22,
+          "waterPumpedIn": 10.7
+        },
+        {
+          "year": 2029,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.818,
+          "reliability": 1,
+          "mainStress": null,
+          "expectedYield": 208,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 156,
+          "netReturnPerAcre": 105,
+          "waterPumpedIn": 16.2
+        }
+      ],
+      "scores": {
+        "climate": 0.866,
+        "reliability": 1,
+        "soil": 0.48,
+        "profit": 0.31,
+        "total": 0.63
+      },
+      "avgNetReturnPerAcre": 63,
+      "totalNitrogenLbPerAcre": 390,
+      "coverYears": 0,
+      "notes": [
+        "Fall 2027: sow winter wheat after corn harvest."
+      ],
+      "badYearsIn10": 0,
+      "waterPumpedIn": 14.4,
+      "includes_non_corn_year": true
+    },
+    "waterOptions": [
+      {
+        "water": "rain",
+        "bestLabel": "Soybean \u2192 Grain sorghum \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "sorghum",
+          "soybean"
+        ],
+        "badYearsIn10": 8,
+        "avgNetReturnPerAcre": 90,
+        "waterPumpedIn": 0
+      },
+      {
+        "water": "limited",
+        "bestLabel": "Soybean \u2192 Winter wheat \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "winter_wheat",
+          "soybean"
+        ],
+        "badYearsIn10": 3,
+        "avgNetReturnPerAcre": 135,
+        "waterPumpedIn": 9.5
+      },
+      {
+        "water": "full",
+        "bestLabel": "Soybean \u2192 Corn \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "corn",
+          "soybean"
+        ],
+        "badYearsIn10": 0,
+        "avgNetReturnPerAcre": 194,
+        "waterPumpedIn": 14.2
+      }
+    ]
+  },
+  {
+    "irrigated": true,
+    "priority": "profit",
+    "plans": [
+      {
+        "id": "plan-1",
+        "label": "Soybean \u2192 Corn \u2192 Soybean",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "hairy_vetch",
+            "coverName": "Hairy vetch",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 198,
+            "waterPumpedIn": 13.2
+          },
+          {
+            "year": 2028,
+            "crop": "corn",
+            "cropName": "Corn",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.818,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 202,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 81,
+            "netReturnPerAcre": 140,
+            "waterPumpedIn": 16.2
+          },
+          {
+            "year": 2029,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 64,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 244,
+            "waterPumpedIn": 13.2
+          }
+        ],
+        "scores": {
+          "climate": 0.851,
+          "reliability": 1,
+          "soil": 0.59,
+          "profit": 0.967,
+          "total": 0.886
+        },
+        "avgNetReturnPerAcre": 194,
+        "totalNitrogenLbPerAcre": 81,
+        "coverYears": 1,
+        "notes": [
+          "Fall 2027: seed hairy vetch after soybean harvest, terminate before planting corn in 2028."
+        ],
+        "badYearsIn10": 0,
+        "waterPumpedIn": 14.2,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-2",
+        "label": "Soybean \u2192 Grain sorghum \u2192 Soybean",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 258,
+            "waterPumpedIn": 13.2
+          },
+          {
+            "year": 2028,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.97,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 149,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 108,
+            "netReturnPerAcre": 23,
+            "waterPumpedIn": 12.9
+          },
+          {
+            "year": 2029,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 64,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 244,
+            "waterPumpedIn": 13.2
+          }
+        ],
+        "scores": {
+          "climate": 0.901,
+          "reliability": 1,
+          "soil": 0.48,
+          "profit": 0.872,
+          "total": 0.84
+        },
+        "avgNetReturnPerAcre": 175,
+        "totalNitrogenLbPerAcre": 108,
+        "coverYears": 0,
+        "notes": [],
+        "badYearsIn10": 0,
+        "waterPumpedIn": 13.1,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-3",
+        "label": "Soybean \u2192 Winter wheat \u2192 Soybean",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 258,
+            "waterPumpedIn": 13.2
+          },
+          {
+            "year": 2028,
+            "crop": "winter_wheat",
+            "cropName": "Winter wheat",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.963,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 65,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 78,
+            "netReturnPerAcre": -22,
+            "waterPumpedIn": 10.7
+          },
+          {
+            "year": 2029,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 258,
+            "waterPumpedIn": 13.2
+          }
+        ],
+        "scores": {
+          "climate": 0.899,
+          "reliability": 1,
+          "soil": 0.58,
+          "profit": 0.82,
+          "total": 0.831
+        },
+        "avgNetReturnPerAcre": 165,
+        "totalNitrogenLbPerAcre": 78,
+        "coverYears": 0,
+        "notes": [
+          "Fall 2027: sow winter wheat after soybean harvest."
+        ],
+        "badYearsIn10": 0,
+        "waterPumpedIn": 12.4,
+        "includes_non_corn_year": true
+      }
+    ],
+    "currentPractice": {
+      "id": "current",
+      "label": "Current pattern: Corn \u2192 Winter wheat \u2192 Corn",
+      "years": [
+        {
+          "year": 2027,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.818,
+          "reliability": 1,
+          "mainStress": null,
+          "expectedYield": 208,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 156,
+          "netReturnPerAcre": 105,
+          "waterPumpedIn": 16.2
+        },
+        {
+          "year": 2028,
+          "crop": "winter_wheat",
+          "cropName": "Winter wheat",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.963,
+          "reliability": 1,
+          "mainStress": null,
+          "expectedYield": 65,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 78,
+          "netReturnPerAcre": -22,
+          "waterPumpedIn": 10.7
+        },
+        {
+          "year": 2029,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.818,
+          "reliability": 1,
+          "mainStress": null,
+          "expectedYield": 208,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 156,
+          "netReturnPerAcre": 105,
+          "waterPumpedIn": 16.2
+        }
+      ],
+      "scores": {
+        "climate": 0.866,
+        "reliability": 1,
+        "soil": 0.48,
+        "profit": 0.31,
+        "total": 0.578
+      },
+      "avgNetReturnPerAcre": 63,
+      "totalNitrogenLbPerAcre": 390,
+      "coverYears": 0,
+      "notes": [
+        "Fall 2027: sow winter wheat after corn harvest."
+      ],
+      "badYearsIn10": 0,
+      "waterPumpedIn": 14.4,
+      "includes_non_corn_year": true
+    },
+    "waterOptions": [
+      {
+        "water": "rain",
+        "bestLabel": "Soybean \u2192 Grain sorghum \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "sorghum",
+          "soybean"
+        ],
+        "badYearsIn10": 8,
+        "avgNetReturnPerAcre": 90,
+        "waterPumpedIn": 0
+      },
+      {
+        "water": "limited",
+        "bestLabel": "Soybean \u2192 Grain sorghum \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "sorghum",
+          "soybean"
+        ],
+        "badYearsIn10": 3,
+        "avgNetReturnPerAcre": 147,
+        "waterPumpedIn": 9.7
+      },
+      {
+        "water": "full",
+        "bestLabel": "Soybean \u2192 Corn \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "corn",
+          "soybean"
+        ],
+        "badYearsIn10": 0,
+        "avgNetReturnPerAcre": 194,
+        "waterPumpedIn": 14.2
+      }
+    ]
+  },
+  {
+    "irrigated": true,
+    "priority": "soil",
+    "plans": [
+      {
+        "id": "plan-1",
+        "label": "Soybean \u2192 Corn \u2192 Soybean",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "hairy_vetch",
+            "coverName": "Hairy vetch",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 198,
+            "waterPumpedIn": 13.2
+          },
+          {
+            "year": 2028,
+            "crop": "corn",
+            "cropName": "Corn",
+            "cover": "cereal_rye",
+            "coverName": "Cereal rye",
+            "climateScore": 0.818,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 202,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 81,
+            "netReturnPerAcre": 100,
+            "waterPumpedIn": 16.2
+          },
+          {
+            "year": 2029,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "hairy_vetch",
+            "coverName": "Hairy vetch",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 64,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 184,
+            "waterPumpedIn": 13.2
+          }
+        ],
+        "scores": {
+          "climate": 0.851,
+          "reliability": 1,
+          "soil": 0.78,
+          "profit": 0.8,
+          "total": 0.831
+        },
+        "avgNetReturnPerAcre": 161,
+        "totalNitrogenLbPerAcre": 81,
+        "coverYears": 3,
+        "notes": [
+          "Fall 2027: seed hairy vetch after soybean harvest, terminate before planting corn in 2028.",
+          "Fall 2028: seed cereal rye after corn harvest, terminate before planting soybean in 2029.",
+          "Fall 2029: seed hairy vetch after soybean harvest."
+        ],
+        "badYearsIn10": 0,
+        "waterPumpedIn": 14.2,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-2",
+        "label": "Soybean \u2192 Winter wheat \u2192 Soybean",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 258,
+            "waterPumpedIn": 13.2
+          },
+          {
+            "year": 2028,
+            "crop": "winter_wheat",
+            "cropName": "Winter wheat",
+            "cover": "cereal_rye",
+            "coverName": "Cereal rye",
+            "climateScore": 0.963,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 65,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 78,
+            "netReturnPerAcre": -62,
+            "waterPumpedIn": 10.7
+          },
+          {
+            "year": 2029,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "hairy_vetch",
+            "coverName": "Hairy vetch",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 198,
+            "waterPumpedIn": 13.2
+          }
+        ],
+        "scores": {
+          "climate": 0.899,
+          "reliability": 1,
+          "soil": 0.77,
+          "profit": 0.653,
+          "total": 0.807
+        },
+        "avgNetReturnPerAcre": 131,
+        "totalNitrogenLbPerAcre": 78,
+        "coverYears": 2,
+        "notes": [
+          "Fall 2027: sow winter wheat after soybean harvest.",
+          "Fall 2028: seed cereal rye after winter wheat harvest, terminate before planting soybean in 2029.",
+          "Fall 2029: seed hairy vetch after soybean harvest."
+        ],
+        "badYearsIn10": 0,
+        "waterPumpedIn": 12.4,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-3",
+        "label": "Soybean \u2192 Corn \u2192 Oats",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "hairy_vetch",
+            "coverName": "Hairy vetch",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 198,
+            "waterPumpedIn": 13.2
+          },
+          {
+            "year": 2028,
+            "crop": "corn",
+            "cropName": "Corn",
+            "cover": "cereal_rye",
+            "coverName": "Cereal rye",
+            "climateScore": 0.818,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 202,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 81,
+            "netReturnPerAcre": 100,
+            "waterPumpedIn": 16.2
+          },
+          {
+            "year": 2029,
+            "crop": "oats",
+            "cropName": "Oats",
+            "cover": "crimson_clover",
+            "coverName": "Crimson clover",
+            "climateScore": 0.904,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 67,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 53,
+            "netReturnPerAcre": -141,
+            "waterPumpedIn": 9.6
+          }
+        ],
+        "scores": {
+          "climate": 0.863,
+          "reliability": 1,
+          "soil": 0.96,
+          "profit": 0.258,
+          "total": 0.806
+        },
+        "avgNetReturnPerAcre": 52,
+        "totalNitrogenLbPerAcre": 134,
+        "coverYears": 3,
+        "notes": [
+          "Fall 2027: seed hairy vetch after soybean harvest, terminate before planting corn in 2028.",
+          "Fall 2028: seed cereal rye after corn harvest, terminate before planting oats in 2029.",
+          "Fall 2029: seed crimson clover after oats harvest."
+        ],
+        "badYearsIn10": 0,
+        "waterPumpedIn": 13,
+        "includes_non_corn_year": true
+      }
+    ],
+    "currentPractice": {
+      "id": "current",
+      "label": "Current pattern: Corn \u2192 Winter wheat \u2192 Corn",
+      "years": [
+        {
+          "year": 2027,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.818,
+          "reliability": 1,
+          "mainStress": null,
+          "expectedYield": 208,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 156,
+          "netReturnPerAcre": 105,
+          "waterPumpedIn": 16.2
+        },
+        {
+          "year": 2028,
+          "crop": "winter_wheat",
+          "cropName": "Winter wheat",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.963,
+          "reliability": 1,
+          "mainStress": null,
+          "expectedYield": 65,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 78,
+          "netReturnPerAcre": -22,
+          "waterPumpedIn": 10.7
+        },
+        {
+          "year": 2029,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.818,
+          "reliability": 1,
+          "mainStress": null,
+          "expectedYield": 208,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 156,
+          "netReturnPerAcre": 105,
+          "waterPumpedIn": 16.2
+        }
+      ],
+      "scores": {
+        "climate": 0.866,
+        "reliability": 1,
+        "soil": 0.48,
+        "profit": 0.31,
+        "total": 0.601
+      },
+      "avgNetReturnPerAcre": 63,
+      "totalNitrogenLbPerAcre": 390,
+      "coverYears": 0,
+      "notes": [
+        "Fall 2027: sow winter wheat after corn harvest."
+      ],
+      "badYearsIn10": 0,
+      "waterPumpedIn": 14.4,
+      "includes_non_corn_year": true
+    },
+    "waterOptions": [
+      {
+        "water": "rain",
+        "bestLabel": "Grain sorghum \u2192 Fallow (no crop) \u2192 Winter wheat",
+        "crops": [
+          "sorghum",
+          "fallow",
+          "winter_wheat"
+        ],
+        "badYearsIn10": 5,
+        "avgNetReturnPerAcre": -20,
+        "waterPumpedIn": 0
+      },
+      {
+        "water": "limited",
+        "bestLabel": "Soybean \u2192 Grain sorghum \u2192 Winter wheat",
+        "crops": [
+          "soybean",
+          "sorghum",
+          "winter_wheat"
+        ],
+        "badYearsIn10": 2,
+        "avgNetReturnPerAcre": 34,
+        "waterPumpedIn": 9.5
+      },
+      {
+        "water": "full",
+        "bestLabel": "Soybean \u2192 Corn \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "corn",
+          "soybean"
+        ],
+        "badYearsIn10": 0,
+        "avgNetReturnPerAcre": 161,
+        "waterPumpedIn": 14.2
+      }
+    ]
+  },
+  {
+    "irrigated": true,
+    "priority": "risk",
+    "plans": [
+      {
+        "id": "plan-1",
+        "label": "Soybean \u2192 Corn \u2192 Soybean",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "hairy_vetch",
+            "coverName": "Hairy vetch",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 198,
+            "waterPumpedIn": 13.2
+          },
+          {
+            "year": 2028,
+            "crop": "corn",
+            "cropName": "Corn",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.818,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 202,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 81,
+            "netReturnPerAcre": 140,
+            "waterPumpedIn": 16.2
+          },
+          {
+            "year": 2029,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 64,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 244,
+            "waterPumpedIn": 13.2
+          }
+        ],
+        "scores": {
+          "climate": 0.851,
+          "reliability": 1,
+          "soil": 0.59,
+          "profit": 0.967,
+          "total": 0.913
+        },
+        "avgNetReturnPerAcre": 194,
+        "totalNitrogenLbPerAcre": 81,
+        "coverYears": 1,
+        "notes": [
+          "Fall 2027: seed hairy vetch after soybean harvest, terminate before planting corn in 2028."
+        ],
+        "badYearsIn10": 0,
+        "waterPumpedIn": 14.2,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-2",
+        "label": "Soybean \u2192 Grain sorghum \u2192 Soybean",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 258,
+            "waterPumpedIn": 13.2
+          },
+          {
+            "year": 2028,
+            "crop": "sorghum",
+            "cropName": "Grain sorghum",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.97,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 149,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 108,
+            "netReturnPerAcre": 23,
+            "waterPumpedIn": 12.9
+          },
+          {
+            "year": 2029,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 64,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 244,
+            "waterPumpedIn": 13.2
+          }
+        ],
+        "scores": {
+          "climate": 0.901,
+          "reliability": 1,
+          "soil": 0.48,
+          "profit": 0.872,
+          "total": 0.891
+        },
+        "avgNetReturnPerAcre": 175,
+        "totalNitrogenLbPerAcre": 108,
+        "coverYears": 0,
+        "notes": [],
+        "badYearsIn10": 0,
+        "waterPumpedIn": 13.1,
+        "includes_non_corn_year": true
+      },
+      {
+        "id": "plan-3",
+        "label": "Soybean \u2192 Winter wheat \u2192 Soybean",
+        "years": [
+          {
+            "year": 2027,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 258,
+            "waterPumpedIn": 13.2
+          },
+          {
+            "year": 2028,
+            "crop": "winter_wheat",
+            "cropName": "Winter wheat",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.963,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 65,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 78,
+            "netReturnPerAcre": -22,
+            "waterPumpedIn": 10.7
+          },
+          {
+            "year": 2029,
+            "crop": "soybean",
+            "cropName": "Soybean",
+            "cover": "none",
+            "coverName": "No cover crop",
+            "climateScore": 0.867,
+            "reliability": 1,
+            "mainStress": null,
+            "expectedYield": 66,
+            "yieldUnit": "bu/acre",
+            "nitrogenLbPerAcre": 0,
+            "netReturnPerAcre": 258,
+            "waterPumpedIn": 13.2
+          }
+        ],
+        "scores": {
+          "climate": 0.899,
+          "reliability": 1,
+          "soil": 0.58,
+          "profit": 0.82,
+          "total": 0.888
+        },
+        "avgNetReturnPerAcre": 165,
+        "totalNitrogenLbPerAcre": 78,
+        "coverYears": 0,
+        "notes": [
+          "Fall 2027: sow winter wheat after soybean harvest."
+        ],
+        "badYearsIn10": 0,
+        "waterPumpedIn": 12.4,
+        "includes_non_corn_year": true
+      }
+    ],
+    "currentPractice": {
+      "id": "current",
+      "label": "Current pattern: Corn \u2192 Winter wheat \u2192 Corn",
+      "years": [
+        {
+          "year": 2027,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.818,
+          "reliability": 1,
+          "mainStress": null,
+          "expectedYield": 208,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 156,
+          "netReturnPerAcre": 105,
+          "waterPumpedIn": 16.2
+        },
+        {
+          "year": 2028,
+          "crop": "winter_wheat",
+          "cropName": "Winter wheat",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.963,
+          "reliability": 1,
+          "mainStress": null,
+          "expectedYield": 65,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 78,
+          "netReturnPerAcre": -22,
+          "waterPumpedIn": 10.7
+        },
+        {
+          "year": 2029,
+          "crop": "corn",
+          "cropName": "Corn",
+          "cover": "none",
+          "coverName": "No cover crop",
+          "climateScore": 0.818,
+          "reliability": 1,
+          "mainStress": null,
+          "expectedYield": 208,
+          "yieldUnit": "bu/acre",
+          "nitrogenLbPerAcre": 156,
+          "netReturnPerAcre": 105,
+          "waterPumpedIn": 16.2
+        }
+      ],
+      "scores": {
+        "climate": 0.866,
+        "reliability": 1,
+        "soil": 0.48,
+        "profit": 0.31,
+        "total": 0.742
+      },
+      "avgNetReturnPerAcre": 63,
+      "totalNitrogenLbPerAcre": 390,
+      "coverYears": 0,
+      "notes": [
+        "Fall 2027: sow winter wheat after corn harvest."
+      ],
+      "badYearsIn10": 0,
+      "waterPumpedIn": 14.4,
+      "includes_non_corn_year": true
+    },
+    "waterOptions": [
+      {
+        "water": "rain",
+        "bestLabel": "Fallow (no crop) \u2192 Grain sorghum \u2192 Fallow (no crop)",
+        "crops": [
+          "fallow",
+          "sorghum",
+          "fallow"
+        ],
+        "badYearsIn10": 2,
+        "avgNetReturnPerAcre": -18,
+        "waterPumpedIn": 0
+      },
+      {
+        "water": "limited",
+        "bestLabel": "Soybean \u2192 Grain sorghum \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "sorghum",
+          "soybean"
+        ],
+        "badYearsIn10": 3,
+        "avgNetReturnPerAcre": 147,
+        "waterPumpedIn": 9.7
+      },
+      {
+        "water": "full",
+        "bestLabel": "Soybean \u2192 Corn \u2192 Soybean",
+        "crops": [
+          "soybean",
+          "corn",
+          "soybean"
+        ],
+        "badYearsIn10": 0,
+        "avgNetReturnPerAcre": 194,
+        "waterPumpedIn": 14.2
+      }
+    ]
+  }
+]

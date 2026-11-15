@@ -9,7 +9,7 @@ import { ALL_CROPS, CROPS } from "./crops";
 import { availableCrops, FALLOW_MAX_ANNUAL_RAIN_MM, statePotential } from "./regions";
 import { buildDroughtReplays } from "./droughtReplay";
 import { planAdvice } from "./pestNotes";
-import { buildWaterContext, evaluateCropClimate, LIMITED_IRRIGATION_MM, makeReplay, meanAnnualRainMm, runEngine } from "./rotation";
+import { buildWaterContext, type CropWeatherMemo, evaluateCropClimate, LIMITED_IRRIGATION_MM, makeReplay, meanAnnualRainMm, runEngine } from "./rotation";
 import { usdaInputs, type RecentYield, type ValidationSeries } from "./usda";
 import { checkWaterUse, validateCrop, type YieldRecord } from "./validate";
 
@@ -120,7 +120,14 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   const wheatDeadline = new Date(Date.UTC(planStartYear - 1, 9, 15));
   const firstYearWheatAllowed = now.getTime() < wheatDeadline.getTime();
 
-  const annualRain = meanAnnualRainMm(buildWaterContext(climate, soil, false));
+  const waterBase = buildWaterContext(climate, soil, false);
+  const waterMemo = new Map<WaterLevel, ReturnType<typeof buildWaterContext>>();
+  const waterFor = (w: WaterLevel) => {
+    let ctx = waterMemo.get(w);
+    if (!ctx) waterMemo.set(w, ctx = { ...waterBase, irrigated: w === "full", allowanceMm: w === "limited" ? LIMITED_IRRIGATION_MM : 0 });
+    return ctx;
+  };
+  const annualRain = meanAnnualRainMm(waterBase);
   const dryRegion = annualRain < FALLOW_MAX_ANNUAL_RAIN_MM;
   const region = availableCrops(county?.stateCode, ALL_CROPS);
   const prices = inputs.nass?.prices ?? {};
@@ -128,20 +135,21 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
 
   // Weather work is shared: the crop climate depends only on full irrigation (canopy cooling) and on
   // whether trends are applied, so compute each variant once per plan.
+  const weatherMemo: CropWeatherMemo = new Map();
   const ccMemo = new Map<string, ReturnType<typeof evaluateCropClimate>>();
   const cropClimateFor = (full: boolean, adjust: boolean) => {
     const key = `${full}:${adjust}`;
     let cc = ccMemo.get(key);
     if (!cc) {
-      cc = evaluateCropClimate(climate, soil, full, adjust ? targetYear : climate.lastYear, { adjustTrends: adjust });
+      cc = evaluateCropClimate(climate, soil, full, adjust ? targetYear : climate.lastYear, { adjustTrends: adjust, weatherMemo });
       ccMemo.set(key, cc);
     }
     return cc;
   };
 
   // Real past years replayed rain-fed, without trend shifting: used to check the model and to calibrate.
-  const replay = makeReplay(climate, soil, false, 0, cropClimateFor(false, false));
-  const fullReplay = makeReplay(climate, soil, true, 0, cropClimateFor(true, false));
+  const replay = makeReplay(climate, soil, false, 0, cropClimateFor(false, false), waterFor("rain"));
+  const fullReplay = makeReplay(climate, soil, true, 0, cropClimateFor(true, false), waterFor("full"));
   const replays = new Map<CropId, ReturnType<typeof replay>>();
   for (const crop of region.crops) replays.set(crop, replay(crop, usualPreviousCrop(crop, dryRegion)));
   const fracOf = (rs: ReturnType<typeof replay>) => {
@@ -151,7 +159,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   const recentFrac = (crop: CropId) => fracOf(replays.get(crop) ?? []);
   const table = statePotential(county?.stateCode);
   // Records describe the selected practice. Keep one inferred local potential across water comparisons.
-  const localReplay = level === "full" ? fullReplay : level === "limited" ? makeReplay(climate, soil, false, LIMITED_IRRIGATION_MM, cropClimateFor(false, false)) : replay;
+  const localReplay = level === "full" ? fullReplay : level === "limited" ? makeReplay(climate, soil, false, LIMITED_IRRIGATION_MM, cropClimateFor(false, false), waterFor("limited")) : replay;
   const local = new Map<CropId, { count: number; average: number; fraction: number; fallback: number; years: number[] }>();
   for (const crop of region.crops) {
     const records = checked.yieldRecords?.filter((r) => r.crop === crop) ?? [];
@@ -169,7 +177,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     const full = w === "full";
     const allowance = w === "limited" ? LIMITED_IRRIGATION_MM : 0;
     const cropClimate = cropClimateFor(full, true);
-    const water = buildWaterContext(climate, soil, full, allowance);
+    const water = waterFor(w);
     // Fallow where it is a real practice (dry, rain-fed), or where the farmer already uses it.
     const fallowAllowed = (w === "rain" && dryRegion) || history.includes("fallow");
     const crops = fallowAllowed ? [...region.crops, "fallow" as CropId] : region.crops;
@@ -243,7 +251,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   validation.sort((a, b) => b.years.length - a.years.length || b.correlation - a.correlation);
 
   // The field's water level, replayed on real past years (no trend shifting).
-  const fieldReplay = level === "full" ? fullReplay : level === "limited" ? makeReplay(climate, soil, false, LIMITED_IRRIGATION_MM, cropClimateFor(false, false)) : replay;
+  const fieldReplay = level === "full" ? fullReplay : level === "limited" ? makeReplay(climate, soil, false, LIMITED_IRRIGATION_MM, cropClimateFor(false, false), waterFor("limited")) : replay;
 
   // Water check: our crop water use vs. OpenET's measured water use, for the crops actually grown here.
   let waterCheck: WaterCheck | null = null;

@@ -1,3 +1,4 @@
+import { useI18n } from "../i18n";
 import L from "leaflet";
 import { useEffect, useRef } from "react";
 
@@ -30,6 +31,7 @@ interface Props {
 }
 
 export function MapPicker({ point, onPick, focus }: Props) {
+  const { t, language } = useI18n();
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
   const marker = useRef<L.CircleMarker | null>(null);
@@ -70,8 +72,8 @@ export function MapPicker({ point, onPick, focus }: Props) {
     });
     L.control
       .layers(
-        { "NASA satellite": nasa, "Close-up photo": imagery, "Street map": streets },
-        { "Plant greenness (NASA MODIS NDVI)": ndvi, "Soil moisture (NASA SMAP)": smap },
+        { [t("NASA satellite")]: nasa, [t("Close-up photo")]: imagery, [t("Street map")]: streets },
+        { [t("Plant greenness (NASA MODIS NDVI)")]: ndvi, [t("Soil moisture (NASA SMAP)")]: smap },
         { position: "topright", collapsed: true },
       )
       .addTo(m);
@@ -98,8 +100,9 @@ export function MapPicker({ point, onPick, focus }: Props) {
     return () => {
       m.remove();
       map.current = null;
+      marker.current = null;
     };
-  }, []);
+  }, [language]);
 
   useEffect(() => {
     const m = map.current;
@@ -113,14 +116,14 @@ export function MapPicker({ point, onPick, focus }: Props) {
       }).addTo(m);
     } else marker.current.setLatLng([point.lat, point.lon]);
     if (m.getZoom() < 11) m.flyTo([point.lat, point.lon], 13, { duration: 0.8, animate: !window.matchMedia("(prefers-reduced-motion: reduce)").matches });
-  }, [point]);
+  }, [point, language]);
 
   useEffect(() => {
     if (focus && map.current) map.current.flyTo([focus.lat, focus.lon], focus.zoom, { duration: 0.8, animate: !window.matchMedia("(prefers-reduced-motion: reduce)").matches });
-  }, [focus]);
+  }, [focus, language]);
 
   return <>
-    <p id="map-keyboard-help" className="jr-note">Keyboard: focus the map, use arrow keys to move, + or − to zoom, and Enter to select the center. Or choose an example below.</p>
-    <div ref={el} className="map" role="region" aria-label="Choose your field on the map" aria-describedby="map-keyboard-help" />
+    <p id="map-keyboard-help" className="jr-note">{t("Keyboard: focus the map, use arrow keys to move, + or − to zoom, and Enter to select the center. Or choose an example below.")}</p>
+    <div ref={el} className="map" role="region" aria-label={t("Map: tap your field")} aria-describedby="map-keyboard-help" />
   </>;
 }

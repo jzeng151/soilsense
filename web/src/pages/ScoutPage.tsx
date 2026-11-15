@@ -1,3 +1,4 @@
+import { useI18n } from "../i18n";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -83,6 +84,7 @@ interface Props {
 }
 
 export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props) {
+  const { t: tx, text: localize, language } = useI18n();
   const transport = useMemo(() => new DefaultChatTransport({ api: "/api/scout/chat", fetch: authFetch }), []);
   const { messages, sendMessage, status, error, stop, regenerate, clearError } = useChat({ id: chatId, messages: initialMessages, transport });
   const [input, setInput] = useState("");
@@ -174,7 +176,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
       return;
     }
     const rec = new Ctor();
-    rec.lang = "en-US";
+    rec.lang = language === "es" ? "es-US" : "en-US";
     rec.interimResults = true;
     rec.onresult = (e) => setInput(Array.from(e.results).map((r) => r[0]?.transcript ?? "").join(""));
     rec.onend = () => setListening(false);
@@ -193,7 +195,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
       }}
     >
       <div className="sc-plus-wrap">
-        <button type="button" className="sc-icon-btn" aria-label="Quick actions" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}>
+        <button type="button" className="sc-icon-btn" aria-label={tx("Quick actions")} aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 5v14M5 12h14" />
           </svg>
@@ -208,12 +210,12 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
                   onClick={() => {
                     setMenuOpen(false);
                     if (a.prompt.endsWith(" ")) {
-                      setInput(a.prompt);
+                      setInput(localize(a.prompt));
                       inputRef.current?.focus();
-                    } else send(a.prompt);
+                    } else send(localize(a.prompt));
                   }}
                 >
-                  {a.label}
+                  {localize(a.label)}
                 </button>
               </li>
             ))}
@@ -224,8 +226,8 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
         ref={inputRef}
         rows={1}
         value={input}
-        placeholder="Ask Sprout about your field"
-        aria-label="Message Sprout"
+        placeholder={tx("Ask Sprout about your field")}
+        aria-label={tx("Message Sprout")}
         maxLength={4000}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
@@ -235,11 +237,11 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
           }
         }}
       />
-      <span className="sc-model" title={model?.fallback ? `Backup: ${model.fallback}` : "AI model"}>
+      <span className="sc-model" title={model?.fallback ? tx("Backup: {model}", { model: model.fallback }) : tx("AI model")}>
         {model?.model ? (model.provider === "workers-ai" ? `Cloudflare Workers AI · ${model.model.replace(/^@cf\/[^/]+\//, "")}` : model.model) : "Sprout"}
       </span>
       {micSupported && (
-        <button type="button" className={`sc-icon-btn ${listening ? "rec" : ""}`} aria-label={listening ? "Stop dictation" : "Dictate"} onClick={toggleMic}>
+        <button type="button" className={`sc-icon-btn ${listening ? "rec" : ""}`} aria-label={listening ? tx("Stop dictation") : tx("Dictate")} onClick={toggleMic}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <rect x="9" y="3" width="6" height="11" rx="3" />
             <path d="M5 11a7 7 0 0014 0M12 18v3" />
@@ -247,13 +249,13 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
         </button>
       )}
       {busy ? (
-        <button type="button" className="sc-send" aria-label="Stop" onClick={() => void stop()}>
+        <button type="button" className="sc-send" aria-label={tx("Stop")} onClick={() => void stop()}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <rect x="7" y="7" width="10" height="10" rx="1.5" fill="currentColor" />
           </svg>
         </button>
       ) : (
-        <button type="submit" className="sc-send" aria-label="Send" disabled={!input.trim()}>
+        <button type="submit" className="sc-send" aria-label={tx("Send")} disabled={!input.trim()}>
           {input.trim() ? (
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 19V5M5 12l7-7 7 7" />
@@ -273,7 +275,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
   return (
     <div className="scout">
       <header className="sc-top">
-        <button type="button" className="sc-icon-btn sc-menu-btn" aria-label="Open sidebar" onClick={onMenu}>
+        <button type="button" className="sc-icon-btn sc-menu-btn" aria-label={tx("Open sidebar")} onClick={onMenu}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 7h16M4 12h16M4 17h16" />
           </svg>
@@ -282,31 +284,29 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
           <LogoMark size={28} />
           Sprout
         </span>
-        {model && !model.configured && <span className="sc-warn">AI model not set up</span>}
+        {model && !model.configured && <span className="sc-warn">{tx("AI model not set up")}</span>}
       </header>
 
-      {model?.research === "unavailable" && <p className="sc-research-state" role="status">Research unavailable: retrieval bindings are not configured. No research citations can be verified until search is available.</p>}
+      {model?.research === "unavailable" && <p className="sc-research-state" role="status">{tx("Research unavailable: retrieval bindings are not configured. No research citations can be verified until search is available.")}</p>}
 
       {empty ? (
         <div className="sc-hero">
           <Sprout mood="hello" width={128} />
-          <h1>Hi, I'm Sprout. What's growing on your field?</h1>
-          <p className="sc-lead">Ask about any US field. I read 35 years of NASA data so you don't have to.</p>
+          <h1>{tx("Hi, I'm Sprout. What's growing on your field?")}</h1>
+          <p className="sc-lead">{tx("Ask about any US field. I read 35 years of NASA data so you don't have to.")}</p>
           {composer}
           <ul className="sc-suggest">
             {SUGGESTIONS.map((s) => (
               <li key={s.text}>
-                <button type="button" onClick={() => send(s.text)}>
+                <button type="button" onClick={() => send(localize(s.text))}>
                   <Icon name={s.icon} />
-                  <span>{s.text}</span>
+                  <span>{localize(s.text)}</span>
                 </button>
               </li>
             ))}
           </ul>
           {model && !model.configured && (
-            <p className="sc-note">
-              Sprout needs the Workers AI binding or a Gemini API key (<code>GEMINI_API_KEY</code> in <code>.dev.vars</code>). Restart the dev server after adding it.
-            </p>
+            <p className="sc-note">{tx("Sprout needs the Workers AI binding or a Gemini API key (GEMINI_API_KEY in .dev.vars). Restart the dev server after adding it.")}</p>
           )}
         </div>
       ) : (
@@ -328,29 +328,27 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
                 <span className="dot" />
                 <span className="dot" />
                 <span className="dot" />
-                <span className="sc-thinking-text">Sprout is checking the NASA data…</span>
+                <span className="sc-thinking-text">{tx("Sprout is checking the NASA data…")}</span>
               </div>
             )}
             {error && (
               <div className="sc-msg sc-bot sc-err">
                 <p>{errorText(error)}</p>
-                <button type="button" className="sc-retry" onClick={() => void regenerate()}>
-                  Try again
-                </button>
+                <button type="button" className="sc-retry" onClick={() => void regenerate()}>{tx("Try again")}</button>
               </div>
             )}
           </div>
           </div>
           <div className="sc-dock">
             {showJump && (
-              <button type="button" className="sc-jump" aria-label="Scroll to latest" onClick={() => { pinned.current = true; setShowJump(false); toBottom(true); }}>
+              <button type="button" className="sc-jump" aria-label={tx("Scroll to latest")} onClick={() => { pinned.current = true; setShowJump(false); toBottom(true); }}>
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M12 5v14M5 12l7 7 7-7" />
                 </svg>
               </button>
             )}
             {composer}
-            <p className="sc-disclaimer">Sprout can make mistakes. Check the numbers in your plan before acting on them.</p>
+            <p className="sc-disclaimer">{tx("Sprout can make mistakes. Check the numbers in your plan before acting on them.")}</p>
           </div>
         </>
       )}

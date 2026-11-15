@@ -27,11 +27,11 @@ const PRIORITY_WORDS: Record<Priority, { en: string; es: string }> = {
 
 const CROP_ES: Record<CropId, string> = {
   corn: "maíz",
-  soybean: "soya",
+  soybean: "soja",
   winter_wheat: "trigo de invierno",
   oats: "avena",
   alfalfa: "alfalfa",
-  sorghum: "sorgo",
+  sorghum: "sorgo de grano",
   fallow: "barbecho (sin cultivo)",
 };
 
@@ -211,7 +211,8 @@ function planSentenceEn(plan: RotationPlan): string {
 }
 
 function planSentenceEs(plan: RotationPlan): string {
-  return plan.years.map((y) => `${CROP_ES[y.crop]} en ${y.year}`).join(", luego ");
+  const covers = { cereal_rye: "centeno", crimson_clover: "trébol encarnado", hairy_vetch: "veza vellosa", none: "" };
+  return plan.years.map((y) => `${CROP_ES[y.crop]} en ${y.year}${y.cover !== "none" ? ` con ${covers[y.cover]} como cobertura invernal` : ""}`).join(", luego ");
 }
 
 export function buildExplanation(args: {
@@ -225,7 +226,9 @@ export function buildExplanation(args: {
 }): { summary: string; speech: string; sms: string } {
   const { plans, climate, facts, priority, currentPractice } = args;
   const top = plans[0];
-  if (!top) return { summary: "No feasible rotation found.", speech: "Sorry, I could not build a plan for this location.", sms: "SoilSense: no plan available." };
+  if (!top) return args.language === "es"
+    ? { summary: "No se encontró una rotación viable.", speech: "No pude preparar un plan para esta ubicación.", sms: "SoilSense: no hay un plan disponible." }
+    : { summary: "No feasible rotation found.", speech: "Sorry, I could not build a plan for this location.", sms: "SoilSense: no plan available." };
 
   const sigTrends = climate.indicators.filter((i) => isSignificant(i.trend));
   const keyTrend = sigTrends.find((i) => ["hot_days", "gs_rain", "spring_rain", "dry_spell"].includes(i.id)) ?? sigTrends[0];
@@ -245,7 +248,7 @@ export function buildExplanation(args: {
     return {
       summary: speech,
       speech,
-      sms: `SoilSense: ${top.years.map((y) => `${y.year} ${CROP_ES[y.crop]}`).join(", ")}. Basado en datos NASA ${climate.firstYear}-${climate.lastYear}. Confirme con su agente de extension.`,
+      sms: `SoilSense: ${top.years.map((y) => `${y.year} ${CROP_ES[y.crop]}`).join(", ")}. Basado en datos NASA ${climate.firstYear}-${climate.lastYear}. Confirme con su agente de extensión.`,
     };
   }
 

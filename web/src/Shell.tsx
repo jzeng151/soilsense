@@ -1,3 +1,4 @@
+import { useI18n } from "./i18n";
 import { useCallback, useEffect, useState } from "react";
 import { App } from "./App";
 import { DocsAdmin } from "./components/DocsAdmin";
@@ -58,6 +59,7 @@ export function Shell() {
 }
 
 function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSignedIn: (u: User) => void; onSignOut: () => void }) {
+  const { t: tx } = useI18n();
   const [route, setRoute] = useState<WorkspaceRoute>(routeFromHash);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const ownerId = user?.id ?? GUEST_ID;
@@ -138,7 +140,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
           )
         ) : (
           <>
-            <button type="button" className="sb-toggle" aria-label="Open sidebar" onClick={() => setSidebarOpen(true)}>
+            <button type="button" className="sb-toggle" aria-label={tx("Open sidebar")} onClick={() => setSidebarOpen(true)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4 7h16M4 12h16M4 17h16" />
               </svg>

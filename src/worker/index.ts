@@ -1,5 +1,8 @@
 // SoilSense Worker: JSON API for the dashboard, Twilio voice webhooks, and static dashboard assets.
 
+import { imergRefresh } from "./refresh/imerg-routes";
+import { startImergRefresh } from "./refresh/imerg-workflow";
+export { ImergRefreshWorkflow } from "./refresh/imerg-workflow";
 import { Hono } from "hono";
 import type { Env } from "./env";
 import { api } from "./routes/api";
@@ -32,6 +35,7 @@ app.route("/api/admin", admin);
 // Live room (Durable Object): real-time events for the dashboard. Mounted before /api so it isn't shadowed.
 app.route("/api/live", live);
 // NASA POWER snapshot refresh (Workflow) status, evidence manifests and the admin-only trigger.
+app.route("/api/refresh/imerg", imergRefresh);
 app.route("/api/refresh", refresh);
 app.route("/api", api);
 app.route("/voice", voice);
@@ -51,6 +55,7 @@ app.onError((err, c) => {
 async function scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
   // Daily NASA POWER snapshot refresh (separate cron): start the Workflow instead of a Field Watch run.
   if (controller.cron === POWER_REFRESH_CRON) {
+    if (env.IMERG_REFRESH) ctx.waitUntil(startImergRefresh(env, "cron").catch(() => console.error(JSON.stringify({ msg: "IMERG refresh start failed" }))));
     ctx.waitUntil(startPowerRefresh(env, "cron").catch((err) => console.error(JSON.stringify({ msg: "power refresh start failed", err: String(err) }))));
     return;
   }

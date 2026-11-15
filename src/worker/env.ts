@@ -1,4 +1,8 @@
 export interface Env {
+  /** Earthdata bearer credential; server-side only. */
+  EARTHDATA_TOKEN?: string;
+  /** Independent second-product Workflow on the existing daily refresh cron. */
+  IMERG_REFRESH?: Workflow<{ trigger?: "cron" | "manual" }>;
   ASSETS?: Fetcher;
   DB?: D1Database;
   AI?: Ai;

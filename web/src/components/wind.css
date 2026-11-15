@@ -6,7 +6,7 @@
 }
 .wind-small {
   font-size: 0.78rem;
-  opacity: 0.85;
+  color: var(--color-muted);
 }
 .wind-h3 {
   font-size: 1rem;

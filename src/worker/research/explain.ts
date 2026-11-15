@@ -89,7 +89,7 @@ export function comparisonKeyParts(plan: PlanResponse, rotation: RotationPlan, f
   return {
     field: `${req.lat.toFixed(4)},${req.lon.toFixed(4)}`,
     evidence: `${plan.climate.firstYear}-${plan.climate.lastYear}:${fnv1a(JSON.stringify(facts.map((f) => [f.id, f.rotationId, f.value, f.display])) + JSON.stringify(plan.facts.map((f) => [f.id, f.text])))}`,
-    scenario: `water=${water};recent=${(req.recentCrops ?? []).join(",")}`,
+    scenario: `water=${water};recent=${(req.recentCrops ?? []).join(",")}${req.goals?.length ? `;goals=${req.goals.join(",")}` : ""}`,
     rotation: rotationSignature(rotation),
     priority: req.priority,
     scoring: scoringVersion,

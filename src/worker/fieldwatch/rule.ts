@@ -310,10 +310,7 @@ export function evaluateField(input: {
   if (kansas) {
     reasons.push({
       id: "kansas",
-      text:
-        `Kansas weekly outlook for ${kansas.county} (data through ${kansas.dataThrough}, context only): alert "${kansas.alert}"` +
-        `${kansas.droughtProbability !== null ? `, ${Math.round(kansas.droughtProbability * 100)}% chance of drought in 4 weeks` : ""}` +
-        `${kansas.rootzonePct !== null ? `, root zone ${ordinal(Math.round(kansas.rootzonePct))} percentile` : ""}.`,
+      text: `Kansas weekly outlook for ${kansas.county} (data through ${kansas.dataThrough}, context only): alert "${kansas.alert}".`,
       source: "Kansas Crop Rotation Advice pipeline (V. Pisharody, team): NASA POWER + U.S. Drought Monitor",
     });
   }

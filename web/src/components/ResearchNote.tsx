@@ -16,7 +16,7 @@ export function ResearchNote({ note }: { note?: FieldResearchNote }) {
         <p>No matching research is available for this run. {note.reason}</p>
       ) : note.passages.slice(0, 2).map((p) => (
         <figure key={p.chunkId} style={{ margin: "0.75rem 0" }}>
-          <blockquote cite={p.sourceUrl} style={{ margin: "0.5rem 0", paddingLeft: "0.75rem", borderLeft: "2px solid currentColor" }}>{p.text}</blockquote>
+          <blockquote cite={p.sourceUrl} style={{ whiteSpace: "pre-line", margin: "0.5rem 0", paddingLeft: "0.75rem", borderLeft: "2px solid currentColor" }}>{p.text}</blockquote>
           <figcaption>
             <a href={p.sourceUrl} target="_blank" rel="noopener noreferrer">{p.sourceTitle}</a> ({p.year})
             <p><strong>Applicability:</strong> {p.applicability}</p>

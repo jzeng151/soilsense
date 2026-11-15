@@ -2,6 +2,7 @@
 // recommended dryland rotations per county from NASA POWER weather, refreshed weekly and published as one JSON file
 // on Cloudflare R2. We read it server-side, cache it, and never let it affect or break the plan.
 
+import savedFile from "../../../kansas-crop-rotation/data/app_rotation_advice.json";
 import type { CropId, KStateRotation, SecondOpinion } from "../../shared/types";
 import { cached } from "../lib/cache";
 import { fetchJson } from "../lib/http";
@@ -53,15 +54,22 @@ function toRotation(r: RawRotation): KStateRotation {
   return { rank: r.rank, code: r.code, name: r.name, weightPct: r.weight_pct, crops: rotationCrops(r.code), note: r.note ?? null };
 }
 
-let fileMemo: { at: number; file: Promise<RawFile> } | null = null;
+interface LoadedFile { file: RawFile; savedCopy: boolean }
+let fileMemo: { at: number; file: Promise<LoadedFile> } | null = null;
 
-function loadFile(): Promise<RawFile> {
+function loadFile(): Promise<LoadedFile> {
   if (fileMemo && Date.now() - fileMemo.at < TTL_SECONDS * 1000) return fileMemo.file;
-  const file = fetchJson<RawFile>(KSTATE_URL, { service: "K-State rotation file (R2)", timeoutMs: 8000, retries: 1 });
+  const file = fetchJson<RawFile>(KSTATE_URL, { service: "K-State rotation file (R2)", timeoutMs: 8000, retries: 1 })
+    .then((live): LoadedFile => {
+      if (!Array.isArray(live?.counties) || typeof live.data_through !== "string" || typeof live.disclaimer !== "string")
+        throw new Error("unexpected Kansas rotation file shape");
+      return { file: live, savedCopy: false };
+    })
+    .catch((err): LoadedFile => {
+      console.warn(JSON.stringify({ msg: "kstate using saved copy", dataThrough: savedFile.data_through, err: String(err) }));
+      return { file: savedFile, savedCopy: true };
+    });
   fileMemo = { at: Date.now(), file };
-  file.catch(() => {
-    fileMemo = null;
-  });
   return file;
 }
 
@@ -83,17 +91,22 @@ export function toSecondOpinion(file: RawFile, fips: string): SecondOpinion | nu
     alert: c.alert,
     droughtChanceNow: typeof c.drought_probability_now === "number" ? c.drought_probability_now : null,
     rootzonePctNow: typeof c.rootzone_pct_now === "number" ? c.rootzone_pct_now : null,
-    dryYearRanking: c.alert !== "normal",
+    basis: c.basis ?? null,
+    dryYearRanking: c.basis ? c.basis.startsWith("dry-year") : c.alert !== "normal",
     rotations: c.rotations.map(toRotation),
     byCurrentCrop,
   };
 }
 
-/** The county's second opinion, or null when outside Kansas, not in the file, or the file is unreachable. Never throws. */
+/** The county's second opinion (bundled saved copy if R2 is unreachable), or null outside the file. Never throws. */
 export async function getSecondOpinion(db: D1Database | undefined, fips: string): Promise<SecondOpinion | null> {
   if (!/^20\d{3}$/.test(fips)) return null;
   try {
-    const { value } = await cached(db, `kstate:v1:${fips}`, TTL_SECONDS, async () => toSecondOpinion(await loadFile(), fips));
+    const { value } = await cached(db, `kstate:v2:${fips}`, TTL_SECONDS, async () => {
+      const loaded = await loadFile();
+      const opinion = toSecondOpinion(loaded.file, fips);
+      return opinion ? { ...opinion, savedCopy: loaded.savedCopy } : null;
+    });
     return value;
   } catch (err) {
     console.warn(JSON.stringify({ msg: "kstate second opinion unavailable", fips, err: String(err) }));

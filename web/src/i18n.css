@@ -1,0 +1,40 @@
+/* The shell normally hides the planner's duplicate brand bar. Keep it visible
+   because it now contains the planner's language controls. */
+.shell .app.jr > .topbar { display: flex; }
+
+.language-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+.language-switch button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid currentColor;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+.language-switch button[aria-pressed="true"] {
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+.language-switch button:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+/* Spanish comparison labels are longer; let badges and grid tracks wrap. */
+.jr .delta { white-space: normal; }
+.jr-main { grid-template-columns: minmax(0, 1fr); }
+.jr-main > section { min-width: 0; }
+
+@media (max-width: 700px) {
+  .topbar { flex-wrap: wrap; gap: 0.5rem; }
+  .topbar .topbar-tag { flex-basis: 100%; order: 2; }
+  .language-switch { margin-inline-start: auto; }
+}

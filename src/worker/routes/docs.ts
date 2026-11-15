@@ -4,13 +4,21 @@ import { DOCS_LAYOUT, REVIEW_EVENT, docIdFromKey, type ReviewDecision } from "..
 import type { Env } from "../env";
 import { acceptedKey } from "../ingest/queue";
 import { sha256Hex } from "../ingest/hash";
-import { getChunks, getDoc } from "../ingest/store";
+import { getChunks, getDoc, getReviewChunks } from "../ingest/store";
 import { isResearchTag } from "../research/config";
 
 /** Used again inside the Workflow: even directly sent events must pass the human-review contract. */
-export function validReview(value: unknown): value is ReviewDecision {
+export function validReview(value: unknown, currentChunkIds?: readonly string[]): value is ReviewDecision {
   if (!value || typeof value !== "object") return false;
   const r = value as ReviewDecision;
+  if (r.excludeChunkIds !== undefined) {
+    if (!Array.isArray(r.excludeChunkIds) || !r.excludeChunkIds.every((id) => typeof id === "string" && id.length > 0 && id.length <= 200)
+      || new Set(r.excludeChunkIds).size !== r.excludeChunkIds.length) return false;
+    if (currentChunkIds) {
+      const current = new Set(currentChunkIds);
+      if (!r.excludeChunkIds.every((id) => current.has(id))) return false;
+    }
+  }
   if (typeof r.reviewer !== "string" || !r.reviewer.trim() || r.reviewer.length > 300 || (r.note !== undefined && (typeof r.note !== "string" || r.note.length > 4000))) return false;
   if (r.decision === "reject") return true;
   if (r.decision !== "approve" || !r.source || !Array.isArray(r.crops) || !r.crops.length || r.crops.length > 8 || !r.crops.every(isResearchTag) || new Set(r.crops).size !== r.crops.length) return false;
@@ -62,7 +70,11 @@ docs.get("/:docId", async (c) => {
   const doc = await getDoc(c.env.DB, c.req.param("docId"));
   if (!doc) return c.json({ error: "Document not found" }, 404);
   const versions = await c.env.DB.prepare("SELECT * FROM ingest_doc_versions WHERE doc_id=? ORDER BY received_at DESC").bind(doc.doc_id).all();
-  return c.json({ doc, versions: versions.results, chunks: await getChunks(c.env.DB, doc.doc_id) });
+  if (doc.status === "pending_review" && !c.env.DOCS) return c.json({ error: "DOCS binding required for current review chunks" }, 503);
+  const chunks = doc.status === "pending_review"
+    ? await getReviewChunks(c.env.DB, c.env.DOCS!, doc)
+    : await getChunks(c.env.DB, doc.doc_id);
+  return c.json({ doc, versions: versions.results, chunks });
 });
 docs.post("/:docId/review", bodyLimit({ maxSize: 32 * 1024 }), async (c) => {
   if (!c.env.DB || !c.env.DOC_INGEST) return c.json({ error: "DB and DOC_INGEST bindings required" }, 503);
@@ -71,6 +83,11 @@ docs.post("/:docId/review", bodyLimit({ maxSize: 32 * 1024 }), async (c) => {
   const doc = await getDoc(c.env.DB, c.req.param("docId"));
   if (!doc) return c.json({ error: "Document not found" }, 404);
   if (doc.status !== "pending_review" || !doc.workflow_id) return c.json({ error: "Document is not waiting for review" }, 409);
+  if (payload.excludeChunkIds?.length) {
+    if (!c.env.DOCS) return c.json({ error: "DOCS binding required to validate exclusions" }, 503);
+    const chunks = await getReviewChunks(c.env.DB, c.env.DOCS, doc);
+    if (!validReview(payload, chunks.map((chunk) => chunk.chunk_id))) return c.json({ error: "Excluded chunk ids must belong to this document's current version" }, 400);
+  }
   const instance = await c.env.DOC_INGEST.get(doc.workflow_id);
   await instance.sendEvent({ type: REVIEW_EVENT, payload });
   return c.json({ ok: true, docId: doc.doc_id, workflowId: doc.workflow_id, decision: payload.decision }, 202);

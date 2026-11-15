@@ -150,7 +150,7 @@ export function ScoutMessage({ message, streaming }: { message: UIMessage; strea
       {citations?.passages.map(p => (
         <details className="sc-research-quote" key={p.citationId}>
           <summary>[{p.citationId}] {p.sourceTitle} ({p.year}) — show verbatim passage</summary>
-          <blockquote>{p.text}</blockquote>
+          <blockquote style={{ whiteSpace: "pre-line" }}>{p.text}</blockquote>
           <p><a href={p.sourceUrl} target="_blank" rel="noreferrer">{p.publisher ?? p.attribution} · {p.year} · Open source</a></p>
           <p><strong>Applicability:</strong> {p.applicability}</p>
         </details>

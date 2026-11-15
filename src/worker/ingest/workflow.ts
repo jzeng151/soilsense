@@ -47,11 +47,11 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
       if (await sha256Hex(bytes) !== read.sha) throw new Error("Upload changed during extraction; await its new notification");
       const result = await extractText(env.AI, bytes, params.key, read.contentType);
       if (!result.text.trim()) throw new Error("Document has no extractable text");
-      const key = DOCS_LAYOUT.extracted(read.sha);
-      await bucket.put(key, result.text, { httpMetadata: { contentType: "text/markdown; charset=utf-8" } });
+      const key = DOCS_LAYOUT.extracted(read.sha, docId);
+      await bucket.put(key, result.text, { httpMetadata: { contentType: "text/plain; charset=utf-8" } });
       await saveVersion(db, { id: docId, sha: read.sha, size: read.size, contentType: read.contentType, method: result.method, extractedKey: key, chars: result.text.length, receivedAt: params.eventTime });
       await setStatus(db, docId, instanceId, "extracted");
-      return { method: result.method, key, chars: result.text.length };
+      return { method: result.method, key, chars: result.text.length, converterPreamble: result.converterPreamble ?? { removed: false, chars: 0 }, plainTextConversion: result.plainTextConversion ?? null };
     });
     // Large text/embedding arrays stay in R2/D1, not Workflow step outputs (1 MiB limit).
     const loadChunks = async () => {
@@ -79,7 +79,9 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
     });
     const manifest = async (status: string, review?: ReviewDecision) => {
       const chunks = await loadChunks();
-      await bucket.put(DOCS_LAYOUT.manifest(read.sha), JSON.stringify({ docId, sha256: read.sha, key: params.key, ingestVersion: INGEST_VERSION, extraction: extraction.method, extractedKey: extraction.key, status, source: review?.source ?? null, review: review ?? null, chunks, diff: plan }), { httpMetadata: { contentType: "application/json" } });
+      const excluded = new Set(review?.decision === "approve" ? review.excludeChunkIds ?? [] : []);
+      const reviewedChunks = chunks.map((chunk) => ({ ...chunk, status: excluded.has(chunk.id) ? "excluded" : status === "indexed" ? "indexed" : "pending" }));
+      await bucket.put(DOCS_LAYOUT.manifest(read.sha, docId), JSON.stringify({ docId, sha256: read.sha, key: params.key, ingestVersion: INGEST_VERSION, extraction: extraction.method, converterPreamble: extraction.converterPreamble, plainTextConversion: extraction.plainTextConversion, extractedKey: extraction.key, status, source: review?.source ?? null, review: review ?? null, chunks: reviewedChunks, diff: plan }), { httpMetadata: { contentType: "application/json" } });
     };
     await step.do("pending review", IO, async () => {
       await assertCurrent(db, docId, instanceId);
@@ -91,7 +93,7 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
     try {
       // Installed workers-types: waitForEvent(name, {type, timeout}) -> WorkflowStepEvent<T>.
       const event = await step.waitForEvent("review", { type: REVIEW_EVENT, timeout: REVIEW_TIMEOUT });
-      if (!validReview(event.payload)) throw new Error("Invalid review event");
+      if (!validReview(event.payload, plan.ids)) throw new Error("Invalid review event or foreign chunk exclusions");
       review = event.payload.decision === "reject"
         ? { decision: "reject", reviewer: event.payload.reviewer, ...(event.payload.note !== undefined ? { note: event.payload.note } : {}) }
         : event.payload;
@@ -103,7 +105,7 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
       });
       return { outcome: "error", docId };
     }
-    if (!validReview(review)) throw new Error("Invalid review event");
+    if (!validReview(review, plan.ids)) throw new Error("Invalid review event");
     await step.do("record review", IO, async () => {
       await assertCurrent(db, docId, instanceId);
       await recordReview(db, docId, instanceId, review);
@@ -113,6 +115,7 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
     if (review.decision === "reject") return { outcome: "rejected", docId };
     if (!env.AI || !env.RESEARCH_INDEX) throw new Error("AI and RESEARCH_INDEX bindings required");
     const ai = env.AI, index = env.RESEARCH_INDEX, crops = review.crops!;
+    const excluded = new Set(review.excludeChunkIds ?? []);
     // Bound step count for multi-megabyte uploads. A failed batch replays stable vector ids / SQL upserts.
     for (let offset = 0; offset < plan.ids.length; offset += 64) {
       const ids = plan.ids.slice(offset, offset + 64);
@@ -123,6 +126,14 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
         for (const id of ids) {
           const chunk = chunks.get(id)!;
           const oldIds = JSON.parse(existing.get(id)?.vector_ids_json ?? "[]") as string[];
+          if (excluded.has(id)) {
+            // A kept chunk may still have vectors from the previous approved version.
+            // Delete before clearing their durable ids, so a retry can finish deletion.
+            await assertCurrent(db, docId, instanceId);
+            if (oldIds.length) await index.deleteByIds(oldIds);
+            await chunkStatement(db, chunk, "excluded", []).run();
+            continue;
+          }
           // Kept chunks retain embeddings, but refresh version metadata and reviewer-selected crop tags.
           const old = oldIds.length ? await index.getByIds(oldIds) : [];
           const values = old[0]?.values ?? (await embed(ai, [chunk.text], env.AI_GATEWAY_ID))[0]!;
@@ -162,7 +173,7 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
       await recordError(db, docId, params.key, instanceId, message);
       const current = await getDoc(db, docId);
       if (current?.workflow_id === instanceId && current.latest_sha256) {
-        const key = DOCS_LAYOUT.manifest(current.latest_sha256);
+        const key = DOCS_LAYOUT.manifest(current.latest_sha256, docId);
         const saved = await bucket.get(key);
         if (saved) {
           const manifest = JSON.parse(await saved.text()) as Record<string, unknown>;

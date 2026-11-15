@@ -370,13 +370,14 @@ function MainFlow() {
         </div>
         <span className="topbar-tag">{t("Teaching satellites to speak Farmer")}</span>
         <div role="group" aria-label={t("Language")} className="language-switch">
-          <button type="button" lang="en" aria-label="English" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>EN</button>
+          {/* WCAG 2.5.3: the accessible name starts with the visible "EN"/"ES", so voice users can say what they see. */}
+          <button type="button" lang="en" aria-label="EN English" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>EN</button>
           <span aria-hidden="true"> / </span>
-          <button type="button" lang="es" aria-label="Español" aria-pressed={language === "es"} onClick={() => setLanguage("es")}>ES</button>
+          <button type="button" lang="es" aria-label="ES Español" aria-pressed={language === "es"} onClick={() => setLanguage("es")}>ES</button>
         </div>
       </header>
 
-      <main className="jr-main" ref={top} tabIndex={-1} aria-label="Crop rotation planner">
+      <main className="jr-main" ref={top} tabIndex={-1} aria-label={t("Crop rotation planner")}>
         <Progress step={step} canGo={canGo} go={go} />
         <Glossary />
 
@@ -404,7 +405,10 @@ function MainFlow() {
                 {t("📍 Use my location")}
               </button>
             </div>
-            {zipMsg && <p className="jr-note">{t(zipMsg.key, zipMsg.values)}</p>}
+            {/* WCAG 4.1.3: ZIP lookup results are announced to screen readers. */}
+            <p className="jr-note" role="status">
+              {zipMsg && t(zipMsg.key, zipMsg.values)}
+            </p>
 
             <p className="jr-tap">{t("Then tap your field on the map.")}</p>
             <MapPicker point={point} onPick={pick} focus={focus} />
@@ -524,7 +528,7 @@ function MainFlow() {
               <legend>
                 <span className="jr-qn">3</span> {t("What matters most to you?")}
               </legend>
-              <div className="jr-tiles jr-tiles-2" role="group" aria-label="Your priority">
+              <div className="jr-tiles jr-tiles-2" role="group" aria-label={t("Your priority")}>
                 {PRIORITIES.map((p) => (
                   <button key={p.id} type="button" aria-pressed={priority === p.id} className={priority === p.id ? "on" : ""} onClick={() => setPriority(p.id)}>
                     <b>{t(p.label)}</b>

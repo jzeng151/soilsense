@@ -1,5 +1,15 @@
 /** Fixed UI copy. Source titles, quotations and identifiers keep their original wording. */
 export const cardMessages = {
+  "Skip to main content": "Saltar al contenido principal",
+  "Crop rotation planner": "Planificador de rotaciones de cultivos",
+  "Your priority": "Tu prioridad",
+  "Year": "Año",
+  "Show these numbers as a table": "Mostrar estos valores en una tabla",
+  "{crop}: real county harvest and model estimate by year": "{crop}: cosecha real del condado y estimación del modelo por año",
+  "Real county harvest": "Cosecha real del condado",
+  " (one of the 5 worst)": " (uno de los 5 peores)",
+  "speaking ": "habla en ",
+  "{label}, {start} to {end}. {trend}. Lowest {low} {unit} in {lowYear}, highest {high} {unit} in {highYear}.": "{label}, de {start} a {end}. {trend}. Mínimo de {low} {unit} en {lowYear}, máximo de {high} {unit} en {highYear}.",
   "Water conservation": "Conservación del agua",
   "Prefer lower modeled pumping; most useful with irrigation": "Favorecer una menor extracción estimada; más útil con riego",
   "Nitrogen fixation": "Fijación de nitrógeno",

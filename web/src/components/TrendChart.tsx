@@ -21,6 +21,17 @@ export function trendText(ind: ClimateIndicator, language: Language = "en"): str
   return translate(language, "{direction} {number} {unit} every 10 years", { direction: translate(language, tone === "up" ? "Up" : "Down"), number: n, unit });
 }
 
+/** WCAG 1.1.1: what the chart shows, in words (trend plus the lowest and highest years). */
+function describe(ind: ClimateIndicator, language: Language): string {
+  const ys = ind.values;
+  const xs = ind.years;
+  if (!ys.length) return ind.label;
+  const iMin = ys.indexOf(Math.min(...ys));
+  const iMax = ys.indexOf(Math.max(...ys));
+  const f = (n: number) => (Math.abs(n) >= 100 ? Math.round(n) : Math.round(n * 10) / 10);
+  return translate(language, "{label}, {start} to {end}. {trend}. Lowest {low} {unit} in {lowYear}, highest {high} {unit} in {highYear}.", { label: translateKnown(language, ind.label), start: xs[0]!, end: xs[xs.length - 1]!, trend: trendText(ind, language), low: f(ys[iMin]!), unit: translateKnown(language, ind.unit), lowYear: xs[iMin]!, high: f(ys[iMax]!), highYear: xs[iMax]! });
+}
+
 export function TrendChart({ ind }: { ind: ClimateIndicator }) {
   const { t: tx, text: localize, language } = useI18n();
   const xs = ind.years;
@@ -46,7 +57,7 @@ export function TrendChart({ ind }: { ind: ClimateIndicator }) {
         <span className="trend-title">{localize(ind.label)}</span>
         <span className={`badge badge-${tone}`}>{trendText(ind, language)}</span>
       </figcaption>
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={tx("{label}, {start} to {end}. {trend}.", { label: localize(ind.label), start: x0, end: x1, trend: trendText(ind, language) })}>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={describe(ind, language)}>
         {[lo, hi].map((tk) => (
           <g key={tk}>
             <line x1={PAD.l} x2={W - PAD.r} y1={Y(tk)} y2={Y(tk)} className="grid" />

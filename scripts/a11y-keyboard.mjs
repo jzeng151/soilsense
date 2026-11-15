@@ -10,7 +10,15 @@ try {
     page.setDefaultTimeout(180000);
     await page.goto(base);
     await page.locator('.leaflet-container').waitFor();
+    // WCAG 2.4.1: the skip link is the first Tab stop and moves focus to the main content.
+    await page.keyboard.press('Tab');
+    assert.equal(await page.getByRole('link',{name:'Skip to main content'}).evaluate(e=>e===document.activeElement),true,'Skip link is the first Tab stop');
+    await page.keyboard.press('Enter');
+    assert.equal(await page.evaluate(()=>document.activeElement?.id),'content','Skip link focuses the main content');
+    await page.goto(base);
+    await page.locator('.leaflet-container').waitFor();
     if (width === 375) {
+      await page.keyboard.press('Tab');
       await page.keyboard.press('Tab');
       await page.keyboard.press('Enter');
       await page.getByRole('button',{name:'Close navigation'}).waitFor();
@@ -30,7 +38,7 @@ try {
       order.push(await page.evaluate(()=>({tag:document.activeElement.tagName,text:(document.activeElement.textContent||document.activeElement.getAttribute('aria-label')||'').trim().slice(0,90)})));
       if(await page.getByRole('button',{name:'Kansas',exact:true}).evaluate(e=>e===document.activeElement)) break;
     }
-    if (width === 375) assert.equal(order[0].text,'Open sidebar','Collapsed phone navigation must not receive focus');
+    if (width === 375) assert.equal(order[0].text,'Skip to main content','Skip link comes first'), assert.equal(order[1].text,'Open sidebar','Collapsed phone navigation must not receive focus');
     assert.equal(await page.getByRole('button',{name:'Kansas',exact:true}).evaluate(e=>e===document.activeElement),true,'Kansas reachable by Tab');
     await page.keyboard.press('Enter');
     await page.getByRole('button',{name:'Yes, this is my field'}).waitFor();

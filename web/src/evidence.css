@@ -122,3 +122,9 @@
 .so-current p { margin: 0; }
 .so-current .so-msg { margin-top: 0.2rem; color: var(--color-text-2); }
 .jr-warn { color: var(--color-warning); font-weight: 600; }
+/* "Show as table": text alternative for the harvest chart (WCAG 1.1.1). */
+.vd-table { margin: 0.35rem 0 0.6rem; font-size: var(--text-sm); }
+.vd-table summary { cursor: pointer; color: var(--color-primary); font-weight: 600; }
+.vd-table table { border-collapse: collapse; margin-top: 0.4rem; width: 100%; max-width: 30rem; }
+.vd-table th, .vd-table td { text-align: left; padding: 0.2rem 0.6rem 0.2rem 0; border-bottom: 1px solid var(--color-border); font-variant-numeric: tabular-nums; }
+.vd-table thead th { color: var(--color-muted); font-weight: 600; }

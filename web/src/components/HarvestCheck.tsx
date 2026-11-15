@@ -51,6 +51,40 @@ function Chart({ v }: { v: CropValidation }) {
   );
 }
 
+/** WCAG 1.1.1: the same numbers as the chart, as a table screen-reader and keyboard users can read. */
+function ChartTable({ v }: { v: CropValidation }) {
+  const { t: tx, language } = useI18n();
+  const worst = new Set(v.worstYears.map((w) => w.year));
+  const fmt = (n: number | undefined) => (n == null ? "–" : Math.abs(n) >= 20 ? Math.round(n).toString() : n.toFixed(1));
+  return (
+    <details className="vd-table">
+      <summary>{tx("Show these numbers as a table")}</summary>
+      <table>
+        <caption className="sr-only">{tx("{crop}: real county harvest and model estimate by year", { crop: cropText(v.cropName, language) })}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{tx("Year")}</th>
+            <th scope="col">{tx("Real county harvest")}</th>
+            <th scope="col">{tx("Our model")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {v.years.map((y, i) => (
+            <tr key={y}>
+              <th scope="row">
+                {y}
+                {worst.has(y) ? tx(" (one of the 5 worst)") : ""}
+              </th>
+              <td>{fmt(v.actual[i])}</td>
+              <td>{fmt(v.modeled[i])}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </details>
+  );
+}
+
 function sentence(v: CropValidation, language: Language): string {
   const n = v.years.length;
   if (v.correlation >= 0.5) return translate(language, "In {same} of {count} years, the model and the real harvest agreed on whether it was a better or worse year than usual.", { same: v.sameDirection, count: n });
@@ -103,6 +137,7 @@ export function HarvestCheck({
             </li>
           </ul>
           <Chart v={v} />
+          <ChartTable v={v} />
           {v.worstYears.some((w) => w.cause) && (
             <p className="vd-causes">
               <b>{tx("Worst real years and what crop insurance paid out for:")}</b>{" "}

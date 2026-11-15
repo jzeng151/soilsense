@@ -40,6 +40,9 @@
   // Field Watch: check every watched field each hour in the background (scheduled() in src/worker/index.ts).
   "triggers": { "crons": ["17 * * * *"] },
 
+  // Cited research passages (#7). Create the index + metadata indexes BEFORE ingesting: see docs/RESEARCH.md.
+  "vectorize": [{ "binding": "RESEARCH_INDEX", "index_name": "soilsense-research-v1" }],
+
   "vars": {
     "AI_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
     "TWILIO_VALIDATE": "true",

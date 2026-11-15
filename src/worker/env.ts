@@ -32,4 +32,6 @@ export interface Env {
   LIVE_ROOM?: DurableObjectNamespace;
   /** Name of the live room instance (default "demo"). */
   LIVE_ROOM_NAME?: string;
+  /** Vectorize index for cited research passages (#7): soilsense-research-v1, 768 dims, cosine. Optional. */
+  RESEARCH_INDEX?: Vectorize;
 }

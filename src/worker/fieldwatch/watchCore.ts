@@ -216,6 +216,7 @@ async function evaluateAndSave(
         ...(stale ? [{ id: "stale", text: `Weekly checks need a 14-day window ending within ${FRESH_DAYS} days of the check; this one ends ${through ?? "—"}.`, source: "SoilSense freshness rule" }] : []),
         ...live.result.reasons,
       ],
+      districtOutlook: live.districtOutlook,
       metrics: live.result.metrics,
       snapshot: live.snapshot,
       sources: sourcesFor(field, live.kansas),

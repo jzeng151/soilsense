@@ -5,11 +5,12 @@
 // it schedules the check CHECK_DELAY_SECONDS ahead on Cloudflare, so the result is produced and saved
 // even if the browser is closed, and reopening the page shows it without running anything again.
 
+import type { DistrictOutlook } from "../../shared/districtOutlook";
 import type { FieldResearchNote } from "../../shared/fieldResearch";
 import { researchNoteFor } from "./researchNote";
 import type { Env } from "../env";
 import { RULE_TEXT, RULE_VERSION, THRESHOLDS, evaluateField, isoDate, type DayMap, type KansasSignal, type WatchMetrics, type WatchReason, type WatchStatus } from "./rule";
-import { defaultDeps, sourcesFor, type FieldWatchDeps, type WatchedField } from "./run";
+import { defaultDeps, loadDistrictOutlook, sourcesFor, type FieldWatchDeps, type WatchedField } from "./run";
 
 export const CHECK_DELAY_SECONDS = 45;
 
@@ -55,6 +56,7 @@ export interface AgentRun {
   sources: { name: string; url: string; detail: string }[];
   /** Optional for older persisted runs and non-alert results. */
   researchNote?: FieldResearchNote;
+  districtOutlook?: DistrictOutlook;
 }
 
 export interface RunStore {
@@ -170,7 +172,7 @@ export async function evaluateLive(
   now: Date,
   deps: FieldWatchDeps = defaultDeps,
   history?: Awaited<ReturnType<FieldWatchDeps["history"]>>,
-): Promise<{ result: ReturnType<typeof evaluateField>; kansas: KansasSignal | null; snapshot: SnapshotRef }> {
+): Promise<{ result: ReturnType<typeof evaluateField>; kansas: KansasSignal | null; districtOutlook?: DistrictOutlook; snapshot: SnapshotRef }> {
   const [hist, recent, kansas] = await Promise.all([
     history ? Promise.resolve(history) : deps.history(env, field, now),
     deps.recent(env.DB, field, now),
@@ -180,6 +182,7 @@ export async function evaluateLive(
   return {
     result,
     kansas,
+    districtOutlook: await loadDistrictOutlook(env, field, now, kansas, deps),
     snapshot: {
       label: "Current conditions",
       source: `NASA POWER daily (last ~60 days) at the grid cell containing ${field.lat}, ${field.lon}`,
@@ -213,6 +216,7 @@ export async function executeRun(
     let recentMap: DayMap;
     let snapshot: SnapshotRef;
     let kansas = null;
+    let districtOutlook: DistrictOutlook | undefined;
     if (run.mode === "replay") {
       const preset = REPLAY_PRESETS.find((p) => p.id === run.replayId);
       if (!preset) throw new Error(`unknown replay ${run.replayId}`);
@@ -249,6 +253,7 @@ export async function executeRun(
     } else {
       const live = await evaluateLive(env, field, now, deps, history);
       kansas = live.kansas;
+      districtOutlook = live.districtOutlook;
       result = live.result;
       snapshot = live.snapshot;
     }
@@ -258,6 +263,7 @@ export async function executeRun(
       completedAt: now.getTime(),
       headline: run.mode === "replay" ? `Historical replay: ${result.headline}` : result.headline,
       reasons: result.reasons,
+      districtOutlook,
       metrics: result.metrics,
       snapshot,
       sources: sourcesFor(field, kansas),

@@ -4,6 +4,22 @@ import type { CropId } from "../../src/shared/types";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
+  "District outlook (next ~4 weeks, team's Kansas model)": "Perspectiva del distrito (próximas ~4 semanas, modelo de Kansas del equipo)",
+  "drought likely to continue.": "es probable que la sequía continúe.",
+  "possible drought onset (low confidence).": "posible inicio de sequía (baja confianza).",
+  "The model's tested skill is strong for persistence and weak for onsets: logistic onset hit rate 0.17, false-alarm ratio 0.47 (2023–2026 test). Districts approximate nine points, not official NASS boundaries. County USDM context uses any D1 or worse area, not a field measurement. This outlook does not change Dry/Watch/OK.": "El modelo probado es fuerte para la persistencia y débil para los inicios: tasa de detección de inicios del modelo logístico 0.17, razón de falsas alarmas 0.47 (prueba 2023–2026). Los distritos aproximan nueve puntos, no los límites oficiales de NASS. El contexto USDM del condado usa cualquier área D1 o peor, no una medición de la parcela. Esta perspectiva no cambia Seco/Vigilar/OK.",
+  "Why this outlook?": "¿Por qué esta perspectiva?",
+  "Model backtest report": "Informe de evaluación histórica del modelo",
+  "Model data through {date}": "Datos del modelo hasta {date}",
+  "County Drought Monitor map: {date}": "Mapa del Monitor de Sequía del condado: {date}",
+  "U.S. Drought Monitor": "Monitor de Sequía de EE. UU.",
+  "K-State rotations for this county are ranked for a dry year": "Las rotaciones de K-State para este condado se ordenan para un año seco",
+  "Second opinion": "Segunda opinión",
+  "Separate Kansas model; rain-fed rotations, not a change to Field Watch status.": "Modelo separado de Kansas; rotaciones de secano, sin cambiar el estado de Field Watch.",
+  "County rotations unavailable. Try the link again.": "Rotaciones del condado no disponibles. Vuelve a intentar el enlace.",
+  "Loading county rotations…": "Cargando rotaciones del condado…",
+  "Using a saved copy.": "Se usa una copia guardada.",
+
   "In short": "En resumen",
   "Crop grown this season": "Cultivo de esta temporada",
   "Water supply": "Suministro de agua",

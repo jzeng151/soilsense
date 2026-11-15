@@ -62,13 +62,13 @@ export function historyToDayMap(climate: DailyClimate): { map: DayMap; first: nu
 
 interface KsFile {
   data_through?: string;
-  counties?: { fips?: string; county?: string; alert?: string; drought_probability_now?: number; rootzone_pct_now?: number }[];
+  counties?: { fips?: string; county?: string; alert?: string; basis?: string | null; drought_probability_now?: number; rootzone_pct_now?: number }[];
 }
 
 /** The team's weekly Kansas outlook for one county (by 5-digit FIPS), or null if unavailable. */
 export async function getKansasSignal(db: D1Database | undefined, fips: string): Promise<KansasSignal | null> {
   try {
-    const { value } = await cached(db, "ks-advice:v1", KS_TTL_SECONDS, async () => {
+    const { value } = await cached(db, "ks-advice:v2", KS_TTL_SECONDS, async () => {
       const json = await fetchJson<KsFile>(KS_ADVICE_URL, { service: "Kansas rotation advice (R2)", timeoutMs: 10000, retries: 1 });
       if (!Array.isArray(json?.counties)) throw new UpstreamError("Kansas rotation advice (R2)", "unexpected file shape");
       // Keep only what Field Watch uses (the full file is ~280 KB).
@@ -78,13 +78,14 @@ export async function getKansasSignal(db: D1Database | undefined, fips: string):
           fips: String(c.fips ?? ""),
           county: String(c.county ?? ""),
           alert: String(c.alert ?? "unknown"),
+          basis: c.basis ?? null,
           p: typeof c.drought_probability_now === "number" ? c.drought_probability_now : null,
           r: typeof c.rootzone_pct_now === "number" ? c.rootzone_pct_now : null,
         })),
       };
     });
     const c = value.counties.find((x) => x.fips === fips);
-    return c ? { county: c.county, alert: c.alert, droughtProbability: c.p, rootzonePct: c.r, dataThrough: value.dataThrough } : null;
+    return c ? { county: c.county, alert: c.alert, basis: c.basis, droughtProbability: c.p, rootzonePct: c.r, dataThrough: value.dataThrough } : null;
   } catch (err) {
     console.warn(JSON.stringify({ msg: "kansas advice unavailable", err: String(err) }));
     return null;

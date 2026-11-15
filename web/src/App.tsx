@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { CropId, FieldResponse, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
+import type { CropId, FieldResponse, Goal, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
+import { GoalPicker } from "./components/GoalPicker";
 import { Glossary, Definition } from "./components/Glossary";
 import { askQuestion, fetchField, fetchPlan } from "./api";
 import { DataEvidence, DecisionNotice } from "./components/DataEvidence";
@@ -160,6 +161,7 @@ export function App() {
   const [guessed, setGuessed] = useState(false);
   const [water, setWater] = useState<WaterLevel>("rain");
   const [priority, setPriority] = useState<Priority>("balanced");
+  const [goals, setGoals] = useState<Goal[]>([]);
   const [plan, setPlan] = useState<PlanResponse | null>(null);
   const [planLoading, setPlanLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
@@ -259,7 +261,7 @@ export function App() {
     if (lastMapped?.crop && lastMapped.year < THIS_SEASON) recentCrops.push(lastMapped.crop);
     recentCrops.push(thisYear);
     try {
-      const res = await fetchPlan({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, recentCrops }, ctrl.signal);
+      const res = await fetchPlan({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, goals, recentCrops }, ctrl.signal);
       setPlan(res);
       setAnswer(null);
     } catch (e) {
@@ -267,7 +269,7 @@ export function App() {
     } finally {
       if (planAbort.current === ctrl) setPlanLoading(false);
     }
-  }, [point, thisYear, water, priority, lastMapped, go]);
+  }, [point, thisYear, water, priority, goals, lastMapped, go]);
 
   // Walk through the loading messages while the plan is being built.
   useEffect(() => {
@@ -496,6 +498,8 @@ export function App() {
                 ))}
               </div>
             </fieldset>
+
+            <GoalPicker value={goals} onChange={setGoals} water={water} />
 
             <div className="jr-actions">
               <button type="button" className="ghost" onClick={() => go("field")}>

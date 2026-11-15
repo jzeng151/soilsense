@@ -1,6 +1,6 @@
 import { Hono, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
-import type { CropId, PlanRequest, Priority } from "../../shared/types";
+import { GOALS, type CropId, type Goal, type PlanRequest, type Priority } from "../../shared/types";
 import { currentUser } from "../lib/auth";
 import { UpstreamError } from "../lib/http";
 import { getSecondOpinion } from "../data/kstate";
@@ -91,11 +91,18 @@ export function validatePlanRequest(body: unknown): PlanRequest | string {
     for (const c of b.recentCrops) if (!ALL_CROPS.includes(c as CropId)) return `unknown crop: ${String(c)}`;
     recentCrops = b.recentCrops as CropId[];
   }
+  let goals: Goal[] | undefined;
+  if (b.goals !== undefined) {
+    if (!Array.isArray(b.goals) || b.goals.length > 2) return "goals must be an array of up to 2 distinct goals";
+    for (const g of b.goals) if (!GOALS.includes(g as Goal)) return `unknown goal: ${String(g)}`;
+    if (new Set(b.goals).size !== b.goals.length) return "goals must be distinct";
+    goals = b.goals as Goal[];
+  }
   const language = b.language === "es" ? "es" : "en";
   // Water beyond rain: "rain" | "limited" | "full". Older clients send only `irrigated`.
   if (b.water !== undefined && b.water !== "rain" && b.water !== "limited" && b.water !== "full") return 'water must be "rain", "limited" or "full"';
   const water = (b.water as "rain" | "limited" | "full" | undefined) ?? (b.irrigated === true ? "full" : "rain");
-  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language };
+  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language, ...(goals !== undefined ? { goals } : {}) };
 }
 
 function upstreamMessage(err: unknown): { status: 502 | 500; body: { error: string; detail?: string } } {

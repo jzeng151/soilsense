@@ -1,3 +1,4 @@
+import { GoalScore } from "./GoalPicker";
 import { Definition } from "./Glossary";
 import type { CropId, RotationPlan } from "../../../src/shared/types";
 import { PlanExplanation } from "./PlanExplanation";
@@ -72,6 +73,7 @@ export function TopPlan({ plan, compareTo }: { plan: RotationPlan; compareTo: Ro
           </dd>
         </div>
       </dl>
+      <GoalScore plan={plan} />
       <PlanExplanation rotation={plan} />
     </article>
   );
@@ -96,6 +98,7 @@ export function PlanRow({ plan, title, compareTo, muted }: { plan: RotationPlan;
         <span className="plan-row-bad">{plan.badYearsIn10}/10 bad years</span>
         {delta !== null && <DeltaTag delta={delta} />}
       </span>
+      <GoalScore plan={plan} />
     </li>
   );
 }

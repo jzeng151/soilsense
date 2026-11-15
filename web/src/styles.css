@@ -376,3 +376,10 @@ a.sb-foot:hover { color: var(--color-text); text-decoration: underline; }
 /* Keep screen-reader-only labels inside their message box; otherwise, inside a scrolling transcript,
    they are placed relative to the page and stretch it (which also un-sticks the sidebar). */
 .lv-say, .st-msg, .lv-who, .st-who { position: relative; }
+
+/* Call recordings (Settings > Call history) */
+.st-recs { display: grid; gap: 0.6rem; margin-bottom: 0.9rem; padding-bottom: 0.9rem; border-bottom: 1px solid var(--color-border); }
+.st-rec { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; }
+.st-rec audio { flex: 1 1 260px; min-width: 0; height: 40px; }
+.st-rec-dl { display: inline-flex; align-items: center; min-height: 40px; padding: 0 0.9rem; border-radius: var(--radius-full); text-decoration: none; font-weight: 600; }
+.st-rec-note { color: var(--color-muted); font-size: var(--text-sm); }

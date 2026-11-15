@@ -13,7 +13,7 @@ import { ALL_CROPS } from "../../engine/crops";
 import type { CropId, PlanResponse, Priority, WaterLevel } from "../../shared/types";
 import { lookupZip } from "../data/geo";
 import type { Env } from "../env";
-import { maskPhone, sendSms, xmlEscape } from "../lib/twilio";
+import { maskPhone, sendSms, startCallRecording, xmlEscape } from "../lib/twilio";
 import { isLiveDemoOn, publishLive } from "../live/publish";
 import { isInContiguousUS, logPlan, makePlan } from "../service";
 import { LOCKED_RULES, languageName, languageRules, loadVoiceSettings, logVoiceEvent, type VoiceAgentSettings, type VoiceEventKind } from "../voiceSettings";
@@ -43,6 +43,18 @@ function tokenSecret(env: Env): string | null {
   return env.TWILIO_AUTH_TOKEN || (env.TWILIO_VALIDATE === "false" ? "local-dev" : null);
 }
 
+/** Callers are told up front that the call is recorded (consent is required in several US states). */
+export const RECORDING_NOTICE = "This call is recorded to help improve Soil Sense.";
+
+/** The greeting exactly as the caller hears it: recording notice, greeting, and (multi-language) the other languages. */
+export function spokenGreeting({ greeting, languages }: Pick<VoiceAgentSettings, "greeting" | "languages">): string {
+  const others = languages.enabled.filter((c) => c !== "en").map(languageName);
+  const base = `${RECORDING_NOTICE} ${greeting}`;
+  if (!languages.autoDetect || others.length === 0) return base;
+  const list = others.length > 1 ? `${others.slice(0, -1).join(", ")} or ${others[others.length - 1]}` : others[0];
+  return `${base} You can also talk to me in ${list}.`;
+}
+
 /** TwiML that connects the call to the agent. Falls back to the keypad menu if the session fails. */
 export async function agentTwiml(env: Env, requestUrl: string, callSid: string): Promise<string | null> {
   const secret = tokenSecret(env);
@@ -50,10 +62,10 @@ export async function agentTwiml(env: Env, requestUrl: string, callSid: string):
   const base = new URL(env.PUBLIC_BASE_URL || requestUrl);
   const wsUrl = `${base.protocol === "http:" ? "ws" : "wss"}://${base.host}/voice-agent`;
   const token = await callToken(secret, callSid);
-  const { greeting, languages } = await loadVoiceSettings(env.DB);
+  const settings = await loadVoiceSettings(env.DB);
+  const { languages } = settings;
   const multi = languages.autoDetect && languages.enabled.length > 1;
-  const others = languages.enabled.filter((c) => c !== "en").map(languageName);
-  const fullGreeting = multi ? `${greeting} You can also talk to me in ${others.length > 1 ? `${others.slice(0, -1).join(", ")} or ${others[others.length - 1]}` : others[0]}.` : greeting;
+  const fullGreeting = spokenGreeting(settings);
   const attrs = [
     `url="${xmlEscape(wsUrl)}"`,
     `welcomeGreeting="${xmlEscape(fullGreeting)}"`,
@@ -313,15 +325,22 @@ class CallSession {
     this.caller = msg.from ?? "";
     this.calledNumber = msg.to ?? "";
     this.settings = await loadVoiceSettings(this.env.DB);
-    this.history.push({ role: "assistant", content: this.settings.greeting });
+    const greeting = spokenGreeting(this.settings);
+    this.history.push({ role: "assistant", content: greeting });
+    // Record the call (both sides, separate channels) for the team's Call history. Never blocks the call.
+    if (this.env.TWILIO_ACCOUNT_SID && this.env.TWILIO_AUTH_TOKEN && this.callSid.startsWith("CA")) {
+      void startCallRecording({ accountSid: this.env.TWILIO_ACCOUNT_SID, authToken: this.env.TWILIO_AUTH_TOKEN }, this.callSid)
+        .then((sid) => this.log("tool", { name: "start_recording", detail: JSON.stringify({ recording: sid }), ok: Boolean(sid) }))
+        .catch((err) => this.log("tool", { name: "start_recording", detail: JSON.stringify({ error: String(err) }), ok: false }));
+    }
     console.log(JSON.stringify({ msg: "voice agent session started", callSid: this.callSid, caller: maskPhone(this.caller) }));
     this.log("session_start", {
       detail: JSON.stringify({ caller: maskPhone(this.caller), languages: this.multi ? this.settings.languages.enabled.map(languageName) : ["English"] }),
     });
-    this.log("agent", { detail: this.settings.greeting });
+    this.log("agent", { detail: greeting });
     this.liveOn = await isLiveDemoOn(this.env.DB);
     this.live("call.start", { caller: maskPhone(this.caller), languages: this.multi ? this.settings.languages.enabled.map(languageName) : ["English"] });
-    this.live("call.say", { who: "agent", text: this.settings.greeting, lang: "en" });
+    this.live("call.say", { who: "agent", text: greeting, lang: "en" });
     this.markReady();
   }
 

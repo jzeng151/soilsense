@@ -468,6 +468,53 @@ function ToolsTab({ config, draft, setDraft }: { config: VoiceConfig; draft: Voi
 
 // ---------- Call history ----------
 
+interface RecordingRow {
+  sid: string;
+  durationSec: number | null;
+  createdAt: string;
+  status: string;
+}
+
+/** Audio of the call (recorded by Twilio): play it here or download the MP3. */
+function CallRecordings({ token, callSid }: { token: string; callSid: string }) {
+  const [rows, setRows] = useState<RecordingRow[] | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  useEffect(() => {
+    adminFetch<{ recordings: RecordingRow[] }>(token, `/calls/${encodeURIComponent(callSid)}/recordings`)
+      .then((r) => setRows(r.recordings))
+      .catch((e) => setErr((e as Error).message));
+  }, [token, callSid]);
+  if (err) return <p className="error">Recording: {err}</p>;
+  if (!rows) return <p className="st-rec-note">Looking for a recording…</p>;
+  if (rows.length === 0) return <p className="st-rec-note">No recording for this call (calls are recorded from today on).</p>;
+  return (
+    <div className="st-recs">
+      {rows.map((r) => {
+        const src = `/api/admin/calls/${encodeURIComponent(callSid)}/recordings/${r.sid}.mp3`;
+        const ready = r.status === "completed";
+        return (
+          <div key={r.sid} className="st-rec">
+            <b>Call recording</b>
+            {r.durationSec != null && <span className="st-rec-note"> · {Math.floor(r.durationSec / 60)}:{String(r.durationSec % 60).padStart(2, "0")}</span>}
+            {ready ? (
+              <>
+                <audio controls preload="none" src={src} aria-label="Call recording">
+                  <a href={src}>Play the recording</a>
+                </audio>
+                <a className="ghost st-rec-dl" href={`${src}?download=1`} download>
+                  Download MP3
+                </a>
+              </>
+            ) : (
+              <span className="st-rec-note"> · still processing, refresh in a minute</span>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 /** Demo mode: show calls in real time on the public Live call page (#/live). Off by default for caller privacy. */
 function LiveDemoBlock({ token, onAuthError }: { token: string; onAuthError: (msg?: string) => void }) {
   const [state, setState] = useState<{ on: boolean; available: boolean } | null>(null);
@@ -601,6 +648,7 @@ function ActivityTab({ token, onAuthError }: { token: string; onAuthError: (msg?
       </div>
 
       <div className="st-card st-transcript">
+        {selected && <CallRecordings key={selected} token={token} callSid={selected} />}
         {!events ? (
           <p className="loading">Loading…</p>
         ) : (

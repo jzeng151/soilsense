@@ -4,6 +4,7 @@
 
 import { Hono } from "hono";
 import { currentUser } from "../lib/auth";
+import { fetchRecordingAudio, listCallRecordings } from "../lib/twilio";
 import { isLiveDemoOn, liveRoom, setLiveDemo } from "../live/publish";
 import type { AppEnv } from "./auth";
 import {
@@ -166,4 +167,39 @@ admin.post("/live-demo/clear", async (c) => {
   const room = liveRoom(c.env);
   if (room) await room.clear();
   return c.json({ ok: true });
+});
+
+// ---------- Call recordings ----------
+// Twilio stores the audio; we list and stream it through here so the browser never sees Twilio keys.
+const twilioAuth = (env: { TWILIO_ACCOUNT_SID?: string; TWILIO_AUTH_TOKEN?: string }) =>
+  env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN ? { accountSid: env.TWILIO_ACCOUNT_SID, authToken: env.TWILIO_AUTH_TOKEN } : null;
+const CALL_SID = /^CA[0-9a-f]{32}$/;
+const RECORDING_SID = /^RE[0-9a-f]{32}$/;
+
+admin.get("/calls/:sid/recordings", async (c) => {
+  const auth = twilioAuth(c.env);
+  const sid = c.req.param("sid");
+  if (!auth || !CALL_SID.test(sid)) return c.json({ recordings: [] });
+  try {
+    return c.json({ recordings: await listCallRecordings(auth, sid) });
+  } catch (err) {
+    return c.json({ error: String(err) }, 502);
+  }
+});
+
+/** The MP3. ?download=1 saves it as a file instead of playing it. Only recordings of that call are served. */
+admin.get("/calls/:sid/recordings/:rsid", async (c) => {
+  const auth = twilioAuth(c.env);
+  const sid = c.req.param("sid");
+  const rsid = c.req.param("rsid").replace(/\.mp3$/, "");
+  if (!auth || !CALL_SID.test(sid) || !RECORDING_SID.test(rsid)) return c.json({ error: "Not found" }, 404);
+  const mine = (await listCallRecordings(auth, sid).catch(() => [])).some((r) => r.sid === rsid);
+  if (!mine) return c.json({ error: "Not found" }, 404);
+  const res = await fetchRecordingAudio(auth, rsid);
+  if (!res.ok || !res.body) return c.json({ error: `Recording not available (${res.status})` }, 502);
+  const headers = new Headers({ "Content-Type": "audio/mpeg", "Cache-Control": "private, max-age=3600" });
+  const len = res.headers.get("Content-Length");
+  if (len) headers.set("Content-Length", len);
+  headers.set("Content-Disposition", `${c.req.query("download") ? "attachment" : "inline"}; filename="soilsense-call-${sid.slice(-8)}.mp3"`);
+  return new Response(res.body, { headers });
 });

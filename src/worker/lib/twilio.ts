@@ -112,3 +112,50 @@ export function maskPhone(phone: string | undefined): string | null {
   const digits = phone.replace(/\D/g, "");
   return digits.length >= 4 ? `***${digits.slice(-4)}` : "***";
 }
+
+type TwilioAuth = { accountSid: string; authToken: string };
+const twilioBase = (a: TwilioAuth) => `https://api.twilio.com/2010-04-01/Accounts/${encodeURIComponent(a.accountSid)}`;
+const basic = (a: TwilioAuth) => `Basic ${btoa(`${a.accountSid}:${a.authToken}`)}`;
+
+/** Start recording an in-progress call, caller and agent on separate channels. Returns the recording SID or null. */
+export async function startCallRecording(a: TwilioAuth, callSid: string): Promise<string | null> {
+  const res = await fetch(`${twilioBase(a)}/Calls/${encodeURIComponent(callSid)}/Recordings.json`, {
+    method: "POST",
+    headers: { Authorization: basic(a), "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ RecordingChannels: "dual", RecordingTrack: "both" }),
+  });
+  if (!res.ok) {
+    console.warn(JSON.stringify({ msg: "call recording failed to start", status: res.status, body: (await res.text()).slice(0, 300) }));
+    return null;
+  }
+  return ((await res.json()) as { sid?: string }).sid ?? null;
+}
+
+export interface CallRecording {
+  sid: string;
+  callSid: string;
+  durationSec: number | null;
+  createdAt: string;
+  status: string;
+  channels: number;
+}
+
+/** Recordings Twilio holds for one call. */
+export async function listCallRecordings(a: TwilioAuth, callSid: string): Promise<CallRecording[]> {
+  const res = await fetch(`${twilioBase(a)}/Recordings.json?CallSid=${encodeURIComponent(callSid)}&PageSize=20`, { headers: { Authorization: basic(a) } });
+  if (!res.ok) throw new Error(`Twilio recordings ${res.status}`);
+  const j = (await res.json()) as { recordings?: { sid: string; call_sid: string; duration: string | null; date_created: string; status: string; channels: number }[] };
+  return (j.recordings ?? []).map((r) => ({
+    sid: r.sid,
+    callSid: r.call_sid,
+    durationSec: r.duration == null ? null : Number(r.duration),
+    createdAt: r.date_created,
+    status: r.status,
+    channels: r.channels,
+  }));
+}
+
+/** The recording's MP3 audio (Twilio redirects to its media store). */
+export function fetchRecordingAudio(a: TwilioAuth, recordingSid: string): Promise<Response> {
+  return fetch(`${twilioBase(a)}/Recordings/${encodeURIComponent(recordingSid)}.mp3`, { headers: { Authorization: basic(a) } });
+}

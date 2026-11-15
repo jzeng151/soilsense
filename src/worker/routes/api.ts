@@ -209,3 +209,6 @@ api.get("/logs", async (c) => {
 api.route("/scout", scout);
 // Field Watch: background field checks (Cron Trigger) and their saved results.
 api.route("/fieldwatch", fieldWatch);
+// U.S. Drought Monitor weekly county context (issue #31): /api/usdm/category, /timeline, /replay.
+import { usdm } from "./usdm";
+api.route("/usdm", usdm);

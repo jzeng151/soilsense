@@ -29,3 +29,8 @@ export async function scoutStatus(): Promise<{ configured: boolean; model: strin
 export async function fetchSecondOpinion(countyFips: string, signal?: AbortSignal): Promise<SecondOpinion> {
   return handle(await fetch(`/api/second-opinion?fips=${encodeURIComponent(countyFips)}`, { signal }));
 }
+
+/** Weekly U.S. Drought Monitor context (May–Sep) for each replayed year in the field's county (issue #31). */
+export async function fetchUsdmReplay(countyFips: string, years: number[], signal?: AbortSignal): Promise<{ timelines: import("../../src/shared/types").UsdmTimeline[] }> {
+  return handle(await fetch(`/api/usdm/replay?fips=${encodeURIComponent(countyFips)}&years=${years.join(",")}`, { signal }));
+}

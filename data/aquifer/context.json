@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "retrievedAt": "2026-11-15T22:51:27.585120+00:00",
+  "product": "Kansas Geological Survey: High Plains Aquifer Section Properties",
+  "version": "Attributes created 2024-05-30; 2022-2024 winter average",
+  "nativeResolution": "PLSS section (approximately one square mile); interpolated section representative values, not a field-area average",
+  "nativeCrs": "EPSG:26914; query geometry reprojected by ArcGIS to EPSG:4326",
+  "method": "Point intersects one published section polygon; retain source attributes and unsimplified returned polygon. No nearest-section extrapolation.",
+  "units": {
+    "thickness": "ft",
+    "change": "ft (negative = decline)",
+    "percentChange": "%",
+    "usableLifetime": "years (published scenario, not a countdown)"
+  },
+  "sourceLayer": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/ArcGIS/rest/services/High_Plains_Aquifer_Section_Properties/FeatureServer/0",
+  "sourceItem": "https://www.arcgis.com/sharing/rest/content/items/223ec510fbb044e88b0d147196ae42a5?f=json",
+  "dataLastEditDate": 1793049392136,
+  "point": {
+    "lat": 38.1095,
+    "lon": -100.706
+  },
+  "section": {
+    "attributes": {
+      "OBJECTID": 18173,
+      "TRS": "22S31W27",
+      "TWP_IDENT": "22S31W",
+      "TOWNSHIP": "22S",
+      "RANGE": "31W",
+      "SECTION_": "27",
+      "STATUS": "",
+      "gmd": 3,
+      "ned_elev": 2892.5,
+      "hpa_bedrock": 2701.68994140625,
+      "hpa_bedrock_depth": 190.8101,
+      "predev_wte": 2812,
+      "predev_wte_updated": 2812.35198974609,
+      "predev_dtw_updated": 80.14801025390989,
+      "predev_satthick_updated": 110.66204833984011,
+      "county": "FI",
+      "wte_2022_2024": 2768.6141764322915,
+      "dtw_2022_2024": 123.88582356770848,
+      "satthick_2022_2024": 66.92423502604152,
+      "chng_predev_20222024_act": -43.7378133137986,
+      "chng_predev_20222024_pct": -39.52376986505886,
+      "eul_3yr_2013_2023_200gpm": 94.64219027960489,
+      "chng_3yr_2018_2023": -2.209744373957316,
+      "chng_3yr_2013_2023": -4.035846418804592,
+      "chng_3yr_2003_2023": -10.654791514078775,
+      "Shape__Area": 2587160.1563720703,
+      "Shape__Length": 6434.035272772729
+    },
+    "geometry": {
+      "rings": [
+        [
+          [
+            -100.719186920833,
+            38.1191652758376
+          ],
+          [
+            -100.700908060171,
+            38.1191563614838
+          ],
+          [
+            -100.700877287839,
+            38.1045394577007
+          ],
+          [
+            -100.719131232163,
+            38.1046749297765
+          ],
+          [
+            -100.719186920833,
+            38.1191652758376
+          ]
+        ]
+      ]
+    }
+  },
+  "boundary": {
+    "product": "Qi, S.L. (2010), USGS Data Series 543",
+    "url": "https://pubs.usgs.gov/ds/543/",
+    "doi": "10.5066/P9KA17IW",
+    "method": "Reproject WGS84 point to native NAD83 Albers. Point-in-polygon after subtracting all aquifer-not-present islands; nearest mapped boundary distance in native projected metres / 1000. Not a survey boundary.",
+    "nativeScale": "Mixed source scales; see DS543 metadata. Not field-scale delineation.",
+    "demoPoints": [
+      {
+        "name": "Story County, Iowa",
+        "lat": 42.0563,
+        "lon": -93.495,
+        "inMappedHighPlainsAquifer": false,
+        "distanceToMappedBoundaryKm": 243.99913654630197
+      },
+      {
+        "name": "Champaign County, Illinois",
+        "lat": 40.048,
+        "lon": -88.33,
+        "inMappedHighPlainsAquifer": false,
+        "distanceToMappedBoundaryKm": 678.2980822047003
+      },
+      {
+        "name": "Finney County, Kansas",
+        "lat": 38.1095,
+        "lon": -100.706,
+        "inMappedHighPlainsAquifer": true,
+        "distanceToMappedBoundaryKm": 6.6983517282231855
+      },
+      {
+        "name": "Lancaster County, Nebraska",
+        "lat": 40.73,
+        "lon": -96.55,
+        "inMappedHighPlainsAquifer": false,
+        "distanceToMappedBoundaryKm": 36.07828318364643
+      }
+    ]
+  },
+  "lema": {
+    "status": "unverified",
+    "reason": "No current effective LEMA order and point boundary verified; proposed GMD3 plans are not allocations. Direct KDA/GMD3 PDF retrieval returned HTTP 403 on retrieval date.",
+    "url": "https://agriculture.ks.gov/home/showpublisheddocument/16936/639210159550700000"
+  },
+  "sources": [
+    {
+      "file": "kgs-item.json",
+      "url": "https://www.arcgis.com/sharing/rest/content/items/223ec510fbb044e88b0d147196ae42a5?f=json",
+      "sha256": "de744f28a04852cffa1baac16ad220e910c3edaad20d9f3ef0bc5ce51bccb130",
+      "bytes": 6558,
+      "retrievedAt": "2026-11-15T22:51:27.585120+00:00"
+    },
+    {
+      "file": "kgs-layer.json",
+      "url": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/ArcGIS/rest/services/High_Plains_Aquifer_Section_Properties/FeatureServer/0?f=json",
+      "sha256": "48205705c7952ccd3021fe2d3d2956b1cfdec4f2fa0c29ab36d3bb0042918139",
+      "bytes": 15457,
+      "retrievedAt": "2026-11-15T22:51:27.585120+00:00"
+    },
+    {
+      "file": "kgs-finney-section.json",
+      "url": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/ArcGIS/rest/services/High_Plains_Aquifer_Section_Properties/FeatureServer/0/query?f=json&geometry=-100.706%2C38.1095&geometryType=esriGeometryPoint&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=true",
+      "sha256": "ddcb3ad16260e42900e40ef45fced9fb5cbe5e59d5dd5b3d653ea4755d2702bd",
+      "bytes": 5156,
+      "retrievedAt": "2026-11-15T22:51:27.585120+00:00"
+    },
+    {
+      "file": "kgs-finney-gmd.json",
+      "url": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/ArcGIS/rest/services/GMDs/FeatureServer/35/query?f=json&geometry=-100.706%2C38.1095&geometryType=esriGeometryPoint&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=false",
+      "sha256": "5f80f568d3837a25336e8088df04a84b1e0e0d81acabc78307627a5a208e18d1",
+      "bytes": 8885,
+      "retrievedAt": "2026-11-15T22:51:27.585120+00:00"
+    },
+    {
+      "file": null,
+      "url": "https://www.sciencebase.gov/catalog/file/get/6314061bd34e36012efa397b?f=__disk__39%2F00%2Fb6%2F3900b621917a747319cd00a5ecb647623a500dae",
+      "sha256": "e5b94e11453aa375ec655b47e666cd06306a8a7af41c808aa8b60d4c653a03d9",
+      "bytes": 1053908,
+      "retrievedAt": "2026-11-15T22:51:27.585120+00:00"
+    }
+  ]
+}

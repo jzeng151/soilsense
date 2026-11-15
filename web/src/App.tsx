@@ -22,6 +22,7 @@ import { VegetationCard } from "./components/VegetationCard";
 
 import { CropTimingEvidence } from "./components/CropTimingEvidence";
 import { SmapCard } from "./components/SmapCard";
+import { AquiferCard } from "./components/AquiferCard";
 import { GraceWellsCard } from "./components/GraceWellsCard";
 import { EconomicsCard } from "./components/EconomicsCard";
 import { HistoricalScenarios } from "./components/HistoricalScenarios";
@@ -648,6 +649,7 @@ function MainFlow() {
                 <EconomicsCard plan={plan} />
                 <VegetationCard plan={plan} />
                 <SmapCard plan={plan} />
+                <AquiferCard lat={plan.request.lat} lon={plan.request.lon} />
                 <GraceWellsCard plan={plan} />
                 {/* /stretch: data evidence */}
 

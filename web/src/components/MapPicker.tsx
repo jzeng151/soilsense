@@ -78,9 +78,11 @@ export function MapPicker({ point, onPick, focus }: Props) {
       )
       .addTo(m);
     m.on("click", (e: L.LeafletMouseEvent) => pickRef.current(e.latlng.lat, e.latlng.lng));
-    // Leaflet already pans with arrow keys; Enter selects the center without a pointer.
+    // WCAG 2.1.1 Keyboard: Leaflet already pans with the arrow keys and zooms with + and −;
+    // Enter or Space chooses the spot under the crosshair in the middle of the map.
     m.on("keydown", (e: L.LeafletKeyboardEvent) => {
-      if (e.originalEvent.key === "Enter" && e.originalEvent.target === el.current) {
+      const key = e.originalEvent.key;
+      if ((key === "Enter" || key === " ") && e.originalEvent.target === el.current) {
         e.originalEvent.preventDefault();
         const center = m.getCenter();
         pickRef.current(center.lat, center.lng);

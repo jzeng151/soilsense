@@ -18,6 +18,10 @@ Daily precipitation is the native **mm/day** mean daily rate. For fully sampled 
 
 POWER uses **LST** days, IMERG **UTC** days: these are not equivalent intervals despite shared labels. Display only qualified multi-day totals and descriptive IMERG-minus-POWER differences, not day-level agreement, truth, confidence or a new alert. A common-boundary comparison would require verified hourly reaggregation and is unmet.
 
+## Local live Worker verification
+
+`wrangler dev -c wrangler.offline.jsonc --port 8793 --ip 127.0.0.1`, using ignored credentials and local D1 migrations, successfully warmed and publicly read back all four 14-day Late windows ending 2026-11-13 and 2026-11-12. Raw parsed responses are saved under `test/fixtures/imerg-live/comparison-*.json`; Python independently recomputed all totals and differences. For Oct 30–Nov 12, Finney was IMERG **26.564999585039914 mm**, POWER **26.29 mm**, descriptive difference **0.2749995850399145 mm**. Nov 13 POWER was unavailable, so that window correctly preserves null POWER totals/differences rather than substituting zero. GES DISC required minutes for a cold window; short 30-second calls timed out, and one CMR 503 was observed. The adapter now bounds calls to 90 seconds with one transient retry and shares metadata/day cache across windows.
+
 ## Product sources
 
 - [Final GPM_3IMERGDF V07](https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDF_07/summary), DOI [10.5067/GPM/IMERGDF/DAY/07](https://doi.org/10.5067/GPM/IMERGDF/DAY/07): up to four months plus roughly 24 hours latency.

@@ -67,7 +67,7 @@ export function parseDap4(bytes: Uint8Array, date: string, grid: Grid, sourceUrl
  const epochText = attr(t, "units").match(/^days since (.+)$/)?.[1];
  const epoch = epochText ? Date.parse(epochText) : NaN;
  if (!Number.isFinite(epoch) || new Date(epoch + values.get("time")! * 86400000).toISOString().slice(0, 10) !== date) throw new Error("IMERG observation date mismatch");
- if (Math.abs(values.get("lat")! - grid.lat) > 0.001 || Math.abs(values.get("lon")! - grid.lon) > 0.001) throw new Error("IMERG grid mismatch");
+  if (![values.get("lat"), values.get("lon")].every(Number.isFinite) || Math.abs(values.get("lat")! - grid.lat) > 0.001 || Math.abs(values.get("lon")! - grid.lon) > 0.001) throw new Error("IMERG grid mismatch");
  const value = values.get("precipitation")!, count = values.get("precipitation_cnt")!, fill = Number(attr(p, "_FillValue"));
  if (!Number.isFinite(fill) || !Number.isInteger(count) || count < 0 || count > 48) throw new Error("Invalid IMERG sample count/fill");
  // Metadata is decimal text; compare in Float32 space, not exact decimal equality.

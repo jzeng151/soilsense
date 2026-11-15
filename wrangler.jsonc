@@ -34,11 +34,29 @@
   "ratelimits": [{ "name": "SCOUT_LIMITER", "namespace_id": "1001", "simple": { "limit": 20, "period": 60 } }],
 
   // Live room: one SQLite-backed Durable Object (works on the Free plan). Field Watch and calls publish to it.
-  "durable_objects": { "bindings": [{ "name": "LIVE_ROOM", "class_name": "LiveRoom" }] },
-  "migrations": [{ "tag": "v1-live-room", "new_sqlite_classes": ["LiveRoom"] }],
+  "durable_objects": {
+    "bindings": [
+      { "name": "LIVE_ROOM", "class_name": "LiveRoom" },
+      // Field Watch agents (Agents SDK): one SQLite-backed instance per watched field; schedules and keeps its checks.
+      { "name": "FIELD_AGENT", "class_name": "FieldAgent" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1-live-room", "new_sqlite_classes": ["LiveRoom"] },
+    { "tag": "v2-field-agent", "new_sqlite_classes": ["FieldAgent"] }
+  ],
 
   // Field Watch: check every watched field each hour in the background (scheduled() in src/worker/index.ts).
-  "triggers": { "crons": ["17 * * * *"] },
+  "triggers": { "crons": ["17 * * * *", "43 5 * * *"] },
+
+  // NASA POWER snapshot refresh: daily at 05:43 UTC (second cron above) and POST /api/refresh/run (ADMIN_TOKEN).
+  "workflows": [{ "name": "soilsense-power-refresh", "binding": "POWER_REFRESH", "class_name": "PowerRefreshWorkflow" }],
+
+  // Immutable, content-addressed evidence bundles. Create with: npx wrangler r2 bucket create soilsense-evidence
+  "r2_buckets": [{ "binding": "EVIDENCE", "bucket_name": "soilsense-evidence" }],
+
+  // Cited research passages (#7). Create the index + metadata indexes BEFORE ingesting: see docs/RESEARCH.md.
+  "vectorize": [{ "binding": "RESEARCH_INDEX", "index_name": "soilsense-research-v1" }],
 
   "vars": {
     "AI_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",

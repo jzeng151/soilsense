@@ -3,6 +3,14 @@
 // IMPORTANT: values are approximate planning defaults compiled for a hackathon prototype
 // (land-grant extension guidance ranges: Iowa State, Purdue, Kansas State, USDA NRCS).
 // They are centralised here so an agronomist can review and replace them in one place.
+// #23: economics.ts exposes per-value provenance/missing-source annotations for EVERY price,
+// base yield and base cost here. These existing numbers remain APPROXIMATE DEFAULTS (year/source unknown).
+// Do not claim the following real, separately transcribed budgets validate these defaults:
+// K-State NE Kansas 2025 dryland middle-yield corn = 145 bu/ac, $4.21/bu, $449.20/ac total direct;
+// soybean = 55 bu/ac, $9.67/bu, $272.28/ac total direct. Those costs INCLUDE nitrogen, unlike ours.
+// Sources: https://agmanager.info/sites/default/files/wysiwyg/Corn%20Cost-Return%20Budget%20in%20Northeast%20Kansas__Nov-20-2024.pdf
+// https://agmanager.info/sites/default/files/wysiwyg/Soybean%20Cost-Return%20Budget%20in%20Northeast%20Kansas__Nov-20-2024.pdf
+// Published 2024-11-20, planning year 2025, fetched 2026-11-15. See docs/economics-sources.md.
 
 import type { CoverId, CropId } from "../shared/types";
 import type { Window } from "./climate";

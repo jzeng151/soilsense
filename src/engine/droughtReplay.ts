@@ -11,6 +11,8 @@ import type { ReplayYear } from "./rotation";
 import { LOSS_WORDS, mainLossCause } from "./validate";
 
 type Replay = (crop: CropId, prev: CropId) => ReplayYear[];
+const known = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
+const optionalRound = (v: unknown, digits = 0): number | null => known(v) ? round(v, digits) : null;
 
 /** Each year's yield as a % above/below its long-term trend line (real yields rise with better seed). */
 export function trendDeviations(records: YieldRecord[]): Map<number, number> {
@@ -120,10 +122,10 @@ export function buildDroughtReplays(inp: Input): DroughtReplay[] {
     return {
       year,
       weather: {
-        seasonRainIn: rain && ri >= 0 ? round(rain.values[ri] as number, 1) : null,
-        typicalSeasonRainIn: rain ? round(rain.mean, 1) : null,
-        hotDays: heat && hi >= 0 ? Math.round(heat.values[hi] as number) : null,
-        typicalHotDays: heat ? Math.round(heat.mean) : null,
+        seasonRainIn: rain && ri >= 0 ? optionalRound(rain.values[ri], 1) : null,
+        typicalSeasonRainIn: optionalRound(rain?.mean, 1),
+        hotDays: heat && hi >= 0 ? optionalRound(heat.values[hi]) : null,
+        typicalHotDays: optionalRound(heat?.mean),
       },
       current: currentOut,
       plan: planOut,

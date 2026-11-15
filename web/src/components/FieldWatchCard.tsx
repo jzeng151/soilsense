@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useState } from "react";
 import "./fieldwatch.css";
 import { Sprout } from "./Sprout";
+import { ScheduledCheck } from "./ScheduledCheck";
 
 type Status = "ok" | "watch" | "dry" | "insufficient" | "error";
 interface Reason {
@@ -164,6 +165,7 @@ export function FieldWatchCard() {
         )}
       </footer>
       {data && <p className="fw-rule">{data.rule}</p>}
+      <ScheduledCheck />
     </section>
   );
 }

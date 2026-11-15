@@ -1,0 +1,100 @@
+# Cited research and grounded explanations (#7, #8)
+
+Each plan card shows a short explanation ("In short") with a visible status label and the research
+passages it may cite. Everything is optional at runtime: with no Workers AI or Vectorize binding the
+card falls back to the deterministic template and an explicit "research unavailable" state, and the
+plan itself never changes.
+
+## Pieces
+
+| Piece | File |
+| --- | --- |
+| Shared config (embedding model, pooling, preprocessing, index, generation model, retired list) | `src/worker/research/config.ts` |
+| Curated corpus (13 verbatim chunks, 3 sources, corpus version) | `src/worker/research/corpus.json` |
+| Retrieval (embed → Vectorize query filtered by crop tag → ≤ 2 passages) | `src/worker/research/retrieve.ts` |
+| Explanation (approved facts, prompt, validation, rendering, template, fallbacks) | `src/worker/research/explain.ts` |
+| Saved demo bundle (empty until captured) + loader | `src/worker/research/saved-evidence.json`, `saved.ts` |
+| API | `src/worker/routes/research.ts` (mounted at `/api/research`) |
+| UI | `web/src/components/PlanExplanation.tsx` (rendered inside `TopPlan` in `PlanCard.tsx`) |
+| Scripts | `scripts/setup-research-index.sh`, `ingest-research.mjs`, `snapshot-research.mjs`, `verify-research-corpus.mjs` |
+
+## Configuration (pinned in one place)
+
+- Embeddings: `@cf/baai/bge-base-en-v1.5`, 768 dimensions, `pooling: "cls"`, ≤ 512 tokens per input.
+  Ingestion and queries both call `embeddingInput()` → `prepareEmbeddingText()` (collapse whitespace,
+  cap at 1,500 characters ≈ ≤ 500 tokens; **no** prefix or heading on either side). Corpus chunks are
+  all under the cap, so none is truncated (a test enforces this).
+- `cls` and `mean` pooling are not compatible, and neither is a different model with equal dimensions.
+  Any change ⇒ bump `EMBEDDING.id`, create a new index (e.g. `soilsense-research-v2`), re-ingest.
+- Not used: `@cf/google/embeddinggemma-300m` (retiring 2026-11-20).
+- Generation: `@cf/google/gemma-4-26b-a4b-it` (same model Scout already uses), thinking disabled,
+  one attempt with a 12 s timeout, called through AI Gateway (`AI_GATEWAY_ID`, default `default`).
+  None of the 2026-11-20 retirement-list models are used (see `RETIRED_MODELS`).
+- Vectorize: index `soilsense-research-v1`, 768 dims, cosine, binding `RESEARCH_INDEX`. One vector per
+  (chunk, crop tag) with metadata `crop`, `corpus`, `chunk_id`, `source_id`; metadata indexes on `crop`
+  and `corpus` (string). Passage text is served from `corpus.json` by chunk ID, never from the index.
+
+## Corpus
+
+Tags: `corn`, `soybean`, `winter_wheat`, `oats`, `alfalfa`, `sorghum`, `fallow`, `cover` (winter cover
+crops). Sources:
+
+1. Schlegel & Bond (2021), *Alternative Cropping Systems with Limited Irrigation*, K-State SWREC
+   (Tribune, KS; 10 in/yr limited irrigation, no-till). License stated in the PDF: free reproduction for
+   educational purposes.
+2. K-State Entomology, *Corn Rootworms* (last updated 2024-03-29). License: unknown (© Kansas State University).
+3. Magdoff & van Es (2021), *Building Soils for Better Crops*, Ch. 11 Diversifying Cropping Systems, SARE.
+   License: unknown (© SARE).
+
+Each chunk is a contiguous verbatim excerpt (only whitespace normalized). Re-check against the live
+sources at any time: `node scripts/verify-research-corpus.mjs` (needs `pdftotext` for the PDF).
+
+## API
+
+- `GET /api/research/status` – pinned config, corpus version, bindings, saved-entry count.
+- `GET /api/research/corpus` – the corpus.
+- `POST /api/research/query` `{ "crops": ["corn"], "query": "…" }` – raw retrieval check:
+  `status` is `live` (≤ 2 passages), `empty` (unsupported crop, or nothing above the 0.45 cosine floor),
+  or `unavailable` (binding missing / failed).
+- `POST /api/research/explain` – body = the same `PlanRequest` as `/api/plan`, plus optional `rotationId`
+  (`plan-1`… or the current practice id). The Worker rebuilds the plan with `makePlan` (D1-cached, so the
+  dashboard's request is a cache hit) — facts never come from the client. Returns
+  `{ narrative, citations, status: live|saved|template, asOf, evidencePeriod, comparisonKey, research, … }`.
+- `POST /api/research/ingest` – `Authorization: Bearer $ADMIN_TOKEN` only (403 if the secret is unset).
+
+### Explanation rules
+
+The model returns `{rotationId, narrative, citations}`; quantities appear only as placeholders such as
+`{{plan-1/net_return}}`, `{{current/bad_years}}`, `{{field/weather_period}}`. Trusted code rejects the
+whole output (⇒ template) on: invalid JSON/structure, wrong `rotationId`, unknown fact IDs, facts from
+another rotation, any digit / `$` / `%` / number word outside placeholders, unknown citation IDs,
+certainty/confidence wording or "bare", > 3 sentences or > 600 chars. Numbers are rendered from the
+approved facts. The agronomist-check line is fixed text, never model-written.
+
+Failures: HTTP 410 / error 5028 (retired), timeout or provider error ⇒ no retry; use a saved explanation
+only when the **complete comparison key** matches and it re-validates, else the template.
+
+### Comparison key
+
+`k1 | lat,lon | climate period + hash(approved facts + engine facts) | water + recent crops |
+rotation id + crop/cover sequence | priority | PLAN_ENGINE_VERSION | corpus version | embedding id |
+generation model | prompt version`. Any change ⇒ saved output is not reused.
+
+## Morning steps (Tunk) — nothing below has been run yet
+
+1. `npx wrangler login` (if needed), then `bash scripts/setup-research-index.sh`
+   (creates the index and **both metadata indexes before any upsert**).
+   ⚠️ `wrangler.jsonc` now binds `RESEARCH_INDEX`; deploying before the index exists will fail.
+2. `npm run deploy`
+3. `ADMIN_TOKEN=… node scripts/ingest-research.mjs https://<worker-url>` — expects `dimensions: 768`;
+   prints one known query per crop tag (should be `live`) and `rice` (should be `empty`). Keep the
+   output as evidence of a real embedding call + Vectorize query.
+4. Check one real explanation: open a plan in the dashboard; the card badge should read "AI summary".
+   Record the response of `POST /api/research/explain` (status `live`, model id, latency).
+5. Capture saved demo output: `ADMIN_TOKEN=… node scripts/snapshot-research.mjs https://<worker-url> [scenarios.json]`.
+   Scenarios must equal what the dashboard sends (copy `lat`, `lon`, `water`, `priority`, `recentCrops`
+   from the `/api/plan` request in DevTools for each demo field). Only live results are written.
+   Review `src/worker/research/saved-evidence.json`, commit, `npm run deploy` again.
+6. Verify fallbacks: temporarily remove the `vectorize`/`ai` bindings (or `wrangler.offline.jsonc`) and
+   confirm prepared scenarios show "Saved summary" + saved passages with their retrieval date, and that
+   an unprepared field/priority shows "Standard summary" and "research unavailable".

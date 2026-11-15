@@ -1,0 +1,186 @@
+{
+  "corpusVersion": "soilsense-research-v1-2026-11-14",
+  "curatedAt": "2026-11-14",
+  "excerptRule": "Each chunk is a contiguous verbatim excerpt of the source; only whitespace/line breaks are normalized to single spaces. Verify with: node scripts/verify-research-corpus.mjs",
+  "sources": [
+    {
+      "id": "schlegel-bond-2021",
+      "title": "Alternative Cropping Systems with Limited Irrigation (Schlegel & Bond, Kansas Agricultural Experiment Station Research Reports, Vol. 7, Iss. 7, Southwest Research-Extension Reports)",
+      "url": "https://ksu.janeway.systems/kaesrr/article/7218/galley/7152/download",
+      "doi": "https://doi.org/10.4148/2378-5977.8107",
+      "publisher": "Kansas State University Agricultural Experiment Station and Cooperative Extension Service (New Prairie Press)",
+      "year": 2021,
+      "license": "Copyright 2021 the Author(s). Contents of this publication may be freely reproduced for educational purposes. All other rights reserved.",
+      "attribution": "Schlegel, A. and Bond, D. (2021) \"Alternative Cropping Systems with Limited Irrigation,\" Kansas Agricultural Experiment Station Research Reports: Vol. 7: Iss. 7. https://doi.org/10.4148/2378-5977.8107",
+      "applicability": "Single research site near Tribune, KS (southwest Kansas), sprinkler irrigation limited to 10 inches per year, no-till, 2012-2020. Results may not transfer to other fields, rainfall or irrigation levels."
+    },
+    {
+      "id": "kstate-corn-rootworm",
+      "title": "Corn Rootworms (K-State Department of Entomology, Extension: Crop Protection, Corn)",
+      "url": "https://entomology.k-state.edu/extension/crop-protection/corn/cornrootworm.html",
+      "doi": null,
+      "publisher": "Kansas State University Department of Entomology",
+      "year": 2024,
+      "license": "unknown (page states \"© Kansas State University\"; no reuse license found)",
+      "attribution": "J.P. Michaud, K-State Department of Entomology, \"Corn Rootworms\", last updated 3/29/2024.",
+      "applicability": "Written for Kansas; the page notes rotation-resistant rootworm behavior seen in some upper Midwestern states has not been reported in Kansas."
+    },
+    {
+      "id": "sare-bsbc-ch11",
+      "title": "Building Soils for Better Crops, Ch 11. Diversifying Cropping Systems (SARE Outreach)",
+      "url": "https://www.sare.org/publications/building-soils-for-better-crops/diversifying-cropping-systems",
+      "doi": null,
+      "publisher": "Sustainable Agriculture Research & Education (SARE), USDA NIFA",
+      "year": 2021,
+      "license": "unknown (page states \"© 2026 Sustainable Agriculture Research & Education\"; no reuse license found)",
+      "attribution": "Magdoff, F. and van Es, H. (2021). Building Soils for Better Crops, Ch 11. Diversifying Cropping Systems. SARE Outreach.",
+      "applicability": "General U.S. guidance summarizing many studies (Iowa, Missouri, South Dakota, eastern Canada and others); not specific to any one field."
+    }
+  ],
+  "chunks": [
+    {
+      "id": "ksu-li-01",
+      "sourceId": "schlegel-bond-2021",
+      "crops": [
+        "corn",
+        "sorghum",
+        "winter_wheat"
+      ],
+      "topic": "summary",
+      "text": "A limited irrigation study involving four cropping systems and evaluating four crop rotations was initiated at the Southwest Research-Extension Center near Tribune, KS, in 2012. The cropping systems were two annual systems (continuous corn and continuous grain sorghum) and two 2-year systems (corn-grain sorghum and corn-winter wheat). In 2020, corn yields were similar for all rotations, although averaged across the past 8 years, corn yields were greater following wheat than following corn. There were no significant differences in grain sorghum yields in 2020, which was similar to the multi-year average. Wheat yields were below the multi-year average."
+    },
+    {
+      "id": "ksu-li-02",
+      "sourceId": "schlegel-bond-2021",
+      "crops": [
+        "corn",
+        "sorghum",
+        "winter_wheat"
+      ],
+      "topic": "methods / irrigation treatment",
+      "text": "The study evaluates four different crop rotations with a limited irrigation allocation. The rotations include 1- and 2-year rotations. The crop rotations are 1) continuous corn; 2) corn-winter wheat; 3) corn-grain sorghum; and 4) continuous grain sorghum (a total of 6 treatments). All rotations are limited to 10 inches of irrigation water annually. All crops are grown no-till, while other cultural practices (hybrid selection, fertility practices, weed control, etc.) are selected to optimize production. All phases of each rotation are present each year and replicated four times. Irrigations are scheduled to supply water at the most critical stress periods for the specific crops and limited to 1.5 inches per week."
+    },
+    {
+      "id": "ksu-li-03",
+      "sourceId": "schlegel-bond-2021",
+      "crops": [
+        "corn",
+        "sorghum",
+        "winter_wheat"
+      ],
+      "topic": "yields by rotation",
+      "text": "Wheat yields in 2020 (33 bu/a) were less than the long-term average (51 bu/a) (Tables 1 and 2). Precipitation was near normal from April through September (13.13 inches in 2020 vs. normal of 12.93 inches). Corn yields in 2020 were slightly below the long-term average with no differences among rotations. Grain sorghum yields were near the long-term average with no differences among rotations. On average, corn yields were greatest following wheat and least following corn, with little difference in grain sorghum yields following corn or sorghum (Table 2)."
+    },
+    {
+      "id": "ksu-li-04",
+      "sourceId": "schlegel-bond-2021",
+      "crops": [
+        "corn",
+        "sorghum",
+        "winter_wheat",
+        "fallow"
+      ],
+      "topic": "soil water / fallow",
+      "text": "Averaged across the 8-year period, fallow accumulation prior to corn was greater following wheat than following sorghum or corn; however, fallow efficiency was greatest following sorghum (shortest fallow period) [Table 4]. For sorghum in 2020, fallow accumulation and efficiency were greater following corn than sorghum. Fallow accumulation prior to sorghum was also greater following corn than sorghum when averaged across the 8-year period. There were no differences in crop water use due to rotation for either crop in 2020 or averaged across years."
+    },
+    {
+      "id": "ksu-crw-01",
+      "sourceId": "kstate-corn-rootworm",
+      "crops": [
+        "corn"
+      ],
+      "topic": "pests: continuous corn",
+      "text": "Significant rootworm problems in Kansas usually occur in fields continuously planted to corn, and are typically caused by western corn rootworms. Larvae cause damage by pruning corn roots and tunnelling within them. Severe damage will cause the plants to lodge or lean over, reducing the ability of the leaves to harvest sunlight and the plant’s ability to tolerate moisture stress and access. Research indicates that rootworm-infested corn that lodges will yield less than similarly infested corn that does not lodge."
+    },
+    {
+      "id": "ksu-crw-02",
+      "sourceId": "kstate-corn-rootworm",
+      "crops": [
+        "corn",
+        "soybean"
+      ],
+      "topic": "pests: rotation",
+      "text": "Occasionally, rootworms cause problems when corn follows weedy soybeans, or soybeans infested with volunteer corn that persisted through July, as these situations can elicit adult beetles to lay eggs in the field in fall. In some upper Midwestern states, rotation with soybeans has been a cultural strategy for reducing rootworm populations, but some northern corn rootworms have evolved eggs that remain dormant for two winters before hatching, thus reconnecting with their host plant in the next rotation cycle. Another form of 'rotation resistance' occurs when adults lay eggs in soybean fields in late summer that hatch the following spring when corn is now in the field. However, these phenomena have not been reported in Kansas, and crop rotation still works well as part of an integrated management strategy. Western corn rootworms, by far the state’s most significant species, are generally not known to lay many eggs in non-corn fields."
+    },
+    {
+      "id": "ksu-crw-03",
+      "sourceId": "kstate-corn-rootworm",
+      "crops": [
+        "corn",
+        "soybean"
+      ],
+      "topic": "pests: first-year corn",
+      "text": "Rootworm insecticides are rarely necessary in first year corn fields. Rootworms are less problematic in sandy soils, and in southeast Kansas, south of U.S. Highway 54. Previous year counts of adult beetles can be used to estimate the likelihood of economic damage and the need for insecticide protection the following growing season."
+    },
+    {
+      "id": "sare-11-01",
+      "sourceId": "sare-bsbc-ch11",
+      "crops": [
+        "soybean",
+        "alfalfa",
+        "corn",
+        "cover"
+      ],
+      "topic": "nitrogen / legumes",
+      "text": "In addition, rotations that include legumes may supply varying amounts of nitrogen to succeeding crops. An annual legume harvested for seed, such as soybeans, provides little nitrogen for the following crop. On the other hand, a multiyear legume sod such as alfalfa may well supply all the nitrogen needed by the following crop. Growing sod-type forage grasses, legumes and grass-legume mixes as part of the rotation also increases soil organic matter. When you alternate two warm season crops, such as corn and soybeans, you have a very simple rotation that, unless cover crops are used as well, leaves the soil bare for long periods of time."
+    },
+    {
+      "id": "sare-11-02",
+      "sourceId": "sare-bsbc-ch11",
+      "crops": [
+        "corn",
+        "alfalfa"
+      ],
+      "topic": "rotation effect",
+      "text": "Rotations are an important part of any sustainable agricultural system. Yields of crops grown in rotations are typically 10% higher than those of crops grown in monoculture in normal growing seasons and as much as 25% higher in droughty growing seasons. Rotations involving three or more crops with different characteristics generally lead to positive changes in soil health, thus enhancing crop growth. And when you grow a grain or vegetable crop following a forage legume, the extra supply of nitrogen certainly helps. In fact, yields of crops grown in rotation are often still higher than those of crops grown in monoculture, even when both are supplied with plentiful amounts of nitrogen. Research in Iowa found that even using 240 pounds of nitrogen per acre when growing corn after corn, yields were not as good as corn following alfalfa with little or no nitrogen applied."
+    },
+    {
+      "id": "sare-11-03",
+      "sourceId": "sare-bsbc-ch11",
+      "crops": [
+        "corn",
+        "soybean",
+        "winter_wheat",
+        "cover"
+      ],
+      "topic": "living roots",
+      "text": "The percent of the time that living roots are present during a rotation is important. The period that active roots are present varies considerably, ranging from 32% of the time for a corn-soybean rotation to 57% for a soybean-wheat rotation to 76% for a three-year, soybean-wheat-corn rotation (Table 11.1). Just adding winter wheat to a corn-soybean alternation can greatly increase the time that active roots are present. (Doing so also assists in controlling weeds, increases corn yields and provides another crop to sell.) This is primarily the result of the fact that winter annuals, perennials and cover crops extend the growing period compared to summer annuals. As mentioned above, when soils are covered with living vegetation for a longer period of time, there tends to be decreased erosion, decreased loss of nitrate and less groundwater contamination."
+    },
+    {
+      "id": "sare-11-04",
+      "sourceId": "sare-bsbc-ch11",
+      "crops": [
+        "oats",
+        "alfalfa",
+        "corn",
+        "soybean"
+      ],
+      "topic": "extended rotations",
+      "text": "An experiment comparing a typical corn-soybean crop alternation with a rotation that adds a year of oats and red clover (harvesting oats and straw) or a two-year alfalfa crop found many improvements with the more complex rotations: they resulted in less energy use, lower greenhouse gas emissions and better air quality without “compromising economic or agronomic performance.”"
+    },
+    {
+      "id": "sare-11-05",
+      "sourceId": "sare-bsbc-ch11",
+      "crops": [
+        "cover",
+        "winter_wheat",
+        "alfalfa",
+        "oats"
+      ],
+      "topic": "cover crops / water quality",
+      "text": "Thus, rotations that include perennial forages and winter grains help maintain or enhance the quality of both ground and surface waters. And, while intensive use of cover crops helps water quality in a similar way, cover crops should not be viewed as a substitute for a good rotation of economic crops. It’s the combination of the positive effects of both good rotations and routine cover crop use that provides the greatest improvements in soil physical, chemical and biological characteristics."
+    },
+    {
+      "id": "sare-11-06",
+      "sourceId": "sare-bsbc-ch11",
+      "crops": [
+        "alfalfa",
+        "corn",
+        "oats",
+        "winter_wheat"
+      ],
+      "topic": "sequencing",
+      "text": "Follow a legume forage crop, such as clover or alfalfa, with a high-nitrogen-demanding crop, such as corn, to take advantage of the nitrogen supply. Grow less of nitrogen-demanding crops, such as oats, barley and wheat, in the second or third year after a legume sod."
+    }
+  ]
+}

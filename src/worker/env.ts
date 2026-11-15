@@ -32,4 +32,12 @@ export interface Env {
   LIVE_ROOM?: DurableObjectNamespace;
   /** Name of the live room instance (default "demo"). */
   LIVE_ROOM_NAME?: string;
+  /** Field Watch agents (Agents SDK, class FieldAgent): one instance per watched field, named by field id. */
+  FIELD_AGENT?: DurableObjectNamespace;
+  /** Vectorize index for cited research passages (#7): soilsense-research-v1, 768 dims, cosine. Optional. */
+  RESEARCH_INDEX?: Vectorize;
+  /** NASA POWER refresh Workflow (PowerRefreshWorkflow): fetch -> validate -> publish current snapshots (optional). */
+  POWER_REFRESH?: Workflow<{ trigger?: "cron" | "manual" }>;
+  /** R2 bucket for immutable, content-addressed evidence bundles (optional; D1 still indexes snapshots without it). */
+  EVIDENCE?: R2Bucket;
 }

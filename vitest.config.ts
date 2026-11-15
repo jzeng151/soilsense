@@ -4,7 +4,11 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   resolve: {
     // "cloudflare:workers" only exists in the Workers runtime; tests use a small stub.
-    alias: { "cloudflare:workers": fileURLToPath(new URL("./test/stubs/cloudflare-workers.ts", import.meta.url)) },
+    // The Agents SDK imports other Workers-only modules, so tests use a stub for it too.
+    alias: {
+      "cloudflare:workers": fileURLToPath(new URL("./test/stubs/cloudflare-workers.ts", import.meta.url)),
+      agents: fileURLToPath(new URL("./test/stubs/agents.ts", import.meta.url)),
+    },
   },
   test: {
     include: ["test/**/*.test.ts"],

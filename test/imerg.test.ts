@@ -36,19 +36,29 @@ describe("IMERG candidate adapter: hand-made protocol mocks, NOT live verificati
   const f = vi.fn(); await expect(retrieveSubset({}, 38.1095, -100.706, "2022-07-01", "2022-07-01", "final", f)).rejects.toThrow(/EARTHDATA_TOKEN/); expect(f).not.toHaveBeenCalled();
   expect(() => dapUrl("https://example.com/collections/x/granules/y")).toThrow();
  });
- it("discovers granules, fetches only a constrained point, sends bearer only to DAP and caches", async () => {
+ it("discovers granules, fetches only a constrained DAP4 point, follows NASA-only auth redirects and caches", async () => {
   const calls: { url: string; init?: RequestInit }[] = [];
+  const liveLink = link.replace("GPM_3IMERGDF.07%3Amock.nc4", "GPM_3IMERGDL.07%3A3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4");
   const fetcher: Fetcher = async (url, init) => { calls.push({ url, init });
-   if (url.includes("cmr.earthdata")) return Response.json({ feed: { entry: [{ time_start: "2022-07-01T00:00:00.000Z", links: [{ title: "OPeNDAP request URL", href: link }] }] } });
-   return new Response(url.endsWith(".dds") ? mockDds : url.endsWith(".das") ? mockDas : mockAscii());
+   if (url.includes("cmr.earthdata")) return Response.json({ feed: { entry: [{ time_start: "2026-11-13T00:00:00.000Z", links: [{ title: "OPeNDAP request URL", href: liveLink }] }] } });
+   if (url.endsWith(".dmr.xml")) return new Response(readFileSync("test/fixtures/imerg-live/late-20261113.dmr.xml", "utf8"));
+   if (!url.includes("urs.earthdata")) return new Response(null, { status: 302, headers: { Location: "https://urs.earthdata.nasa.gov/mock-redirect" } });
+   return new Response(new Uint8Array(readFileSync("test/fixtures/imerg-live/late-finney-20261113.dap")));
   };
-  const value = await retrieveSubset({ EARTHDATA_TOKEN: "test-only-not-a-real-token" }, 38.1095, -100.706, "2022-07-01", "2022-07-01", "final", fetcher);
-  expect(value.observations[0]?.mm).toBe(2); expect(calls).toHaveLength(4);
+  const value = await retrieveSubset({ EARTHDATA_TOKEN: "test-only-not-a-real-token" }, 38.1095, -100.706, "2026-11-13", "2026-11-13", "late", fetcher);
+  expect(value.observations[0]?.mm).toBe(0); expect(calls).toHaveLength(4);
   expect(calls[0]?.init?.headers).toEqual({});
-  expect(calls[1]?.init?.headers).toEqual({ Authorization: "Bearer test-only-not-a-real-token" });
-  expect(calls.every((c) => c.init?.redirect === "error")).toBe(true);
-  expect(decodeURI(calls[3]!.url)).toContain(".ascii?precipitation[");
-  await retrieveSubset({}, 38.1095, -100.706, "2022-07-01", "2022-07-01", "final", fetcher); expect(calls).toHaveLength(4);
+  expect(calls[3]?.init?.headers).toEqual({ Authorization: "Bearer test-only-not-a-real-token" });
+  expect(calls.every((c) => c.init?.redirect === "manual")).toBe(true);
+  expect(decodeURIComponent(calls[2]!.url)).toContain(".dap?dap4.ce=/precipitation[");
+  await retrieveSubset({}, 38.1095, -100.706, "2026-11-13", "2026-11-13", "late", fetcher); expect(calls).toHaveLength(4);
+ });
+ it("rejects a redirect to a non-NASA host before forwarding credentials", async () => {
+  const calls: string[] = [];
+  const liveLink = link.replace("GPM_3IMERGDF.07%3Amock.nc4", "GPM_3IMERGDL.07%3A3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4");
+  const f: Fetcher = async (url) => { calls.push(url); return url.includes("cmr.earthdata") ? Response.json({ feed: { entry: [{ time_start: "2026-11-13T00:00:00Z", links: [{ title: "OPeNDAP", href: liveLink }] }] } }) : new Response(null, { status: 302, headers: { Location: "https://example.com/token-sink" } }); };
+  await expect(retrieveSubset({ EARTHDATA_TOKEN: "test-only" }, 42.0563, -93.495, "2026-11-13", "2026-11-13", "late", f)).rejects.toThrow(/Untrusted/);
+  expect(calls).toHaveLength(2); expect(calls.some(url => url.includes("example.com"))).toBe(false);
  });
  it("compares multi-day totals without claiming aligned observation intervals", () => {
   const subset = { observations: Array.from({ length: 14 }, () => ({ mm: 2 })), product: PRODUCTS.final } as Subset;

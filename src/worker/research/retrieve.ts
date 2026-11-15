@@ -96,6 +96,8 @@ export async function retrieveLive(
   const [vector] = await embed(deps.ai, [query], deps.gatewayId);
   if (!vector) throw new Error("embedding: empty");
   const res = await deps.index.query(vector, {
+    // All shared research is in the default namespace. Never search field-memory namespaces.
+    namespace: "",
     topK: 10,
     returnMetadata: "indexed",
     filter: { corpus: { $in: [CORPUS_VERSION, DOCS_CORPUS] }, crop: tags.length === 1 ? { $eq: tags[0]! } : { $in: tags } },

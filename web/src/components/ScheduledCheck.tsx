@@ -4,6 +4,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { FieldResearchNote } from "../../../src/shared/fieldResearch";
+import type { ImergContext } from "../../../src/shared/imergContext";
+import { ImergRunContext } from "./ImergRunContext";
 import { ResearchNote } from "./ResearchNote";
 
 type Status = "pending" | "ok" | "watch" | "dry" | "insufficient" | "inactive" | "error";
@@ -26,6 +28,7 @@ interface AgentRun {
   headline: string | null;
   reasons: Reason[];
   researchNote?: FieldResearchNote;
+  imergContext?: ImergContext;
   metrics: { rainPercentile: number | null; rootzonePercentile: number | null; rain14Mm: number | null; normalPeriod: string | null } | null;
   snapshot: { label: string; source: string; comparisonYears: string; windowStart: string | null; windowEnd: string | null; inputSha256: string | null } | null;
 }
@@ -236,6 +239,7 @@ export function ScheduledCheck() {
                       </span>
                     </summary>
                     <div className="fw-detail">
+                      <ImergRunContext context={r.imergContext} />
                       <ResearchNote note={r.researchNote} />
                       {r.reasons.length > 0 && (
                         <ul className="fw-reasons">

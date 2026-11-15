@@ -5,6 +5,8 @@
 // it schedules the check CHECK_DELAY_SECONDS ahead on Cloudflare, so the result is produced and saved
 // even if the browser is closed, and reopening the page shows it without running anything again.
 
+import { imergContextFor } from "./imergContext";
+import type { ImergContext } from "../../shared/imergContext";
 import type { FieldResearchNote } from "../../shared/fieldResearch";
 import { researchNoteFor } from "./researchNote";
 import type { Env } from "../env";
@@ -55,6 +57,7 @@ export interface AgentRun {
   sources: { name: string; url: string; detail: string }[];
   /** Optional for older persisted runs and non-alert results. */
   researchNote?: FieldResearchNote;
+  imergContext?: ImergContext;
 }
 
 export interface RunStore {
@@ -170,7 +173,7 @@ export async function evaluateLive(
   now: Date,
   deps: FieldWatchDeps = defaultDeps,
   history?: Awaited<ReturnType<FieldWatchDeps["history"]>>,
-): Promise<{ result: ReturnType<typeof evaluateField>; kansas: KansasSignal | null; snapshot: SnapshotRef }> {
+): Promise<{ result: ReturnType<typeof evaluateField>; kansas: KansasSignal | null; snapshot: SnapshotRef; imergContext: ImergContext }> {
   const [hist, recent, kansas] = await Promise.all([
     history ? Promise.resolve(history) : deps.history(env, field, now),
     deps.recent(env.DB, field, now),
@@ -180,6 +183,7 @@ export async function evaluateLive(
   return {
     result,
     kansas,
+    imergContext: await imergContextFor(env, field, now, recent),
     snapshot: {
       label: "Current conditions",
       source: `NASA POWER daily (last ~60 days) at the grid cell containing ${field.lat}, ${field.lon}`,
@@ -213,6 +217,7 @@ export async function executeRun(
     let recentMap: DayMap;
     let snapshot: SnapshotRef;
     let kansas = null;
+    let imergContext: ImergContext | undefined;
     if (run.mode === "replay") {
       const preset = REPLAY_PRESETS.find((p) => p.id === run.replayId);
       if (!preset) throw new Error(`unknown replay ${run.replayId}`);
@@ -251,6 +256,7 @@ export async function executeRun(
       kansas = live.kansas;
       result = live.result;
       snapshot = live.snapshot;
+      imergContext = live.imergContext;
     }
     const done: AgentRun = {
       ...run,
@@ -259,6 +265,7 @@ export async function executeRun(
       headline: run.mode === "replay" ? `Historical replay: ${result.headline}` : result.headline,
       reasons: result.reasons,
       metrics: result.metrics,
+      imergContext,
       snapshot,
       sources: sourcesFor(field, kansas),
       researchNote: await researchNoteFor(result.status, env, field, crop),

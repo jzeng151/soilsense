@@ -4,6 +4,13 @@ import type { CropId } from "../../src/shared/types";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
+  "IMERG rainfall context": "Contexto de lluvia IMERG",
+  "14-day totals ({start} to {end}): IMERG UTC {imerg} mm · POWER LST {power} mm": "Totales de 14 días ({start} a {end}): IMERG UTC {imerg} mm · POWER LST {power} mm",
+  "Same date labels, different UTC/LST day boundaries. Context only; rule v2 still uses POWER. Neither estimate is field truth or agronomic confidence.": "Mismas fechas, distintos límites diarios UTC/LST. Solo contexto; la regla v2 sigue usando POWER. Ninguna estimación es una medición de la parcela ni una garantía agronómica.",
+  "Accepted IMERG Late V07 snapshot": "Instantánea aceptada de IMERG Late V07",
+  "Accepted IMERG observations are stale; POWER-only check.": "Las observaciones IMERG aceptadas están desactualizadas; la revisión usa solo POWER.",
+  "Accepted IMERG evidence is unavailable; POWER-only check.": "La evidencia IMERG aceptada no está disponible; la revisión usa solo POWER.",
+  "unavailable": "no disponible",
   "In short": "En resumen",
   "Crop grown this season": "Cultivo de esta temporada",
   "Water supply": "Suministro de agua",

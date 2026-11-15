@@ -218,6 +218,7 @@ async function evaluateAndSave(
       ],
       metrics: live.result.metrics,
       snapshot: live.snapshot,
+      imergContext: live.imergContext,
       sources: sourcesFor(field, live.kansas),
     };
   } catch (err) {

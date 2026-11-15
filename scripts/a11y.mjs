@@ -18,7 +18,7 @@ try {
       await page.evaluate(() => document.fonts.ready);
       await page.addScriptTag({ content: axe.source });
       const result = await page.evaluate(async ({ tags, include }) => window.axe.run(include ? { include: [include] } : document, { runOnly: {type:'tag', values:tags} }), { tags: report.tags, include });
-      const inventory = await page.evaluate(() => ({ headings: [...document.querySelectorAll('h1,h2,h3')].map(e=>e.textContent.trim()), details: [...document.querySelectorAll('details')].map(d=>({summary:d.querySelector('summary')?.textContent.trim(),open:d.open})), fieldWatchRows: document.querySelectorAll('.fw-row').length, horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth }));
+      const inventory = await page.evaluate(() => ({ headings: [...document.querySelectorAll('h1,h2,h3')].map(e=>e.textContent.trim()), details: [...document.querySelectorAll('details')].map(d=>({summary:d.querySelector('summary')?.textContent.trim(),open:d.open})), fieldWatchRows: document.querySelectorAll('.fw-row').length, selectedGoals: [...document.querySelectorAll('.farmer-goals input:checked')].map(e=>e.closest('label').textContent.trim()), goalScoreDisclosures: document.querySelectorAll('.goal-score').length, vegetation: document.querySelector('[aria-label="Historical vegetation evidence"]')?.textContent.trim() ?? null, harvestTables: document.querySelectorAll('.vd-table').length, pageLanguage: document.documentElement.lang, horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth }));
       report.scans.push({ state, language, width, fixture: state === 'admin-docs-review-fixture' ? 'Synthetic local-only document API interception; not authenticated server coverage' : null, url: page.url(), inventory, ...result });
       if (process.env.A11Y_SCREENSHOTS) {
         await mkdir(process.env.A11Y_SCREENSHOTS,{recursive:true});
@@ -35,6 +35,10 @@ try {
     await scan('field-confirmation');
     await page.getByRole('button', {name:confirm}).click();
     await scan('three-questions');
+    await page.getByRole('checkbox', { name: /^Water conservation/ }).check();
+    await page.getByRole('checkbox', { name: /^Organic matter/ }).check();
+    if (await page.locator('.farmer-goals input:checked').count() !== 2 || await page.locator('.farmer-goals input:disabled').count() !== 3) throw new Error('Goal limit state not exercised');
+    await scan('two-goals-selected');
     await page.getByRole('button', {name:showPlan}).click();
     await page.locator('.jr-answer').waitFor();
     // Exercise opt-in evidence cards as well as automatically fetched card contents.
@@ -47,6 +51,7 @@ try {
     await page.waitForTimeout(500);
     await page.evaluate(() => document.querySelectorAll('details').forEach(d => { d.open = true; }));
     if (await page.locator('details:not([open])').count()) throw new Error('Plan disclosures were not fully expanded');
+    if (await page.locator('.goal-score').count() === 0) throw new Error('Goal score card was not rendered');
     await scan('kansas-plan-expanded');
     await page.goto(base);
     await page.locator('.fw').waitFor();
@@ -79,4 +84,4 @@ try {
   await mkdir(output.replace(/[/\\][^/\\]+$/, ''), {recursive:true});
   await writeFile(output, JSON.stringify(report, null, 2) + '\n');
 }
-if (report.scans.length !== 28 || report.scans.some(s=>s.violations.length || s.inventory.horizontalOverflow)) process.exitCode = 1;
+if (report.scans.length !== 32 || report.scans.some(s=>s.violations.length || s.inventory.horizontalOverflow)) process.exitCode = 1;

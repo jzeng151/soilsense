@@ -102,7 +102,11 @@ export async function generateAI(ai: AiRunner, input: unknown, policy: CallPolic
   const models = [...new Set([primary, GENERATION_FALLBACK])];
   let error: unknown;
   for (let i = 0; i < models.length; i++) {
-    try { return { output: await runAI(ai, models[i]!, input, { ...policy, correlationId, fallback: i > 0 }), model: models[i]! }; }
+    // Preserve Gemma's non-thinking explanation behavior without sending its model-specific option to Llama.
+    const modelInput = models[i] === GENERATION.model
+      ? { ...(input as Record<string, unknown>), chat_template_kwargs: { enable_thinking: false } }
+      : input;
+    try { return { output: await runAI(ai, models[i]!, modelInput, { ...policy, correlationId, fallback: i > 0 }), model: models[i]! }; }
     catch (err) { error = err; }
   }
   throw error;

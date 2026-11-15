@@ -42,6 +42,8 @@ describe("AI Gateway public adapters", () => {
     const run = vi.fn().mockRejectedValueOnce(new Error("rate limit")).mockResolvedValueOnce({ response: "ok" });
     expect(await generateAI({ run }, { messages: [] }, { feature: "test-generation", db })).toEqual({ output: { response: "ok" }, model: GENERATION_FALLBACK });
     expect(run.mock.calls.map(call => call[0])).toEqual([GENERATION.model, GENERATION_FALLBACK]);
+    expect(run.mock.calls[0]![1]).toMatchObject({ chat_template_kwargs: { enable_thinking: false } });
+    expect(run.mock.calls[1]![1]).not.toHaveProperty("chat_template_kwargs");
     expect(RETIRED_MODELS).not.toContain(GENERATION_FALLBACK);
     expect(run.mock.calls[0]![2].gateway.metadata.correlationId).toBe(run.mock.calls[1]![2].gateway.metadata.correlationId);
     expect(await aiUsage(db)).toMatchObject({ available: true, features: [{ feature: "test-generation", calls: 2, failures: 1, fallbacks: 1 }] });

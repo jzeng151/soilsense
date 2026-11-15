@@ -34,7 +34,13 @@
   "migrations": [{ "tag": "v1-live-room", "new_sqlite_classes": ["LiveRoom"] }],
 
   // Field Watch: check every watched field each hour in the background (scheduled() in src/worker/index.ts).
-  "triggers": { "crons": ["17 * * * *"] },
+  "triggers": { "crons": ["17 * * * *", "43 5 * * *"] },
+
+  // NASA POWER snapshot refresh: daily at 05:43 UTC (second cron above) and POST /api/refresh/run (ADMIN_TOKEN).
+  "workflows": [{ "name": "soilsense-power-refresh", "binding": "POWER_REFRESH", "class_name": "PowerRefreshWorkflow" }],
+
+  // Immutable, content-addressed evidence bundles. Create with: npx wrangler r2 bucket create soilsense-evidence
+  "r2_buckets": [{ "binding": "EVIDENCE", "bucket_name": "soilsense-evidence" }],
 
   "vars": {
     "AI_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",

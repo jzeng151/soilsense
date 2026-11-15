@@ -8,9 +8,13 @@ import { handleAgentSocket } from "./routes/agent";
 import { voice } from "./routes/voice";
 import { runFieldWatch } from "./fieldwatch/run";
 import { live } from "./routes/live";
+import { refresh } from "./routes/refresh";
+import { POWER_REFRESH_CRON, startPowerRefresh } from "./refresh/workflow";
 
 // Durable Object classes must be exported from the main module.
 export { LiveRoom } from "./live/room";
+// Workflow classes too (wrangler "workflows" binding POWER_REFRESH).
+export { PowerRefreshWorkflow } from "./refresh/workflow";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -26,6 +30,8 @@ app.get("/voice-agent", (c) => handleAgentSocket(c.req.raw, c.env));
 app.route("/api/admin", admin);
 // Live room (Durable Object): real-time events for the dashboard. Mounted before /api so it isn't shadowed.
 app.route("/api/live", live);
+// NASA POWER snapshot refresh (Workflow) status, evidence manifests and the admin-only trigger.
+app.route("/api/refresh", refresh);
 app.route("/api", api);
 app.route("/voice", voice);
 
@@ -42,6 +48,11 @@ app.onError((err, c) => {
 // Cloudflare Cron Trigger (wrangler "triggers.crons"): Field Watch checks every watched field in the
 // background, with no browser open, and saves each result in D1.
 async function scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+  // Daily NASA POWER snapshot refresh (separate cron): start the Workflow instead of a Field Watch run.
+  if (controller.cron === POWER_REFRESH_CRON) {
+    ctx.waitUntil(startPowerRefresh(env, "cron").catch((err) => console.error(JSON.stringify({ msg: "power refresh start failed", err: String(err) }))));
+    return;
+  }
   ctx.waitUntil(
     runFieldWatch(env, "cron").catch((err) => console.error(JSON.stringify({ msg: "field watch cron failed", cron: controller.cron, err: String(err) }))),
   );

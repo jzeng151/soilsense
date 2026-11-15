@@ -1,0 +1,19 @@
+.decision-notice { padding: 12px; border-left: 4px solid var(--ink, #18352b); background: var(--surface-alt, #f0f4ed); line-height: 1.6; }
+.data-evidence, .plan-assumptions { min-width: 0; overflow-wrap: anywhere; }
+.data-evidence details, .plan-assumptions { margin-block: 12px; }
+.data-evidence summary, .plan-assumptions summary { min-height: 44px; padding: 12px 8px; cursor: pointer; line-height: 1.5; }
+.data-evidence a, .plan-assumptions a { display: inline-block; min-height: 44px; padding-block: 10px; }
+.data-evidence :focus-visible, .plan-assumptions :focus-visible { outline: 3px solid #245a47; outline-offset: 3px; }
+.data-evidence li, .plan-assumptions li { margin-block: 8px; line-height: 1.6; }
+.data-table-scroll { max-width: 100%; overflow-x: auto; }
+.data-evidence table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+.data-evidence th, .data-evidence td { padding: 10px; vertical-align: top; border-bottom: 1px solid #c9d3c8; }
+.data-evidence th { font-weight: 600; }
+.data-evidence caption { text-align: left; padding: 8px; }
+.plan-assumptions blockquote { margin-inline: 0; padding-left: 12px; border-left: 3px solid #c9d3c8; }
+.jr .wi-years button, .jr .jr-more > summary, .jr .fine > summary, .jr .link-btn { min-height: 44px; }
+@media (max-width: 480px) {
+  .data-evidence table { table-layout: fixed; font-size: 0.8rem; }
+  .data-evidence th, .data-evidence td { padding: 6px; }
+  .plan-assumptions { width: 100%; }
+}

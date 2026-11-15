@@ -1,6 +1,8 @@
-import { Hono, type MiddlewareHandler } from "hono";
+import { generateAI, type AiRunner } from "../lib/ai";
+import { Hono, type Handler, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
-import type { CropId, PlanRequest, Priority } from "../../shared/types";
+import { hasMeasurements, validateMeasurements } from "../../shared/measurements";
+import { GOALS, type CropId, type Goal, type PlanRequest, type Priority } from "../../shared/types";
 import { currentUser } from "../lib/auth";
 import { UpstreamError } from "../lib/http";
 import { getSecondOpinion } from "../data/kstate";
@@ -8,11 +10,17 @@ import { getField, isInContiguousUS, logPlan, makePlan } from "../service";
 import { auth, type AppEnv } from "./auth";
 import { fieldWatch } from "./fieldwatch";
 import { scout } from "./scout";
+import { getMemoryRecord } from "../fieldMemory";
 import { research } from "./research";
+import { docs } from "./docs";
 
 const PRIORITIES: Priority[] = ["profit", "soil", "risk", "balanced"];
 
+import { smap } from "./smap";
+
 export const api = new Hono<AppEnv>();
+
+import { cropTiming } from "./cropTiming";
 
 // ---- Simple per-isolate rate limit (use Cloudflare rate-limiting rules for hard limits). ----
 const hits = new Map<string, { count: number; reset: number }>();
@@ -40,6 +48,7 @@ api.use("*", async (c, next) => {
 
 // ---- Accounts: sign up / sign in / sign out, then require a signed-in user for the dashboard's data routes. ----
 api.route("/auth", auth);
+api.route("/docs", docs);
 
 function adminTokenMatches(header: string | undefined, token: string | undefined): boolean {
   if (!token || !header) return false;
@@ -85,11 +94,20 @@ export function validatePlanRequest(body: unknown): PlanRequest | string {
     for (const c of b.recentCrops) if (!ALL_CROPS.includes(c as CropId)) return `unknown crop: ${String(c)}`;
     recentCrops = b.recentCrops as CropId[];
   }
+  let goals: Goal[] | undefined;
+  if (b.goals !== undefined) {
+    if (!Array.isArray(b.goals) || b.goals.length > 2) return "goals must be an array of up to 2 distinct goals";
+    for (const g of b.goals) if (!GOALS.includes(g as Goal)) return `unknown goal: ${String(g)}`;
+    if (new Set(b.goals).size !== b.goals.length) return "goals must be distinct";
+    goals = b.goals as Goal[];
+  }
   const language = b.language === "es" ? "es" : "en";
   // Water beyond rain: "rain" | "limited" | "full". Older clients send only `irrigated`.
   if (b.water !== undefined && b.water !== "rain" && b.water !== "limited" && b.water !== "full") return 'water must be "rain", "limited" or "full"';
   const water = (b.water as "rain" | "limited" | "full" | undefined) ?? (b.irrigated === true ? "full" : "rain");
-  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language };
+  const measurements = validateMeasurements(b);
+  if (typeof measurements === "string") return measurements;
+  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language, ...measurements, ...(goals !== undefined ? { goals } : {}) };
 }
 
 function upstreamMessage(err: unknown): { status: 502 | 500; body: { error: string; detail?: string } } {
@@ -123,6 +141,19 @@ api.get("/second-opinion", async (c) => {
   return c.json(opinion);
 });
 
+// Citation target resolves only retained, public demo records; no owner/caller data is exposed.
+api.get("/field-memory/:field/:vector", async (c) => {
+  if (!c.env.DB) return c.json({ error: "Field memory unavailable" }, 503);
+  try {
+    const record = await getMemoryRecord(c.env.DB, c.req.param("field"), c.req.param("vector"));
+    if (!record) return c.json({ error: "Field memory record not found" }, 404);
+    c.header("Cache-Control", "no-store");
+    return c.json(record);
+  } catch {
+    return c.json({ error: "Field memory unavailable" }, 503);
+  }
+});
+
 api.post("/plan", async (c) => {
   let body: unknown;
   try {
@@ -137,6 +168,7 @@ api.post("/plan", async (c) => {
     const plan = await makePlan(c.env, req);
     c.executionCtx.waitUntil(logPlan(c.env, { channel: "web", plan }));
     c.header("Server-Timing", `plan;dur=${Date.now() - started}`);
+    if (hasMeasurements(req)) c.header("Cache-Control", "private, no-store");
     return c.json(plan);
   } catch (err) {
     const e = upstreamMessage(err);
@@ -181,11 +213,11 @@ api.post("/ask", async (c) => {
         "If the facts do not answer it, say so and suggest asking their county extension agent. Never invent numbers, prices, or guarantees. Use US units.";
       const user = `Recommended plan: ${String(body.planLabel ?? "").slice(0, 200)}\nSummary: ${String(body.summary ?? "").slice(0, 800)}\nFacts:\n- ${facts.join("\n- ")}\n\nQuestion: ${question}`;
       // Routed through Cloudflare AI Gateway (logs, analytics, caching). "default" is created automatically on first use.
-      const out = (await (c.env.AI as unknown as { run: (m: string, i: unknown, o?: unknown) => Promise<{ response?: string }> }).run(
-        c.env.AI_MODEL ?? "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      const out = (await generateAI(c.env.AI as unknown as AiRunner,
         { messages: [{ role: "system", content: system }, { role: "user", content: user }], max_tokens: 300, temperature: 0.2 },
-        { gateway: { id: c.env.AI_GATEWAY_ID ?? "default" } },
-      )) as { response?: string };
+        { feature: "plan-ask", gatewayId: c.env.AI_GATEWAY_ID, db: c.env.DB, timeoutMs: 12_000 },
+        c.env.AI_MODEL,
+      )).output as { response?: string };
       if (out?.response) return c.json({ answer: out.response.trim(), source: "workers-ai" });
     } catch (err) {
       console.warn(JSON.stringify({ msg: "workers ai failed", err: String(err) }));
@@ -210,7 +242,44 @@ api.get("/logs", async (c) => {
 api.route("/scout", scout);
 // Field Watch: background field checks (Cron Trigger) and their saved results.
 api.route("/fieldwatch", fieldWatch);
+
+
+// Additive stretch evidence endpoint: never blocks plan construction.
+const vegetation: Handler<AppEnv> = async (c) => {
+  const coords = parseCoords(c.req.query("lat"), c.req.query("lon"));
+  const year = Number(c.req.query("year"));
+  if (typeof coords === "string") return c.json({ error: coords }, 400);
+  if (!Number.isInteger(year) || year < 2001 || year >= new Date().getUTCFullYear()) return c.json({ error: "year must be a completed year from 2001 onward" }, 400);
+  const { getModisNdvi } = await import("../data/modis");
+  return c.json(await getModisNdvi(c.env.DB, coords.lat, coords.lon, year));
+};
+api.get("/vegetation", vegetation);
+api.post("/vegetation/prefetch", async (c, next) => {
+  if (!adminTokenMatches(c.req.header("Authorization"), c.env.ADMIN_TOKEN)) return c.json({ error: "Admin token required" }, 401);
+  await next();
+}, vegetation);
+
 // Cited research retrieval (Vectorize) and grounded explanations (Workers AI): see docs/RESEARCH.md.
 api.route("/research", research);
 import { prismCrosscheck } from "./prismCrosscheck";
 api.route("/prism-crosscheck", prismCrosscheck);
+api.route("/crop-timing", cropTiming);
+// U.S. Drought Monitor weekly county context (issue #31): /api/usdm/category, /timeline, /replay.
+import { usdm } from "./usdm";
+api.route("/usdm", usdm);
+// Wind-erosion exposure screen (issues #40, #17): POST /api/wind-screen. Separate from /api/plan so plans never wait on it.
+import { windScreen } from "./windScreen";
+api.route("/wind-screen", windScreen);
+
+// Versioned static source audit; no live market quotation or effect on rankings.
+api.get("/economics-assumptions", async (c) => {
+  const { assumptionAudit } = await import("../../engine/economics");
+  const state = c.req.query("state");
+  if (state !== undefined && !/^[A-Z]{2}$/.test(state)) return c.json({ error: "state must be a two-letter uppercase code" }, 400);
+  return c.json(assumptionAudit(state));
+});
+import { historicalScenarios } from "./historicalScenarios";
+api.route("/historical-scenarios", historicalScenarios);
+api.route("/smap", smap);
+import { groundwater } from "./groundwater";
+api.route("/groundwater", groundwater);

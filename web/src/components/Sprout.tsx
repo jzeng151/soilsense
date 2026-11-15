@@ -1,5 +1,6 @@
 // Sprout, the Soil Sense mascot (from the brand kit: "Sprout, six moods").
 // Each mood has one job in the product; use the matching one, never decorate with a random mood.
+import { useI18n } from "../i18n";
 import hello from "../assets/sprout/hello.svg";
 import checking from "../assets/sprout/checking.svg";
 import onCall from "../assets/sprout/on-call.svg";
@@ -20,6 +21,7 @@ const MOODS: Record<SproutMood, { src: string; alt: string }> = {
 
 /** Sprout at a given width (height follows the 150×196 artwork). Pass decorative when text already says the same thing. */
 export function Sprout({ mood, width = 120, decorative = false, className = "" }: { mood: SproutMood; width?: number; decorative?: boolean; className?: string }) {
+  const { text: localize } = useI18n();
   const m = MOODS[mood];
-  return <img className={`sprout ${className}`} src={m.src} width={width} height={Math.round((width * 196) / 150)} alt={decorative ? "" : m.alt} aria-hidden={decorative || undefined} />;
+  return <img className={`sprout ${className}`} src={m.src} width={width} height={Math.round((width * 196) / 150)} alt={decorative ? "" : localize(m.alt)} aria-hidden={decorative || undefined} />;
 }

@@ -4,9 +4,11 @@
 // The logic lives in agentCore.ts; this class only adapts it to the SDK (storage, scheduling, RPC).
 
 import { Agent } from "agents";
+import type { CropId } from "../../shared/types";
 import type { Env } from "../env";
 import { executeRun, requestCheck, type AgentRun, type RunStore } from "./agentCore";
 import { WATCHED_FIELDS, type WatchedField } from "./run";
+import { applySettings, DEFAULT_SETTINGS, nextWeeklyAt, nextWindowOpening, runRecurringCheck, WEEKLY_DESCRIPTION, type WatchSettings } from "./watchCore";
 
 type SqlTag = <T>(strings: TemplateStringsArray, ...values: (string | number | boolean | null)[]) => T[];
 
@@ -64,13 +66,85 @@ export class FieldAgent extends Agent<Env> {
 
   /** Called by the SDK scheduler. Safe to call twice: a finished run is never re-evaluated. */
   async runScheduledCheck(payload: { runId: string; fieldId: string }): Promise<void> {
-    const run = await executeRun(this.store(), payload.runId, this.env, this.field(payload.fieldId), new Date());
+    const run = await executeRun(this.store(), payload.runId, this.env, this.field(payload.fieldId), new Date(), undefined, this.settings().crop);
     if (run && run.status !== "pending") await this.publish(run);
   }
 
   /** RPC: this field's recent checks, newest first. */
   async listRuns(limit = 10): Promise<AgentRun[]> {
     return this.store().list(Math.min(50, Math.max(1, limit)));
+  }
+
+  // ---------- Recurring watch: weekly checks (#15) and crop stress-window checks (#35) ----------
+
+  private settings(): WatchSettings {
+    this.sql`CREATE TABLE IF NOT EXISTS watch_settings (id INTEGER PRIMARY KEY CHECK (id = 1), data TEXT NOT NULL)`;
+    const rows = this.sql<{ data: string }>`SELECT data FROM watch_settings WHERE id = 1`;
+    return rows[0] ? { ...DEFAULT_SETTINGS, ...(JSON.parse(rows[0].data) as WatchSettings) } : { ...DEFAULT_SETTINGS };
+  }
+
+  private saveSettings(s: WatchSettings): void {
+    this.sql`INSERT INTO watch_settings (id, data) VALUES (1, ${JSON.stringify(s)}) ON CONFLICT(id) DO UPDATE SET data = excluded.data`;
+  }
+
+  /** RPC: recurring-watch settings, next scheduled runs and recent recurring results. */
+  async getWatch(fieldId: string): Promise<{ settings: WatchSettings; schedule: string; scheduledJobs: number; runs: AgentRun[] }> {
+    this.field(fieldId);
+    const jobs = (await this.listSchedules()).filter((s) => s.callback === "weeklyCheck" || s.callback === "windowCheck").length;
+    return { settings: this.settings(), schedule: WEEKLY_DESCRIPTION, scheduledJobs: jobs, runs: this.store().list(20).filter((r) => r.mode === "weekly" || r.mode === "window").slice(0, 8) };
+  }
+
+  /**
+   * RPC: enable/disable recurrence and/or confirm the season's crop. Every change cancels this field's
+   * existing recurring schedules and creates new ones for the new settings version, so queued work for the
+   * old settings can't run (it also rechecks the version when it fires). Completed results are kept.
+   */
+  async updateWatch(fieldId: string, input: { enabled?: unknown; crop?: unknown }): Promise<WatchSettings> {
+    this.field(fieldId);
+    const now = Date.now();
+    const next = applySettings(this.settings(), input, now);
+    for (const id of [next.weeklyScheduleId, next.windowScheduleId]) if (id) await this.cancelSchedule(id);
+    next.weeklyScheduleId = next.nextWeeklyAt = next.windowScheduleId = null;
+    next.nextWindow = null;
+    if (next.enabled) {
+      const at = nextWeeklyAt(now);
+      const weekly = await this.schedule(new Date(at), "weeklyCheck", { fieldId, version: next.version });
+      next.weeklyScheduleId = weekly.id;
+      next.nextWeeklyAt = at;
+      if (next.crop) {
+        const plan = nextWindowOpening(next.crop, now);
+        const w = await this.schedule(new Date(plan.at), "windowCheck", { fieldId, version: next.version, crop: plan.crop, seasonYear: plan.seasonYear });
+        next.windowScheduleId = w.id;
+        next.nextWindow = plan;
+      }
+    }
+    this.saveSettings(next);
+    return next;
+  }
+
+  /** Weekly callback. Ignored if disabled or if the settings changed since it was scheduled; otherwise checks,
+   *  then schedules next Monday's run for the same settings version. */
+  async weeklyCheck(payload: { fieldId: string; version: number }): Promise<void> {
+    const settings = this.settings();
+    const run = await runRecurringCheck("weekly", payload, settings, this.store(), this.env, this.field(payload.fieldId), new Date());
+    if (settings.enabled && settings.version === payload.version) {
+      const at = nextWeeklyAt(Date.now());
+      const s = await this.schedule(new Date(at), "weeklyCheck", { fieldId: payload.fieldId, version: settings.version });
+      this.saveSettings({ ...settings, weeklyScheduleId: s.id, nextWeeklyAt: at });
+    }
+    if (run) await this.publish(run);
+  }
+
+  /** One-off callback when the confirmed crop's reference window opens; then plans next season's opening. */
+  async windowCheck(payload: { fieldId: string; version: number; crop: CropId; seasonYear: number }): Promise<void> {
+    const settings = this.settings();
+    const run = await runRecurringCheck("window", payload, settings, this.store(), this.env, this.field(payload.fieldId), new Date());
+    if (settings.enabled && settings.version === payload.version && settings.crop === payload.crop) {
+      const plan = nextWindowOpening(payload.crop, Date.now());
+      const w = await this.schedule(new Date(plan.at), "windowCheck", { fieldId: payload.fieldId, version: settings.version, crop: plan.crop, seasonYear: plan.seasonYear });
+      this.saveSettings({ ...settings, windowScheduleId: w.id, nextWindow: plan });
+    }
+    if (run) await this.publish(run);
   }
 
   /** Mirror the finished run to the live room (#/live) when that binding exists; never fails the check. */

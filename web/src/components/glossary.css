@@ -1,0 +1,13 @@
+.glossary { margin-block: 16px; padding: 12px; border: 1px solid #cbbda5; border-radius: 12px; background: #fffdf7; overflow-wrap: anywhere; }
+.glossary summary, .glossary a, .term-definition button, .term-popover a { min-height: 44px; padding: 10px 8px; cursor: pointer; }
+.glossary summary { line-height: 1.5; }
+.glossary dt { font-weight: 700; }
+.glossary dt small { font-weight: 400; }
+.glossary dd { margin: 0 0 20px; }
+.glossary a, .term-popover a { display: inline-block; }
+.term-definition > button { border: 0; background: transparent; color: inherit; font: inherit; text-decoration: underline dotted; text-underline-offset: 4px; }
+.term-popover { position: fixed; inset: auto 16px 16px; margin: 0 auto; width: min(32rem, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto; box-sizing: border-box; border: 2px solid #345a42; border-radius: 12px; background: #fffdf7; color: #20352a; padding: 16px; font-size: 1rem; line-height: 1.6; text-align: left; overflow-wrap: anywhere; box-shadow: 0 6px 30px #0003; }
+.term-popover > span, .term-popover > strong { display: block; margin-bottom: 10px; }
+.term-technical { font-size: .9rem; }
+.term-popover button { display: block; margin-top: 12px; }
+.glossary :focus-visible, .term-definition :focus-visible { outline: 3px solid #245a47; outline-offset: 3px; }

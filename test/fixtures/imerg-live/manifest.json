@@ -1,0 +1,53 @@
+{
+  "product": "GPM_3IMERGDL",
+  "version": "07",
+  "revision": "V07C",
+  "date": "2026-11-13",
+  "retrievedAt": "2026-11-15T14:54:33.131301+00:00",
+  "records": [
+    {
+      "field": "story-ia",
+      "lat": 42.0563,
+      "lon": -93.495,
+      "url": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+      "asciiUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.ascii?precipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%2Cprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%2Clat%5B1320%3A1%3A1320%5D%2Clon%5B865%3A1%3A865%5D%2Ctime%5B0%3A1%3A0%5D",
+      "status": 200,
+      "sha256": "4ff244db67ad02924e885fc5560bf43f362c311479463d4ba7828aa684f15899",
+      "file": "late-story-ia-20261113.dap",
+      "ascii": "Dataset: 3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4\nprecipitation.lat, 42.05\nprecipitation.precipitation[precipitation.time=17113][precipitation.lon=-93.45], 0\nprecipitation_cnt.lat, 42.05\nprecipitation_cnt.precipitation_cnt[precipitation_cnt.time=17113][precipitation_cnt.lon=-93.45], 48\nlon, -93.45\nlat, 42.05\ntime, 17113\n"
+    },
+    {
+      "field": "champaign-il",
+      "lat": 40.048,
+      "lon": -88.33,
+      "url": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+      "asciiUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.ascii?precipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%2Cprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%2Clat%5B1300%3A1%3A1300%5D%2Clon%5B916%3A1%3A916%5D%2Ctime%5B0%3A1%3A0%5D",
+      "status": 200,
+      "sha256": "de4f07104695ce75454758175b36cbfd3640c1e334977351555b3df7fd70536c",
+      "file": "late-champaign-il-20261113.dap",
+      "ascii": "Dataset: 3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4\nprecipitation.lat, 40.05\nprecipitation.precipitation[precipitation.time=17113][precipitation.lon=-88.35], 0.045\nprecipitation_cnt.lat, 40.05\nprecipitation_cnt.precipitation_cnt[precipitation_cnt.time=17113][precipitation_cnt.lon=-88.35], 48\nlon, -88.35\nlat, 40.05\ntime, 17113\n"
+    },
+    {
+      "field": "finney-ks",
+      "lat": 38.1095,
+      "lon": -100.706,
+      "url": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+      "asciiUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.ascii?precipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%2Cprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%2Clat%5B1281%3A1%3A1281%5D%2Clon%5B792%3A1%3A792%5D%2Ctime%5B0%3A1%3A0%5D",
+      "status": 200,
+      "sha256": "d61592944ff6959229a27c5b18a5d8f57687f5b30247fdd5d91cd8895a30cc57",
+      "file": "late-finney-ks-20261113.dap",
+      "ascii": "Dataset: 3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4\nprecipitation.lat, 38.15\nprecipitation.precipitation[precipitation.time=17113][precipitation.lon=-100.75], 0\nprecipitation_cnt.lat, 38.15\nprecipitation_cnt.precipitation_cnt[precipitation_cnt.time=17113][precipitation_cnt.lon=-100.75], 48\nlon, -100.75\nlat, 38.15\ntime, 17113\n"
+    },
+    {
+      "field": "lancaster-ne",
+      "lat": 40.73,
+      "lon": -96.55,
+      "url": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+      "asciiUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.ascii?precipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%2Cprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%2Clat%5B1307%3A1%3A1307%5D%2Clon%5B834%3A1%3A834%5D%2Ctime%5B0%3A1%3A0%5D",
+      "status": 200,
+      "sha256": "9b2d1fa12bd6ffa9cf9a6f1b024d320129af09726c01daf6fbc3ae48dd9194b9",
+      "file": "late-lancaster-ne-20261113.dap",
+      "ascii": "Dataset: 3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4\nprecipitation.lat, 40.75\nprecipitation.precipitation[precipitation.time=17113][precipitation.lon=-96.55], 0\nprecipitation_cnt.lat, 40.75\nprecipitation_cnt.precipitation_cnt[precipitation_cnt.time=17113][precipitation_cnt.lon=-96.55], 48\nlon, -96.55\nlat, 40.75\ntime, 17113\n"
+    }
+  ]
+}

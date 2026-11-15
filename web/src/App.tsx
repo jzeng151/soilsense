@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CropId, FieldResponse, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
+import { Glossary, Definition } from "./components/Glossary";
 import { askQuestion, fetchField, fetchPlan } from "./api";
 import { DataEvidence, DecisionNotice } from "./components/DataEvidence";
 import { PlanAssumptions } from "./components/PlanAssumptions";
@@ -337,6 +338,7 @@ export function App() {
 
       <main className="jr-main" ref={top}>
         <Progress step={step} canGo={canGo} go={go} />
+        <Glossary />
 
         {/* ---------- Step 1: find the field ---------- */}
         {step === "field" && (
@@ -465,6 +467,7 @@ export function App() {
               <legend>
                 <span className="jr-qn">2</span> How is it watered?
               </legend>
+              <p className="jr-note">Check your <Definition term="irrigation-allocation" />; the model allowance is not measured pumping or a legal water right.</p>
               <div className="jr-tiles jr-tiles-3" role="radiogroup">
                 {(["rain", "limited", "full"] as WaterLevel[]).map((v) => (
                   <button key={v} type="button" role="radio" aria-checked={water === v} className={water === v ? "on" : ""} onClick={() => setWater(v)}>
@@ -651,7 +654,7 @@ export function App() {
                 <details className="jr-more">
                   <summary>How the weather on your field has changed</summary>
                   <p className="hint">
-                    {plan.climate.firstYear}–{plan.climate.lastYear}, from NASA data for your field.
+                    {plan.climate.firstYear}–{plan.climate.lastYear}, from NASA data: a <Definition term="regional-grid" />, not an individual field station.
                   </p>
                   {changes.length > 0 ? (
                     <ul className="changes">

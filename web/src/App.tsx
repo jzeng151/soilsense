@@ -13,6 +13,7 @@ import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
 import { FieldWatchCard } from "./components/FieldWatchCard";
 import { UsdmContext } from "./components/UsdmContext";
+import { WindScreenCard } from "./components/WindScreenCard";
 import { TrendChart, trendText, trendTone } from "./components/TrendChart";
 
 // A simple three-step journey: 1) find your field, 2) three quick questions, 3) your plan.
@@ -588,6 +589,7 @@ export function App() {
 
                 {/* stretch: data evidence */}
                 <UsdmContext plan={plan} />
+                <WindScreenCard plan={plan} />
                 {/* /stretch: data evidence */}
 
                 <div className="jr-card">

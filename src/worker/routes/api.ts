@@ -215,3 +215,6 @@ api.route("/research", research);
 // U.S. Drought Monitor weekly county context (issue #31): /api/usdm/category, /timeline, /replay.
 import { usdm } from "./usdm";
 api.route("/usdm", usdm);
+// Wind-erosion exposure screen (issues #40, #17): POST /api/wind-screen. Separate from /api/plan so plans never wait on it.
+import { windScreen } from "./windScreen";
+api.route("/wind-screen", windScreen);

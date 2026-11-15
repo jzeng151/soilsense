@@ -57,3 +57,11 @@ export async function fetchExplanation(req: ExplainRequest, signal?: AbortSignal
 export async function fetchUsdmReplay(countyFips: string, years: number[], signal?: AbortSignal): Promise<{ timelines: import("../../src/shared/types").UsdmTimeline[] }> {
   return handle(await fetch(`/api/usdm/replay?fips=${encodeURIComponent(countyFips)}&years=${years.join(",")}`, { signal }));
 }
+
+/** Wind-erosion exposure screen for the field and rotation calendars (issues #40, #17). */
+export async function fetchWindScreen(
+  body: { lat: number; lon: number; lastCrop: string | null; rotations: { label: string; years: { year: number; crop: string; cover: string }[] }[] },
+  signal?: AbortSignal,
+): Promise<import("../../src/shared/types").WindScreen> {
+  return handle(await fetch("/api/wind-screen", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal }));
+}

@@ -475,3 +475,101 @@ export interface UsdmCategoryResult {
   snapshotId: string | null;
   source: UsdmSourceInfo;
 }
+
+// ---- Wind inputs and wind-erosion exposure screen (GitHub issues #17, #40) ----
+
+/** Provenance of the NASA POWER daily wind snapshot. */
+export interface WindMeta {
+  source: string;
+  parameters: { id: "WS10M" | "WS10M_MAX"; name: string; definition: string; units: "m/s"; heightM: 10; aggregation: string }[];
+  grid: { lat: number; lon: number; resolution: string };
+  timeStandard: string;
+  fillValue: number;
+  start: string;
+  end: string;
+  validDays: { WS10M: number; WS10M_MAX: number };
+  missingDays: { WS10M: number; WS10M_MAX: number };
+  requestUrl: string;
+  retrievedAt: string;
+  apiVersion: string | null;
+  /** Version of this cached snapshot's content layout. */
+  contentVersion: string;
+}
+
+/** One SSURGO component's wind-erodibility attributes (categorical WEG kept as-is, never averaged). */
+export interface WindSoilComponent {
+  componentKey: string;
+  name: string;
+  pct: number | null;
+  major: boolean;
+  /** Wind erodibility group, "1" (most susceptible) … "8"; null when SSURGO has none. Categorical. */
+  weg: string | null;
+  /** Wind erodibility index, tons/acre/yr, a REFERENCE value for a bare, smooth, unsheltered, non-crusted soil in Garden City, KS climate. */
+  wei: number | null;
+  surfaceTexture: string | null;
+}
+
+export interface WindSoil {
+  available: boolean;
+  mapUnitKey: string | null;
+  mapUnitName: string | null;
+  surveyArea: string | null;
+  /** Survey area version date (SSURGO sacatalog.saverest). */
+  surveyVersion: string | null;
+  components: WindSoilComponent[];
+  source: string;
+  sourceUrl: string;
+  retrievedAt: string | null;
+}
+
+export type ProtectionState = "living-cover" | "unknown";
+
+export interface WindMonthStat {
+  month: number;
+  validDays: number;
+  windyDays: number;
+  /** windyDays / validDays (null when no valid day). */
+  share: number | null;
+}
+
+export interface WindRotationYear {
+  year: number;
+  crop: CropId;
+  state: ProtectionState;
+  reason: string;
+  /** Expected windy days (climatological) in the screened months under this state. */
+  windyDays: number | null;
+}
+
+export interface WindRotationScreen {
+  label: string;
+  years: WindRotationYear[];
+  /** Mean per plan year of expected windy days in the screened months without assured living cover. */
+  windyDaysWithoutLivingCover: number | null;
+  /** Mean per plan year of expected windy days while living cover is assumed. */
+  windyDaysWithLivingCover: number | null;
+}
+
+export interface WindScreen {
+  rule: {
+    version: string;
+    parameter: "WS10M_MAX";
+    thresholdMs: number;
+    thresholdMph: number;
+    comparison: ">=";
+    months: number[];
+    monthsSource: string;
+    thresholdSource: string;
+    adaptation: string;
+  };
+  wind: WindMeta | null;
+  /** Climatology over the baseline for the screened months. */
+  months: WindMonthStat[];
+  baseline: { startYear: number; endYear: number; seasons: number } | null;
+  /** Most recent complete screened season: daily WS10M_MAX (m/s, null = missing). */
+  recentSeason: { year: number; dates: string[]; ws10mMax: (number | null)[]; ws10m: (number | null)[]; windyDays: number; validDays: number } | null;
+  soil: WindSoil;
+  rotations: WindRotationScreen[];
+  limitations: string[];
+  status: "ok" | "partial" | "unavailable";
+}

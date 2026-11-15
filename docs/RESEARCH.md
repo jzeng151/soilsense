@@ -80,6 +80,26 @@ only when the **complete comparison key** matches and it re-validates, else the 
 rotation id + crop/cover sequence | priority | PLAN_ENGINE_VERSION | corpus version | embedding id |
 generation model | prompt version`. Any change ⇒ saved output is not reused.
 
+## Field Watch research notes
+
+Dry and Watch results from the field agent (live, replay, weekly and crop-window checks) store a
+`researchNote` in the existing SQLite run JSON. The note queries the same pinned research index for
+the dry-spell topic, using the confirmed watch-settings crop first, otherwise the demo planner's crop
+tags (`scripts/prefetch-demo.mjs`, mirrored on `WATCHED_FIELDS`). Those fallback tags are not a claim
+about the field's current crop. With neither, the note records `skipped` and a reason.
+
+The note includes at most two verbatim corpus passages, citation metadata, applicability, similarity
+scores, retrieval status/date, corpus and embedding identifiers, and a fixed context-not-advice line.
+There is no generation call and no change to rule v2. No passage above the shared `MIN_SCORE` yields
+`empty`; absent bindings or a retrieval failure yields `unavailable`. Retrieval has a 1.5-second
+ceiling and no retry. Notes do not reuse plan-specific saved explanations. Reopening the dashboard
+reads the stored note, not a fresh index query; older runs are left unchanged.
+
+`ScheduledCheck.tsx` renders notes through `ResearchNote.tsx` (no changes to `FieldWatchCard.tsx`).
+Local tests exercise mocked embedding/index results and actual SQLite round trips through the Agents
+stub. A deployed check with real Workers AI and Vectorize bindings is still required to assess live
+retrieval relevance for dry-spell queries; a similarity score is not agronomic confidence.
+
 ## Morning steps (Tunk) — nothing below has been run yet
 
 1. `npx wrangler login` (if needed), then `bash scripts/setup-research-index.sh`

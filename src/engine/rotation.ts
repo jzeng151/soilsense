@@ -323,6 +323,12 @@ export interface EngineInput {
   water: WaterContext;
   /** Current prices (e.g. USDA NASS prices received), per crop unit; defaults from crops.ts otherwise. */
   prices?: Partial<Record<CropId, number>>;
+  /**
+   * Quick search: rank every crop sequence without cover crops first, then try cover-crop variants only for the
+   * best `quickSearch` sequences. Used for the "what if your water changes?" comparison, where only the best
+   * plan is needed; the field's own plan always uses the full search.
+   */
+  quickSearch?: number;
 }
 
 interface RawPlan {
@@ -419,7 +425,23 @@ const storedInMonth = (ctx: WaterContext, idx: number, m: number) =>
   Math.max(0, (ctx.monthRain[idx]![m] ?? 0) - BARE_SOIL_EVAP * (ctx.monthEt0[idx]![m] ?? 0));
 
 /** Rain stored in the soil from the month after harvest (year A) to the month before the next crop starts (year B). */
+const gapMemo = new WeakMap<WaterContext, Map<number, number>>();
+
 function gapRecharge(ctx: WaterContext, idxA: number, endMonthA: number, idxB: number, startMonthB: number): number {
+  let memo = gapMemo.get(ctx);
+  if (!memo) {
+    memo = new Map();
+    gapMemo.set(ctx, memo);
+  }
+  const key = ((idxA * 13 + endMonthA) * 128 + idxB) * 13 + startMonthB;
+  const hit = memo.get(key);
+  if (hit !== undefined) return hit;
+  const r = gapRechargeUncached(ctx, idxA, endMonthA, idxB, startMonthB);
+  memo.set(key, r);
+  return r;
+}
+
+function gapRechargeUncached(ctx: WaterContext, idxA: number, endMonthA: number, idxB: number, startMonthB: number): number {
   let r = 0;
   for (let m = endMonthA + 1; m <= 12; m++) r += storedInMonth(ctx, idxA, m);
   for (let m = 1; m < startMonthB; m++) r += storedInMonth(ctx, idxB, m);
@@ -494,24 +516,33 @@ interface SimulatedYear {
  * Replays the 3-year plan against every run of consecutive historical weather years, carrying soil water
  * from one season to the next (a crop that dries the subsoil leaves less for the next one; fallow refills it).
  */
-function simulate(seq: CropId[], covers: CoverId[], input: EngineInput): SimulatedYear[] {
+const spinUpMemo = new WeakMap<EngineInput, { storage: number[]; lastEnd: number }>();
+
+/** Soil water after the field's last known crop, for each weather scenario (same for every candidate plan). */
+function spinUp(input: EngineInput): { storage: number[]; lastEnd: number } {
+  const hit = spinUpMemo.get(input);
+  if (hit) return hit;
   const ctx = input.water;
   const n = ctx.n;
   const prevCrop = input.history[input.history.length - 1] ?? null;
+  const out = prevCrop
+    ? { storage: Array.from({ length: n }, (_, i) => runCropYear(prevCrop, (i - 1 + n) % n, 0.6 * ctx.profileCap, input).storageAfter), lastEnd: CROPS[prevCrop].season.to[0] }
+    : { storage: Array.from({ length: n }, () => 0.3 * ctx.profileCap), lastEnd: 9 };
+  spinUpMemo.set(input, out);
+  return out;
+}
+
+function simulate(seq: CropId[], covers: CoverId[], input: EngineInput): SimulatedYear[] {
+  const ctx = input.water;
+  const n = ctx.n;
+  const start = spinUp(input);
   const acc = seq.map(() => ({ w: 0, score: 0, reliable: 0, yieldFrac: 0, pumped: 0, stress: new Map<StressFactor, number>() }));
 
   for (let i = 0; i < n; i++) {
     let prevIdx = (i - 1 + n) % n;
-    let storage: number;
-    let lastEnd: number;
-    if (prevCrop) {
-      // Spin up with the field's last known crop in the preceding weather year.
-      storage = runCropYear(prevCrop, prevIdx, 0.6 * ctx.profileCap, input).storageAfter;
-      lastEnd = CROPS[prevCrop].season.to[0];
-    } else {
-      storage = 0.3 * ctx.profileCap; // unknown history: assume a summer crop drew the profile down
-      lastEnd = 9;
-    }
+    // Spin up with the field's last known crop in the preceding weather year (or a typical summer crop).
+    let storage = start.storage[i] as number;
+    let lastEnd = start.lastEnd;
     for (let k = 0; k < seq.length; k++) {
       const crop = seq[k] as CropId;
       const idx = (i + k) % n;
@@ -690,9 +721,21 @@ export interface EngineResult {
 
 export function runEngine(input: EngineInput, topN = 3): EngineResult {
   const crops = input.crops?.length ? input.crops : ALL_CROPS.filter((c) => c !== "fallow");
-  const sequences = cartesian([crops, crops, crops]).filter((s) =>
+  let sequences = cartesian([crops, crops, crops]).filter((s) =>
     feasibleSequence(s, input.history, input.firstYearWheatAllowed),
   );
+
+  if (input.quickSearch && sequences.length > input.quickSearch) {
+    const bare = sequences.map((seq) => evaluate(seq, seq.map(() => "none" as CoverId), input));
+    const top = Math.max(...bare.map((r) => r.avgNet));
+    const norm = (v: number) => clamp(1 - (top - v) / PROFIT_SCALE_PER_ACRE);
+    const keep = bare
+      .map((r) => ({ seq: r.seq, total: toPlan(r, norm, input.priority, "q").scores.total }))
+      .sort((a, b) => b.total - a.total)
+      .slice(0, input.quickSearch)
+      .map((x) => x.seq);
+    sequences = keep;
+  }
 
   const raws: RawPlan[] = [];
   for (const seq of sequences) {
@@ -770,9 +813,15 @@ export function replayCropByYear(climate: DailyClimate, soil: SoilProfile, crop:
 }
 
 /** Prepares the weather once, then replays any (crop, previous crop) pair against the actual years. */
-export function makeReplay(climate: DailyClimate, soil: SoilProfile, irrigated: boolean, allowanceMm = 0): (crop: CropId, prevCrop: CropId) => ReplayYear[] {
+export function makeReplay(
+  climate: DailyClimate,
+  soil: SoilProfile,
+  irrigated: boolean,
+  allowanceMm = 0,
+  shared?: Record<CropId, CropClimate>,
+): (crop: CropId, prevCrop: CropId) => ReplayYear[] {
   const water = buildWaterContext(climate, soil, irrigated, allowanceMm);
-  const cropClimate = evaluateCropClimate(climate, soil, irrigated, climate.lastYear, { adjustTrends: false });
+  const cropClimate = shared ?? evaluateCropClimate(climate, soil, irrigated, climate.lastYear, { adjustTrends: false });
   const input: EngineInput = { cropClimate, water, history: [], priority: "balanced", planStartYear: 0, firstYearWheatAllowed: true };
   return (crop, prevCrop) => replayPair(climate, water, input, crop, prevCrop);
 }

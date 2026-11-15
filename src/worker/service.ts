@@ -12,6 +12,7 @@ import { getCountyLosses } from "./data/rma";
 import { getDailyClimate } from "./data/power";
 import { getSoil } from "./data/soil";
 import type { Env } from "./env";
+import { cached } from "./lib/cache";
 
 export function yearsFor(env: Env, now = new Date()) {
   const year = now.getUTCFullYear();
@@ -38,7 +39,35 @@ export async function getField(env: Env, lat: number, lon: number): Promise<Fiel
   return { lat, lon, county, soil, cropHistory };
 }
 
+/**
+ * A finished plan is saved for 6 hours (memory + D1): the same field and answers on the same day reuse it and
+ * skip every data download and the whole engine run. This keeps repeated requests (demos, the phone agent
+ * re-asking) far under the Worker CPU limit.
+ */
 export async function makePlan(
+  env: Env,
+  request: PlanRequest,
+  opts: { placeName?: string; skipCropHistory?: boolean; now?: Date } = {},
+): Promise<PlanResponse> {
+  if (opts.now) return makePlanFresh(env, request, opts); // tests pin the date: always compute
+  const water = request.water ?? (request.irrigated ? "full" : "rain");
+  const key = [
+    "plan:v2",
+    request.lat.toFixed(4),
+    request.lon.toFixed(4),
+    water,
+    request.priority,
+    (request.recentCrops ?? []).join(","),
+    request.language ?? "en",
+    opts.skipCropHistory ? "nocdl" : "cdl",
+    opts.placeName ?? "",
+    new Date().toISOString().slice(0, 10),
+  ].join(":");
+  const { value } = await cached(env.DB, key, 6 * 3600, () => makePlanFresh(env, request, opts));
+  return value;
+}
+
+async function makePlanFresh(
   env: Env,
   request: PlanRequest,
   opts: { placeName?: string; skipCropHistory?: boolean; now?: Date } = {},

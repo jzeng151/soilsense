@@ -36,17 +36,19 @@ try {
     await scan('field-confirmation');
     await page.getByRole('button', {name:confirm}).click();
     await scan('three-questions');
-    await page.getByRole('checkbox', { name: /^Water conservation/ }).check();
-    await page.getByRole('checkbox', { name: /^Organic matter/ }).check();
+    await page.getByRole('checkbox', { name: /^(Water conservation|Conservación del agua)/ }).check();
+    await page.getByRole('checkbox', { name: /^(Organic matter|Materia orgánica)/ }).check();
     if (await page.locator('.farmer-goals input:checked').count() !== 2 || await page.locator('.farmer-goals input:disabled').count() !== 3) throw new Error('Goal limit state not exercised');
     await scan('two-goals-selected');
     await page.getByRole('button', {name:showPlan}).click();
     await page.locator('.jr-answer').waitFor();
     // Exercise opt-in evidence cards as well as automatically fetched card contents.
     await page.evaluate(() => document.querySelectorAll('details').forEach(d => { d.open = true; }));
-    await page.getByRole('button', {name:'Compare timing', exact:true}).click();
-    await page.getByRole('button', {name:'Load field history', exact:true}).click();
-    await page.waitForFunction(() => ![...document.querySelectorAll('main p, main button')].some(e => /^Loading(?: |…)/.test(e.textContent.trim())));
+    await page.getByRole('button', {name: language === 'es' ? 'Cargar muestra HLS' : 'Load HLS sample', exact:true}).click();
+    await page.locator('.hls-evidence table').first().waitFor();
+    await page.getByRole('button', {name: language === 'es' ? 'Comparar fechas' : 'Compare timing', exact:true}).click();
+    await page.getByRole('button', {name: language === 'es' ? 'Cargar historial de la parcela' : 'Load field history', exact:true}).click();
+    await page.waitForFunction(() => ![...document.querySelectorAll('main p, main button')].some(e => /^(?:Loading|Cargando)(?: |…)/.test(e.textContent.trim())));
     // Async evidence can add disclosures after the plan shell first appears.
     await page.evaluate(() => document.querySelectorAll('details').forEach(d => { d.open = true; }));
     await page.waitForTimeout(500);

@@ -86,9 +86,6 @@ export async function fetchSecondOpinion(countyFips: string, signal?: AbortSigna
 }
 
 
-
-
-
 export async function fetchVegetation(lat: number, lon: number, year: number, signal?: AbortSignal): Promise<import("../../src/shared/types").ModisVegetation> {
   // ORNL may need several sequential requests. Do not leave the evidence card
   // loading indefinitely: its caller renders an explicit unknown state on timeout.
@@ -128,8 +125,5 @@ export async function fetchWindScreen(
   signal?: AbortSignal,
 ): Promise<import("../../src/shared/types").WindScreen> {
   return handle(await fetch("/api/wind-screen", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal }));
-
-
-
 
 }

@@ -7,6 +7,11 @@ import { runDocIngest, type DocStepRunner } from "../src/worker/ingest/workflow"
 import { getChunks, getDoc } from "../src/worker/ingest/store";
 import { DOCS_LAYOUT, REVIEW_EVENT, REVIEW_TIMEOUT, type ReviewDecision, type DocIngestParams } from "../src/shared/ingest";
 
+vi.mock("../src/worker/ingest/url-https", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../src/worker/ingest/url-https")>();
+  return { ...actual, pinnedHttps: (url: URL) => fetch(url.href) };
+});
+
 const ctx = { waitUntil() {}, passThroughOnException() {}, props: {} } as unknown as ExecutionContext;
 const approval: ReviewDecision = { decision: "approve", reviewer: "test reviewer", crops: ["corn", "cover"], source: { title: "Reviewer supplied title", url: "https://example.org/paper", publisher: "Test publisher", year: 2026, license: "CC BY 4.0", attribution: "Test author", applicability: "Test fixture, not agronomic evidence" } };
 const firstParagraph = "Cover crops protect soil during winter and improve water infiltration. ".repeat(19).trim();
@@ -28,18 +33,18 @@ let harnessId = 0;
 function harness() {
   const testIp = `192.0.2.${++harnessId}`;
   const DB = fakeD1();
-  const objects = new Map<string, { text: string; etag: string; type: string }>();
+  const objects = new Map<string, { text: string; etag: string; type: string; customMetadata?: Record<string, string> }>();
   let revision = 0;
   const DOCS = {
-    put: async (key: string, body: string | ArrayBuffer, options?: { httpMetadata?: { contentType?: string } }) => {
+    put: async (key: string, body: string | ArrayBuffer, options?: { httpMetadata?: { contentType?: string }; customMetadata?: Record<string, string> }) => {
       const text = typeof body === "string" ? body : new TextDecoder().decode(body);
-      const value = { text, etag: `etag-${++revision}`, type: options?.httpMetadata?.contentType ?? "text/plain" };
+      const value = { text, etag: `etag-${++revision}`, type: options?.httpMetadata?.contentType ?? "text/plain", customMetadata: options?.customMetadata };
       objects.set(key, value);
       return { key, etag: value.etag };
     },
     get: async (key: string) => {
       const o = objects.get(key);
-      return o ? { etag: o.etag, size: new TextEncoder().encode(o.text).byteLength, httpMetadata: { contentType: o.type }, text: async () => o.text, arrayBuffer: async () => new TextEncoder().encode(o.text).buffer } : null;
+      return o ? { customMetadata: o.customMetadata, etag: o.etag, size: new TextEncoder().encode(o.text).byteLength, httpMetadata: { contentType: o.type }, text: async () => o.text, arrayBuffer: async () => new TextEncoder().encode(o.text).buffer } : null;
     },
   };
   type Vector = { id: string; values: number[]; metadata: Record<string, string> };
@@ -101,6 +106,29 @@ function harness() {
 }
 
 describe("document pipeline public seams", () => {
+  it("carries URL intake provenance through the queue and pending manifest without approving metadata", async () => {
+    const h = harness();
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => url.startsWith("https://cloudflare-dns.com/")
+      ? Response.json({ Status: 0, Answer: [{ type: 1, data: "129.130.1.1" }] })
+      : new Response(`<main><p>${firstParagraph}</p></main>`, { headers: { "content-type": "text/html" } })));
+    try {
+      const response = await h.request("/from-url", { method: "POST", headers: { ...h.auth, "Content-Type": "application/json" }, body: JSON.stringify({ url: "https://www.ksu.edu/research" }) });
+      expect(response.status).toBe(202);
+      const uploaded = await response.json() as { key: string; eTag: string; docId: string };
+      const ack = vi.fn();
+      await app.queue({ messages: [{ body: { account: "test", bucket: "soilsense-docs", action: "PutObject", object: { key: uploaded.key, eTag: uploaded.eTag }, eventTime: "2026-11-15T12:00:00Z" }, ack, retry: vi.fn() }] } as unknown as MessageBatch, h.env);
+      expect(ack).toHaveBeenCalledOnce();
+      const { run } = await h.start();
+      const detail = await (await h.request(`/${uploaded.docId}`)).json() as { provenance: unknown; doc: { title: string | null; status: string } };
+      expect(detail).toMatchObject({ provenance: { sourceUrl: "https://www.ksu.edu/research", intakeMethod: "html-fetch-fallback" }, doc: { title: null, status: "pending_review" } });
+      const manifest = [...h.objects.entries()].find(([key]) => key.startsWith("manifests/"))!;
+      expect(JSON.parse(manifest[1].text)).toMatchObject({ provenance: detail.provenance, source: null });
+      expect(h.AI.run).not.toHaveBeenCalled(); expect(h.vectors.size).toBe(0);
+      await h.review(uploaded.docId, { decision: "reject", reviewer: "test reviewer" });
+      expect(await run).toMatchObject({ outcome: "rejected" });
+      expect(JSON.parse(h.objects.get(manifest[0])!.text).provenance).toEqual(detail.provenance);
+    } finally { vi.unstubAllGlobals(); }
+  });
   it("uploads through R2 notification/queue, waits for review, then indexes exact sourced chunks", async () => {
     const h = harness();
     const uploaded = await h.upload(firstParagraph + "\n\n" + secondParagraph);

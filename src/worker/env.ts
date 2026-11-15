@@ -44,6 +44,8 @@ export interface Env {
   EVIDENCE?: R2Bucket;
   /** Document pipeline (docs/INGEST.md): uploads bucket soilsense-docs (optional). */
   DOCS?: R2Bucket;
+  /** Optional Browser Rendering for URL intake; absence uses local HTML-to-text. */
+  BROWSER?: Fetcher;
   /** Document pipeline queue (R2 event notifications land here); producer binding for retries (optional). */
   DOC_QUEUE?: Queue;
   /** Document pipeline Workflow (DocIngestWorkflow): extract -> chunk -> review -> embed -> upsert (optional). */

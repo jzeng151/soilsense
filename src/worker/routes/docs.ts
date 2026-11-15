@@ -4,6 +4,7 @@ import { DOCS_LAYOUT, REVIEW_EVENT, docIdFromKey, type ReviewDecision } from "..
 import type { Env } from "../env";
 import { acceptedKey } from "../ingest/queue";
 import { sha256Hex } from "../ingest/hash";
+import { documentFromUrl, UrlIntakeError } from "../ingest/from-url";
 import { getChunks, getDoc, getReviewChunks } from "../ingest/store";
 import { isResearchTag } from "../research/config";
 
@@ -37,7 +38,7 @@ function adminOk(header: string | undefined, token: string | undefined): boolean
 }
 export const docs = new Hono<{ Bindings: Env }>();
 // Protect mutations independently of any optional dashboard sign-in gate.
-docs.on("POST", ["/upload", "/:docId/review"], async (c, next) => {
+docs.on("POST", ["/upload", "/from-url", "/:docId/review"], async (c, next) => {
   if (!c.env.ADMIN_TOKEN) return c.json({ error: "Set ADMIN_TOKEN first" }, 403);
   if (!adminOk(c.req.header("Authorization"), c.env.ADMIN_TOKEN)) return c.json({ error: "unauthorized" }, 401);
   return next();
@@ -60,6 +61,18 @@ docs.post("/upload", bodyLimit({ maxSize: 10 * 1024 * 1024, onError: (c) => c.js
   const object = await c.env.DOCS.put(key, bytes, { httpMetadata: { contentType } });
   return c.json({ key, docId: docIdFromKey(await sha256Hex(key)), eTag: object?.etag, size: bytes.byteLength, status: "queued", note: "R2 object-create notification starts ingestion asynchronously" }, 202);
 });
+docs.post("/from-url", bodyLimit({ maxSize: 4096 }), async (c) => {
+  if (!c.env.DOCS) return c.json({ error: "DOCS binding required" }, 503);
+  const body: unknown = await c.req.json().catch(() => null);
+  if (!body || typeof body !== "object" || !("url" in body)) return c.json({ error: "JSON url required" }, 400);
+  try {
+    const result = await documentFromUrl(c.env, body.url);
+    return c.json({ ...result, docId: docIdFromKey(await sha256Hex(result.key)), status: "queued" }, 202);
+  } catch (error) {
+    if (error instanceof UrlIntakeError) return c.json({ error: error.message }, error.status);
+    return c.json({ error: "Document retrieval or rendering failed; retry or upload a copy" }, 502);
+  }
+});
 docs.get("/", async (c) => {
   if (!c.env.DB) return c.json({ error: "DB binding required" }, 503);
   const rows = await c.env.DB.prepare("SELECT * FROM ingest_docs ORDER BY updated_at DESC LIMIT 200").all();
@@ -74,7 +87,12 @@ docs.get("/:docId", async (c) => {
   const chunks = doc.status === "pending_review"
     ? await getReviewChunks(c.env.DB, c.env.DOCS!, doc)
     : await getChunks(c.env.DB, doc.doc_id);
-  return c.json({ doc, versions: versions.results, chunks });
+  let provenance: unknown = null;
+  if (c.env.DOCS && doc.latest_sha256) {
+    const manifest = await c.env.DOCS.get(DOCS_LAYOUT.manifest(doc.latest_sha256, doc.doc_id));
+    if (manifest) provenance = (JSON.parse(await manifest.text()) as { provenance?: unknown }).provenance ?? null;
+  }
+  return c.json({ doc, versions: versions.results, chunks, provenance });
 });
 docs.post("/:docId/review", bodyLimit({ maxSize: 32 * 1024 }), async (c) => {
   if (!c.env.DB || !c.env.DOC_INGEST) return c.json({ error: "DB and DOC_INGEST bindings required" }, 503);

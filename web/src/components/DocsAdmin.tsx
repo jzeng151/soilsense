@@ -1,7 +1,8 @@
 import { useRef, useState, type FormEvent } from "react";
 import { ACCEPTED_EXTENSIONS, likelyGarbledChunk, type ReviewDecision } from "../../../src/shared/ingest";
 import { RESEARCH_TAGS } from "../../../src/worker/research/config";
-import { fetchDoc, fetchDocs, reviewDoc, uploadDoc, type AdminDocDetail, type AdminDocument } from "../api";
+import { addDocFromUrl, fetchDoc, fetchDocs, reviewDoc, uploadDoc, type AdminDocDetail, type AdminDocument } from "../api";
+import { LanguageProvider, useI18n } from "../i18n";
 import "./DocsAdmin.css";
 
 const TOKEN_KEY = "soilsense:docs-admin-token";
@@ -12,6 +13,12 @@ const sourceFields = ["title", "url", "publisher", "year", "license", "attributi
 
 /** Hidden operator tool. The server, not this route, enforces ADMIN_TOKEN. */
 export function DocsAdmin() {
+  return <LanguageProvider><DocsAdminContent /></LanguageProvider>;
+}
+
+function DocsAdminContent() {
+  const { t } = useI18n();
+  const [researchUrl, setResearchUrl] = useState("");
   const [token, setToken] = useState(storedToken);
   const [docs, setDocs] = useState<AdminDocument[]>([]);
   const [detail, setDetail] = useState<AdminDocDetail | null>(null);
@@ -86,6 +93,16 @@ export function DocsAdmin() {
       <label>Research document<input ref={fileInput} type="file" accept={ACCEPTED_EXTENSIONS.join(",")} required disabled={busy} onChange={(event) => setFile(event.target.files?.[0] ?? null)} /></label>
       <button disabled={busy || !token || !file}>Upload document</button>
     </form>
+    <form onSubmit={(event) => { event.preventDefault(); void run(async () => {
+      const result = await addDocFromUrl(researchUrl, token);
+      await refresh(); setResearchUrl("");
+      setMessage(t(result.method === "html-fetch-fallback" ? "URL accepted using plain HTML fallback (Browser Rendering unavailable). Refresh to check review status." : "URL accepted. Refresh to check review status."));
+    }); }}>
+      <h2>{t("Add a research document by URL")}</h2>
+      <p>{t("Only approved research hosts over HTTPS, up to 10 MiB. Source metadata still requires human confirmation.")}</p>
+      <label>{t("Research document URL")}<input type="url" required maxLength={2000} value={researchUrl} disabled={busy} onChange={(event) => setResearchUrl(event.target.value)} /></label>
+      <button disabled={busy || !token || !researchUrl}>{t("Add document from URL")}</button>
+    </form>
     <section aria-labelledby="docs-list-heading">
       <h2 id="docs-list-heading">Documents</h2>
       {!docs.length && <p>No documents loaded. Enter a token and refresh.</p>}
@@ -98,6 +115,7 @@ export function DocsAdmin() {
     {detail && <section aria-labelledby="review-heading" key={detail.doc.docId}>
       <h2 id="review-heading">Review {detail.doc.title || detail.doc.r2Key}</h2>
       <p>Status: {detail.doc.status}</p>
+      {detail.provenance && <p>{t("Retrieved source (confirm before approving)")}: {detail.provenance.sourceUrl} · {detail.provenance.retrievedAt} · {detail.provenance.intakeMethod}</p>}
       <details open><summary>Extracted chunks ({detail.chunks.length})</summary>
         <p>Exclude publisher boilerplate, citation blocks or unreadable text from search. All chunks start included; warnings never change selections or source text.</p>
         {detail.chunks.map((chunk) => <article key={`${detail.doc.docId}:${detail.doc.latestSha256 ?? detail.versions[0]?.sha256}:${chunk.chunkId}`}>
@@ -112,7 +130,7 @@ export function DocsAdmin() {
           <legend>Human review decision</legend>
           <label>Reviewer<input name="reviewer" required maxLength={200} /></label>
           {sourceFields.map((field) => <label key={field}>{field === "url" ? "Source URL" : field[0]!.toUpperCase() + field.slice(1)}
-            <input name={field} type={field === "year" ? "number" : field === "url" ? "url" : "text"} required maxLength={field === "year" ? undefined : 4000} min={field === "year" ? 1000 : undefined} max={field === "year" ? 9999 : undefined} step={field === "year" ? 1 : undefined} />
+            <input name={field} defaultValue={field === "url" ? detail.provenance?.sourceUrl ?? "" : ""} type={field === "year" ? "number" : field === "url" ? "url" : "text"} required maxLength={field === "year" ? undefined : 4000} min={field === "year" ? 1000 : undefined} max={field === "year" ? 9999 : undefined} step={field === "year" ? 1 : undefined} />
           </label>)}
           <fieldset><legend>Crop tags (at least one to approve)</legend>
             {RESEARCH_TAGS.map((tag) => <label className="docs-checkbox" key={tag}><input type="checkbox" name="crops" value={tag} />{tag.replaceAll("_", " ")}</label>)}

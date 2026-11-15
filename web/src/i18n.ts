@@ -4,6 +4,13 @@ import type { CropId } from "../../src/shared/types";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
+  "Add a research document by URL": "Añadir un documento de investigación por URL",
+  "Only approved research hosts over HTTPS, up to 10 MiB. Source metadata still requires human confirmation.": "Solo sitios de investigación permitidos por HTTPS, hasta 10 MiB. Una persona debe confirmar los metadatos de la fuente.",
+  "Research document URL": "URL del documento de investigación",
+  "Add document from URL": "Añadir documento desde URL",
+  "URL accepted using plain HTML fallback (Browser Rendering unavailable). Refresh to check review status.": "URL aceptada mediante extracción HTML básica (Browser Rendering no disponible). Actualiza para ver el estado de revisión.",
+  "URL accepted. Refresh to check review status.": "URL aceptada. Actualiza para ver el estado de revisión.",
+  "Retrieved source (confirm before approving)": "Fuente recuperada (confirmar antes de aprobar)",
   "In short": "En resumen",
   "Crop grown this season": "Cultivo de esta temporada",
   "Water supply": "Suministro de agua",

@@ -10,6 +10,7 @@ afterEach(async () => {
   root = undefined;
   document.body.replaceChildren();
   sessionStorage.clear();
+  localStorage.clear();
   vi.unstubAllGlobals();
 });
 
@@ -63,4 +64,25 @@ it("shows exact plain chunks, warns without preselecting, submits only checked e
   expect(submitted).toMatchObject({ decision: "approve", reviewer: "Fixture reviewer", crops: ["corn"], excludeChunkIds: ["doc-fixture:warn"] });
   expect(boxes().every((box) => box.disabled)).toBe(true);
   expect(container.textContent).toContain("Approval submitted");
+});
+
+it("prefills URL provenance for a person to confirm and reads Spanish from the shared preference", async () => {
+  vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+  localStorage.setItem("soilsense.language", "es");
+  sessionStorage.setItem("soilsense:docs-admin-token", "fixture-token");
+  const doc = { doc_id: "doc-url", r2_key: "docs/url-research.txt", title: null, status: "pending_review", updated_at: "2026-11-15" };
+  vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => String(input).endsWith("/doc-url")
+    ? Response.json({ doc, versions: [], chunks: [], provenance: { sourceUrl: "https://www.ksu.edu/research", retrievedAt: "2026-11-15T12:00:00Z", intakeMethod: "html-fetch-fallback" } })
+    : Response.json({ docs: [doc] })));
+  const container = document.createElement("div"); document.body.append(container);
+  root = createRoot(container);
+  await act(async () => root!.render(createElement(DocsAdmin)));
+  expect(container.textContent).toContain("Añadir un documento de investigación por URL");
+  expect(container.textContent).toContain("Añadir documento desde URL");
+  const button = (text: string) => Array.from(container.querySelectorAll("button")).find((b) => b.textContent === text)!;
+  await act(async () => button("Refresh documents").click());
+  await act(async () => button("docs/url-research.txt").click());
+  expect(container.querySelector<HTMLInputElement>('input[name="url"]')?.value).toBe("https://www.ksu.edu/research");
+  expect(container.querySelector<HTMLInputElement>('input[name="title"]')?.value).toBe("");
+  expect(container.textContent).toContain("Fuente recuperada (confirmar antes de aprobar)");
 });

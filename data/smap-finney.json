@@ -1,0 +1,1165 @@
+{
+  "schema": 1,
+  "product": "SPL4SMGP",
+  "version": "008",
+  "point": {
+    "lat": 38.1095,
+    "lon": -100.706
+  },
+  "cell": {
+    "row": 310,
+    "column": 849,
+    "lat": 38.0969,
+    "lon": -100.69
+  },
+  "retrievedAt": "2026-11-15T13:19:49.440929+00:00",
+  "qualityPolicy": "v1 demonstration applicability screen: finite native values 0\u20130.9 m3/m3, soil_temp_layer1 >=273.15 K, snow_mass ==0 kg/m2. L4 geophysical fields have no L2 retrieval quality bitfield; no L2 flags invented. Not a validation of assimilation updates; SMAP outages can be model-only.",
+  "granules": [
+    {
+      "id": "G3480581521-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20150701T013000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "87abc6f454a46723bf2f65157930d39270aab71fef194cf4a6b082236dafa8fb"
+    },
+    {
+      "id": "G3480578059-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20150701T043000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "5c6e4b26cbe7256fb1d5d7717527232a7440ba084d8f97673646525f9b056726"
+    },
+    {
+      "id": "G3480582700-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20150701T073000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "070cbcfca75f75da1d14ad0ba8df2c0a24f96480b65c6ad79d3c97fe8951bfe6"
+    },
+    {
+      "id": "G3480579835-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20150701T103000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "5965b7ee8b4fc4a9761427b27e778c5ad82b319014ebd93736897bcb9eb670b4"
+    },
+    {
+      "id": "G3480580533-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20150701T133000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "8c12e635fabf6b8b3f7b7818f6df295824818bbb75fe0239626550e8761747e9"
+    },
+    {
+      "id": "G3480578029-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20150701T163000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "fe39ee672177a7d6d827a3045af0bd71018acb37a76362a30d1cc9479b3a5d13"
+    },
+    {
+      "id": "G3480578097-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20150701T193000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "7a7a167291aa983238682ed2990b009a64729fe808da699a73713350186d3003"
+    },
+    {
+      "id": "G3480578046-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20150701T223000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "ca339f080a779bb2e98b0396981954fee5e050b2ef89748d27a80b79c6420b89"
+    },
+    {
+      "id": "G3480834794-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20160701T013000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "7d317d9d5ffd154940c6bc4f3c3ea69195ecd401b47b658601a180093ff6f61b"
+    },
+    {
+      "id": "G3480832463-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20160701T043000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "30a0c604227ffc49f371e414aa376c9be583e2ef1ae23e34a555a8d7cd87088d"
+    },
+    {
+      "id": "G3480833577-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20160701T073000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "7be102b96202af705f0f924815f0d66eac7bfbb300cc37534dea353f96a09f78"
+    },
+    {
+      "id": "G3480855206-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20160701T103000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "5940f45486b4b5f60431f45cbd96d1f90d9e1fe370f401863ce25d83d9e732ca"
+    },
+    {
+      "id": "G3480835949-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20160701T133000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "26bdf8c7da67d2bd554c8f1085b06066442720ff4d1e3c2d6b52b77a2ce697ce"
+    },
+    {
+      "id": "G3480855244-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20160701T163000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "d60aae194f05e215d2c578d63295f95f53753efdeef9f7de2126427b588c6842"
+    },
+    {
+      "id": "G3480830339-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20160701T193000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "ecddd12344876d44c9cd1dddffbc3feed105a57b0f35120ce9375d00fad02006"
+    },
+    {
+      "id": "G3480837158-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20160701T223000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "35d57665d0ead9173e69b1c7786909c599d948ff27e35f7c2919d2e0efcb0cfa"
+    },
+    {
+      "id": "G3481010399-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20170701T013000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "6342e26fc0dfb5f49fae607ad9b85fed26bee9a5befd2e0afeca077e57a540fa"
+    },
+    {
+      "id": "G3481005386-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20170701T043000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "f9bf3895591e0fa4cda083f2f27b6ab43e46f8bc7b546e3313530b7c99593311"
+    },
+    {
+      "id": "G3481019138-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20170701T073000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "f549620a90c2ff990b9ee6620ec3ae0ed5bea73a805cfbf23b07c68a9f313714"
+    },
+    {
+      "id": "G3481014987-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20170701T103000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "8c72ec5afb559991215fcc2e632fda3e604c376b2ad17053eb732043d38d466d"
+    },
+    {
+      "id": "G3481017793-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20170701T133000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "1e144bfeb4ba807181cb4c7490a6e0b2e39ee2689715d426769318313a8d86a7"
+    },
+    {
+      "id": "G3481007734-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20170701T163000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "020012cdda57261f2b92e75a98d20816f4a68ab99387c5ca6dcb880cb44d85e3"
+    },
+    {
+      "id": "G3481013467-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20170701T193000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "a84da0f70ed02722af5b3ef23ed53b3fcc45a12444b1f06f1255a5a733442b0d"
+    },
+    {
+      "id": "G3481017839-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20170701T223000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "60736c569c7646895b391f775e35151bd7ba7956bab1eb43d87ec66274cdd777"
+    },
+    {
+      "id": "G3481186734-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20180701T013000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "fa4ab0860ba5c3f07fba9ea7d1543fdbd0c95fae3f21f8de20d6f69fc2976012"
+    },
+    {
+      "id": "G3481180234-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20180701T043000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "28a73daeed05cdefd404fc7c996ef7b5a974933f87865e0e930261c01fc44c7f"
+    },
+    {
+      "id": "G3481191420-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20180701T073000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "68216671ef59df47379211627a782df2a1f03a7fd166a82d4e85bd1c0d6fe69a"
+    },
+    {
+      "id": "G3481186699-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20180701T103000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "6037440922ff4011b0fde3a81d26a0f48464e0be8dbde0674a8d4a9ad3282ba5"
+    },
+    {
+      "id": "G3481186761-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20180701T133000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "08c529b2e6ff0c6aee1b1ea389f5eb3707d62faffe7781fbe68da0495b0099a5"
+    },
+    {
+      "id": "G3481185723-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20180701T163000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "eec593c1f79ecf5c4a8cf44b1e79f416e579aed9c9fcaf7ebebce9c5907de4a9"
+    },
+    {
+      "id": "G3481185059-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20180701T193000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "4dbf30fbaf97e0e2a10a67b3758bc8e74e5a3009e45c26c1522932e18d984974"
+    },
+    {
+      "id": "G3481180190-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20180701T223000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "8c5254e8cc25644c4f3afe9dffeb12915fa7a92f5d3f51a9c256a5cf48716d76"
+    },
+    {
+      "id": "G3483063305-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20190701T013000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "f30d52b7bc18ad500a19ca943dffd7bd3fd2ffff9f0350fd8c9ea6283ce3cf27"
+    },
+    {
+      "id": "G3483062172-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20190701T043000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "f115ae3072e813ac9f3e8dfaa4a27653305507c8de21a45d2307768535599988"
+    },
+    {
+      "id": "G3483064002-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20190701T073000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "2270bdceabfa78fe00b3625dbf45ddd826912f257797425d02b6e0b54f27acdc"
+    },
+    {
+      "id": "G3483063386-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20190701T103000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "5328d02ddd4368b976a2497b89ef68c83008c2a3314535038636c4f10b5e4628"
+    },
+    {
+      "id": "G3483062143-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20190701T133000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "b40adb48c3296996accebf91e68c00cca1e265baabf4809fc6b594729a4fb98f"
+    },
+    {
+      "id": "G3483063379-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20190701T163000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "abebea007c4cec87493eb6aeecc18ee6a297919572bf5c20c9e48b06ca3e8f2a"
+    },
+    {
+      "id": "G3483062007-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20190701T193000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "c174862f6feab39fab7c2dee7fc38ff0a96d3da0884386d2e28dbc276b4c60e2"
+    },
+    {
+      "id": "G3483063312-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20190701T223000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "ec8354b92e432610b1bfa4a611204464e1aa3429d58292147f66a1955bd3e2cb"
+    },
+    {
+      "id": "G3483188422-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20200701T013000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "a179a0c7ab194da19c5c5f73dd38460f840d90675ecc731759ff6f52305b733b"
+    },
+    {
+      "id": "G3483187441-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20200701T043000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "ad366b13c9a488d3e954ef5afe1ec7ad660c843271a90ca6f141e35dc57f03a6"
+    },
+    {
+      "id": "G3483190160-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20200701T073000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "4922464895aa7002fda3df36ea493f6fc9cb4663b8f7dd6154a11f9fc09094c4"
+    },
+    {
+      "id": "G3483185819-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20200701T103000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "9d6b8a61470be07e37de304a5c29fb02f588ba23a5a029283b3110206464e717"
+    },
+    {
+      "id": "G3483190018-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20200701T133000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "2ad8ac10db44a0fa1f709cc81b61af5dcaa775036347f6b0f64f0801433d98e7"
+    },
+    {
+      "id": "G3483188654-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20200701T163000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "ec30beacd00beb9ad33adea5e11a06b05bcfabab6a199bb3265ca4554cb30e88"
+    },
+    {
+      "id": "G3483187509-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20200701T193000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "c66734fbb7c7350290cf2308187abbb8df295c748df80f1e8eaec844e886b852"
+    },
+    {
+      "id": "G3483190062-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20200701T223000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "d9d9670db9d7d8df9e29cace86a661ce511e6edf47a6021a76262d76cb23c2ac"
+    },
+    {
+      "id": "G3483338292-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20210701T013000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "62f4ab12ddab54af92e5120d888ccdac4d0b25fc7e625f01ad176cbea39b9a84"
+    },
+    {
+      "id": "G3483338333-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20210701T043000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "2a14008441203a264d58f73d4fac73788de6e0cbd83a07f8a67849616e74018f"
+    },
+    {
+      "id": "G3483338293-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20210701T073000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "02389f7507589e166bc311a90de306df4fd26a30d1f42cc795f0239f1b2faae0"
+    },
+    {
+      "id": "G3483338265-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20210701T103000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "a42b77fc06c6c2d7c59ce504e5ffcea3cd291f0fdf44e21941ebb01362e5f1a8"
+    },
+    {
+      "id": "G3483338285-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20210701T133000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "c5bdc2557b0ea7c3dce38212d30cebc586da14e1fc605347d1db836b31b953e2"
+    },
+    {
+      "id": "G3483339106-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20210701T163000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "f864c9b66a4cc8a85037eed8a7a4ff24fb5522d04693c97dfd2ca6ce80518afb"
+    },
+    {
+      "id": "G3483337983-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20210701T193000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "fa669f84334df45a6db7ee02200c4732129347a38ad90cf6eb88e0d85ad4bf0b"
+    },
+    {
+      "id": "G3483337999-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20210701T223000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "97b596d49979c1b257391b2a6003709cbe36e9911552a8595cd5db42cd811c96"
+    },
+    {
+      "id": "G3483488203-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20220701T013000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "72981f60c7399fecddbb2931f6f1cf22f9fbcdaa5aacd996cbe5e2141080a23c"
+    },
+    {
+      "id": "G3483492734-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20220701T043000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "6496a7aac834f89ea352d29a2610d41564bd6252f05132004d34db60ac34eb03"
+    },
+    {
+      "id": "G3483492703-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20220701T073000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "2cae6e4337346cca0764373f94ba23aa9b7726ad1cf4c174a926144e931cff39"
+    },
+    {
+      "id": "G3483488246-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20220701T103000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "6177a46e959bb242d7b7e692ea36a8bf815a2fc90a6c61c0e39875ca8828d653"
+    },
+    {
+      "id": "G3483484061-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20220701T133000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "aa3c467d040c6b3ad1ffd0f0c70fc85411c59e0daeaa8cc912782b2919eac370"
+    },
+    {
+      "id": "G3483486876-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20220701T163000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "616a8dde8aca3a21d3324cc0be77a6b5cafa12e6e982f5c89010521faaed96d7"
+    },
+    {
+      "id": "G3483485457-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20220701T193000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "d3f20a887f38ee2baf2b9597d8398741384c53fe53f38fffa3eacca3b6bdfb1e"
+    },
+    {
+      "id": "G3483486869-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20220701T223000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "0cbcf8fb0e9547fcc520358d1c6b9804bda7466695e52b57138d89e22dd6211e"
+    },
+    {
+      "id": "G3483636562-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20230701T013000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "b0a1fcd6ba048ceb24d68a4f35f3aeb45279f944cc9a35d896889d7b7e7f4ea3"
+    },
+    {
+      "id": "G3483640886-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20230701T043000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "f6f91f1735efc6d061fbb9726b3170b09c7e20422fa77866005cd7f3af93c160"
+    },
+    {
+      "id": "G3483639325-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20230701T073000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "faceaaf0c38d16369c269196272b41a9956aed0fe5493d21e2fdd3012717733e"
+    },
+    {
+      "id": "G3483636565-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20230701T103000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "aa4be924cf017d54272c0f43e89937cbc6cec8fecee301729524b15d13a55053"
+    },
+    {
+      "id": "G3483638106-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20230701T133000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "8300324c193130506c74a0c3fe56391d2277a67c63677dcb72b09574e20bc7a6"
+    },
+    {
+      "id": "G3483639393-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20230701T163000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "11e201615e3cb909c535bd47a0adaf320a93e962bd8c757a6311ebd6fcf8718f"
+    },
+    {
+      "id": "G3483639277-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20230701T193000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "aa2b06c4778648bb1ebc731bffd52b5ec4cf97a8462ca20a80868b8a902a44bd"
+    },
+    {
+      "id": "G3483640767-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20230701T223000_Vv8010_001.h5.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "14de8066f553674a5d0e3a41b93bd4bf0d88d4029cb60f463e2a5950cdf985de"
+    },
+    {
+      "id": "G4351875506-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20240701T013000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "dc4aa6de600dc5f0ce50b6818355f83086612b5978747d39f803894a556ac92b"
+    },
+    {
+      "id": "G4351875730-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20240701T043000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "e8a28364ea34704fe4935dec52c2995375cb7277540f6e6e48b11db92d6a0bc9"
+    },
+    {
+      "id": "G4351875811-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20240701T073000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "83f3d571758a7bc5d16187aaf649a55b4a16b39928ecd28d71cfa9d7a68b665a"
+    },
+    {
+      "id": "G4351875492-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20240701T103000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "dd17b745eac5bd1401dd71334dba4ec00e38bd9c927d01130319fb086bf9440f"
+    },
+    {
+      "id": "G4351875522-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20240701T133000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "7a7cf602ec507a2e39799197e6b09ea0a00757c590e6b3a59312d6a082f059a0"
+    },
+    {
+      "id": "G4351875555-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20240701T163000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "a9a81342781d104711691f4e26f9caab8a325bc9ed34777c9da17064e503d59f"
+    },
+    {
+      "id": "G4351875509-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20240701T193000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "c35773e310f4aef538e0132c0621a927449c05e620eb3e2575017d20e90fd109"
+    },
+    {
+      "id": "G4351875367-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20240701T223000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "5fb800b65a2b926ffaed8e9f7c933ebf5375522e7b20263a5c5c0a6f37ec125f"
+    },
+    {
+      "id": "G4352536484-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20250701T013000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "eaf60432a4f3552fc98c83a06476c176f84a9eb48576a8901d1a0cdf393ca780"
+    },
+    {
+      "id": "G4352530541-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20250701T043000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "ae6da023f4dd495a55d681f807acea416fe78c8c7186c4c5d4aa5e67c9273fff"
+    },
+    {
+      "id": "G4352530527-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20250701T073000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "750aa0f053bc4c564c50cb345824fe5fb8b39dbb976d3c3682744eb61a494d02"
+    },
+    {
+      "id": "G4352530679-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20250701T103000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "45b0d705b1c663b91d6ec1b3a70143ff4f285455c8807bbf5617072fe853582a"
+    },
+    {
+      "id": "G4352530150-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20250701T133000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "afd1b257f402100920d5419a89dbe032cb98d303023c867a33866088fa2275e5"
+    },
+    {
+      "id": "G4352530453-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20250701T163000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "33b5573ca886055405e7492a17dadf0c734e0df2e5c14801d2e0c66e14f8e819"
+    },
+    {
+      "id": "G4352530614-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20250701T193000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "0a0ebad1816ad5157b516c5d5547e55c97cf53aebe42ddf361dfd4636bbce9ff"
+    },
+    {
+      "id": "G4352530557-NSIDC_CPRD",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20250701T223000_Vv8012_001.h5_u9loH5HD.ascii?cell_lat[310:1:310][849:1:849],cell_lon[310:1:310][849:1:849],/Geophysical_Data/sm_surface[310:1:310][849:1:849],/Geophysical_Data/sm_rootzone[310:1:310][849:1:849],/Geophysical_Data/soil_temp_layer1[310:1:310][849:1:849],/Geophysical_Data/snow_mass[310:1:310][849:1:849]",
+      "sha256": "a1ac3563407dc6e063ceb210ecda0fd699699cf4c2fd9e35afc211f3d74feab7"
+    }
+  ],
+  "samples": [
+    {
+      "time": "2015-07-01T01:30:00Z",
+      "surface": 0.111964,
+      "rootzone": 0.236327,
+      "quality": "accepted",
+      "soilTempK": 302.307,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2015-07-01T04:30:00Z",
+      "surface": 0.114447,
+      "rootzone": 0.236634,
+      "quality": "accepted",
+      "soilTempK": 300.413,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2015-07-01T07:30:00Z",
+      "surface": 0.117162,
+      "rootzone": 0.237033,
+      "quality": "accepted",
+      "soilTempK": 298.832,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2015-07-01T10:30:00Z",
+      "surface": 0.119888,
+      "rootzone": 0.237362,
+      "quality": "accepted",
+      "soilTempK": 297.661,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2015-07-01T13:30:00Z",
+      "surface": 0.105109,
+      "rootzone": 0.236479,
+      "quality": "accepted",
+      "soilTempK": 297.279,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2015-07-01T16:30:00Z",
+      "surface": 0.106891,
+      "rootzone": 0.236211,
+      "quality": "accepted",
+      "soilTempK": 299.532,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2015-07-01T19:30:00Z",
+      "surface": 0.107879,
+      "rootzone": 0.23544,
+      "quality": "accepted",
+      "soilTempK": 302.0,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2015-07-01T22:30:00Z",
+      "surface": 0.119034,
+      "rootzone": 0.235287,
+      "quality": "accepted",
+      "soilTempK": 303.001,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2016-07-01T01:30:00Z",
+      "surface": 0.216521,
+      "rootzone": 0.250561,
+      "quality": "accepted",
+      "soilTempK": 299.244,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2016-07-01T04:30:00Z",
+      "surface": 0.214634,
+      "rootzone": 0.250203,
+      "quality": "accepted",
+      "soilTempK": 297.687,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2016-07-01T07:30:00Z",
+      "surface": 0.285048,
+      "rootzone": 0.254249,
+      "quality": "accepted",
+      "soilTempK": 296.173,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2016-07-01T10:30:00Z",
+      "surface": 0.373478,
+      "rootzone": 0.265913,
+      "quality": "accepted",
+      "soilTempK": 294.701,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2016-07-01T13:30:00Z",
+      "surface": 0.384688,
+      "rootzone": 0.279073,
+      "quality": "accepted",
+      "soilTempK": 293.81,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2016-07-01T16:30:00Z",
+      "surface": 0.38675,
+      "rootzone": 0.291658,
+      "quality": "accepted",
+      "soilTempK": 294.008,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2016-07-01T19:30:00Z",
+      "surface": 0.335445,
+      "rootzone": 0.296102,
+      "quality": "accepted",
+      "soilTempK": 295.164,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2016-07-01T22:30:00Z",
+      "surface": 0.314862,
+      "rootzone": 0.29629,
+      "quality": "accepted",
+      "soilTempK": 296.374,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2017-07-01T01:30:00Z",
+      "surface": 0.08916,
+      "rootzone": 0.199602,
+      "quality": "accepted",
+      "soilTempK": 298.454,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2017-07-01T04:30:00Z",
+      "surface": 0.0908532,
+      "rootzone": 0.199769,
+      "quality": "accepted",
+      "soilTempK": 296.449,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2017-07-01T07:30:00Z",
+      "surface": 0.0925464,
+      "rootzone": 0.199944,
+      "quality": "accepted",
+      "soilTempK": 294.565,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2017-07-01T10:30:00Z",
+      "surface": 0.0942658,
+      "rootzone": 0.200114,
+      "quality": "accepted",
+      "soilTempK": 292.935,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2017-07-01T13:30:00Z",
+      "surface": 0.0958497,
+      "rootzone": 0.200277,
+      "quality": "accepted",
+      "soilTempK": 292.639,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2017-07-01T16:30:00Z",
+      "surface": 0.0961313,
+      "rootzone": 0.20004,
+      "quality": "accepted",
+      "soilTempK": 295.54,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2017-07-01T19:30:00Z",
+      "surface": 0.0949471,
+      "rootzone": 0.199495,
+      "quality": "accepted",
+      "soilTempK": 298.786,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2017-07-01T22:30:00Z",
+      "surface": 0.0934723,
+      "rootzone": 0.198831,
+      "quality": "accepted",
+      "soilTempK": 300.588,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2018-07-01T01:30:00Z",
+      "surface": 0.161087,
+      "rootzone": 0.219051,
+      "quality": "accepted",
+      "soilTempK": 303.172,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2018-07-01T04:30:00Z",
+      "surface": 0.175055,
+      "rootzone": 0.219655,
+      "quality": "accepted",
+      "soilTempK": 301.124,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2018-07-01T07:30:00Z",
+      "surface": 0.197857,
+      "rootzone": 0.220832,
+      "quality": "accepted",
+      "soilTempK": 297.546,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2018-07-01T10:30:00Z",
+      "surface": 0.193898,
+      "rootzone": 0.220661,
+      "quality": "accepted",
+      "soilTempK": 295.292,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2018-07-01T13:30:00Z",
+      "surface": 0.163905,
+      "rootzone": 0.218897,
+      "quality": "accepted",
+      "soilTempK": 294.646,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2018-07-01T16:30:00Z",
+      "surface": 0.160601,
+      "rootzone": 0.218357,
+      "quality": "accepted",
+      "soilTempK": 296.481,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2018-07-01T19:30:00Z",
+      "surface": 0.153974,
+      "rootzone": 0.217267,
+      "quality": "accepted",
+      "soilTempK": 299.405,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2018-07-01T22:30:00Z",
+      "surface": 0.147769,
+      "rootzone": 0.21609,
+      "quality": "accepted",
+      "soilTempK": 301.278,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2019-07-01T01:30:00Z",
+      "surface": 0.142744,
+      "rootzone": 0.253206,
+      "quality": "accepted",
+      "soilTempK": 302.315,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2019-07-01T04:30:00Z",
+      "surface": 0.145145,
+      "rootzone": 0.253485,
+      "quality": "accepted",
+      "soilTempK": 300.105,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2019-07-01T07:30:00Z",
+      "surface": 0.148436,
+      "rootzone": 0.253888,
+      "quality": "accepted",
+      "soilTempK": 297.956,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2019-07-01T10:30:00Z",
+      "surface": 0.152174,
+      "rootzone": 0.25427,
+      "quality": "accepted",
+      "soilTempK": 296.288,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2019-07-01T13:30:00Z",
+      "surface": 0.155285,
+      "rootzone": 0.254591,
+      "quality": "accepted",
+      "soilTempK": 295.811,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2019-07-01T16:30:00Z",
+      "surface": 0.155544,
+      "rootzone": 0.25443,
+      "quality": "accepted",
+      "soilTempK": 297.957,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2019-07-01T19:30:00Z",
+      "surface": 0.151626,
+      "rootzone": 0.2536,
+      "quality": "accepted",
+      "soilTempK": 300.838,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2019-07-01T22:30:00Z",
+      "surface": 0.147273,
+      "rootzone": 0.252593,
+      "quality": "accepted",
+      "soilTempK": 302.303,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2020-07-01T01:30:00Z",
+      "surface": 0.0929786,
+      "rootzone": 0.185361,
+      "quality": "accepted",
+      "soilTempK": 305.416,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2020-07-01T04:30:00Z",
+      "surface": 0.0936816,
+      "rootzone": 0.185383,
+      "quality": "accepted",
+      "soilTempK": 302.777,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2020-07-01T07:30:00Z",
+      "surface": 0.0948381,
+      "rootzone": 0.18546,
+      "quality": "accepted",
+      "soilTempK": 300.143,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2020-07-01T10:30:00Z",
+      "surface": 0.095996,
+      "rootzone": 0.185539,
+      "quality": "accepted",
+      "soilTempK": 297.986,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2020-07-01T13:30:00Z",
+      "surface": 0.0969009,
+      "rootzone": 0.185606,
+      "quality": "accepted",
+      "soilTempK": 296.881,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2020-07-01T16:30:00Z",
+      "surface": 0.0968256,
+      "rootzone": 0.185385,
+      "quality": "accepted",
+      "soilTempK": 298.753,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2020-07-01T19:30:00Z",
+      "surface": 0.0955963,
+      "rootzone": 0.184928,
+      "quality": "accepted",
+      "soilTempK": 301.759,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2020-07-01T22:30:00Z",
+      "surface": 0.0964776,
+      "rootzone": 0.184598,
+      "quality": "accepted",
+      "soilTempK": 303.316,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2021-07-01T01:30:00Z",
+      "surface": 0.2192,
+      "rootzone": 0.214295,
+      "quality": "accepted",
+      "soilTempK": 297.182,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2021-07-01T04:30:00Z",
+      "surface": 0.245172,
+      "rootzone": 0.216584,
+      "quality": "accepted",
+      "soilTempK": 295.663,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2021-07-01T07:30:00Z",
+      "surface": 0.267315,
+      "rootzone": 0.220041,
+      "quality": "accepted",
+      "soilTempK": 294.449,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2021-07-01T10:30:00Z",
+      "surface": 0.283655,
+      "rootzone": 0.224043,
+      "quality": "accepted",
+      "soilTempK": 293.649,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2021-07-01T13:30:00Z",
+      "surface": 0.230899,
+      "rootzone": 0.214253,
+      "quality": "accepted",
+      "soilTempK": 293.346,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2021-07-01T16:30:00Z",
+      "surface": 0.231669,
+      "rootzone": 0.214942,
+      "quality": "accepted",
+      "soilTempK": 294.173,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2021-07-01T19:30:00Z",
+      "surface": 0.246785,
+      "rootzone": 0.2168,
+      "quality": "accepted",
+      "soilTempK": 294.7,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2021-07-01T22:30:00Z",
+      "surface": 0.229735,
+      "rootzone": 0.216845,
+      "quality": "accepted",
+      "soilTempK": 295.254,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2022-07-01T01:30:00Z",
+      "surface": 0.0666381,
+      "rootzone": 0.173321,
+      "quality": "accepted",
+      "soilTempK": 305.535,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2022-07-01T04:30:00Z",
+      "surface": 0.067997,
+      "rootzone": 0.173393,
+      "quality": "accepted",
+      "soilTempK": 303.447,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2022-07-01T07:30:00Z",
+      "surface": 0.0697146,
+      "rootzone": 0.173553,
+      "quality": "accepted",
+      "soilTempK": 301.421,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2022-07-01T10:30:00Z",
+      "surface": 0.0711766,
+      "rootzone": 0.173677,
+      "quality": "accepted",
+      "soilTempK": 299.66,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2022-07-01T13:30:00Z",
+      "surface": 0.0721602,
+      "rootzone": 0.174342,
+      "quality": "accepted",
+      "soilTempK": 298.561,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2022-07-01T16:30:00Z",
+      "surface": 0.0723827,
+      "rootzone": 0.174249,
+      "quality": "accepted",
+      "soilTempK": 299.89,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2022-07-01T19:30:00Z",
+      "surface": 0.071761,
+      "rootzone": 0.174034,
+      "quality": "accepted",
+      "soilTempK": 301.816,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2022-07-01T22:30:00Z",
+      "surface": 0.0714125,
+      "rootzone": 0.173844,
+      "quality": "accepted",
+      "soilTempK": 302.67,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2023-07-01T01:30:00Z",
+      "surface": 0.128044,
+      "rootzone": 0.230058,
+      "quality": "accepted",
+      "soilTempK": 300.734,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2023-07-01T04:30:00Z",
+      "surface": 0.154625,
+      "rootzone": 0.231501,
+      "quality": "accepted",
+      "soilTempK": 298.886,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2023-07-01T07:30:00Z",
+      "surface": 0.173964,
+      "rootzone": 0.232654,
+      "quality": "accepted",
+      "soilTempK": 296.28,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2023-07-01T10:30:00Z",
+      "surface": 0.173882,
+      "rootzone": 0.232817,
+      "quality": "accepted",
+      "soilTempK": 294.385,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2023-07-01T13:30:00Z",
+      "surface": 0.174154,
+      "rootzone": 0.232939,
+      "quality": "accepted",
+      "soilTempK": 293.917,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2023-07-01T16:30:00Z",
+      "surface": 0.1709,
+      "rootzone": 0.232629,
+      "quality": "accepted",
+      "soilTempK": 295.716,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2023-07-01T19:30:00Z",
+      "surface": 0.164497,
+      "rootzone": 0.23178,
+      "quality": "accepted",
+      "soilTempK": 298.211,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2023-07-01T22:30:00Z",
+      "surface": 0.158018,
+      "rootzone": 0.230821,
+      "quality": "accepted",
+      "soilTempK": 299.727,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2024-07-01T01:30:00Z",
+      "surface": 0.206705,
+      "rootzone": 0.211703,
+      "quality": "accepted",
+      "soilTempK": 297.426,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2024-07-01T04:30:00Z",
+      "surface": 0.212314,
+      "rootzone": 0.212332,
+      "quality": "accepted",
+      "soilTempK": 296.509,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2024-07-01T07:30:00Z",
+      "surface": 0.216935,
+      "rootzone": 0.212995,
+      "quality": "accepted",
+      "soilTempK": 295.557,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2024-07-01T10:30:00Z",
+      "surface": 0.212438,
+      "rootzone": 0.213145,
+      "quality": "accepted",
+      "soilTempK": 294.846,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2024-07-01T13:30:00Z",
+      "surface": 0.249069,
+      "rootzone": 0.229962,
+      "quality": "accepted",
+      "soilTempK": 294.84,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2024-07-01T16:30:00Z",
+      "surface": 0.225491,
+      "rootzone": 0.22873,
+      "quality": "accepted",
+      "soilTempK": 297.43,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2024-07-01T19:30:00Z",
+      "surface": 0.202786,
+      "rootzone": 0.226636,
+      "quality": "accepted",
+      "soilTempK": 300.705,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2024-07-01T22:30:00Z",
+      "surface": 0.18453,
+      "rootzone": 0.224619,
+      "quality": "accepted",
+      "soilTempK": 302.653,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2025-07-01T01:30:00Z",
+      "surface": 0.17321,
+      "rootzone": 0.215578,
+      "quality": "accepted",
+      "soilTempK": 300.317,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2025-07-01T04:30:00Z",
+      "surface": 0.172619,
+      "rootzone": 0.215805,
+      "quality": "accepted",
+      "soilTempK": 298.557,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2025-07-01T07:30:00Z",
+      "surface": 0.172463,
+      "rootzone": 0.216063,
+      "quality": "accepted",
+      "soilTempK": 296.997,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2025-07-01T10:30:00Z",
+      "surface": 0.173124,
+      "rootzone": 0.216359,
+      "quality": "accepted",
+      "soilTempK": 295.674,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2025-07-01T13:30:00Z",
+      "surface": 0.0880421,
+      "rootzone": 0.205097,
+      "quality": "accepted",
+      "soilTempK": 297.11,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2025-07-01T16:30:00Z",
+      "surface": 0.0895799,
+      "rootzone": 0.205058,
+      "quality": "accepted",
+      "soilTempK": 298.998,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2025-07-01T19:30:00Z",
+      "surface": 0.0900047,
+      "rootzone": 0.204643,
+      "quality": "accepted",
+      "soilTempK": 301.817,
+      "snowMassKgM2": 0.0
+    },
+    {
+      "time": "2025-07-01T22:30:00Z",
+      "surface": 0.0900151,
+      "rootzone": 0.204181,
+      "quality": "accepted",
+      "soilTempK": 303.178,
+      "snowMassKgM2": 0.0
+    }
+  ]
+}

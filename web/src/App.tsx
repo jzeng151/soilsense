@@ -13,6 +13,7 @@ import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
 import { CropTimingEvidence } from "./components/CropTimingEvidence";
+import { SmapCard } from "./components/SmapCard";
 import { EconomicsCard } from "./components/EconomicsCard";
 import { HistoricalScenarios } from "./components/HistoricalScenarios";
 import { FieldWatchCard } from "./components/FieldWatchCard";
@@ -597,6 +598,7 @@ export function App() {
                 <UsdmContext plan={plan} />
                 <WindScreenCard plan={plan} />
                 <EconomicsCard plan={plan} />
+                <SmapCard plan={plan} />
                 {/* /stretch: data evidence */}
 
                 <div className="jr-card">

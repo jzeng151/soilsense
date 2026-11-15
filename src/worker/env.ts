@@ -1,4 +1,5 @@
 export interface Env {
+  EARTHDATA_TOKEN?: string;
   ASSETS?: Fetcher;
   DB?: D1Database;
   AI?: Ai;

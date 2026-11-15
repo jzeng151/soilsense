@@ -12,6 +12,7 @@ import { SecondOpinion } from "./components/SecondOpinion";
 import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
+import { CropTimingEvidence } from "./components/CropTimingEvidence";
 import { EconomicsCard } from "./components/EconomicsCard";
 import { HistoricalScenarios } from "./components/HistoricalScenarios";
 import { FieldWatchCard } from "./components/FieldWatchCard";
@@ -699,6 +700,7 @@ export function App() {
                 </details>
 
                 {/* stretch: data evidence */}
+                <CropTimingEvidence key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
                 <HistoricalScenarios key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
                 {/* /stretch: data evidence */}
 

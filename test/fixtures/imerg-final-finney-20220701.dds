@@ -1,0 +1,78 @@
+Dataset {
+    Grid {
+      Array:
+        Float32 precipitation[time = 1][lon = 3600][lat = 1800];
+      Maps:
+        Float64 time[time = 1];
+        Float32 lon[lon = 3600];
+        Float64 lat[lat = 1800];
+    } precipitation;
+    Grid {
+      Array:
+        Int16 precipitation_cnt[time = 1][lon = 3600][lat = 1800];
+      Maps:
+        Float64 time[time = 1];
+        Float32 lon[lon = 3600];
+        Float64 lat[lat = 1800];
+    } precipitation_cnt;
+    Grid {
+      Array:
+        Int16 precipitation_cnt_cond[time = 1][lon = 3600][lat = 1800];
+      Maps:
+        Float64 time[time = 1];
+        Float32 lon[lon = 3600];
+        Float64 lat[lat = 1800];
+    } precipitation_cnt_cond;
+    Grid {
+      Array:
+        Float32 MWprecipitation[time = 1][lon = 3600][lat = 1800];
+      Maps:
+        Float64 time[time = 1];
+        Float32 lon[lon = 3600];
+        Float64 lat[lat = 1800];
+    } MWprecipitation;
+    Grid {
+      Array:
+        Int16 MWprecipitation_cnt[time = 1][lon = 3600][lat = 1800];
+      Maps:
+        Float64 time[time = 1];
+        Float32 lon[lon = 3600];
+        Float64 lat[lat = 1800];
+    } MWprecipitation_cnt;
+    Grid {
+      Array:
+        Int16 MWprecipitation_cnt_cond[time = 1][lon = 3600][lat = 1800];
+      Maps:
+        Float64 time[time = 1];
+        Float32 lon[lon = 3600];
+        Float64 lat[lat = 1800];
+    } MWprecipitation_cnt_cond;
+    Grid {
+      Array:
+        Float32 randomError[time = 1][lon = 3600][lat = 1800];
+      Maps:
+        Float64 time[time = 1];
+        Float32 lon[lon = 3600];
+        Float64 lat[lat = 1800];
+    } randomError;
+    Grid {
+      Array:
+        Int16 randomError_cnt[time = 1][lon = 3600][lat = 1800];
+      Maps:
+        Float64 time[time = 1];
+        Float32 lon[lon = 3600];
+        Float64 lat[lat = 1800];
+    } randomError_cnt;
+    Grid {
+      Array:
+        Int16 probabilityLiquidPrecipitation[time = 1][lon = 3600][lat = 1800];
+      Maps:
+        Float64 time[time = 1];
+        Float32 lon[lon = 3600];
+        Float64 lat[lat = 1800];
+    } probabilityLiquidPrecipitation;
+    Float32 lon[lon = 3600];
+    Float64 lat[lat = 1800];
+    Float64 time[time = 1];
+    Float64 time_bnds[time = 1][nv = 2];
+} 3B-DAY.MS.MRG.3IMERG.20220701-S000000-E235959.V07B.nc4;

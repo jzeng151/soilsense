@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-15T16:59:29.697Z",
+  "timestamp": "2026-11-15T23:11:03.660Z",
   "observations": [
     {
       "language": "en",
@@ -18,6 +18,14 @@
           "text": "New chat"
         },
         {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
           "tag": "A",
           "text": "Rotation planner"
         },
@@ -32,6 +40,10 @@
         {
           "tag": "A",
           "text": "Sources"
+        },
+        {
+          "tag": "A",
+          "text": "How it works"
         },
         {
           "tag": "A",
@@ -104,7 +116,7 @@
       ],
       "undersizedButtons": [],
       "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Crop rotation planner\"><ol class=\"jr-progress\" aria-label=\"Progress\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</span>Your field</but",
-      "planHeading": "Grow alfalfa (hay) in 2027, alfalfa (hay) in 2028, then alfalfa (hay) in 2029.",
+      "planHeading": "Grow soybean in 2027, corn in 2028, then soybean in 2029.",
       "mapKeyboardSelection": true
     },
     {
@@ -178,7 +190,7 @@
       ],
       "undersizedButtons": [],
       "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Crop rotation planner\"><ol class=\"jr-progress\" aria-label=\"Progress\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</span>Your field</but",
-      "planHeading": "Grow alfalfa (hay) in 2027, alfalfa (hay) in 2028, then alfalfa (hay) in 2029.",
+      "planHeading": "Grow soybean in 2027, corn in 2028, then soybean in 2029.",
       "mapKeyboardSelection": true
     },
     {
@@ -187,43 +199,55 @@
       "order": [
         {
           "tag": "A",
-          "text": "Skip to main content"
+          "text": "Saltar al contenido principal"
         },
         {
           "tag": "A",
-          "text": "Soil SenseTeaching satellites to speak Farmer"
+          "text": "Soil SenseEnseñamos a los satélites a hablar el idioma del campo"
         },
         {
           "tag": "BUTTON",
-          "text": "New chat"
+          "text": "Nueva conversación"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
         },
         {
           "tag": "A",
-          "text": "Rotation planner"
+          "text": "Planificador de rotaciones"
         },
         {
           "tag": "A",
-          "text": "SproutAI"
+          "text": "SproutIA"
         },
         {
           "tag": "A",
-          "text": "Live call"
+          "text": "Llamada en directo"
         },
         {
           "tag": "A",
-          "text": "Sources"
+          "text": "Fuentes"
         },
         {
           "tag": "A",
-          "text": "Settings"
+          "text": "Cómo funciona"
         },
         {
           "tag": "A",
-          "text": "Data: NASA · USDA · FCC — see all sources"
+          "text": "Configuración"
         },
         {
           "tag": "A",
-          "text": "Team sign-in"
+          "text": "Datos: NASA · USDA · FCC — ver todas las fuentes"
+        },
+        {
+          "tag": "A",
+          "text": "Acceso del equipo"
         },
         {
           "tag": "BUTTON",
@@ -235,7 +259,7 @@
         },
         {
           "tag": "SUMMARY",
-          "text": "Plain-language glossary — what the terms mean"
+          "text": "Glosario en palabras sencillas: qué significan los términos"
         },
         {
           "tag": "INPUT",
@@ -283,8 +307,8 @@
         }
       ],
       "undersizedButtons": [],
-      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Crop rotation planner\"><ol class=\"jr-progress\" aria-label=\"Progreso\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</span>Tu parcela</but",
-      "planHeading": "Recomendamos cultivar alfalfa / heno en 2027, cultivar alfalfa / heno en 2028 y después cultivar alfalfa / heno en 2029.",
+      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Planificador de rotaciones de cultivos\"><ol class=\"jr-progress\" aria-label=\"Progreso\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</spa",
+      "planHeading": "Recomendamos cultivar soja en 2027, cultivar maíz en 2028 y después cultivar soja en 2029.",
       "mapKeyboardSelection": true
     },
     {
@@ -293,11 +317,11 @@
       "order": [
         {
           "tag": "A",
-          "text": "Skip to main content"
+          "text": "Saltar al contenido principal"
         },
         {
           "tag": "BUTTON",
-          "text": "Open sidebar"
+          "text": "Abrir barra lateral"
         },
         {
           "tag": "BUTTON",
@@ -309,7 +333,7 @@
         },
         {
           "tag": "SUMMARY",
-          "text": "Plain-language glossary — what the terms mean"
+          "text": "Glosario en palabras sencillas: qué significan los términos"
         },
         {
           "tag": "INPUT",
@@ -357,8 +381,8 @@
         }
       ],
       "undersizedButtons": [],
-      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Crop rotation planner\"><ol class=\"jr-progress\" aria-label=\"Progreso\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</span>Tu parcela</but",
-      "planHeading": "Recomendamos cultivar alfalfa / heno en 2027, cultivar alfalfa / heno en 2028 y después cultivar alfalfa / heno en 2029.",
+      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Planificador de rotaciones de cultivos\"><ol class=\"jr-progress\" aria-label=\"Progreso\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</spa",
+      "planHeading": "Recomendamos cultivar soja en 2027, cultivar maíz en 2028 y después cultivar soja en 2029.",
       "mapKeyboardSelection": true
     }
   ]

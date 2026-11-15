@@ -1,6 +1,6 @@
 # HLS vegetation evidence (#19)
 
-This PR stacks on draft #61 (MODIS), merged with `next`. HLS and MODIS remain separate evidence sources and cannot change engine rankings, yields, confirmed Field Watch state or pinned scenarios.
+MODIS #61 is merged. This branch is reconciled with `origin/next` at `4f44678`. HLS and MODIS remain separate evidence sources and cannot change engine rankings, yields, confirmed Field Watch state or pinned scenarios.
 
 ## Deliberately offline extraction
 
@@ -51,10 +51,27 @@ Vitest independently recomputes scale, QA acceptance, per-pixel NDVI, scene mean
 - [x] Separate HLS plot/table/details card in marked stretch evidence block; MODIS remains distinct.
 - [x] No gap filling, bare-soil inference or hypothetical-rotation observation claims.
 - [ ] Dynamic arbitrary-field Worker COG processing and longer seasonal history, field polygons/area coverage.
-- [ ] MODIS live Collection 061 reconciliation remains #61's dependency and is not established by HLS success.
+- [x] MODIS dependency #61 merged and its separate card renders beside HLS on all four demo farms.
 - [ ] Deployed browser 375 px, screen-reader and common evidence-drawer integration verification.
 
-Local `wrangler dev -c wrangler.offline.jsonc --port 8793` verification returned HTTP 200 / available / finney-ks / two observations; a neighboring non-demo point returned 200 / unavailable and invalid coordinates returned 400. `npm test`: 214 passed, 11 existing opt-in tests skipped. Python QA tests: 3 passed. Typecheck/build passed; existing Vite large-bundle warning remains.
+## Local integration audit — 2026-11-15
+
+Production assets served by `npx wrangler dev -c wrangler.offline.jsonc --port 8797`, source revision `6ca1a5e`:
+
+- `npm run typecheck`, `npm test` (571 passed, 11 opt-in skipped), and `npm run build` passed. Existing Vite bundle-size warning remains.
+- `A11Y_BASE_URL=http://127.0.0.1:8797 node scripts/a11y-hls.mjs`: 16 states (four farms × EN/ES × 1280/375 px), zero selected WCAG axe violations, zero HLS incomplete rules and no page horizontal overflow. Each card loaded real local Worker evidence, exact field IDs and both actual scene means; expanded tables contain two scene rows and eighteen pixel rows. MODIS rendered separately with populated observations.
+- Real Enter/Space/Tab traversal opens HLS and pixel disclosures, loads the sample, and reaches the labelled scrollable observation table. ARIA snapshots preserve table captions, column/row headers, chart alternative text and translated labels. This is accessibility-tree inspection, **not an NVDA/VoiceOver listening test or WCAG certification**.
+- Loading HLS leaves the recommendation answer, localStorage (including any browser-owned scenario state), and visible Field Watch text unchanged and sends no mutating API requests. No engine/ranking/yield/Field Watch logic was modified. Field-switch stale-response cancellation, reset, failed requests and non-demo unavailability are additionally covered by component tests.
+- `A11Y_BASE_URL=http://127.0.0.1:8797 A11Y_OUTPUT=docs/a11y/hls-common.json npm run a11y` passed: all 32 common-flow scans, including fully expanded HLS plus other evidence disclosures, have zero selected axe violations. Broader-page incomplete findings remain recorded, not counted as passes. Keyboard flow passes EN/ES at both widths, including 320 px plan reflow. Fixed stale English-only test selectors and Spanish water-stat wrapping exposed by that real run.
+- Full JSON, ARIA snapshots and screenshots: `docs/a11y/hls.json`, `docs/a11y/hls-common.json`, `docs/a11y/keyboard.json`, `docs/a11y/hls-screenshots/`. Run the audit suites sequentially: a concurrent run timed out at plan loading; a standalone rerun passed. No API evidence was fabricated or intercepted in HLS checks. Common admin-review coverage retains its explicitly labelled synthetic UI fixture.
+
+### Cloud setup for owner
+
+HLS requires no new cloud binding, migration, runtime token or provider call. Deploy the normal build with ASSETS containing `data/hls-demo.json`. The optional ASSETS binding degrades to explicit unavailable without it. Earthdata credentials are only needed to rebuild the offline artifact, never in the browser. MODIS uses its existing D1 cache; local warming does not warm production. If needed, use the existing admin-protected prefetch script against the deployed URL.
+
+### Still needs deployed / human checks
+
+No deployment occurred. Verify production asset routing and `/api/hls` exact field IDs/values for all four demos, a nearby unavailable point, EN/ES 375 px reflow, common evidence disclosures and field-switch reset. Listen with NVDA or VoiceOver for disclosure state, loading/error announcements and table navigation; ARIA snapshots cannot establish actual speech output. Confirm production MODIS cache warmth independently. Dynamic arbitrary-field decoding, longer history and field polygons remain out of this bounded implementation.
 
 After deployment: load each demo card and compare JSON values; test a non-demo point (explicit unavailable), asset failure and full-cloud snapshots; inspect field-switch reset and narrow layouts; confirm no Field Watch changes. No deploy or merge performed.
 

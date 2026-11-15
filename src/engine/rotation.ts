@@ -831,6 +831,11 @@ export function makeReplay(
 function replayPair(climate: DailyClimate, water: WaterContext, input: EngineInput, crop: CropId, prevCrop: CropId): ReplayYear[] {
   const out: ReplayYear[] = [];
   for (let i = 0; i < water.n; i++) {
+    // A missing year cannot be bridged by substituting a different calendar year for soil-water spinup.
+    const window = climate.years.slice(Math.max(0, i - 2), i + 1);
+    if (window.some((ys, k) => (k > 0 && ys.year !== window[k - 1]!.year + 1) ||
+      ys.days.length !== (Date.UTC(ys.year + 1, 0, 1) - Date.UTC(ys.year, 0, 1)) / 86_400_000 ||
+      ys.days.some((d) => d.prcp === null || d.tmax === null || d.tmin === null))) continue;
     // Spin up through the two seasons before (crop → prevCrop → crop), using the real preceding years.
     const steps: [CropId, number][] = [];
     if (i >= 2) steps.push([crop, i - 2]);

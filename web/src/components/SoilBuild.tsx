@@ -13,7 +13,7 @@ const KIND_LABEL: Record<Kind, { icon: string; title: string }> = {
   roots: { icon: "🌾", title: "Deep roots" },
   drought: { icon: "☀️", title: "Handles drought" },
   cover: { icon: "🛡️", title: "Keeps the ground covered" },
-  pests: { icon: "🔄", title: "Breaks pest cycles" },
+  pests: { icon: "🔄", title: "Review rotation effects" },
   residue: { icon: "🍂", title: "Leaves residue" },
   bare: { icon: "⚠️", title: "Watch out" },
 };
@@ -33,9 +33,9 @@ const CROP_SOIL: Record<CropId, { kind: Kind; text: string }[]> = {
   winter_wheat: [
     { kind: "cover", text: "Winter wheat is sown in fall, so the ground is covered through winter and spring, when wind and water erosion are worst." },
     { kind: "drought", text: "It grows in the cooler, wetter part of the year and is harvested before the summer heat." },
-    { kind: "pests", text: "A small grain between row crops breaks corn and soybean pest and disease cycles." },
+    { kind: "pests", text: "A small-grain phase is not universal pest or disease protection. Review the plan’s named-pest notes, local field history and volunteer corn with your agronomist." },
   ],
-  oats: [{ kind: "pests", text: "Oats, a small grain, break corn and soybean pest and disease cycles and open a summer window for a legume cover crop." }],
+  oats: [{ kind: "pests", text: "An oats phase is not universal pest or disease protection. Review named-pest evidence and confirm whether the following cover-crop planting window is feasible locally." }],
   corn: [{ kind: "residue", text: "Corn leaves a lot of stalks and leaves on the field, which protect the surface and feed soil organic matter, but it needs the most nitrogen fertilizer." }],
   fallow: [{ kind: "bare", text: "A fallow season stores water for the next crop, but bare ground can blow or wash away and loses organic matter. Leaving crop residue standing helps." }],
 };
@@ -66,7 +66,7 @@ export function SoilBuild({ plan }: { plan: RotationPlan }) {
     }
   }
   const crops = new Set(plan.years.map((y) => y.crop).filter((c) => c !== "fallow"));
-  if (crops.size >= 2) items.push({ key: "variety", kind: "pests", text: `Growing ${crops.size} different crops in 3 years feeds a wider range of soil life than one crop repeated, and makes it harder for pests to build up.` });
+  if (crops.size >= 2) items.push({ key: "variety", kind: "pests", text: `This plan has ${crops.size} different crops in 3 years. Pest effects depend on the pest, crop sequence, region and field history; diversity alone is not a promise of protection.` });
   // Good things first, cautions last.
   items.sort((a, b) => Number(a.kind === "bare") - Number(b.kind === "bare"));
   return (

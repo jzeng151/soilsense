@@ -62,7 +62,7 @@ export interface PlanOpts {
 }
 
 /** Bump whenever the engine's output changes, so cached plans from older code are never served. */
-export const PLAN_ENGINE_VERSION = "e3";
+export const PLAN_ENGINE_VERSION = "e4-mvp-evidence";
 
 export async function makePlan(
   env: Env,

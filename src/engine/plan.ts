@@ -7,6 +7,7 @@ import { buildExplanation, buildFacts } from "./explain";
 import { ALL_CROPS, CROPS } from "./crops";
 import { availableCrops, FALLOW_MAX_ANNUAL_RAIN_MM, statePotential } from "./regions";
 import { buildDroughtReplays } from "./droughtReplay";
+import { planAdvice } from "./pestNotes";
 import { buildWaterContext, evaluateCropClimate, LIMITED_IRRIGATION_MM, makeReplay, meanAnnualRainMm, runEngine } from "./rotation";
 import { usdaInputs, type RecentYield, type ValidationSeries } from "./usda";
 import { checkWaterUse, validateCrop, type YieldRecord } from "./validate";
@@ -250,6 +251,10 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       })
     : [];
 
+  for (const plan of [...plans, ...(currentPractice ? [currentPractice] : [])]) {
+    plan.includes_non_corn_year = plan.years.some((y) => y.crop !== "corn");
+  }
+
   const facts = buildFacts({
     climate: climateSummary,
     cropClimate,
@@ -262,6 +267,15 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     losses: inputs.losses ?? null,
     countyName: county?.countyName ?? null,
   });
+
+  if (plans[0]) {
+    const advice = planAdvice(plans[0], level);
+    facts.push({ id: `advice-${advice.version}`, kind: "agronomy", source: "Versioned model-assumption checklist",
+      text: `Ask your agronomist about: ${advice.checks.join(" ")}` });
+    for (const note of advice.pestNotes) facts.push({ id: `pest-${note.pest}`, kind: "agronomy", source: note.sourceUrl,
+      text: `${note.sequence}. ${note.potentialEffect} ${note.conditions.join(" ")}` });
+    if (advice.undocumentedBenefit) facts.push({ id: "pest-undocumented", kind: "agronomy", source: "Plan crop phases", text: advice.undocumentedBenefit });
+  }
 
   const explanation = buildExplanation({
     plans,
@@ -306,6 +320,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       `This area averages about ${Math.round(annualRain / 25.4)} inches of rain a year; fallow was ${fallowAllowed ? "" : "not "}considered.`,
       "Replayed past years are history, not a forecast: each uses that year's real NASA weather on this soil, compared with what the county really harvested (USDA NASS) and why crop insurance paid out (USDA RMA).",
     ],
+    ...(climate.powerEvidence ? { powerEvidence: climate.powerEvidence } : {}),
     dataSources: DATA_SOURCES,
     disclaimer: DISCLAIMER,
     water: level,

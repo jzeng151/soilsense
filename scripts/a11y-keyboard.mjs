@@ -5,8 +5,11 @@ const browser = await chromium.launch();
 const observations = [];
 const base = process.env.A11Y_BASE_URL ?? 'http://127.0.0.1:8790';
 try {
-  for (const width of [1280,375]) {
+  for (const language of ['en','es']) for (const width of [1280,375]) {
     const page = await browser.newPage({viewport:{width,height:900},reducedMotion:'reduce'});
+    await page.addInitScript(language => localStorage.setItem('soilsense.language',language),language);
+    const confirm = language === 'es' ? 'Sí, esta es mi parcela' : 'Yes, this is my field';
+    const showPlan = language === 'es' ? 'Ver mi plan' : 'Show my plan';
     page.setDefaultTimeout(180000);
     await page.goto(base);
     await page.locator('.leaflet-container').waitFor();
@@ -41,23 +44,23 @@ try {
     if (width === 375) assert.equal(order[0].text,'Skip to main content','Skip link comes first'), assert.equal(order[1].text,'Open sidebar','Collapsed phone navigation must not receive focus');
     assert.equal(await page.getByRole('button',{name:'Kansas',exact:true}).evaluate(e=>e===document.activeElement),true,'Kansas reachable by Tab');
     await page.keyboard.press('Enter');
-    await page.getByRole('button',{name:'Yes, this is my field'}).waitFor();
+    await page.getByRole('button',{name:confirm}).waitFor();
     const small = await page.locator('button:visible').evaluateAll(es=>es.filter(e=>!e.disabled).map(e=>({text:e.textContent.trim(),width:e.getBoundingClientRect().width,height:e.getBoundingClientRect().height})).filter(e=>e.width<44||e.height<44));
-    observations.push({width,order,undersizedButtons:small});
+    observations.push({language,width,order,undersizedButtons:small});
     // Tab forward from Kansas, through Field Watch, to confirmation.
     for(let i=0;i<35;i++) {
       await page.keyboard.press('Tab');
-      if(await page.getByRole('button',{name:'Yes, this is my field'}).evaluate(e=>e===document.activeElement))break;
+      if(await page.getByRole('button',{name:confirm}).evaluate(e=>e===document.activeElement))break;
     }
-    assert.equal(await page.getByRole('button',{name:'Yes, this is my field'}).evaluate(e=>e===document.activeElement),true,'Confirmation reachable by Tab');
+    assert.equal(await page.getByRole('button',{name:confirm}).evaluate(e=>e===document.activeElement),true,'Confirmation reachable by Tab');
     await page.keyboard.press('Enter');
-    await page.getByRole('heading',{name:'Three quick questions'}).waitFor();
+    await page.getByRole('heading',{name:language === 'es' ? 'Tres preguntas rápidas' : 'Three quick questions'}).waitFor();
     observations.at(-1).questionFocus = await page.evaluate(()=>document.activeElement.outerHTML.slice(0,200));
     // Native button groups: Tab reaches every option; Space selects and exposes pressed state.
     await page.locator('.jr-tiles-crops button').first().focus();
     await page.keyboard.press('Space');
     assert.equal(await page.locator('.jr-tiles-crops button').first().getAttribute('aria-pressed'),'true');
-    await page.getByRole('button',{name:'Show my plan'}).focus();
+    await page.getByRole('button',{name:showPlan}).focus();
     await page.keyboard.press('Enter');
     await page.locator('.jr-answer').waitFor();
     observations.at(-1).planHeading = await page.locator('h1').innerText();
@@ -82,4 +85,4 @@ try {
   await writeFile('docs/a11y/keyboard.json',JSON.stringify({timestamp:new Date().toISOString(),observations},null,2)+'\n');
 }
 assert.equal(observations.flatMap(o=>o.undersizedButtons).length,0,'Enabled landing buttons meet the 44px team rule');
-console.log('Keyboard flow and 44px button checks passed at both widths');
+console.log('Keyboard flow and 44px button checks passed in EN and ES at both widths');

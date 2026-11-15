@@ -209,3 +209,11 @@ api.get("/logs", async (c) => {
 api.route("/scout", scout);
 // Field Watch: background field checks (Cron Trigger) and their saved results.
 api.route("/fieldwatch", fieldWatch);
+
+// Versioned static source audit; no live market quotation or effect on rankings.
+api.get("/economics-assumptions", async (c) => {
+  const { assumptionAudit } = await import("../../engine/economics");
+  const state = c.req.query("state");
+  if (state !== undefined && !/^[A-Z]{2}$/.test(state)) return c.json({ error: "state must be a two-letter uppercase code" }, 400);
+  return c.json(assumptionAudit(state));
+});

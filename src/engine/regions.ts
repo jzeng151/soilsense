@@ -1,5 +1,12 @@
 // State-level defaults: approximate yields and which crops have practical local markets.
-// Approximate planning values; when a USDA NASS API key is configured, county averages are used instead.
+// Approximate defaults, not sourced observations: no documented vintage/source for the numbers below.
+// economics.ts provides per-crop region/unit/treatment annotations and explicitly null year/source fields.
+// With a NASS key, county/district averages calibrate (not directly replace) these potential bounds.
+// Reference, NOT substituted for state averages: Iowa State Ag Decision Maker A1-20, January 2026,
+// https://extension.iastate.edu/agdm/crops/pdf/a1-20.pdf (fetched 2026-11-15), corn following soybeans
+// middle budget yield 211 bu/ac (p3); herbicide-tolerant soybean following corn 61 bu/ac (p5).
+// These are Iowa budget TREND yields, not state observations or water-unlimited potential. Never silently
+// use them as irrigated Plains yields. See docs/economics-sources.md for scope and actual costs.
 //
 // The engine needs *water-unlimited* yield potential: what a crop yields when water is not short.
 // Rain-fed yields are then computed from that potential and the water the field actually gets each
@@ -39,9 +46,8 @@ export const PLAINS_POTENTIAL: Record<string, Yields> = {
   ND: { corn: 175, soybean: 45, winter_wheat: 65, alfalfa: 3.4, oats: 78 },
 };
 
-/**
- * Average farm yields in rain-fed regions typically reach about 85-90% of water-limited potential
- * (Global Yield Gap Atlas, US maize/soybean), so potential ≈ average × 1.1.
+/** Demonstration conversion of average yield to model potential. Approximate default, not a sourced
+ * crop/state-specific yield-gap estimate; multiplying by 1.2 is not an observed field measurement.
  */
 export const AVERAGE_TO_POTENTIAL = 1.2;
 

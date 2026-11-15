@@ -1,9 +1,11 @@
+import { useI18n } from "../i18n";
 import type { PlanResponse } from "../../../src/shared/types";
 import { evidenceForPlan, evidenceQuality } from "../../../src/engine/dataEvidence";
 import "./mvp-evidence.css";
 
 export function DecisionNotice() {
-  return <p className="decision-notice" role="note">SoilSense helps explore options using NASA data and research. It supports the farmer’s judgment together with local agronomist and extension advice; it is not a forecast or a guarantee.</p>;
+  const { t } = useI18n();
+  return <p className="decision-notice" role="note">{t("Decision notice")}</p>;
 }
 
 export function DataEvidence({ plan }: { plan: PlanResponse }) {

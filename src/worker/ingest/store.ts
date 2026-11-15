@@ -1,4 +1,4 @@
-import { INGEST_VERSION, type DocChunk, type DocStatus, type ReviewDecision } from "../../shared/ingest";
+import { DOCS_LAYOUT, INGEST_VERSION, type ChunkStatus, type DocChunk, type DocStatus, type ReviewDecision } from "../../shared/ingest";
 
 export interface DocRow {
   doc_id: string; r2_key: string; latest_sha256: string | null; status: DocStatus; workflow_id: string | null;
@@ -8,11 +8,30 @@ export interface DocRow {
 }
 export interface ChunkRow {
   chunk_id: string; doc_id: string; doc_sha256: string; chunk_sha256: string;
-  start_offset: number; end_offset: number; text: string; status: "pending" | "indexed" | "retired"; vector_ids_json: string | null;
+  start_offset: number; end_offset: number; text: string; status: ChunkStatus; vector_ids_json: string | null;
 }
 export const getDoc = (db: D1Database, id: string) => db.prepare("SELECT * FROM ingest_docs WHERE doc_id = ?").bind(id).first<DocRow>();
 export async function getChunks(db: D1Database, id: string): Promise<ChunkRow[]> {
   return (await db.prepare("SELECT * FROM ingest_chunks WHERE doc_id = ? ORDER BY start_offset, chunk_id").bind(id).all<ChunkRow>()).results;
+}
+/** D1 deliberately preserves old indexed offsets during review. The manifest is the
+ * authoritative current-version chunk set (including kept ids at their new offsets).
+ */
+export async function getReviewChunks(db: D1Database, bucket: R2Bucket, doc: DocRow): Promise<ChunkRow[]> {
+  if (!doc.latest_sha256) throw new Error("Current document version missing");
+  const object = await bucket.get(DOCS_LAYOUT.manifest(doc.latest_sha256, doc.doc_id))
+    ?? await bucket.get(DOCS_LAYOUT.manifest(doc.latest_sha256));
+  if (!object) throw new Error("Current document manifest missing");
+  const manifest = JSON.parse(await object.text()) as { docId: string; sha256: string; chunks: DocChunk[] };
+  if (manifest.docId !== doc.doc_id || manifest.sha256 !== doc.latest_sha256 || !Array.isArray(manifest.chunks)) throw new Error("Current document manifest mismatch");
+  const rows = new Map((await getChunks(db, doc.doc_id)).map((c) => [c.chunk_id, c]));
+  return manifest.chunks.map((c) => {
+    if (c.docId !== doc.doc_id || c.docSha256 !== doc.latest_sha256) throw new Error("Current chunk version mismatch");
+    const row = rows.get(c.id);
+    return { chunk_id: c.id, doc_id: c.docId, doc_sha256: c.docSha256, chunk_sha256: c.sha256,
+      start_offset: c.start, end_offset: c.end, text: c.text,
+      status: row?.status ?? "pending", vector_ids_json: row?.vector_ids_json ?? null };
+  });
 }
 export async function assertCurrent(db: D1Database, id: string, instanceId: string): Promise<void> {
   if ((await getDoc(db, id))?.workflow_id !== instanceId) throw new Error("document workflow superseded");
@@ -36,7 +55,7 @@ export async function saveVersion(db: D1Database, v: { id: string; sha: string; 
     VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(doc_id,sha256) DO NOTHING`)
     .bind(v.id,v.sha,v.size,v.contentType,v.method,v.extractedKey,v.chars,INGEST_VERSION,v.receivedAt).run();
 }
-export function chunkStatement(db: D1Database, c: DocChunk, status: "pending" | "indexed", vectors: string[] | null): D1PreparedStatement {
+export function chunkStatement(db: D1Database, c: DocChunk, status: "pending" | "indexed" | "excluded", vectors: string[] | null): D1PreparedStatement {
   const now = new Date().toISOString();
   return db.prepare(`INSERT INTO ingest_chunks (chunk_id,doc_id,doc_sha256,chunk_sha256,start_offset,end_offset,text,status,vector_ids_json,created_at,updated_at)
     VALUES (?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(chunk_id) DO UPDATE SET doc_sha256=excluded.doc_sha256,chunk_sha256=excluded.chunk_sha256,

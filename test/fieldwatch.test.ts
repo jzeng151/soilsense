@@ -81,7 +81,7 @@ describe("Field Watch rule", () => {
       kansas: { county: "Finney County", alert: "warning", droughtProbability: 0.9, rootzonePct: 5, dataThrough: "2026-11-09" },
     });
     expect(r.status).toBe("ok");
-    expect(r.reasons.some((x) => x.id === "kansas" && /Finney County/.test(x.text) && /context only/.test(x.text))).toBe(true);
+    expect(r.reasons.find((x) => x.id === "kansas")?.text).toBe('Kansas weekly outlook for Finney County (data through 2026-11-09, context only): alert "warning".');
   });
 
   it("decides from two percentile ranks using the Drought Monitor bands (rule v2)", () => {

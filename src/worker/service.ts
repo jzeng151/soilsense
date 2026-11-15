@@ -62,7 +62,7 @@ export interface PlanOpts {
 }
 
 /** Bump whenever the engine's output changes, so cached plans from older code are never served. */
-export const PLAN_ENGINE_VERSION = "e4-mvp-evidence";
+export const PLAN_ENGINE_VERSION = "e5-farmer-goals";
 
 export async function makePlan(
   env: Env,
@@ -77,6 +77,7 @@ export async function makePlan(
     request.lon.toFixed(4),
     water,
     request.priority,
+    ...(request.goals?.length ? [`goals=${request.goals.join(",")}`] : []),
     (request.recentCrops ?? []).join(","),
     request.language ?? "en",
     opts.skipCropHistory ? "nocdl" : "cdl",

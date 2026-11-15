@@ -6,7 +6,7 @@ export function Definition({ term }: { term: string }) {
   const id = useId();
   const entry = glossaryEntry(term);
   return <span className="term-definition">
-    <button type="button" popoverTarget={id} aria-label={`Define ${entry.plain}: ${entry.technical}`}>{entry.plain} <span aria-hidden="true">ⓘ</span></button>
+    <button type="button" popoverTarget={id} title={`Define ${entry.technical}`}>{entry.plain} <span aria-hidden="true">ⓘ</span></button>
     <span id={id} popover="auto" className="term-popover" role="note" aria-label={entry.technical}>
       <strong>{entry.plain}</strong><span className="term-technical">{entry.technical}</span>
       <span>{entry.definition}</span><span>{entry.limit}</span>

@@ -1,3 +1,4 @@
+import { useI18n } from "../i18n";
 // The three "what if" pieces of the results page:
 //   - BadYears: how often the current crops vs. the plan would be badly stressed (out of 10 years)
 //   - WaterOptions: best plan with rain only / limited irrigation / full irrigation ("what if the well runs low?")
@@ -34,21 +35,23 @@ export function badYearsWords(n: number): string {
 
 /** Headline: bad years out of 10, current crops vs. the plan. */
 export function BadYears({ plan, current }: { plan: RotationPlan; current: RotationPlan | null }) {
+  const { t, language } = useI18n();
+  const words = (n: number) => language === "en" ? badYearsWords(n) : n >= 10 ? t("bad nearly every year") : n <= 0 ? t("almost never a bad year") : t("about {number} bad years in 10", { number: n });
   return (
-    <div className="wi-bad" aria-label="Bad years out of 10">
+    <div className="wi-bad" role="group" aria-label={t("Bad years out of 10")}>
       {current && (
         <div className="wi-bad-row">
-          <span className="wi-bad-label">What you grow now</span>
+          <span className="wi-bad-label">{t("What you grow now")}</span>
           <Dots bad={current.badYearsIn10} />
-          <b>{badYearsWords(current.badYearsIn10)}</b>
+          <b>{words(current.badYearsIn10)}</b>
         </div>
       )}
       <div className="wi-bad-row wi-bad-plan">
-        <span className="wi-bad-label">This plan</span>
+        <span className="wi-bad-label">{t("This plan")}</span>
         <Dots bad={plan.badYearsIn10} />
-        <b>{badYearsWords(plan.badYearsIn10)}</b>
+        <b>{words(plan.badYearsIn10)}</b>
       </div>
-      <p className="wi-note">A bad year means the crop was badly stressed by drought, heat, frost or a wet spring, in 35 years of NASA weather on this field.</p>
+      <p className="wi-note">{t("A bad year means the crop was badly stressed by drought, heat, frost or a wet spring, in 35 years of NASA weather on this field.")}</p>
     </div>
   );
 }

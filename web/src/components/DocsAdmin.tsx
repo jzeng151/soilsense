@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from "react";
-import { ACCEPTED_EXTENSIONS, type ReviewDecision } from "../../../src/shared/ingest";
+import { ACCEPTED_EXTENSIONS, likelyGarbledChunk, type ReviewDecision } from "../../../src/shared/ingest";
 import { RESEARCH_TAGS } from "../../../src/worker/research/config";
 import { fetchDoc, fetchDocs, reviewDoc, uploadDoc, type AdminDocDetail, type AdminDocument } from "../api";
 import "./DocsAdmin.css";
@@ -45,6 +45,7 @@ export function DocsAdmin() {
     const source = Object.fromEntries(sourceFields.map((key) => [key, key === "year" ? Number(data.get(key)) : String(data.get(key) ?? "").trim()]));
     decision.source = source as NonNullable<ReviewDecision["source"]>;
     decision.crops = data.getAll("crops").map(String);
+    decision.excludeChunkIds = data.getAll("excludeChunkIds").map(String);
     if (!decision.crops.length) { setError("Choose at least one crop tag before approving."); return; }
     const docId = detail.doc.docId;
     await run(async () => {
@@ -98,11 +99,15 @@ export function DocsAdmin() {
       <h2 id="review-heading">Review {detail.doc.title || detail.doc.r2Key}</h2>
       <p>Status: {detail.doc.status}</p>
       <details open><summary>Extracted chunks ({detail.chunks.length})</summary>
-        {detail.chunks.map((chunk) => <article key={chunk.chunkId}>
-          <h3>{chunk.chunkId}</h3><p>Offsets [{chunk.start}, {chunk.end}) · {chunk.status}</p><pre>{chunk.text}</pre>
+        <p>Exclude publisher boilerplate, citation blocks or unreadable text from search. All chunks start included; warnings never change selections or source text.</p>
+        {detail.chunks.map((chunk) => <article key={`${detail.doc.docId}:${detail.doc.latestSha256 ?? detail.versions[0]?.sha256}:${chunk.chunkId}`}>
+          <h3>{chunk.chunkId}</h3><p>Offsets [{chunk.start}, {chunk.end}) · {chunk.status}</p>
+          {likelyGarbledChunk(chunk.text) && <p className="docs-warning"><strong>Warning: possibly garbled text</strong> — long mixed-case words may have missing spaces. Inspect against the original; this heuristic can be wrong.</p>}
+          <pre>{chunk.text}</pre>
+          <label className="docs-checkbox"><input type="checkbox" name="excludeChunkIds" value={chunk.chunkId} form="docs-review-form" defaultChecked={false} disabled={busy || !token || detail.doc.status !== "pending_review"} />Exclude from search</label>
         </article>)}
       </details>
-      <form onSubmit={(event) => void review(event)}>
+      <form id="docs-review-form" onSubmit={(event) => void review(event)}>
         <fieldset disabled={busy || !token}>
           <legend>Human review decision</legend>
           <label>Reviewer<input name="reviewer" required maxLength={200} /></label>

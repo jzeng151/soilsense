@@ -29,6 +29,17 @@ describe("K-State second opinion", () => {
     }
   });
 
+  it("uses the file's ranking basis before the legacy alert", () => {
+    const county = file.counties.find((c: { fips: string }) => c.fips === "20055");
+    const normal = toSecondOpinion({ ...file, counties: [{ ...county, alert: "warning", basis: "normal-year water" }] }, "20055")!;
+    expect(normal.basis).toBe("normal-year water");
+    expect(normal.dryYearRanking).toBe(false);
+    const dry = toSecondOpinion({ ...file, counties: [{ ...county, alert: "normal", basis: "dry-year water (district on watch/warning)" }] }, "20055")!;
+    expect(dry.dryYearRanking).toBe(true);
+    const legacy = toSecondOpinion({ ...file, counties: [{ ...county, alert: "watch", basis: null }] }, "20055")!;
+    expect(legacy.dryYearRanking).toBe(true);
+  });
+
   it("only matches when the crops are the same", () => {
     const op = toSecondOpinion(file, "20055")!;
     const top = op.rotations[0]!;

@@ -10,7 +10,7 @@ import type { RefreshTrigger } from "./store";
 export async function latestImergDay(now: Date): Promise<string> {
   const end = shift(now.toISOString().slice(0, 10), -1), start = shift(end, -15);
   const qs = new URLSearchParams({ short_name: "GPM_3IMERGDL", version: "07", temporal: `${start}T00:00:00Z,${end}T23:59:59Z`, page_size: "1", sort_key: "-start_date" });
-  const r = await fetch(`https://cmr.earthdata.nasa.gov/search/granules.json?${qs}`, { signal: AbortSignal.timeout(15000), redirect: "error" });
+  const r = await fetch(`https://cmr.earthdata.nasa.gov/search/granules.json?${qs}`, { signal: AbortSignal.timeout(90000), redirect: "manual" });
   if (!r.ok) throw new Error("CMR Late discovery failed");
   const json = await r.json() as { feed?: { entry?: { time_start?: string }[] } };
   const day = json.feed?.entry?.[0]?.time_start?.slice(0, 10);

@@ -5,7 +5,7 @@ import app from "../src/worker/index";
 import { gridPoint, PRODUCTS, shift, pointConstraint, retrieveSubset, type Subset } from "../src/worker/imerg/client";
 import { planImergCells, validateImerg } from "../src/worker/refresh/imerg-snapshot";
 import { acceptedImergFor } from "../src/worker/refresh/imerg-store";
-import { runImergRefresh, startImergRefresh } from "../src/worker/refresh/imerg-workflow";
+import { latestImergDay, runImergRefresh, startImergRefresh } from "../src/worker/refresh/imerg-workflow";
 import type { StepRunner } from "../src/worker/refresh/workflow";
 import type { Env } from "../src/worker/env";
 const now = new Date("2026-11-15T06:00:00Z");
@@ -23,15 +23,32 @@ function storage() {
 const step: StepRunner = { do: async (_n, _c, fn) => fn() };
 const options = (data = subset()) => ({ now, trigger: "manual" as const, instanceId: "mock-run", farms: [farm], latest: async () => data.end, retrieve: async () => data });
 describe("IMERG validated second-product refresh (hand-made mock observations)", () => {
+ it("discovers the completed day with Worker-supported manual redirects, rejecting redirects", async () => {
+  const mock = vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(Response.json({ feed: { entry: [{ time_start: "2026-11-13T00:00:00.000Z" }] } })).mockResolvedValueOnce(new Response(null, { status: 302, headers: { Location: "https://example.com" } }));
+  try {
+   expect(await latestImergDay(now)).toBe("2026-11-13");
+   expect(mock.mock.calls[0]?.[1]?.redirect).toBe("manual");
+   await expect(latestImergDay(now)).rejects.toThrow(/discovery/);
+  } finally { mock.mockRestore(); }
+ });
  it("builds a tiny constraint from the actual retrieved Final V07B DDS metadata", () => {
   const dds = readFileSync("test/fixtures/imerg-final-finney-20220701.dds", "utf8");
   expect(pointConstraint(dds, cell)).toContain("precipitation[0:1:0][792:1:792][1281:1:1281]");
  });
  it("mocked HTTP 403 from cloud DAP fails closed without publishing substitute values", async () => {
-  const base = "https://opendap.earthdata.nasa.gov/collections/mock/granules/GPM_3IMERGDL.07%3Amock.nc4";
+  const base = "https://opendap.earthdata.nasa.gov/collections/mock/granules/GPM_3IMERGDL.07%3A3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4";
   const fetcher = vi.fn(async (url: string) => url.includes("cmr.earthdata") ? Response.json({ feed: { entry: [{ time_start: "2026-11-14T00:00:00.000Z", links: [{ title: "OPeNDAP", href: base }] }] } }) : new Response("mock backend DMR++ failure", { status: 403 }));
   await expect(retrieveSubset({ EARTHDATA_TOKEN: "mock-not-a-real-credential" }, farm.lat, farm.lon, "2026-11-14", "2026-11-14", "late", fetcher)).rejects.toThrow(/HTTP 403/);
   expect(fetcher).toHaveBeenCalledTimes(2);
+ });
+ it("accepts all four recorded real fourteen-day Late windows through the publication pipeline", async () => {
+  const rows = JSON.parse(readFileSync("test/fixtures/imerg-live/comparison-20261113.json", "utf8")) as { field: string; read: { imerg: Subset } }[];
+  const { env, sqlite } = storage();
+  const farms = rows.map(r => ({ id: r.field, name: r.field, lat: r.read.imerg.grid.lat, lon: r.read.imerg.grid.lon }));
+  const sources = new Map(rows.map(r => [r.read.imerg.grid.key,r.read.imerg]));
+  const result = await runImergRefresh(env, step, { now, trigger: "manual", instanceId: "recorded-real-replay", farms, latest: async () => "2026-11-13", retrieve: async (_e,lat,lon) => sources.get(gridPoint(lat,lon).key)! });
+  expect(result.cells).toHaveLength(4); expect(result.cells.every(c => c.outcome === "published")).toBe(true);
+  expect(sqlite.prepare("SELECT COUNT(*) AS n FROM imerg_snapshot_events").get()).toEqual({ n: 4 });
  });
  it("groups containing cells and excludes private metadata from upstream planning", () => { expect(planImergCells([farm, { ...farm, id: "another" }])).toHaveLength(1); expect(cell.farmIds).toEqual(["finney-ks"]); });
  it("accepts complete V07 Late and hashes observations independent of retrieval time", async () => { const a = await validateImerg(subset(), cell, now), data = subset(); data.retrievedAt = "2026-11-16T00:00:00Z"; const b = await validateImerg(data, cell, now); expect(a.ok).toBe(true); expect(b).toEqual(a); });

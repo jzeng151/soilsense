@@ -1,3 +1,4 @@
+import { useI18n } from "../i18n";
 // Short grounded explanation for one rotation card (#8) with its cited research passages (#7).
 // Shows whether the text is live AI output, a saved explanation, or the fixed template, and the as-of date
 // of the evidence. Text is keyed to the exact comparison it explains, so changing inputs never leaves a
@@ -17,9 +18,9 @@ function findIn(plan: PlanResponse | null, rotation: RotationPlan): PlanResponse
   return all.some((p) => sig(p) === sig(rotation)) ? plan : null;
 }
 
-const day = (iso: string) => {
+const day = (iso: string, language: "en" | "es" = "en") => {
   const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+  return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString(language === "es" ? "es-US" : "en-US", { year: "numeric", month: "short", day: "numeric" });
 };
 
 const STATUS: Record<ExplanationResponse["status"], { label: string; title: string }> = {
@@ -48,6 +49,7 @@ function excerpt(text: string, max = 320): { short: string; cut: boolean } {
 }
 
 export function PlanExplanation({ rotation }: { rotation: RotationPlan }) {
+  const { t: tx, text: localize, language } = useI18n();
   const latest = useSyncExternalStore(subscribeLastPlan, getLastPlan, getLastPlan);
   const plan = findIn(latest, rotation);
   const key = plan ? JSON.stringify([plan.request, plan.water, plan.generatedAt, sig(rotation)]) : null;
@@ -74,25 +76,23 @@ export function PlanExplanation({ rotation }: { rotation: RotationPlan }) {
   return (
     <section className="px" aria-live="polite" aria-busy={!data && !current?.error}>
       <header className="px-head">
-        <h3 className="px-title">In short</h3>
+        <h3 className="px-title">{tx("In short")}</h3>
         {data && (
-          <span className={`px-badge px-${data.status}`} title={STATUS[data.status].title}>
-            {STATUS[data.status].label}
+          <span className={`px-badge px-${data.status}`} title={localize(STATUS[data.status].title)}>
+            {localize(STATUS[data.status].label)}
           </span>
         )}
       </header>
-      {!current?.error && !data && <p className="px-loading">Writing a short explanation…</p>}
-      {current?.error && <p className="px-loading">The short explanation isn't available right now. The plan above is complete.</p>}
+      {!current?.error && !data && <p className="px-loading">{tx("Writing a short explanation…")}</p>}
+      {current?.error && <p className="px-loading">{tx("The short explanation isn't available right now. The plan above is complete.")}</p>}
       {data && (
         <>
           <p className="px-narrative">{data.narrative}</p>
-          <p className="px-meta">
-            Evidence as of {day(data.asOf)} · weather history {data.evidencePeriod} (past observations, not a forecast)
-            {data.status === "saved" && data.savedAt ? ` · explanation saved ${day(data.savedAt)}` : ""}
+          <p className="px-meta">{tx("Evidence as of")}{" "}{day(data.asOf, language)}{" "}{tx("· weather history")}{" "}{data.evidencePeriod}{" "}{tx("(past observations, not a forecast)")}{data.status === "saved" && data.savedAt ? tx(" · explanation saved {date}", { date: day(data.savedAt, language) }) : ""}
           </p>
           <p className="px-checks">{data.checks}</p>
           <div className="px-research">
-            <p className="px-research-status">{researchLabel(data.research)}</p>
+            <p className="px-research-status">{data.research.status === "saved" ? tx("Saved research result, retrieved {date}", { date: data.research.retrievedAt ? day(data.research.retrievedAt, language) : tx("earlier") }) : localize(researchLabel(data.research))}</p>
             {data.research.passages.length > 0 && (
               <>
                 <ul className="px-passages">
@@ -100,7 +100,7 @@ export function PlanExplanation({ rotation }: { rotation: RotationPlan }) {
                     const e = excerpt(p.text);
                     return (
                       <li key={p.chunkId} id={`px-${p.chunkId}`}>
-                        {data.citations.includes(p.chunkId) && <span className="px-cited">Cited above</span>}
+                        {data.citations.includes(p.chunkId) && <span className="px-cited">{tx("Cited above")}</span>}
                         <blockquote className="px-quote" style={{ whiteSpace: "pre-line" }}>
                           {e.cut ? (
                             <details>
@@ -116,12 +116,12 @@ export function PlanExplanation({ rotation }: { rotation: RotationPlan }) {
                           </a>{" "}
                           ({p.year}) · <span title={p.license}>{p.attribution}</span>
                         </p>
-                        <p className="px-applies">Where this applies: {p.applicability}</p>
+                        <p className="px-applies">{tx("Where this applies:")}{" "}{p.applicability}</p>
                       </li>
                     );
                   })}
                 </ul>
-                <p className="px-note">Numbers inside quoted research come from those trial plots, not from your field.</p>
+                <p className="px-note">{tx("Numbers inside quoted research come from those trial plots, not from your field.")}</p>
               </>
             )}
           </div>

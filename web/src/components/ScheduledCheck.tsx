@@ -1,3 +1,4 @@
+import { watchText, useI18n } from "../i18n";
 // Scheduled check by a field's own Cloudflare Agent (Durable Object): the visitor asks for a check, the agent
 // runs it about 45 s later on Cloudflare whether or not this page is open, and the result is saved there.
 // Reopening the page shows the saved result without running anything again.
@@ -49,10 +50,11 @@ const CROP_NAME: Record<string, string> = { corn: "Corn", soybean: "Soybean", wi
 const MODE_LABEL: Record<AgentRun["mode"], string> = { live: "Current conditions", replay: "Historical replay", weekly: "Weekly check", window: "Crop window opened" };
 
 const LABEL: Record<Status, string> = { pending: "Scheduled", ok: "OK", watch: "Watch", dry: "Dry spell", insufficient: "No data", inactive: "Off season", error: "Error" };
-const fmtDay = (t: number) => new Date(t).toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
-const fmtTime = (t: number) => new Date(t).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", second: "2-digit" });
+const fmtDay = (t: number, language: "en" | "es") => new Date(t).toLocaleString(language === "es" ? "es-US" : "en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
+const fmtTime = (t: number, language: "en" | "es") => new Date(t).toLocaleTimeString(language === "es" ? "es-US" : "en-US", { hour: "numeric", minute: "2-digit", second: "2-digit" });
 
 export function ScheduledCheck() {
+  const { t: tx, text: localize, language } = useI18n();
   const [opts, setOpts] = useState<Options | null>(null);
   const [fieldId, setFieldId] = useState<string>(() => localStorage.getItem("fw-agent-field") ?? "finney-ks");
   const [runs, setRuns] = useState<AgentRun[] | null>(null);
@@ -140,18 +142,14 @@ export function ScheduledCheck() {
 
   return (
     <section className="fw-agent" aria-labelledby="fw-agent-title">
-      <h4 id="fw-agent-title">Ask this field's agent to check it</h4>
-      <p className="fw-sub">
-        Each farm has its own agent on Cloudflare (a Durable Object). It runs your check about {opts.delaySeconds} seconds from now and saves the
-        result, so you can close this page and come back to it.
-      </p>
+      <h4 id="fw-agent-title">{tx("Ask this field's agent to check it")}</h4>
+      <p className="fw-sub">{tx("Each farm has its own agent on Cloudflare (a Durable Object). It runs your check about")}{" "}{opts.delaySeconds}{" "}{tx("seconds from now and saves the result, so you can close this page and come back to it.")}</p>
       {!opts.available ? (
-        <p className="fw-empty">Scheduled checks aren't enabled on this deployment yet.</p>
+        <p className="fw-empty">{tx("Scheduled checks aren't enabled on this deployment yet.")}</p>
       ) : (
         <>
           <div className="fw-agent-controls">
-            <label>
-              Farm{" "}
+            <label>{tx("Farm")}{" "}
               <select
                 value={fieldId}
                 onChange={(e) => {
@@ -167,75 +165,66 @@ export function ScheduledCheck() {
                 ))}
               </select>
             </label>
-            <button type="button" className="fw-run" disabled={busy || !!pending} onClick={() => schedule("live")}>
-              Check current conditions
-            </button>
+            <button type="button" className="fw-run" disabled={busy || !!pending} onClick={() => schedule("live")}>{tx("Check current conditions")}</button>
             {replay && (
-              <button type="button" className="fw-run" disabled={busy || !!pending} onClick={() => schedule("replay", replay.id)}>
-                Replay {replay.label.split(" (")[0]}
+              <button type="button" className="fw-run" disabled={busy || !!pending} onClick={() => schedule("replay", replay.id)}>{tx("Replay")}{" "}{localize(replay.label.split(" (")[0])}
               </button>
             )}
           </div>
           {pending && (
-            <p className="fw-note" role="status">
-              Scheduled {pending.mode === "replay" ? "historical replay" : "check"} runs at {fmtTime(pending.dueAt)}
-              {pending.dueAt > now ? ` (in ${Math.ceil((pending.dueAt - now) / 1000)} s)` : " (finishing…)"}. You can close this page.
-            </p>
+            <p className="fw-note" role="status">{tx("Scheduled")}{" "}{pending.mode === "replay" ? tx("historical replay") : tx("check")}{" "}{tx("runs at")}{" "}{fmtTime(pending.dueAt, language)}
+              {pending.dueAt > now ? tx(" (in {seconds} s)", { seconds: Math.ceil((pending.dueAt - now) / 1000) }) : tx(" (finishing…)")}{tx(". You can close this page.")}</p>
           )}
           {note && !pending && (
             <p className="fw-note" role="status">
-              {note}
+              {localize(note)}
             </p>
           )}
           {watch && opts.weekly && (
             <fieldset className="fw-watch-settings">
-              <legend>Weekly watch for this farm</legend>
+              <legend>{tx("Weekly watch for this farm")}</legend>
               <label className="fw-switch">
-                <input type="checkbox" checked={watch.enabled} disabled={busy} onChange={(e) => saveWatch({ enabled: e.target.checked })} />
-                Check every week ({opts.weekly.schedule}) using only NASA data from the last {opts.weekly.freshDays} days
-              </label>
-              <label>
-                Crop in this field this season{" "}
+                <input type="checkbox" checked={watch.enabled} disabled={busy} onChange={(e) => saveWatch({ enabled: e.target.checked })} />{tx("Check every week (")}{localize(opts.weekly.schedule)}{tx(") using only NASA data from the last")}{" "}{opts.weekly.freshDays}{" "}{tx("days")}</label>
+              <label>{tx("Crop in this field this season")}{" "}
                 <select value={watch.crop ?? ""} disabled={busy} onChange={(e) => saveWatch({ crop: e.target.value || null })}>
-                  <option value="">Not confirmed</option>
+                  <option value="">{tx("Not confirmed")}</option>
                   {opts.weekly.crops.map((c) => (
                     <option key={c} value={c}>
-                      {CROP_NAME[c] ?? c}
+                      {localize(CROP_NAME[c] ?? c)}
                     </option>
                   ))}
                 </select>
               </label>
               <p className="fw-meta">
                 {watch.enabled
-                  ? <>Next weekly check: <b>{watch.nextWeeklyAt ? fmtDay(watch.nextWeeklyAt) : "being scheduled"}</b>.</>
-                  : "Weekly checks are off (the default)."}
+                  ? <>{tx("Next weekly check:")}{" "}<b>{watch.nextWeeklyAt ? fmtDay(watch.nextWeeklyAt, language) : tx("being scheduled")}</b>.</>
+                  : tx("Weekly checks are off (the default).")}
                 {watch.enabled && watch.nextWindow && (
                   <>
-                    {" "}Extra check when {CROP_NAME[watch.nextWindow.crop] ?? watch.nextWindow.crop}'s heat-sensitive window opens: <b>{fmtDay(watch.nextWindow.at)}</b> (window {watch.nextWindow.from} to {watch.nextWindow.to}; an estimate from crop defaults, not an observed crop stage).
-                  </>
+                    {" "}{tx("Extra check when")}{" "}{localize(CROP_NAME[watch.nextWindow.crop] ?? watch.nextWindow.crop)}{tx("'s heat-sensitive window opens:")}{" "}<b>{fmtDay(watch.nextWindow.at, language)}</b>{" "}{tx("(window")}{" "}{watch.nextWindow.from}{" "}{tx("to")}{" "}{watch.nextWindow.to}{tx("; an estimate from crop defaults, not an observed crop stage).")}</>
                 )}
               </p>
             </fieldset>
           )}
-          {error && <p className="fw-empty">{error}</p>}
-          {runs && runs.length === 0 && <p className="fw-empty">No scheduled checks for this farm yet.</p>}
+          {error && <p className="fw-empty">{localize(error)}</p>}
+          {runs && runs.length === 0 && <p className="fw-empty">{tx("No scheduled checks for this farm yet.")}</p>}
           {runs && runs.length > 0 && (
             <ul className="fw-list">
               {runs.map((r) => (
                 <li key={r.runId} className="fw-row">
                   <details>
                     <summary>
-                      <span className={`fw-status fw-${r.status === "pending" ? "insufficient" : r.status}`}>{LABEL[r.status]}</span>
+                      <span className={`fw-status fw-${r.status === "pending" ? "insufficient" : r.status}`}>{localize(LABEL[r.status])}</span>
                       <span className="fw-main">
                         <span className="fw-name">
-                          {MODE_LABEL[r.mode]}
-                          {r.mode === "replay" && <span className="fw-tag">not current conditions</span>}
+                          {localize(MODE_LABEL[r.mode])}
+                          {r.mode === "replay" && <span className="fw-tag">{tx("not current conditions")}</span>}
                         </span>
-                        <span className="fw-headline">{r.headline ? r.headline.replace(/^Historical replay: /, "") : "Waiting for its scheduled time…"}</span>
+                        <span className="fw-headline">{r.headline ? watchText(r.headline.replace(/^Historical replay: /, ""), language) : tx("Waiting for its scheduled time…")}</span>
                       </span>
                       <span className="fw-when">
-                        {r.completedAt ? `done ${fmtTime(r.completedAt)}` : `due ${fmtTime(r.dueAt)}`}
-                        {r.snapshot?.windowEnd && <small>data {r.snapshot.windowStart} to {r.snapshot.windowEnd}</small>}
+                        {r.completedAt ? tx("done {time}", { time: fmtTime(r.completedAt, language) }) : tx("due {time}", { time: fmtTime(r.dueAt, language) })}
+                        {r.snapshot?.windowEnd && <small>{tx("data")}{" "}{r.snapshot.windowStart}{" "}{tx("to")}{" "}{r.snapshot.windowEnd}</small>}
                       </span>
                     </summary>
                     <div className="fw-detail">
@@ -244,20 +233,18 @@ export function ScheduledCheck() {
                         <ul className="fw-reasons">
                           {r.reasons.filter((x) => x.id !== "kansas").map((x) => (
                             <li key={x.id}>
-                              {x.text}
+                              {watchText(x.text, language)}
                               <small>{x.source}</small>
                             </li>
                           ))}
                         </ul>
                       )}
-                      <p className="fw-meta">
-                        Run <code>{r.runId}</code> · rule v{r.ruleVersion} · scheduled {fmtTime(r.scheduledAt)}
-                        {r.completedAt && <> · ran {fmtTime(r.completedAt)} on Cloudflare</>}
+                      <p className="fw-meta">{tx("Run")}{" "}<code>{r.runId}</code>{" "}{tx("· rule v")}{r.ruleVersion}{" "}{tx("· scheduled")}{" "}{fmtTime(r.scheduledAt, language)}
+                        {r.completedAt && <>{" "}{tx("· ran")}{" "}{fmtTime(r.completedAt, language)}{" "}{tx("on Cloudflare")}</>}
                         {r.snapshot && (
                           <>
-                            {" "}
-                            · compared with {r.snapshot.comparisonYears} · {r.snapshot.source}
-                            {r.snapshot.inputSha256 && <> · input hash <code>{r.snapshot.inputSha256.slice(0, 12)}</code></>}
+                            {" "}{tx("· compared with")}{" "}{r.snapshot.comparisonYears} · {r.snapshot.source}
+                            {r.snapshot.inputSha256 && <>{" "}{tx("· input hash")}{" "}<code>{r.snapshot.inputSha256.slice(0, 12)}</code></>}
                           </>
                         )}
                       </p>

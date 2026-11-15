@@ -1,5 +1,5 @@
 import "./i18n.css";
-import { useI18n, translate, cropName } from "./i18n";
+import { useI18n, translate, translateKnown, cropName } from "./i18n";
 import type { Language, TranslationKey } from "./i18n";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CropId, FieldResponse, Goal, PlanRequest, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
@@ -7,7 +7,7 @@ import { MeasurementPanel, SoilComparison } from "./components/Measurements";
 import { GoalPicker } from "./components/GoalPicker";
 import { Glossary, Definition } from "./components/Glossary";
 import { askQuestion, fetchField, fetchPlan } from "./api";
-import { DataEvidence, DecisionNotice } from "./components/DataEvidence";
+import { DataEvidence, DecisionNotice, evidenceText } from "./components/DataEvidence";
 import { PlanAssumptions } from "./components/PlanAssumptions";
 import { DEMO_FARMS, MapPicker } from "./components/MapPicker";
 import { HarvestCheck, SatelliteNote } from "./components/HarvestCheck";
@@ -381,7 +381,7 @@ function MainFlow() {
         </div>
       </header>
 
-      <main className="jr-main" ref={top} tabIndex={-1} aria-label="Crop rotation planner">
+      <main className="jr-main" ref={top} tabIndex={-1} aria-label={t("Crop rotation planner")}>
         <Progress step={step} canGo={canGo} go={go} />
         <Glossary />
 
@@ -532,7 +532,7 @@ function MainFlow() {
               <legend>
                 <span className="jr-qn">3</span> {t("What matters most to you?")}
               </legend>
-              <div className="jr-tiles jr-tiles-2" role="group" aria-label="Your priority">
+              <div className="jr-tiles jr-tiles-2" role="group" aria-label={t("Your priority")}>
                 {PRIORITIES.map((p) => (
                   <button key={p.id} type="button" aria-pressed={priority === p.id} className={priority === p.id ? "on" : ""} onClick={() => setPriority(p.id)}>
                     <b>{t(p.label)}</b>
@@ -716,15 +716,15 @@ function MainFlow() {
                 <details className="jr-more">
                   <summary>{t("How the weather on your field has changed")}</summary>
                   <p className="hint">
-                    {plan.climate.firstYear}–{plan.climate.lastYear}, from NASA data: a <Definition term="regional-grid" />, not an individual field station.
+                    {plan.climate.firstYear}–{plan.climate.lastYear}, {t("from NASA data:")} <Definition term="regional-grid" />, {t("not an individual field station.")}
                   </p>
                   {changes.length > 0 ? (
                     <ul className="changes">
                       {changes.map((c) => (
                         <li key={c.id}>
                           <span className={`arrow arrow-${trendTone(c)}`}>{trendTone(c) === "up" ? "▲" : "▼"}</span>
-                          <b>{c.label}</b>
-                          <span>{trendText(c)}</span>
+                          <b>{translateKnown(language, c.label)}</b>
+                          <span>{trendText(c, language)}</span>
                         </li>
                       ))}
                     </ul>
@@ -792,13 +792,13 @@ function MainFlow() {
                         <a href={d.url} target="_blank" rel="noreferrer">
                           {d.name}
                         </a>{" "}
-                        — {d.usedFor}
+                        — {translateKnown(language, d.usedFor)}
                       </li>
                     ))}
                   </ul>
                   <ul>
                     {plan.assumptions.map((a) => (
-                      <li key={a}>{a}</li>
+                      <li key={a}>{evidenceText(a, language)}</li>
                     ))}
                   </ul>
                 </details>

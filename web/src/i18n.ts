@@ -1,9 +1,11 @@
 import { createContext, createElement, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { CropId } from "../../src/shared/types";
+import { cardMessages } from "./i18n-cards";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
+  ...cardMessages,
   "District outlook (next ~4 weeks, team's Kansas model)": "Perspectiva del distrito (próximas ~4 semanas, modelo de Kansas del equipo)",
   "drought likely to continue.": "es probable que la sequía continúe.",
   "possible drought onset (low confidence).": "posible inicio de sequía (baja confianza).",
@@ -57,6 +59,7 @@ export const messages = {
   "Map estimate used": "Se usa la estimación del mapa",
   "Approximate from your texture": "Aproximado a partir de tu textura",
   "Your entries override only the supplied properties; map drainage and profile depth are unchanged.": "Tus datos reemplazan solo las propiedades ingresadas; el drenaje y la profundidad del mapa no cambian.",
+
   "In short": "En resumen",
   "Crop grown this season": "Cultivo de esta temporada",
   "Water supply": "Suministro de agua",
@@ -281,6 +284,10 @@ english["Low return warning"] = "At today's prices, none of the rotations we com
 english["Lower return tradeoff"] = "On average this plan earns about ${less}/acre a year less than what you do now. We suggest it because it is better for your soil and fits your goal.";
 english["Risk return tradeoff"] = "On average your current crops earn about ${less}/acre a year more, because their good years pay very well. But those good years are rare here: your current crops come through in about {now} of 10 years, this plan in about {ours}. A few bad years in a row cost far more than that average difference.";
 export const dictionaries = { en: english, es: messages };
+/** Translate fixed metadata/enum labels at their render site; unknown provider text is preserved. */
+export function translateKnown(language: Language, value: string): string {
+  return Object.hasOwn(messages, value) ? translate(language, value as TranslationKey) : value;
+}
 export function translate(language: Language, key: TranslationKey, values: Record<string, string | number> = {}): string {
   return dictionaries[language][key].replace(/\{(\w+)\}/g, (match, name: string) => String(values[name] ?? match));
 }
@@ -288,21 +295,83 @@ export const LANGUAGE_STORAGE_KEY = "soilsense.language";
 function initialLanguage(): Language {
   try { return localStorage.getItem(LANGUAGE_STORAGE_KEY) === "es" ? "es" : "en"; } catch { return "en"; }
 }
-const LanguageContext = createContext({ language: "en" as Language, setLanguage: (_language: Language) => {} });
+const defaultLanguage = { language: "en" as Language, setLanguage: (_language: Language) => {} };
+const LanguageContext = createContext<typeof defaultLanguage | null>(null);
 export function LanguageProvider({ children }: { children: ReactNode }) {
+  const parent = useContext(LanguageContext);
   const [language, setLanguage] = useState<Language>(initialLanguage);
   useEffect(() => {
-    document.documentElement.lang = language;
+    if (parent) return;
+    const doc = (globalThis as { document?: { documentElement: { lang: string } } }).document;
+    if (doc) doc.documentElement.lang = language;
     try { localStorage.setItem(LANGUAGE_STORAGE_KEY, language); } catch { /* Storage can be blocked in private browsers. */ }
-  }, [language]);
+  }, [language, parent]);
+  if (parent) return children;
   return createElement(LanguageContext.Provider, { value: { language, setLanguage } }, children);
 }
 export function useI18n() {
-  const context = useContext(LanguageContext);
-  return { ...context, t: (key: TranslationKey, values?: Record<string, string | number>) => translate(context.language, key, values) };
+  const context = useContext(LanguageContext) ?? defaultLanguage;
+  return { ...context, t: (key: TranslationKey, values?: Record<string, string | number>) => translate(context.language, key, values), text: (value: string | null | undefined) => translateKnown(context.language, value ?? "") };
 }
 export const cropKeys: Record<CropId, TranslationKey> = {
   corn: "Corn", soybean: "Soybean", winter_wheat: "Winter wheat", oats: "Oats", alfalfa: "Alfalfa / hay", sorghum: "Grain sorghum", fallow: "Fallow (no crop)",
 };
 export function cropName(crop: CropId, language: Language): string { return translate(language, cropKeys[crop]); }
+/** Crop IDs and display names from providers share the same agricultural vocabulary. */
+export function cropText(value: string, language: Language): string {
+  if (language === "en") return Object.hasOwn(cropKeys, value) ? cropName(value as CropId, language) : value;
+  const normalized = value.toLowerCase().replaceAll(" ", "_");
+  const aliases: Record<string, CropId> = { wheat: "winter_wheat", grain_sorghum: "sorghum", "alfalfa_/_hay": "alfalfa", "alfalfa_(hay)": "alfalfa", "fallow_(no_crop)": "fallow" };
+  const crop = aliases[normalized] ?? normalized;
+  return Object.hasOwn(cropKeys, crop) ? cropName(crop as CropId, language) : translateKnown(language, value);
+}
+export function rotationText(value: string, language: Language): string {
+  if (language === "es" && value.startsWith("Current pattern: ")) return `Práctica actual: ${rotationText(value.slice("Current pattern: ".length), language)}`;
+  return value.split(" → ").map(crop => cropText(crop, language)).join(" → ");
+}
 export const coverNames: Record<string, string> = { cereal_rye: "centeno", crimson_clover: "trébol encarnado", hairy_vetch: "veza vellosa", none: "sin cultivo de cobertura" };
+
+/** Complete templates from the deterministic Field Watch rules; never used for research or model text. */
+export function watchText(value: string, language: Language): string {
+  if (language === "en") return value;
+  if (value.startsWith("Historical replay: ")) return `${translate(language, "Historical replay")}: ${watchText(value.slice(19), language)}`;
+  const rules: [RegExp, TranslationKey, string[]][] = [
+    [/^Kansas weekly outlook for (.+) \(data through (\d{4}-\d{2}-\d{2}), context only\): alert "(.*)"\.$/, 'Kansas weekly outlook for {county} (data through {date}, context only): alert "{alert}".', ["county", "date", "alert"]],
+    [/^Not enough recent NASA data to check (.+)$/, "Not enough recent NASA data to check {field}", ["field"]],
+    [/^Not enough past years to judge (.+)$/, "Not enough past years to judge {field}", ["field"]],
+    [/^Check failed for (.+): a data service didn't answer$/, "Check failed for {field}: a data service didn't answer", ["field"]],
+    [/^Dry spell starting: ([\d.]+) in of rain in 14 days, drier than (\d+)% of past years, and soil drier than usual \((\d+)(?:st|nd|rd|th) percentile\)$/, "Dry spell starting: {rain} in of rain in 14 days, drier than {pct}% of past years, and soil drier than usual ({root} percentile)", ["rain", "pct", "root"]],
+    [/^Watch: rain below normal \(([\d.]+) in in 14 days\)$/, "Watch: rain below normal ({rain} in in 14 days)", ["rain"]],
+    [/^Watch: rain below normal \(([\d.]+) in in 14 days\), soil unconfirmed$/, "Watch: rain below normal ({rain} in in 14 days), soil unconfirmed", ["rain"]],
+    [/^Watch: soil drier than usual \((\d+)(?:st|nd|rd|th) percentile\)$/, "Watch: soil drier than usual ({pct} percentile)", ["pct"]],
+    [/^OK: ([\d.]+) in of rain in 14 days, wetter than usual for this time of year$/, "OK: {rain} in of rain in 14 days, wetter than usual for this time of year", ["rain"]],
+    [/^OK: ([\d.]+) in of rain in 14 days, near normal for this time of year$/, "OK: {rain} in of rain in 14 days, near normal for this time of year", ["rain"]],
+    [/^NASA POWER has no complete (\d+)-day stretch of rain in the last (\d+) days\.$/, "NASA POWER has no complete {days}-day stretch of rain in the last {lookback} days.", ["days", "lookback"]],
+    [/^Root-zone soil wetness \(7 days to ([A-Z][a-z]{2} \d{1,2})\): (\d+)(?:st|nd|rd|th) percentile for this time of year\.$/, "Root-zone soil wetness (7 days to {date}): {pct} percentile for this time of year.", ["date", "pct"]],
+    [/^Water balance (.+): not shown, because NASA POWER is missing temperature for some of these days\.$/, "Water balance {span}: not shown, because NASA POWER is missing temperature for some of these days.", ["span"]],
+    [/^Only (\d+) past years have complete rain for (.+); at least (\d+) are needed\.$/, "Only {count} past years have complete rain for {span}; at least {minimum} are needed.", ["count", "span", "minimum"]],
+    [/^Rain (.+): ([\d.]+) in, drier than (\d+)% of the same two weeks in (\d{4}–\d{4}) \(typical: ([\d.]+) in\)\.$/, "Rain {span}: {rain} in, drier than {pct}% of the same two weeks in {years} (typical: {normal} in).", ["span", "rain", "pct", "years", "normal"]],
+    [/^Rain (.+): ([\d.]+) in, wetter than (\d+)% of the same two weeks in (\d{4}–\d{4}) \(typical: ([\d.]+) in\)\.$/, "Rain {span}: {rain} in, wetter than {pct}% of the same two weeks in {years} (typical: {normal} in).", ["span", "rain", "pct", "years", "normal"]],
+    [/^Rain (.+): ([\d.]+) in, about normal for these two weeks in (\d{4}–\d{4}) \((\d+)(?:st|nd|rd|th) percentile\) \(typical: ([\d.]+) in\)\.$/, "Rain {span}: {rain} in, about normal for these two weeks in {years} ({pct} percentile) (typical: {normal} in).", ["span", "rain", "years", "pct", "normal"]],
+    [/^Water balance (.+) \(context only\): rain minus estimated crop water demand is ([+−][\d.]+) in \(demand ([\d.]+) in, FAO-56 Hargreaves\)\.$/, "Water balance {span} (context only): rain minus estimated crop water demand is {balance} in (demand {demand} in, FAO-56 Hargreaves).", ["span", "balance", "demand"]],
+    [/^Water balance (.+) \(context only\): rain minus estimated crop water demand is about even \(demand ([\d.]+) in, FAO-56 Hargreaves\)\.$/, "Water balance {span} (context only): rain minus estimated crop water demand is about even (demand {demand} in, FAO-56 Hargreaves).", ["span", "demand"]],
+    [/^Weekly checks need a 14-day window ending within (\d+) days of the check; this one ends (.+)\.$/, "Weekly checks need a 14-day window ending within {days} days of the check; this one ends {date}.", ["days", "date"]],
+    [/^(.+)'s reference stress window \((\d{2}-\d{2}) to (\d{2}-\d{2})\) isn't open, so no stress check this week$/, "{crop}'s reference stress window ({from} to {to}) isn't open, so no stress check this week", ["crop", "from", "to"]],
+    [/^(.+) reference stress window (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2}) opened: checking current conditions\. This is an estimate from crop defaults, not an observed crop stage, and not a forecast\.$/, "{crop} reference stress window {from} to {to} opened: checking current conditions. This is an estimate from crop defaults, not an observed crop stage, and not a forecast.", ["crop", "from", "to"]],
+    [/^NASA POWER has no rain value for (.+) in the replay window\.$/, "NASA POWER has no rain value for {dates} in the replay window.", ["dates"]],
+    [/^Not enough fresh NASA data for (.+): the latest complete 14 days end (.+)$/, "Not enough fresh NASA data for {field}: the latest complete 14 days end {date}", ["field", "date"]],
+    [/^not enough NASA data for (.+)$/, "not enough NASA data for {field}", ["field"]],
+  ];
+  for (const [pattern, key, names] of rules) {
+    const match = pattern.exec(value);
+    if (!match) continue;
+    const values = Object.fromEntries(names.map((name, i) => {
+      let text = match[i + 1]!;
+      if (name === "crop") text = cropText(text, language).toLowerCase();
+      if (name === "span" || name === "date") text = text.replace(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/g, month => translateKnown(language, month));
+      return [name, translateKnown(language, text)];
+    }));
+    return translate(language, key, values);
+  }
+  return translateKnown(language, value);
+}

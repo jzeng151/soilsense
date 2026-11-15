@@ -1,3 +1,4 @@
+import { cropText, rotationText, translate, translateKnown, useI18n, type Language } from "../i18n";
 // Renders one Scout assistant message from its AI SDK parts:
 // reasoning → collapsible "Thinking", tool parts → live analysis steps, text → markdown,
 // source parts → a "Sources" list under the answer.
@@ -26,7 +27,7 @@ const obj = (v: unknown): Obj => (v && typeof v === "object" ? (v as Obj) : {});
 const arr = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
 const num = (v: unknown, d = 3) => (typeof v === "number" ? Number(v.toFixed(d)) : v);
 
-function describeInput(name: string, input: unknown): string {
+function describeInput(name: string, input: unknown, language: Language): string {
   if (name === "search_research") return String(obj(input).question ?? "");
   const i = obj(input);
   switch (name) {
@@ -36,21 +37,21 @@ function describeInput(name: string, input: unknown): string {
       return i.lat !== undefined ? `${num(i.lat)}, ${num(i.lon)}` : "";
     case "build_rotation_plan":
       return i.lat !== undefined
-        ? [`${num(i.lat)}, ${num(i.lon)}`, i.irrigated ? "irrigated" : "rain-fed", String(i.priority ?? "balanced"), arr(i.recent_crops).length ? `after ${arr(i.recent_crops).join(" → ")}` : ""]
+        ? [`${num(i.lat)}, ${num(i.lon)}`, translate(language, i.irrigated ? "irrigated" : "rain-fed"), translateKnown(language, String(i.priority ?? "balanced")), arr(i.recent_crops).length ? translate(language, "after {crops}", { crops: arr(i.recent_crops).map(c => cropText(String(c), language)).join(" → ") }) : ""]
             .filter(Boolean)
             .join(" · ")
         : "";
     case "get_usage_analytics":
-      return `last ${String(i.days ?? 30)} days`;
+      return translate(language, "last {days} days", { days: String(i.days ?? 30) });
     default:
       return "";
   }
 }
 
-function describeOutput(name: string, output: unknown): string {
+function describeOutput(name: string, output: unknown, language: Language): string {
   if (name === "search_research") {
     const result = obj(output);
-    return `${String(result.status)} · ${arr(result.passages).length} passage(s) · ${String(result.reason ?? "")}`;
+    return translate(language, "{status} · {count} passage(s) · {reason}", { status: translateKnown(language, String(result.status)), count: arr(result.passages).length, reason: translateKnown(language, String(result.reason ?? "")) });
   }
   const o = obj(output);
   switch (name) {
@@ -62,8 +63,8 @@ function describeOutput(name: string, output: unknown): string {
       const hist = obj(o.cropHistory);
       return [
         county.countyName ? `${String(county.countyName)}, ${String(county.stateCode)}` : "",
-        soil.available ? `soil: ${String(soil.mapUnitName ?? soil.componentName)}` : "no soil survey here",
-        `${arr(hist.years).length} years of crop history`,
+        soil.available ? translate(language, "soil: {soil}", { soil: String(soil.mapUnitName ?? soil.componentName) }) : translate(language, "no soil survey here"),
+        translate(language, "{count} years of crop history", { count: arr(hist.years).length }),
       ]
         .filter(Boolean)
         .join(" · ");
@@ -72,31 +73,32 @@ function describeOutput(name: string, output: unknown): string {
       const ind = arr(obj(o.climate).indicators).map(obj);
       const sig = ind.filter((x) => String(x.verdict).startsWith("significant"));
       const top = obj(arr(o.rankedPlans)[0]);
-      return `${ind.length} climate indicators, ${sig.length} significant trend${sig.length === 1 ? "" : "s"} · ${arr(o.rankedPlans).length} rotations ranked${top.label ? ` · top: ${String(top.label)}` : ""}`;
+      return translate(language, "{indicators} climate indicators, {trends} significant trends · {rotations} rotations ranked{top}", { indicators: ind.length, trends: sig.length, rotations: arr(o.rankedPlans).length, top: top.label ? translate(language, " · top: {plan}", { plan: rotationText(String(top.label), language) }) : "" });
     }
     case "get_crop_catalog":
-      return `${arr(o.crops).length} crops, ${arr(o.covers).length} cover crops`;
+      return translate(language, "{crops} crops, {covers} cover crops", { crops: arr(o.crops).length, covers: arr(o.covers).length });
     case "get_usage_analytics":
-      return o.available === false ? "no plan history database" : `${String(o.totalPlans ?? 0)} plans analyzed`;
+      return o.available === false ? translate(language, "no plan history database") : translate(language, "{count} plans analyzed", { count: String(o.totalPlans ?? 0) });
     default:
       return "";
   }
 }
 
 function ToolStep({ part }: { part: ToolPart }) {
+  const { text: localize, language } = useI18n();
   const name = toolName(part);
   const meta = TOOL_META[name] ?? { running: name, done: name };
   const state = part.state;
   const running = state === "input-streaming" || state === "input-available";
   const failed = state === "output-error" || state === "output-denied";
-  const detail = state === "output-available" ? describeOutput(name, part.output) : failed && "errorText" in part ? String(part.errorText ?? "") : describeInput(name, part.input);
+  const detail = state === "output-available" ? describeOutput(name, part.output, language) : failed && "errorText" in part ? String(part.errorText ?? "") : describeInput(name, part.input, language);
   return (
     <li className={`an-step ${running ? "run" : failed ? "fail" : "ok"}`}>
       <span className="an-icon" aria-hidden="true">
         {running ? <span className="spin" /> : failed ? "!" : "✓"}
       </span>
       <span className="an-body">
-        <span className="an-label">{running ? `${meta.running}…` : meta.done}</span>
+        <span className="an-label">{running ? `${localize(meta.running)}…` : localize(meta.done)}</span>
         {detail && <span className="an-detail">{detail}</span>}
       </span>
     </li>
@@ -104,6 +106,7 @@ function ToolStep({ part }: { part: ToolPart }) {
 }
 
 export function ScoutMessage({ message, streaming }: { message: UIMessage; streaming: boolean }) {
+  const { t: tx, text: localize } = useI18n();
   const parts = message.parts;
   const citationPart = parts.find(p => p.type === "data-research-citations");
   const citations = (citationPart && "data" in citationPart ? citationPart.data : null) as ChatCitationDisplay | null;
@@ -121,7 +124,7 @@ export function ScoutMessage({ message, streaming }: { message: UIMessage; strea
     <div className="sc-msg sc-bot">
       {reasoning.length > 0 && (
         <details className="an-think" open={streaming && !hasText}>
-          <summary>{streaming && !hasText ? "Thinking…" : "Thought process"}</summary>
+          <summary>{streaming && !hasText ? tx("Thinking…") : tx("Thought process")}</summary>
           {reasoning.map((r, i) => (
             <Markdown key={i} text={r.text} />
           ))}
@@ -131,8 +134,7 @@ export function ScoutMessage({ message, streaming }: { message: UIMessage; strea
       {tools.length > 0 && (
         <div className="an-card">
           <p className="an-title">
-            {toolsRunning ? <span className="spin" /> : null}
-            Analysis · {tools.length} step{tools.length === 1 ? "" : "s"}
+            {toolsRunning ? <span className="spin" /> : null}{tx("Analysis ·")}{" "}{tools.length}{" "}{tx(tools.length === 1 ? "step" : "steps")}
           </p>
           <ol className="an-steps">
             {tools.map((t) => (
@@ -148,21 +150,21 @@ export function ScoutMessage({ message, streaming }: { message: UIMessage; strea
           <Markdown text={t.text} />
         </div>
       ))}
-      {streaming && !toolsRunning && tools.length > 0 && !hasText && <p className="an-writing">Writing the answer…</p>}
+      {streaming && !toolsRunning && tools.length > 0 && !hasText && <p className="an-writing">{tx("Writing the answer…")}</p>}
 
-      {researchStates.map((state, i) => <p key={i} className="sc-research-state" role="status">Research {state.status}: {state.reason}</p>)}
+      {researchStates.map((state, i) => <p key={i} className="sc-research-state" role="status">{tx("Research")}{" "}{localize(state.status)}: {state.reason}</p>)}
       {citations?.passages.map(p => (
         <details className="sc-research-quote" key={p.citationId}>
-          <summary>[{p.citationId}] {p.sourceTitle} ({p.year}) — show verbatim passage</summary>
+          <summary>[{p.citationId}] {p.sourceTitle} ({p.year}{tx(") — show verbatim passage")}</summary>
           <blockquote style={{ whiteSpace: "pre-line" }}>{p.text}</blockquote>
-          <p><a href={p.sourceUrl} target="_blank" rel="noreferrer">{p.publisher ?? p.attribution} · {p.year} · Open source</a></p>
-          <p><strong>Applicability:</strong> {p.applicability}</p>
+          <p><a href={p.sourceUrl} target="_blank" rel="noreferrer">{p.publisher ?? p.attribution} · {p.year}{" "}{tx("· Open source")}</a></p>
+          <p><strong>{tx("Applicability:")}</strong> {p.applicability}</p>
         </details>
       ))}
 
       {sources.length > 0 && (
         <div className="an-sources">
-          <p className="an-sources-title">Sources</p>
+          <p className="an-sources-title">{tx("Sources")}</p>
           <ol>
             {sources.map((s, i) => (
               <li key={s.sourceId}>

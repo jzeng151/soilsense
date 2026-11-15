@@ -1,3 +1,4 @@
+import { useI18n } from "./i18n";
 import { useCallback, useEffect, useState } from "react";
 import { App } from "./App";
 import { LanguageProvider } from "./i18n";
@@ -61,6 +62,7 @@ export function Shell() {
 }
 
 function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSignedIn: (u: User) => void; onSignOut: () => void }) {
+  const { t: tx } = useI18n();
   const [route, setRoute] = useState<WorkspaceRoute>(routeFromHash);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const ownerId = user?.id ?? GUEST_ID;
@@ -98,7 +100,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
     <div className={`shell route-${route}`}>
       {/* WCAG 2.4.1: let keyboard and screen-reader users jump past the sidebar. */}
       <a className="skip-link" href="#content" onClick={(e) => { e.preventDefault(); document.getElementById("content")?.focus(); }}>
-        Skip to main content
+        {tx("Skip to main content")}
       </a>
       <Sidebar
         route={route === "admin/docs" ? "planner" : route}
@@ -147,7 +149,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
           )
         ) : (
           <>
-            <button type="button" className="sb-toggle" aria-label="Open sidebar" onClick={() => setSidebarOpen(true)}>
+            <button type="button" className="sb-toggle" aria-label={tx("Open sidebar")} onClick={() => setSidebarOpen(true)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4 7h16M4 12h16M4 17h16" />
               </svg>

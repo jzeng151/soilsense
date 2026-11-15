@@ -91,7 +91,7 @@ export function PlanRow({ plan, title, compareTo, muted }: { plan: RotationPlan;
       <span className="plan-row-title">{title}</span>
       <span className="chips">
         {plan.years.map((y) => (
-          <span key={y.year} className="chip" style={{ background: CROP_COLORS[y.crop] }} title={`${y.year}: ${cropName(y.crop, language)}${y.cover !== "none" ? ` + ${y.coverName}` : ""}`}>
+          <span key={y.year} className="chip" style={{ background: CROP_COLORS[y.crop] }} title={`${y.year}: ${cropName(y.crop, language)}${y.cover !== "none" ? ` + ${language === "es" ? coverNames[y.cover] : y.coverName}` : ""}`}>
             {cropName(y.crop, language)}
           </span>
         ))}

@@ -48,7 +48,7 @@ async function smoke(name, run) {
     const normalDemo = ['/api/plan', '/api/research/explain', '/api/wind-screen'].includes(url.pathname);
     const replay = replayEnabled && name === 'field-watch' && url.pathname === '/api/fieldwatch/agent/finney-ks/check'
       && request.postDataJSON()?.mode === 'replay';
-    const chat = aiEnabled && name === 'sprout' && url.pathname === '/api/scout';
+    const chat = aiEnabled && name === 'sprout' && url.pathname === '/api/scout/chat';
     if (url.origin === base.origin && request.method() === 'POST' && (normalDemo || replay || chat)) return route.continue();
     result.blockedWrites.push(`${request.method()} ${url.pathname}`);
     return route.abort('blockedbyclient');
@@ -86,10 +86,10 @@ try {
     await visit(page);
     await page.locator('.map.leaflet-container').waitFor();
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
-    await page.getByRole('button', { name: 'Español', exact: true }).click();
+    await page.getByRole('button', { name: 'ES Español', exact: true }).click();
     await until(async () => await page.locator('html').getAttribute('lang') === 'es', 'Spanish html lang');
     await page.getByText('Hola, soy Sprout', { exact: true }).waitFor();
-    await page.getByRole('button', { name: 'English', exact: true }).click();
+    await page.getByRole('button', { name: 'EN English', exact: true }).click();
     await until(async () => await page.locator('html').getAttribute('lang') === 'en', 'English html lang');
     await page.getByText("Hi, I'm Sprout", { exact: true }).waitFor();
   });
@@ -177,7 +177,7 @@ try {
     await until(async () => await page.getByRole('button', { name: 'Send', exact: true }).count() > 0, 'Sprout stream finishes', 120_000);
     assert.equal(await page.locator('.sc-err').count(), 0, 'Sprout returned an error instead of an answer');
     const reply = page.locator('.sc-bot').last();
-    const answer = (await reply.locator(':scope > .md').allTextContents()).join('\n');
+    const answer = (await reply.locator(':scope > div[lang] > .md').allTextContents()).join('\n');
     assert(answer.trim(), 'Empty assistant reply');
     result.answer = answer;
     const citations = [...new Set(answer.match(/\[R\d+\]/g) ?? [])];

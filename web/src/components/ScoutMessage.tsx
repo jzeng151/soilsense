@@ -3,6 +3,7 @@
 // source parts → a "Sources" list under the answer.
 
 import type { UIMessage } from "ai";
+import type { ChatCitationDisplay } from "../../../src/shared/chatResearch";
 import { Markdown } from "./Markdown";
 
 type Part = UIMessage["parts"][number];
@@ -10,6 +11,7 @@ type ToolPart = Extract<Part, { toolCallId: string }>;
 type Obj = Record<string, unknown>;
 
 const TOOL_META: Record<string, { running: string; done: string }> = {
+  search_research: { running: "Searching reviewed research", done: "Research search complete" },
   find_location: { running: "Looking up location", done: "Found location" },
   get_field_data: { running: "Reading USDA soil & crop history", done: "Read USDA soil & crop history" },
   build_rotation_plan: { running: "Analyzing 35 years of NASA climate & scoring rotations", done: "Analyzed NASA climate & rotations" },
@@ -24,6 +26,7 @@ const arr = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
 const num = (v: unknown, d = 3) => (typeof v === "number" ? Number(v.toFixed(d)) : v);
 
 function describeInput(name: string, input: unknown): string {
+  if (name === "search_research") return String(obj(input).question ?? "");
   const i = obj(input);
   switch (name) {
     case "find_location":
@@ -44,6 +47,10 @@ function describeInput(name: string, input: unknown): string {
 }
 
 function describeOutput(name: string, output: unknown): string {
+  if (name === "search_research") {
+    const result = obj(output);
+    return `${String(result.status)} · ${arr(result.passages).length} passage(s) · ${String(result.reason ?? "")}`;
+  }
   const o = obj(output);
   switch (name) {
     case "find_location":
@@ -97,6 +104,9 @@ function ToolStep({ part }: { part: ToolPart }) {
 
 export function ScoutMessage({ message, streaming }: { message: UIMessage; streaming: boolean }) {
   const parts = message.parts;
+  const citationPart = parts.find(p => p.type === "data-research-citations");
+  const citations = (citationPart && "data" in citationPart ? citationPart.data : null) as ChatCitationDisplay | null;
+  const researchStates = parts.filter(p => p.type === "data-research-status").map(p => (p as { data: { status: string; reason?: string } }).data);
   const sources = parts.filter((p): p is Extract<Part, { type: "source-url" | "source-document" }> => p.type === "source-url" || p.type === "source-document");
   const tools = parts.filter(isTool);
   const toolsRunning = tools.some((t) => t.state === "input-streaming" || t.state === "input-available");
@@ -135,6 +145,16 @@ export function ScoutMessage({ message, streaming }: { message: UIMessage; strea
         <Markdown key={i} text={t.text} />
       ))}
       {streaming && !toolsRunning && tools.length > 0 && !hasText && <p className="an-writing">Writing the answer…</p>}
+
+      {researchStates.map((state, i) => <p key={i} className="sc-research-state" role="status">Research {state.status}: {state.reason}</p>)}
+      {citations?.passages.map(p => (
+        <details className="sc-research-quote" key={p.citationId}>
+          <summary>[{p.citationId}] {p.sourceTitle} ({p.year}) — show verbatim passage</summary>
+          <blockquote>{p.text}</blockquote>
+          <p><a href={p.sourceUrl} target="_blank" rel="noreferrer">{p.publisher ?? p.attribution} · {p.year} · Open source</a></p>
+          <p><strong>Applicability:</strong> {p.applicability}</p>
+        </details>
+      ))}
 
       {sources.length > 0 && (
         <div className="an-sources">

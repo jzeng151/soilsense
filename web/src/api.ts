@@ -71,7 +71,7 @@ export async function askQuestion(body: { question: string; planLabel: string; s
   return handle(await fetch("/api/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }));
 }
 
-export async function scoutStatus(): Promise<{ configured: boolean; model: string | null; provider: "workers-ai" | "gemini" | null; fallback: string | null }> {
+export async function scoutStatus(): Promise<{ configured: boolean; model: string | null; provider: "workers-ai" | "gemini" | null; fallback: string | null; research: "configured" | "unavailable" }> {
   return handle(await fetch("/api/scout/status"));
 }
 

@@ -370,9 +370,10 @@ function MainFlow() {
         </div>
         <span className="topbar-tag">{t("Teaching satellites to speak Farmer")}</span>
         <div role="group" aria-label={t("Language")} className="language-switch">
-          <button type="button" lang="en" aria-label="English" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>EN</button>
+          {/* WCAG 2.5.3: the accessible name starts with the visible "EN"/"ES", so voice users can say what they see. */}
+          <button type="button" lang="en" aria-label="EN English" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>EN</button>
           <span aria-hidden="true"> / </span>
-          <button type="button" lang="es" aria-label="Español" aria-pressed={language === "es"} onClick={() => setLanguage("es")}>ES</button>
+          <button type="button" lang="es" aria-label="ES Español" aria-pressed={language === "es"} onClick={() => setLanguage("es")}>ES</button>
         </div>
       </header>
 

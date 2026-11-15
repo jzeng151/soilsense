@@ -1,5 +1,6 @@
 import { Hono, type Handler, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
+import { hasMeasurements, validateMeasurements } from "../../shared/measurements";
 import { GOALS, type CropId, type Goal, type PlanRequest, type Priority } from "../../shared/types";
 import { currentUser } from "../lib/auth";
 import { UpstreamError } from "../lib/http";
@@ -102,7 +103,9 @@ export function validatePlanRequest(body: unknown): PlanRequest | string {
   // Water beyond rain: "rain" | "limited" | "full". Older clients send only `irrigated`.
   if (b.water !== undefined && b.water !== "rain" && b.water !== "limited" && b.water !== "full") return 'water must be "rain", "limited" or "full"';
   const water = (b.water as "rain" | "limited" | "full" | undefined) ?? (b.irrigated === true ? "full" : "rain");
-  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language, ...(goals !== undefined ? { goals } : {}) };
+  const measurements = validateMeasurements(b);
+  if (typeof measurements === "string") return measurements;
+  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language, ...measurements, ...(goals !== undefined ? { goals } : {}) };
 }
 
 function upstreamMessage(err: unknown): { status: 502 | 500; body: { error: string; detail?: string } } {
@@ -150,6 +153,7 @@ api.post("/plan", async (c) => {
     const plan = await makePlan(c.env, req);
     c.executionCtx.waitUntil(logPlan(c.env, { channel: "web", plan }));
     c.header("Server-Timing", `plan;dur=${Date.now() - started}`);
+    if (hasMeasurements(req)) c.header("Cache-Control", "private, no-store");
     return c.json(plan);
   } catch (err) {
     const e = upstreamMessage(err);

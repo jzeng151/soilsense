@@ -1,4 +1,4 @@
-import { Hono, type MiddlewareHandler } from "hono";
+import { Hono, type Handler, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
 import type { CropId, PlanRequest, Priority } from "../../shared/types";
 import { currentUser } from "../lib/auth";
@@ -219,14 +219,19 @@ api.route("/fieldwatch", fieldWatch);
 
 
 // Additive stretch evidence endpoint: never blocks plan construction.
-api.get("/vegetation", async (c) => {
+const vegetation: Handler<AppEnv> = async (c) => {
   const coords = parseCoords(c.req.query("lat"), c.req.query("lon"));
   const year = Number(c.req.query("year"));
   if (typeof coords === "string") return c.json({ error: coords }, 400);
   if (!Number.isInteger(year) || year < 2001 || year >= new Date().getUTCFullYear()) return c.json({ error: "year must be a completed year from 2001 onward" }, 400);
   const { getModisNdvi } = await import("../data/modis");
   return c.json(await getModisNdvi(c.env.DB, coords.lat, coords.lon, year));
-});
+};
+api.get("/vegetation", vegetation);
+api.post("/vegetation/prefetch", async (c, next) => {
+  if (!adminTokenMatches(c.req.header("Authorization"), c.env.ADMIN_TOKEN)) return c.json({ error: "Admin token required" }, 401);
+  await next();
+}, vegetation);
 
 // Cited research retrieval (Vectorize) and grounded explanations (Workers AI): see docs/RESEARCH.md.
 api.route("/research", research);

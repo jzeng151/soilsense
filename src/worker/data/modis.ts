@@ -1,7 +1,7 @@
 // ORNL TESViS REST v1. Product-specific rules: MOD13 Collection 6.1 user guide, Tables 1, 4, 5.
 import type { ModisObservation, ModisVegetation } from "../../shared/types";
 import { cached, DAY_SECONDS } from "../lib/cache";
-import { fetchJson } from "../lib/http";
+import { fetchJson, fetchWithRetry } from "../lib/http";
 
 const BASE = "https://modis.ornl.gov/rst/api/v1/MOD13Q1";
 const DOCS = "https://lpdaac.usgs.gov/documents/621/MOD13_User_Guide_V61.pdf";
@@ -10,6 +10,18 @@ interface Subset { nrows: number; ncols: number; cellsize: string; subset: BandR
 const day = 86400000;
 const iso = (ms: number) => new Date(ms).toISOString().slice(0, 10);
 const startMs = (d: string) => Date.UTC(Number(d.slice(1, 5)), 0, Number(d.slice(5)));
+// JSON subsets omit collection/version. CSV's native granule id retains it; never infer 061.
+export function parseModisCsv(text: string, lat: number, lon: number): Subset {
+  const rows = text.trim().split(/\r?\n/).map(line => {
+    const [id, product, date, point, processed, value, ...extra] = line.split(",");
+    const m = /^MOD13Q1\.(A\d{7})\.(h\d{2}v\d{2})\.(061)\.(\d{13})\.(250m_16_days_\w+)$/.exec(id ?? "");
+    const location = /^Lat(-?[\d.]+)Lon(-?[\d.]+)Samp1Line1$/.exec(point ?? "");
+    if (!m || product !== "MOD13Q1" || date !== m[1] || processed !== m[4] || !location ||
+      Number(location[1]) !== lat || Number(location[2]) !== lon || extra.length || !/^-?\d+$/.test(value ?? "")) throw new Error("Invalid MODIS CSV collection, point or pixel");
+    return { band: m[5]!, data: [Number(value)], modis_date: date!, version: m[3]!, proc_date: processed, title: m[2] };
+  });
+  return { nrows: 1, ncols: 1, cellsize: "231.656358264", subset: rows };
+}
 export function compositeDates(year: number): string[] {
   const days = (Date.UTC(year + 1, 0, 1) - Date.UTC(year, 0, 1)) / day;
   return Array.from({ length: Math.ceil(days / 16) }, (_, i) => `A${year}${String(1 + i * 16).padStart(3, "0")}`);
@@ -40,10 +52,10 @@ export async function getModisNdvi(db: D1Database | undefined, lat: number, lon:
   const base: ModisVegetation = { status: "unavailable", product: "MOD13Q1", version: "061", lat, lon, year, resolution: "250 m nominal; MODIS sinusoidal grid", interval: "16-day composite (last interval ends December 31)", units: "NDVI (dimensionless)", scale: 0.0001,
     expectedCount: dates.length, validCount: 0, observations: [], requestUrls: [datesUrl], retrievedAt: null, docsUrl: DOCS,
     attribution: "Didan, K. (2021), MOD13Q1.061, NASA LP DAAC, doi:10.5067/MODIS/MOD13Q1.061. Subsets: ORNL DAAC TESViS RESTful Web Service (2018), doi:10.3334/ORNLDAAC/1600.",
-    note: "Coarse historical point pixel, not a field measurement or observations of alternative rotations. Low NDVI does not establish bare soil; residue and mixed pixels remain unresolved. No interpolation or cross-sensor merging. Field-area coverage is unknown. Landsat/HLS reflectance and SWIR are not implemented (Earthdata login required)." };
+    note: "Coarse historical point pixel, not a field measurement or observations of alternative rotations. Low NDVI does not establish bare soil; residue and mixed pixels remain unresolved. No interpolation or cross-sensor merging. Field-area coverage is unknown. MODIS uses provider NDVI, not reflectance-derived field NDVI." };
   try {
-    return (await cached(db, `modis:MOD13Q1:061:qa-v1:${lat}:${lon}:${year}`, 30 * DAY_SECONDS, async () => {
-      const opts = { service: "ORNL DAAC MODIS", timeoutMs: 10000, retries: 2 };
+    return (await cached(db, `modis:MOD13Q1:061:qa-v2-csv:${lat}:${lon}:${year}`, 30 * DAY_SECONDS, async () => {
+      const opts = { service: "ORNL DAAC MODIS", timeoutMs: 60000, retries: 1 };
       const inventory = await fetchJson<{ dates: { modis_date: string }[] }>(datesUrl, opts);
       if (!Array.isArray(inventory.dates)) throw new Error("Invalid MODIS date inventory");
       const available = new Set(inventory.dates.map(d => d.modis_date));
@@ -55,7 +67,8 @@ export async function getModisNdvi(db: D1Database | undefined, lat: number, lon:
         const batch = selected.slice(i, i + 10);
         const url = `${BASE}/subset?${coords}&startDate=${batch[0]}&endDate=${batch[batch.length - 1]}&kmAboveBelow=0&kmLeftRight=0`;
         requestUrls.push(url);
-        const subset = await fetchJson<Subset>(url, opts);
+        const response = await fetchWithRetry(url, { ...opts, headers: { Accept: "text/csv" } });
+        const subset = parseModisCsv(await response.text(), lat, lon);
         for (const p of parseModisSubset(subset, batch)) byDate.set(p.modisDate, p);
       }
       const missing = parseModisSubset({ nrows: 1, ncols: 1, cellsize: "", subset: [] }, dates);

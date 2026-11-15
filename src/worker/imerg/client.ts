@@ -39,6 +39,14 @@ export interface Subset {
 }
 export type Fetcher = (url: string, init?: RequestInit) => Promise<Response>;
 const pending = new Map<string, Promise<Subset>>();
+const metadataPending = new Map<string, Promise<string>>();
+async function metadata(env: Pick<Env, "DB" | "EARTHDATA_TOKEN">, base: string, stream: Stream, fetcher: Fetcher) {
+  const key = `imerg-dmr:V07:dap4-qa2:${base}`;
+  if (metadataPending.has(key)) return metadataPending.get(key)!;
+  const run = cached(env.DB, key, stream === "final" ? 30 * 86400 : 3600, () => text(`${base}.dmr.xml`, env.EARTHDATA_TOKEN, fetcher)).then(r => r.value);
+  metadataPending.set(key, run);
+  try { return await run; } finally { metadataPending.delete(key); }
+}
 
 export function dapUrl(link: string): string {
   const u = new URL(link);
@@ -58,8 +66,14 @@ async function bytes(url: string, token: string | undefined, fetcher: Fetcher): 
   for (let hop = 0; hop <= 4; hop++) {
     const u = new URL(url);
     if (token && (u.protocol !== "https:" || !AUTH_HOSTS.has(u.hostname) || u.username || u.password)) throw new Error("Untrusted Earthdata redirect");
-    try { r = await fetcher(url, { redirect: "manual", signal: AbortSignal.timeout(90000), headers: token ? { Authorization: `Bearer ${token}` } : {} }); }
-    catch { throw new Error(`Earthdata fetch timeout/network failure: ${u.hostname}${u.pathname}`); }
+    for (let attempt = 0; attempt < 2; attempt++) {
+      r = undefined;
+      try { r = await fetcher(url, { redirect: "manual", signal: AbortSignal.timeout(90000), headers: token ? { Authorization: `Bearer ${token}` } : {} }); }
+      catch { if (attempt === 1) throw new Error(`Earthdata fetch timeout/network failure: ${u.hostname}${u.pathname}`); }
+      if (r && ![429, 500, 502, 503, 504].includes(r.status)) break;
+      if (attempt === 0) { await r?.body?.cancel(); r = undefined; await new Promise(resolve => setTimeout(resolve, 1000)); }
+    }
+    if (!r) throw new Error("Earthdata network unavailable");
     if (![301, 302, 303, 307, 308].includes(r.status)) break;
     const location = r.headers.get("Location"); await r.body?.cancel();
     if (!token || !location || hop === 4) throw new Error("Unsupported Earthdata redirect");
@@ -144,7 +158,7 @@ export async function retrieveSubset(env: Pick<Env, "EARTHDATA_TOKEN" | "DB">, l
       const revision = e.producer_granule_id ?? decodeURIComponent(base.split("/").pop()!);
       const dayKey = `imerg-day:V07:dap4-qa2:${stream}:${grid.key}:${date}:${revision}`;
       const { value: observation } = await cached(env.DB, dayKey, stream === "final" ? 30 * 86400 : 3600, async () => {
-        const dmr = await text(`${base}.dmr.xml`, env.EARTHDATA_TOKEN, fetcher);
+        const dmr = await metadata(env, base, stream, fetcher);
         const url = `${base}.dap?dap4.ce=${encodeURIComponent(dap4Constraint(dmr, grid))}`;
         const data = await bytes(url, env.EARTHDATA_TOKEN, fetcher);
         return parseDap4(data, date, grid, url, revision);

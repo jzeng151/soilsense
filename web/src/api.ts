@@ -52,3 +52,8 @@ export function getLastPlan(): PlanResponse | null {
 export async function fetchExplanation(req: ExplainRequest, signal?: AbortSignal): Promise<ExplanationResponse> {
   return handle(await fetch("/api/research/explain", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req), signal }));
 }
+
+/** Weekly U.S. Drought Monitor context (May–Sep) for each replayed year in the field's county (issue #31). */
+export async function fetchUsdmReplay(countyFips: string, years: number[], signal?: AbortSignal): Promise<{ timelines: import("../../src/shared/types").UsdmTimeline[] }> {
+  return handle(await fetch(`/api/usdm/replay?fips=${encodeURIComponent(countyFips)}&years=${years.join(",")}`, { signal }));
+}

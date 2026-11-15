@@ -212,3 +212,6 @@ api.route("/scout", scout);
 api.route("/fieldwatch", fieldWatch);
 // Cited research retrieval (Vectorize) and grounded explanations (Workers AI): see docs/RESEARCH.md.
 api.route("/research", research);
+// U.S. Drought Monitor weekly county context (issue #31): /api/usdm/category, /timeline, /replay.
+import { usdm } from "./usdm";
+api.route("/usdm", usdm);

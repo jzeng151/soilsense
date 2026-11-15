@@ -393,3 +393,85 @@ export interface SecondOpinion {
   /** Rankings limited to rotations that include the crop the farmer grows now. */
   byCurrentCrop: Partial<Record<"corn" | "sorghum" | "soybean" | "wheat", { message: string | null; rotations: KStateRotation[] }>>;
 }
+
+// ---- U.S. Drought Monitor context (GitHub issue #31) ----
+
+/** USDM categories: none (no drought), D0 abnormally dry, D1–D4 drought. */
+export type UsdmCategory = "none" | "D0" | "D1" | "D2" | "D3" | "D4";
+
+/** One weekly USDM map, summarised for one county (categorical = exclusive % of county area). */
+export interface UsdmWeek {
+  /** Map valid date (Tuesday data cutoff), YYYY-MM-DD. Snapshot id: usdm-county-<fips>-<validStart>. */
+  validStart: string;
+  /** Last day this map is the current one (the following Monday), YYYY-MM-DD. */
+  validEnd: string;
+  /** % of the county's area in each category; exclusive, so they add up to ~100. */
+  pct: Record<UsdmCategory, number>;
+  /** Category covering the largest share of the county. */
+  predominant: UsdmCategory;
+  /** Most severe category present anywhere in the county (> 0% area). */
+  worst: UsdmCategory;
+  /** True when a USDM category boundary crosses the county, so a field could sit in more than one category. */
+  mixed: boolean;
+  /** Official dated state map image for this week. */
+  mapUrl: string;
+}
+
+export interface UsdmSourceInfo {
+  name: string;
+  attribution: string;
+  /** Exact request URL that returned these weeks. */
+  requestUrl: string;
+  docsUrl: string;
+  statistics: string;
+  spatial: string;
+  crs: string;
+  publication: string;
+  retrievedAt: string;
+}
+
+/** A run of weekly USDM maps for one county and date window. */
+export interface UsdmTimeline {
+  fips: string;
+  countyName: string | null;
+  stateCode: string | null;
+  window: { start: string; end: string };
+  /** Map weeks the window should contain (Tuesdays whose valid week overlaps it, up to the newest possible map). */
+  expectedWeeks: number;
+  observedWeeks: number;
+  /** Valid dates (Tuesdays) with no map returned: unavailable, never counted as "no drought". */
+  missingWeeks: string[];
+  weeks: UsdmWeek[];
+  /** Observed weeks by predominant category; each week counted once (no cumulative double counting). */
+  counts: Record<UsdmCategory, number>;
+  /** Observed weeks where D1 or worse covered most of the county. */
+  droughtWeeks: number;
+  mixedWeeks: number;
+  status: "complete" | "partial" | "unavailable";
+  note: string;
+  /** For replayed bad years: whether USDM also showed drought. Agreement and disagreement are both valid. */
+  agreement?: { kind: "drought" | "no-drought" | "mixed" | "unknown"; text: string };
+  source: UsdmSourceInfo;
+}
+
+/** Dated USDM category for a county on one date (for Field Watch results and messages). */
+export interface UsdmCategoryResult {
+  fips: string;
+  date: string;
+  /**
+   * matched: a released map's valid week contains the date. latest: the date is after the newest map but within the
+   * normal release lag. stale: the newest map we could get is too old for this date. unavailable: no map.
+   */
+  status: "matched" | "latest" | "stale" | "unavailable";
+  /** True when the date is in the past (replay/history); such messages must stay marked historical. */
+  historical: boolean;
+  week: UsdmWeek | null;
+  countyName: string | null;
+  stateCode: string | null;
+  /** Plain-language one-liner, e.g. "D1 moderate drought over 58% of Finney County, KS (USDM map valid 2026-11-10)". */
+  label: string;
+  /** Days between the date and the end of the chosen map's valid week (0 when matched). */
+  ageDays: number | null;
+  snapshotId: string | null;
+  source: UsdmSourceInfo;
+}

@@ -140,7 +140,7 @@ const GROUPS: Group[] = [
         url: "https://developers.cloudflare.com/workers-ai/",
         what: "An AI model that runs on Cloudflare.",
         data: ["Written answers"],
-        usedFor: "Answers the \"Have a question?\" box. It can only use the facts from your plan.",
+        usedFor: "Powers Scout, the chat assistant, and answers the \"Have a question?\" box. Every call goes through Cloudflare AI Gateway (logs, caching, limits).",
         status: "ai",
       },
       {
@@ -149,7 +149,7 @@ const GROUPS: Group[] = [
         url: "https://ai.google.dev/",
         what: "An AI model from Google.",
         data: ["Chat answers"],
-        usedFor: "Powers Scout, the chat assistant. Scout uses the same field data and the same plan engine as the planner.",
+        usedFor: "Backup for Scout if Workers AI is unavailable, and the phone voice agent. Uses the same field data and plan engine as the planner.",
         status: "ai",
       },
     ],

@@ -4,6 +4,7 @@
 
 import { Hono } from "hono";
 import { currentUser } from "../lib/auth";
+import { isLiveDemoOn, liveRoom, setLiveDemo } from "../live/publish";
 import type { AppEnv } from "./auth";
 import {
   defaultVoiceSettings,
@@ -143,4 +144,26 @@ admin.get("/calls/:sid", async (c) => {
   } catch (err) {
     return c.json({ error: migrationHint(err) }, 500);
   }
+});
+
+// Live screen (#/live) demo mode: while on, phone calls are shown publicly in real time.
+admin.get("/live-demo", async (c) => c.json({ on: await isLiveDemoOn(c.env.DB), available: Boolean(c.env.LIVE_ROOM) }));
+
+admin.put("/live-demo", async (c) => {
+  if (!c.env.DB) return c.json({ error: "No database configured." }, 503);
+  const body = (await c.req.json().catch(() => ({}))) as { on?: unknown };
+  if (typeof body.on !== "boolean") return c.json({ error: "on must be true or false" }, 400);
+  try {
+    await setLiveDemo(c.env.DB, body.on);
+  } catch (err) {
+    return c.json({ error: migrationHint(err) }, 500);
+  }
+  return c.json({ on: body.on });
+});
+
+/** Empty the live screen (e.g. before a demo). */
+admin.post("/live-demo/clear", async (c) => {
+  const room = liveRoom(c.env);
+  if (room) await room.clear();
+  return c.json({ ok: true });
 });

@@ -14,6 +14,7 @@ import type { CropId, PlanResponse, Priority, WaterLevel } from "../../shared/ty
 import { lookupZip } from "../data/geo";
 import type { Env } from "../env";
 import { maskPhone, sendSms, xmlEscape } from "../lib/twilio";
+import { isLiveDemoOn, publishLive } from "../live/publish";
 import { isInContiguousUS, logPlan, makePlan } from "../service";
 import { LOCKED_RULES, languageName, languageRules, loadVoiceSettings, logVoiceEvent, type VoiceAgentSettings, type VoiceEventKind } from "../voiceSettings";
 
@@ -130,6 +131,31 @@ function planForVoice(p: PlanResponse, place: string | undefined) {
   };
 }
 
+/** A short, non-reversible id for a call on the public live screen (never the Twilio SID itself). */
+function shortId(sid: string): string {
+  let h = 2166136261;
+  for (let i = 0; i < sid.length; i++) h = Math.imul(h ^ sid.charCodeAt(i), 16777619);
+  return (h >>> 0).toString(36);
+}
+
+/** The plan as the live screen shows it: compact, no raw data. */
+function livePlan(p: PlanResponse, place: string | undefined) {
+  const top = p.plans[0];
+  const worst = p.droughtReplays?.[0];
+  return {
+    place: place ?? (p.location.county ? `${p.location.county.countyName}, ${p.location.county.stateCode}` : undefined),
+    water: p.water ?? (p.request.irrigated ? "full" : "rain"),
+    label: top?.label,
+    years: top?.years.map((y) => ({ year: y.year, crop: y.crop, cropName: y.cropName, cover: y.cover === "none" ? null : y.coverName })) ?? [],
+    netPerAcre: top?.avgNetReturnPerAcre,
+    badYearsIn10: top?.badYearsIn10,
+    current: p.currentPractice ? { label: p.currentPractice.label.replace("Current pattern: ", ""), netPerAcre: p.currentPractice.avgNetReturnPerAcre, badYearsIn10: p.currentPractice.badYearsIn10 } : null,
+    replay: worst
+      ? { year: worst.year, rainIn: worst.weather.seasonRainIn, typicalRainIn: worst.weather.typicalSeasonRainIn, currentNet: worst.current?.avgNetPerAcre ?? null, planNet: worst.plan.avgNetPerAcre }
+      : null,
+  };
+}
+
 /** Said while the plan is being built, in the caller's language. */
 const WAIT_LINES: Record<string, string> = {
   en: "Give me a few seconds to check the NASA weather data for your field.",
@@ -200,7 +226,7 @@ class CallSession {
     const key = `${lat.toFixed(3)},${lon.toFixed(3)}`;
     if (this.warmups.has(key)) return;
     const t0 = Date.now();
-    const run = makePlan(this.env, { lat, lon, irrigated: false, priority: "balanced" })
+    const run = makePlan(this.env, { lat, lon, irrigated: false, priority: "balanced" }, { onEvent: (e) => this.live("source", { ...e, prefetch: true }) })
       .then(() => this.log("tool", { name: "prefetch_field_data", detail: JSON.stringify({ input: { lat, lon } }), durationMs: Date.now() - t0, ok: true }))
       .catch((err) => this.log("tool", { name: "prefetch_field_data", detail: JSON.stringify({ input: { lat, lon }, error: String(err) }), durationMs: Date.now() - t0, ok: false }));
     this.warmups.set(key, run);
@@ -225,6 +251,15 @@ class CallSession {
   /** Record a step of the call for the dashboard's Activity tab. Never blocks the conversation. */
   private log(kind: VoiceEventKind, e: { name?: string; detail?: string; durationMs?: number; ok?: boolean } = {}) {
     void logVoiceEvent(this.env.DB, { callSid: this.callSid, kind, ...e });
+  }
+
+  /** Live screen (#/live): only while demo mode is on. Ordered, fire-and-forget. */
+  private liveOn = false;
+  private liveChain: Promise<void> = Promise.resolve();
+  private live(type: string, data: Record<string, unknown> = {}) {
+    if (!this.liveOn) return;
+    const event = { type, call: shortId(this.callSid), at: Date.now(), ...data };
+    this.liveChain = this.liveChain.then(() => publishLive(this.env, event));
   }
 
   private send(msg: Record<string, unknown>) {
@@ -284,6 +319,9 @@ class CallSession {
       detail: JSON.stringify({ caller: maskPhone(this.caller), languages: this.multi ? this.settings.languages.enabled.map(languageName) : ["English"] }),
     });
     this.log("agent", { detail: this.settings.greeting });
+    this.liveOn = await isLiveDemoOn(this.env.DB);
+    this.live("call.start", { caller: maskPhone(this.caller), languages: this.multi ? this.settings.languages.enabled.map(languageName) : ["English"] });
+    this.live("call.say", { who: "agent", text: this.settings.greeting });
     this.markReady();
   }
 
@@ -295,6 +333,7 @@ class CallSession {
     if (this.spoken.trim()) {
       this.history.push({ role: "assistant", content: `${this.spoken.trim()} [interrupted by caller]` });
       this.log("agent", { detail: `${this.spoken.trim()} [interrupted]` });
+      this.live("call.say", { who: "agent", text: this.spoken.trim(), interrupted: true });
     }
     this.spoken = "";
   }
@@ -319,13 +358,16 @@ class CallSession {
   private timed<I, O>(name: string, fn: (input: I) => Promise<O>): (input: I) => Promise<O> {
     return async (input: I) => {
       const t0 = Date.now();
+      this.live("tool.start", { name, input });
       try {
         const out = await fn(input);
         const failed = Boolean(out && typeof out === "object" && ("error" in out || (out as { sent?: boolean }).sent === false));
         this.log("tool", { name, detail: JSON.stringify({ input, result: summarizeResult(out) }), durationMs: Date.now() - t0, ok: !failed });
+        this.live("tool.end", { name, ms: Date.now() - t0, ok: !failed, result: summarizeResult(out) });
         return out;
       } catch (err) {
         this.log("tool", { name, detail: JSON.stringify({ input, error: String(err) }), durationMs: Date.now() - t0, ok: false });
+        this.live("tool.end", { name, ms: Date.now() - t0, ok: false, error: String(err).slice(0, 200) });
         throw err;
       }
     };
@@ -420,13 +462,14 @@ class CallSession {
           let pending = this.plans.get(key);
           if (!pending) {
             const prefetched = this.warmups.get(`${lat.toFixed(3)},${lon.toFixed(3)}`);
-            pending = (prefetched ? prefetched.catch(() => undefined) : Promise.resolve()).then(() => makePlan(env, request, { placeName: place_name }));
+            pending = (prefetched ? prefetched.catch(() => undefined) : Promise.resolve()).then(() => makePlan(env, request, { placeName: place_name, onEvent: (e) => this.live("source", { ...e }) }));
             this.plans.set(key, pending);
             pending.catch(() => this.plans.delete(key));
           }
           const plan = await pending;
           this.lastPlan = { plan, place: place_name };
           this.smsSent = false;
+          this.live("plan", livePlan(plan, place_name));
           void logPlan(env, { channel: "voice", callSid: this.callSid, caller: maskPhone(this.caller), place: place_name, plan });
           return planForVoice(plan, place_name);
           },
@@ -443,6 +486,7 @@ class CallSession {
             Boolean(this.caller && from && env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN) &&
             (await sendSms({ accountSid: env.TWILIO_ACCOUNT_SID!, authToken: env.TWILIO_AUTH_TOKEN!, from, to: this.caller, body: this.lastPlan.plan.explanation.sms }));
           this.smsSent = ok;
+          this.live("sms", { ok, to: maskPhone(this.caller) });
           return { sent: ok };
         }),
       }),
@@ -471,6 +515,7 @@ class CallSession {
     this.spoken = "";
     this.history.push({ role: "user", content: this.multi ? `[language: ${this.lang}] ${userText}` : userText });
     this.log("caller", { detail: userText, name: this.multi ? this.lang : undefined });
+    this.live("call.say", { who: "caller", text: userText, lang: this.lang });
     this.turn++;
     const turnStart = Date.now();
     if (this.history.length > MAX_HISTORY) this.history = this.history.slice(-MAX_HISTORY);
@@ -523,10 +568,12 @@ class CallSession {
       this.history.push(...((await result.responseMessages) as ModelMessage[]));
       this.say("", true);
       this.log("agent", { detail: this.spoken.trim(), durationMs: Date.now() - turnStart, ok: true });
+      this.live("call.say", { who: "agent", text: this.spoken.trim(), ms: Date.now() - turnStart });
     } catch (err) {
       if (ctrl.signal.aborted) return;
       console.error(JSON.stringify({ msg: "voice agent turn failed", callSid: this.callSid, err: String(err) }));
       this.log("error", { name: "model", detail: String(err).slice(0, 500), durationMs: Date.now() - turnStart, ok: false });
+      this.live("error", { name: "model" });
       this.say("Sorry, I had trouble with that. Could you say it again?", true);
       this.history.push({ role: "assistant", content: "Sorry, I had trouble with that. Could you say it again?" });
     } finally {
@@ -544,6 +591,7 @@ class CallSession {
     if (this.digitTimer) clearTimeout(this.digitTimer);
     console.log(JSON.stringify({ msg: "voice agent session ended", callSid: this.callSid }));
     if (this.verified) this.log("session_end");
+    this.live("call.end");
   }
 }
 

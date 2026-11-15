@@ -3,8 +3,10 @@ import { ALL_CROPS } from "../../engine/crops";
 import type { CropId, PlanRequest, Priority } from "../../shared/types";
 import { currentUser } from "../lib/auth";
 import { UpstreamError } from "../lib/http";
+import { getSecondOpinion } from "../data/kstate";
 import { getField, isInContiguousUS, logPlan, makePlan } from "../service";
 import { auth, type AppEnv } from "./auth";
+import { fieldWatch } from "./fieldwatch";
 import { scout } from "./scout";
 
 const PRIORITIES: Priority[] = ["profit", "soil", "risk", "balanced"];
@@ -59,7 +61,7 @@ const requireUser: MiddlewareHandler<AppEnv> = async (c, next) => {
   if (!(await currentUser(c))) return c.json({ error: "Sign in to continue." }, 401);
   await next();
 };
-if (REQUIRE_SIGN_IN) for (const path of ["/field", "/plan", "/ask", "/scout/*"]) api.use(path, requireUser);
+if (REQUIRE_SIGN_IN) for (const path of ["/field", "/plan", "/ask", "/scout/*", "/fieldwatch/*"]) api.use(path, requireUser);
 
 function parseCoords(lat: unknown, lon: unknown): { lat: number; lon: number } | string {
   const la = Number(lat);
@@ -107,6 +109,17 @@ api.get("/field", async (c) => {
     const e = upstreamMessage(err);
     return c.json(e.body, e.status);
   }
+});
+
+// Kansas only: K-State's recommended rain-fed rotations for the county, ranked by our team's separate Kansas model
+// (published weekly to Cloudflare R2). 404 when there is nothing to show, so the page simply hides the box.
+api.get("/second-opinion", async (c) => {
+  const fips = c.req.query("fips") ?? "";
+  if (!/^\d{5}$/.test(fips)) return c.json({ error: "fips must be a 5-digit county code" }, 400);
+  const opinion = await getSecondOpinion(c.env.DB, fips);
+  if (!opinion) return c.json({ error: "No second opinion for this county" }, 404);
+  c.header("Cache-Control", "public, max-age=3600");
+  return c.json(opinion);
 });
 
 api.post("/plan", async (c) => {
@@ -166,9 +179,11 @@ api.post("/ask", async (c) => {
         "You are SoilSense, a farm rotation assistant. Answer the farmer's question in 2-4 plain sentences using ONLY the facts provided. " +
         "If the facts do not answer it, say so and suggest asking their county extension agent. Never invent numbers, prices, or guarantees. Use US units.";
       const user = `Recommended plan: ${String(body.planLabel ?? "").slice(0, 200)}\nSummary: ${String(body.summary ?? "").slice(0, 800)}\nFacts:\n- ${facts.join("\n- ")}\n\nQuestion: ${question}`;
-      const out = (await (c.env.AI as unknown as { run: (m: string, i: unknown) => Promise<{ response?: string }> }).run(
+      // Routed through Cloudflare AI Gateway (logs, analytics, caching). "default" is created automatically on first use.
+      const out = (await (c.env.AI as unknown as { run: (m: string, i: unknown, o?: unknown) => Promise<{ response?: string }> }).run(
         c.env.AI_MODEL ?? "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
         { messages: [{ role: "system", content: system }, { role: "user", content: user }], max_tokens: 300, temperature: 0.2 },
+        { gateway: { id: c.env.AI_GATEWAY_ID ?? "default" } },
       )) as { response?: string };
       if (out?.response) return c.json({ answer: out.response.trim(), source: "workers-ai" });
     } catch (err) {
@@ -192,3 +207,5 @@ api.get("/logs", async (c) => {
 
 // Scout chat agent (Gemini). Mounted here so CORS + rate limiting apply.
 api.route("/scout", scout);
+// Field Watch: background field checks (Cron Trigger) and their saved results.
+api.route("/fieldwatch", fieldWatch);

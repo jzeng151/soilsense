@@ -44,10 +44,27 @@ export async function getField(env: Env, lat: number, lon: number): Promise<Fiel
  * skip every data download and the whole engine run. This keeps repeated requests (demos, the phone agent
  * re-asking) far under the Worker CPU limit.
  */
+/** Progress of one data source while a plan is built (used by the live call screen). */
+export interface PlanSourceEvent {
+  /** power, daymet, soil, cdl, county, nass, rma, openet, engine, or "saved" (a saved plan was reused). */
+  source: string;
+  phase?: "start";
+  ms?: number;
+  ok?: boolean;
+}
+
+export interface PlanOpts {
+  placeName?: string;
+  skipCropHistory?: boolean;
+  now?: Date;
+  /** Optional progress callback, one call per data source start/finish. Must not throw. */
+  onEvent?: (e: PlanSourceEvent) => void;
+}
+
 export async function makePlan(
   env: Env,
   request: PlanRequest,
-  opts: { placeName?: string; skipCropHistory?: boolean; now?: Date } = {},
+  opts: PlanOpts = {},
 ): Promise<PlanResponse> {
   if (opts.now) return makePlanFresh(env, request, opts); // tests pin the date: always compute
   const water = request.water ?? (request.irrigated ? "full" : "rain");
@@ -63,21 +80,37 @@ export async function makePlan(
     opts.placeName ?? "",
     new Date().toISOString().slice(0, 10),
   ].join(":");
-  const { value } = await cached(env.DB, key, 6 * 3600, () => makePlanFresh(env, request, opts));
+  const t0 = Date.now();
+  const { value, cache } = await cached(env.DB, key, 6 * 3600, () => makePlanFresh(env, request, opts));
+  if (cache !== "miss") opts.onEvent?.({ source: "saved", ms: Date.now() - t0, ok: true });
   return value;
 }
 
 async function makePlanFresh(
   env: Env,
   request: PlanRequest,
-  opts: { placeName?: string; skipCropHistory?: boolean; now?: Date } = {},
+  opts: PlanOpts = {},
 ): Promise<PlanResponse> {
   const now = opts.now ?? new Date();
   const years = yearsFor(env, now);
   // Per-source timing, logged once per plan (helps find slow upstream services).
   const t0 = Date.now();
   const timing: Record<string, number> = {};
-  const timed = <T>(label: string, p: Promise<T>): Promise<T> => p.finally(() => (timing[label] = Date.now() - t0));
+  const timed = <T>(label: string, p: Promise<T>): Promise<T> => {
+    opts.onEvent?.({ source: label, phase: "start" });
+    return p.then(
+      (v) => {
+        timing[label] = Date.now() - t0;
+        opts.onEvent?.({ source: label, ms: timing[label], ok: v != null });
+        return v;
+      },
+      (err) => {
+        timing[label] = Date.now() - t0;
+        opts.onEvent?.({ source: label, ms: timing[label], ok: false });
+        throw err;
+      },
+    );
+  };
   const [powerClimate, daymet, soil, cropHistory, county] = await Promise.all([
     timed("power", getDailyClimate(env.DB, request.lat, request.lon, years.historyStart, years.historyEnd)),
     timed("daymet", getDaymet(env.DB, request.lat, request.lon, years.historyStart, years.historyEnd)),
@@ -110,6 +143,7 @@ async function makePlanFresh(
     now,
   });
   timing.engine = Date.now() - tEngine;
+  opts.onEvent?.({ source: "engine", ms: timing.engine, ok: true });
   timing.total = Date.now() - t0;
   console.log(JSON.stringify({ msg: "plan timing", lat: request.lat, lon: request.lon, ms: timing }));
   return plan;

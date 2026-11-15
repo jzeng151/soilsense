@@ -3,6 +3,12 @@ export interface Env {
   DB?: D1Database;
   AI?: Ai;
   AI_MODEL?: string;
+  /** Cloudflare AI Gateway id for Workers AI calls (default "default", auto-created on first request). */
+  AI_GATEWAY_ID?: string;
+  /** Scout's model: a Workers AI model ("@cf/...") or a Gemini model; the other provider is the fallback. */
+  SCOUT_MODEL?: string;
+  /** Per-visitor rate limit for the public Scout chat (Workers Rate Limiting binding). */
+  SCOUT_LIMITER?: RateLimit;
   TWILIO_ACCOUNT_SID?: string;
   TWILIO_AUTH_TOKEN?: string;
   TWILIO_FROM_NUMBER?: string;
@@ -22,4 +28,8 @@ export interface Env {
   VOICE_MODEL?: string;
   /** "ivr" forces the keypad phone menu; otherwise calls go to the conversational voice agent. */
   VOICE_MODE?: string;
+  /** Live room Durable Object: Field Watch publishes each run here when bound (optional). */
+  LIVE_ROOM?: DurableObjectNamespace;
+  /** Name of the live room instance (default "demo"). */
+  LIVE_ROOM_NAME?: string;
 }

@@ -763,7 +763,9 @@ export function runEngine(input: EngineInput, topN = 3): EngineResult {
   // Never recommend a crop that would be stressed in most years here, however good its average looks
   // (e.g. rain-fed soybean on 22 in of rain). Fall back to such plans only if nothing else is feasible.
   const dependable = (r: { raw: RawPlan }) => r.raw.years.every((y) => y.crop === "fallow" || y.reliability >= MIN_RECOMMENDED_RELIABILITY);
-  const pool = ranked.filter(dependable).length >= topN ? ranked.filter(dependable) : ranked;
+  // Dependable plans always come first; the rest only fill the remaining slots (so one dependable plan is enough
+  // to keep an often-stressed crop from being the top pick).
+  const pool = [...ranked.filter(dependable), ...ranked.filter((r) => !dependable(r))];
   // Show genuinely different options: skip plans that use the same set of crops as one already chosen.
   const chosen: { raw: RawPlan; plan: RotationPlan }[] = [];
   const seen = new Set<string>();

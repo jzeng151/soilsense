@@ -1,4 +1,4 @@
-// Scout: a Gemini-powered chat agent built on the Vercel AI SDK, with tool access to every
+// Scout: a chat agent on Cloudflare Workers AI (via AI Gateway, with Gemini as backup), built on the Vercel AI SDK, with tool access to every
 // SoilSense data source (geocoding, USDA soil + crop history, NASA POWER climate trends,
 // the rotation engine, the crop catalog and plan-usage analytics).
 //
@@ -7,6 +7,9 @@
 
 import { createGoogle } from "@ai-sdk/google";
 import {
+  type LanguageModel,
+  type TextStreamPart,
+  type ToolSet,
   convertToModelMessages,
   createUIMessageStream,
   createUIMessageStreamResponse,
@@ -18,6 +21,7 @@ import {
   type UIMessageStreamWriter,
 } from "ai";
 import { Hono } from "hono";
+import { createWorkersAI } from "workers-ai-provider";
 import { z } from "zod";
 import { ALL_CROPS, COVERS, CROPS } from "../../engine/crops";
 import { DATA_SOURCES } from "../../engine/plan";
@@ -29,6 +33,8 @@ import { getField, isInContiguousUS, makePlan } from "../service";
 export const scout = new Hono<{ Bindings: Env }>();
 
 const DEFAULT_MODEL = "gemini-3.8-flash";
+/** Scout's default brain: an open model on Cloudflare Workers AI, routed through AI Gateway. Gemini is the fallback. */
+const DEFAULT_WORKERS_MODEL = "@cf/google/gemma-4-26b-a4b-it";
 const MAX_STEPS = 8;
 const MAX_HISTORY = 40;
 
@@ -233,11 +239,41 @@ function makeTools(env: Env, writer: UIMessageStreamWriter) {
 
 // ---------- Routes ----------
 
-scout.get("/status", (c) => c.json({ configured: Boolean(c.env.GEMINI_API_KEY), model: c.env.GEMINI_MODEL || DEFAULT_MODEL }));
+/** Messages allowed per visitor (IP) per minute. */
+const SCOUT_PER_MINUTE = 20;
+
+/** Per-visitor limit. The Cloudflare binding counts per location, so a D1 counter backs it up. Fails open. */
+async function underScoutLimit(env: Env, ip: string): Promise<boolean> {
+  if (env.SCOUT_LIMITER) {
+    const { success } = await env.SCOUT_LIMITER.limit({ key: ip }).catch(() => ({ success: true }));
+    if (!success) return false;
+  }
+  if (!env.DB) return true;
+  const minute = Math.floor(Date.now() / 60000);
+  try {
+    const row = await env.DB.prepare(
+      "INSERT INTO cache (key, value, expires_at, created_at) VALUES (?1, '1', ?2, ?3) ON CONFLICT(key) DO UPDATE SET value = CAST(value AS INTEGER) + 1 RETURNING value",
+    )
+      .bind(`ratelimit:scout:${ip}:${minute}`, (minute + 2) * 60000, Date.now())
+      .first<{ value: string }>();
+    return Number(row?.value ?? 0) <= SCOUT_PER_MINUTE;
+  } catch {
+    return true;
+  }
+}
+
+scout.get("/status", (c) => {
+  const models = scoutModels(c.env);
+  return c.json({ configured: models.length > 0, model: models[0]?.id ?? null, provider: models[0]?.provider ?? null, fallback: models[1]?.id ?? null });
+});
 
 scout.post("/chat", async (c) => {
-  if (!c.env.GEMINI_API_KEY) {
-    return c.json({ error: "Scout is not connected yet: set GEMINI_API_KEY (in .dev.vars locally, or `npx wrangler secret put GEMINI_API_KEY`)." }, 503);
+  // Scout is public: cap each visitor so nobody can run up the Gemini bill.
+  if (!(await underScoutLimit(c.env, c.req.header("CF-Connecting-IP") ?? "unknown"))) {
+    return c.json({ error: "You're sending messages quickly. Please wait a minute and try again." }, 429);
+  }
+  if (scoutModels(c.env).length === 0) {
+    return c.json({ error: "Scout is not connected yet: add the Workers AI binding or set GEMINI_API_KEY." }, 503);
   }
   let body: { messages?: UIMessage[] };
   try {
@@ -249,7 +285,7 @@ scout.post("/chat", async (c) => {
   if (!messages.length || messages[messages.length - 1]?.role !== "user") return c.json({ error: "The last message must be from the user." }, 400);
 
   const env = c.env;
-  const google = createGoogle({ apiKey: env.GEMINI_API_KEY });
+  const candidates = scoutModels(env);
 
   const stream = createUIMessageStream({
     originalMessages: messages,
@@ -258,18 +294,120 @@ scout.post("/chat", async (c) => {
       return err instanceof Error ? err.message : "Scout ran into a problem.";
     },
     execute: async ({ writer }) => {
-      const result = streamText({
-        model: google(env.GEMINI_MODEL || DEFAULT_MODEL),
-        instructions: INSTRUCTIONS,
-        messages: await convertToModelMessages(messages),
-        tools: makeTools(env, writer),
-        stopWhen: stepCountIs(MAX_STEPS),
-        temperature: 0.3,
-        providerOptions: { google: { thinkingConfig: { includeThoughts: true } } },
-      });
-      writer.merge(toUIMessageStream({ stream: result.stream, sendReasoning: true, sendSources: true }));
+      const modelMessages = await convertToModelMessages(messages);
+      const tools = makeTools(env, writer);
+      const { stream, model } = await firstWorking(candidates, (m) =>
+        streamText({
+          model: m.model,
+          instructions: INSTRUCTIONS,
+          messages: modelMessages,
+          tools,
+          stopWhen: stepCountIs(MAX_STEPS),
+          temperature: 0.3,
+          ...(m.provider === "gemini" ? { providerOptions: { google: { thinkingConfig: { includeThoughts: true } } } } : {}),
+        }).stream,
+      );
+      writer.merge(
+        toUIMessageStream({
+          stream,
+          sendReasoning: true,
+          sendSources: true,
+          // Which model answered (shown under the reply; Workers AI first, Gemini as backup).
+          messageMetadata: ({ part }) => (part.type === "start" ? { model: model.id, provider: model.provider } : undefined),
+        }),
+      );
     },
   });
 
   return createUIMessageStreamResponse({ stream });
 });
+
+interface ScoutModel {
+  provider: "workers-ai" | "gemini";
+  id: string;
+  model: LanguageModel;
+}
+
+/** Models to try in order: SCOUT_MODEL decides the first (a "@cf/..." Workers AI model, or a Gemini model); the other provider backs it up. */
+export function scoutModels(env: Env): ScoutModel[] {
+  const workers = env.AI ? createWorkersAI({ binding: env.AI, gateway: { id: env.AI_GATEWAY_ID ?? "default" } }) : null;
+  const google = env.GEMINI_API_KEY ? createGoogle({ apiKey: env.GEMINI_API_KEY }) : null;
+  const wanted = env.SCOUT_MODEL || DEFAULT_WORKERS_MODEL;
+  const wa = (id: string): ScoutModel[] => (workers ? [{ provider: "workers-ai", id, model: workers(id as Parameters<typeof workers>[0]) }] : []);
+  const gm = (id: string): ScoutModel[] => (google ? [{ provider: "gemini", id, model: google(id) }] : []);
+  return wanted.startsWith("@cf/") ? [...wa(wanted), ...gm(env.GEMINI_MODEL || DEFAULT_MODEL)] : [...gm(wanted), ...wa(DEFAULT_WORKERS_MODEL)];
+}
+
+/** Parts that mean the model has started answering (after these, an error is shown rather than retried). */
+const CONTENT_PARTS = new Set(["text-delta", "reasoning-delta", "tool-input-start", "tool-call", "tool-result"]);
+/** A model that says nothing for this long counts as failed, so the next one gets a turn (not for the last model). */
+const FIRST_CONTENT_TIMEOUT_MS = 25_000;
+
+/**
+ * Start the first model whose stream gets going: if a model fails or stays silent before producing anything
+ * (quota, outage, unsupported model, hang), try the next one. The parts read while checking are replayed.
+ */
+export async function firstWorking<T extends ToolSet>(
+  models: ScoutModel[],
+  start: (m: ScoutModel) => ReadableStream<TextStreamPart<T>>,
+  timeoutMs = FIRST_CONTENT_TIMEOUT_MS,
+): Promise<{ stream: ReadableStream<TextStreamPart<T>>; model: ScoutModel }> {
+  for (let i = 0; i < models.length; i++) {
+    const m = models[i] as ScoutModel;
+    const last = i === models.length - 1;
+    const reader = start(m).getReader();
+    const buffered: TextStreamPart<T>[] = [];
+    let failed: unknown = null;
+    let done = false;
+    const deadline = Date.now() + timeoutMs;
+    try {
+      for (;;) {
+        let timer: ReturnType<typeof setTimeout> | undefined;
+        const timeout = new Promise<"timeout">((resolve) => {
+          timer = setTimeout(() => resolve("timeout"), Math.max(0, deadline - Date.now()));
+        });
+        const next = last ? await reader.read() : await Promise.race([reader.read(), timeout]);
+        if (timer !== undefined) clearTimeout(timer);
+        if (next === "timeout") {
+          failed = `no answer within ${Math.round(timeoutMs / 1000)} s`;
+          break;
+        }
+        if (next.done) {
+          done = true;
+          break;
+        }
+        if (next.value.type === "error") {
+          failed = (next.value as { error?: unknown }).error ?? "stream error";
+          break;
+        }
+        buffered.push(next.value);
+        if (CONTENT_PARTS.has(next.value.type)) break;
+      }
+    } catch (err) {
+      failed = err;
+    }
+    if (failed && !last) {
+      console.warn(JSON.stringify({ msg: "scout model failed, trying next", provider: m.provider, model: m.id, err: String(failed) }));
+      reader.cancel().catch(() => {});
+      continue;
+    }
+    console.log(JSON.stringify({ msg: "scout model", provider: m.provider, model: m.id }));
+    if (failed) buffered.push({ type: "error", error: failed } as TextStreamPart<T>);
+    const stream = new ReadableStream<TextStreamPart<T>>({
+      start(controller) {
+        for (const p of buffered) controller.enqueue(p);
+        if (done || failed) controller.close();
+      },
+      async pull(controller) {
+        const next = await reader.read();
+        if (next.done) controller.close();
+        else controller.enqueue(next.value);
+      },
+      cancel(reason) {
+        return reader.cancel(reason);
+      },
+    });
+    return { stream, model: m };
+  }
+  throw new Error("No Scout model is configured.");
+}

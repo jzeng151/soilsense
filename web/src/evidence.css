@@ -92,3 +92,32 @@
 .jr-tiles-3 { grid-template-columns: repeat(3, 1fr); }
 @media (max-width: 640px) { .jr-tiles-3 { grid-template-columns: 1fr; } }
 .top-stats .stat-words { font-size: 1rem; white-space: nowrap; }
+
+/* ---- Soil science + indicator guide ---- */
+.sb-build ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
+.sb-build li { display: grid; grid-template-columns: 1.6rem 1fr 0.7rem; gap: 0.55rem; align-items: start; font-size: 0.95rem; }
+.sb-build li.warn { color: var(--color-text-2); }
+.sb-build li.warn b { color: var(--color-warning); }
+.sb-icon { font-size: 1.1rem; line-height: 1.4; }
+.sb-cropdot { width: 0.7rem; height: 0.7rem; border-radius: 3px; margin-top: 0.4rem; }
+.ig-list { margin: 0.4rem 0 0; display: grid; gap: 0.75rem; }
+.ig-list dt { font-weight: 700; }
+.ig-list dd { margin: 0.15rem 0 0; color: var(--color-text-2); font-size: 0.93rem; }
+.ig-list dd small { display: block; margin-top: 0.2rem; color: var(--muted); font-size: 0.8rem; }
+
+/* ---- Second opinion (Kansas) ---- */
+.so-badge { margin: 0 0 0.8rem; padding: 0.6rem 0.8rem; border-radius: 10px; background: var(--color-subtle); border: 1px solid var(--color-border); color: var(--color-text-2); font-size: 0.93rem; }
+.so-badge.so-agree { background: var(--color-success-soft); color: inherit; font-weight: 600; }
+.so-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
+.so-rot { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.7rem; padding: 0.5rem 0.7rem; border: 1px solid var(--line); border-radius: 10px; }
+.so-rot.so-ours { border-color: var(--color-success); }
+.so-rank { font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+.so-chips { display: inline-flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; flex: 1 1 auto; }
+.so-chip { display: inline-flex; align-items: center; gap: 0.3rem; }
+.so-arrow { color: var(--muted); margin-left: 0.15rem; }
+.so-weight { font-weight: 700; font-variant-numeric: tabular-nums; }
+.so-tag { font-size: 0.75rem; font-weight: 700; color: var(--green); }
+.so-note { flex-basis: 100%; color: var(--muted); }
+.so-current { margin-top: 0.8rem; font-size: 0.93rem; }
+.so-current p { margin: 0; }
+.so-current .so-msg { margin-top: 0.2rem; color: var(--color-text-2); }

@@ -86,7 +86,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
   const [input, setInput] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [listening, setListening] = useState(false);
-  const [model, setModel] = useState<{ configured: boolean; model: string } | null>(null);
+  const [model, setModel] = useState<Awaited<ReturnType<typeof scoutStatus>> | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -233,8 +233,8 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
           }
         }}
       />
-      <span className="sc-model" title="Gemini model">
-        {model?.model ?? "Gemini"}
+      <span className="sc-model" title={model?.fallback ? `Backup: ${model.fallback}` : "AI model"}>
+        {model?.model ? (model.provider === "workers-ai" ? `Cloudflare Workers AI · ${model.model.replace(/^@cf\/[^/]+\//, "")}` : model.model) : "Scout"}
       </span>
       {micSupported && (
         <button type="button" className={`sc-icon-btn ${listening ? "rec" : ""}`} aria-label={listening ? "Stop dictation" : "Dictate"} onClick={toggleMic}>
@@ -277,7 +277,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
           </svg>
         </button>
         <span className="sc-title">Scout</span>
-        {model && !model.configured && <span className="sc-warn">Gemini key not set</span>}
+        {model && !model.configured && <span className="sc-warn">AI model not set up</span>}
       </header>
 
       {empty ? (
@@ -296,7 +296,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
           </ul>
           {model && !model.configured && (
             <p className="sc-note">
-              Scout needs a Gemini API key. Add <code>GEMINI_API_KEY</code> to <code>.dev.vars</code> and restart the dev server.
+              Scout needs the Workers AI binding or a Gemini API key (<code>GEMINI_API_KEY</code> in <code>.dev.vars</code>). Restart the dev server after adding it.
             </p>
           )}
         </div>

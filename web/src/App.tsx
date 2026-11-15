@@ -4,8 +4,11 @@ import { askQuestion, fetchField, fetchPlan } from "./api";
 import { DEMO_FARMS, MapPicker } from "./components/MapPicker";
 import { HarvestCheck, SatelliteNote } from "./components/HarvestCheck";
 import { BadYears, DroughtReplay, WATER_LABELS, WaterOptions } from "./components/WhatIf";
+import { IndicatorGuide, SoilBuild } from "./components/SoilBuild";
+import { SecondOpinion } from "./components/SecondOpinion";
 import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
+import { FieldWatchCard } from "./components/FieldWatchCard";
 import { TrendChart, trendText, trendTone } from "./components/TrendChart";
 
 // A simple three-step journey: 1) find your field, 2) three quick questions, 3) your plan.
@@ -363,6 +366,8 @@ export function App() {
               ))}
             </p>
 
+            <FieldWatchCard />
+
             {point && (
               <div className="jr-found" aria-live="polite">
                 {fieldLoading ? (
@@ -555,6 +560,18 @@ export function App() {
                   </ul>
                 </div>
 
+                <div className="jr-card">
+                  <h2 className="jr-h2">How this plan builds your soil</h2>
+                  <SoilBuild plan={best} />
+                </div>
+
+                <SecondOpinion
+                  countyFips={plan.location.county?.countyFips ?? null}
+                  plan={best}
+                  history={plan.cropHistory}
+                  irrigated={(plan.water ?? water) !== "rain"}
+                />
+
                 {((plan.validation && plan.validation.length > 0) || plan.waterCheck) && (
                   <div className="jr-card">
                     <h2 className="jr-h2">Checked against real harvests</h2>
@@ -605,6 +622,11 @@ export function App() {
                       ))}
                     </div>
                   </details>
+                </details>
+
+                <details className="jr-more">
+                  <summary>What the satellite measures mean</summary>
+                  <IndicatorGuide />
                 </details>
 
                 <details className="jr-more">

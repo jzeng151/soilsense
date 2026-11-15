@@ -341,3 +341,40 @@ export interface ApiError {
   error: string;
   detail?: string;
 }
+
+/** One rotation from K-State's recommended rain-fed (dryland) list, as ranked by our teammate's Kansas model. */
+export interface KStateRotation {
+  rank: number;
+  /** K-State code, e.g. "W-S-F". */
+  code: string;
+  name: string;
+  /** Share of the top 3 (they total 100%). */
+  weightPct: number;
+  /** The rotation's crops in our crop ids (double-crop soy counts as soybean). */
+  crops: CropId[];
+  note: string | null;
+}
+
+/**
+ * "Second opinion" for Kansas fields: a separate weather-only model (kansas-crop-rotation/, published weekly to
+ * Cloudflare R2) that ranks K-State's recommended dryland rotations for the county.
+ */
+export interface SecondOpinion {
+  source: string;
+  sourceUrl: string;
+  dataThrough: string;
+  disclaimer: string;
+  county: string;
+  /** K-State region the candidate list comes from (west / central / east). */
+  region: string | null;
+  alert: string;
+  /** Chance of drought in the district within 4 weeks (0–1), from NASA POWER soil wetness and rain. */
+  droughtChanceNow: number | null;
+  /** Root-zone soil wetness now, as a percentile of past years at this time of year (0–100). */
+  rootzonePctNow: number | null;
+  /** True when the district is on drought watch/warning, so the ranking uses dry-year scores. */
+  dryYearRanking: boolean;
+  rotations: KStateRotation[];
+  /** Rankings limited to rotations that include the crop the farmer grows now. */
+  byCurrentCrop: Partial<Record<"corn" | "sorghum" | "soybean" | "wheat", { message: string | null; rotations: KStateRotation[] }>>;
+}

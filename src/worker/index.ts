@@ -6,6 +6,11 @@ import { api } from "./routes/api";
 import { admin } from "./routes/admin";
 import { handleAgentSocket } from "./routes/agent";
 import { voice } from "./routes/voice";
+import { runFieldWatch } from "./fieldwatch/run";
+import { live } from "./routes/live";
+
+// Durable Object classes must be exported from the main module.
+export { LiveRoom } from "./live/room";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -19,6 +24,8 @@ app.get("/healthz", (c) => c.json({ ok: true }));
 // WebSocket for Twilio ConversationRelay (the conversational phone agent).
 app.get("/voice-agent", (c) => handleAgentSocket(c.req.raw, c.env));
 app.route("/api/admin", admin);
+// Live room (Durable Object): real-time events for the dashboard. Mounted before /api so it isn't shadowed.
+app.route("/api/live", live);
 app.route("/api", api);
 app.route("/voice", voice);
 
@@ -32,4 +39,13 @@ app.onError((err, c) => {
   return c.json({ error: "Internal error" }, 500);
 });
 
-export default app;
+// Cloudflare Cron Trigger (wrangler "triggers.crons"): Field Watch checks every watched field in the
+// background, with no browser open, and saves each result in D1.
+async function scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+  ctx.waitUntil(
+    runFieldWatch(env, "cron").catch((err) => console.error(JSON.stringify({ msg: "field watch cron failed", cron: controller.cron, err: String(err) }))),
+  );
+}
+
+// The Hono app stays the default export (tests call app.request); Workers also reads its scheduled handler.
+export default Object.assign(app, { scheduled });

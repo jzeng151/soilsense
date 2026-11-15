@@ -6,6 +6,7 @@ import { Sidebar, type Route } from "./components/Sidebar";
 import { ScoutPage } from "./pages/ScoutPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { SourcesPage } from "./pages/SourcesPage";
+import { LivePage } from "./pages/LivePage";
 import { AuthPage } from "./pages/AuthPage";
 import { getMe, SIGNED_OUT_EVENT, signOut, type User } from "./auth";
 
@@ -13,6 +14,7 @@ const routeFromHash = (): Route => {
   const h = window.location.hash;
   if (h.startsWith("#/scout")) return "scout";
   if (h.startsWith("#/sources")) return "sources";
+  if (h.startsWith("#/live")) return "live";
   if (h.startsWith("#/settings")) return "settings";
   if (h.startsWith("#/signin")) return "signin";
   return "planner";
@@ -113,6 +115,8 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
       <div className="shell-main">
         {route === "scout" ? (
           <ScoutPage key={activeId} chatId={activeId} initialMessages={active?.messages ?? []} onMessages={saveMessages} onMenu={() => setSidebarOpen(true)} />
+        ) : route === "live" ? (
+          <LivePage onMenu={() => setSidebarOpen(true)} />
         ) : route === "sources" ? (
           <SourcesPage onMenu={() => setSidebarOpen(true)} />
         ) : route === "settings" || route === "signin" ? (

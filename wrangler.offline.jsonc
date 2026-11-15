@@ -29,6 +29,13 @@
   // Offline dev config: identical to wrangler.jsonc but without the Workers AI binding,
   // so `npm run dev:offline` works without a Cloudflare login. "Ask" falls back to fact matching.
 
+  // Live room: one SQLite-backed Durable Object (works on the Free plan). Field Watch and calls publish to it.
+  "durable_objects": { "bindings": [{ "name": "LIVE_ROOM", "class_name": "LiveRoom" }] },
+  "migrations": [{ "tag": "v1-live-room", "new_sqlite_classes": ["LiveRoom"] }],
+
+  // Field Watch: check every watched field each hour in the background (scheduled() in src/worker/index.ts).
+  "triggers": { "crons": ["17 * * * *"] },
+
   "vars": {
     "AI_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
     "TWILIO_VALIDATE": "true",

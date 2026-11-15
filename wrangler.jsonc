@@ -30,6 +30,16 @@
   // Everything still works without it (deterministic templates are the fallback).
   "ai": { "binding": "AI" },
 
+  // Caps public Scout chat use (Gemini calls cost money): per visitor IP, per minute.
+  "ratelimits": [{ "name": "SCOUT_LIMITER", "namespace_id": "1001", "simple": { "limit": 20, "period": 60 } }],
+
+  // Live room: one SQLite-backed Durable Object (works on the Free plan). Field Watch and calls publish to it.
+  "durable_objects": { "bindings": [{ "name": "LIVE_ROOM", "class_name": "LiveRoom" }] },
+  "migrations": [{ "tag": "v1-live-room", "new_sqlite_classes": ["LiveRoom"] }],
+
+  // Field Watch: check every watched field each hour in the background (scheduled() in src/worker/index.ts).
+  "triggers": { "crons": ["17 * * * *"] },
+
   "vars": {
     "AI_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
     "TWILIO_VALIDATE": "true",

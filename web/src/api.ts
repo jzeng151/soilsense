@@ -1,4 +1,4 @@
-import type { FieldResponse, PlanRequest, PlanResponse } from "../../src/shared/types";
+import type { FieldResponse, PlanRequest, PlanResponse, SecondOpinion } from "../../src/shared/types";
 import { authFetch as fetch } from "./auth";
 
 async function handle<T>(res: Response): Promise<T> {
@@ -21,6 +21,11 @@ export async function askQuestion(body: { question: string; planLabel: string; s
   return handle(await fetch("/api/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }));
 }
 
-export async function scoutStatus(): Promise<{ configured: boolean; model: string }> {
+export async function scoutStatus(): Promise<{ configured: boolean; model: string | null; provider: "workers-ai" | "gemini" | null; fallback: string | null }> {
   return handle(await fetch("/api/scout/status"));
+}
+
+/** Kansas only: K-State's recommended rain-fed rotations for the county (our team's separate model). Throws on 404. */
+export async function fetchSecondOpinion(countyFips: string, signal?: AbortSignal): Promise<SecondOpinion> {
+  return handle(await fetch(`/api/second-opinion?fips=${encodeURIComponent(countyFips)}`, { signal }));
 }

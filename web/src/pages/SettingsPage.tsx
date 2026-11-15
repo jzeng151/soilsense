@@ -231,7 +231,12 @@ export function SettingsPage({ onMenu }: { onMenu: () => void }) {
 
             {tab === "instructions" && <InstructionsTab config={config} draft={draft} setDraft={setDraft} onReset={() => void reset()} saving={saving} />}
             {tab === "tools" && <ToolsTab config={config} draft={draft} setDraft={setDraft} />}
-            {tab === "activity" && <ActivityTab token={token} onAuthError={logout} />}
+            {tab === "activity" && (
+              <>
+                <LiveDemoBlock token={token} onAuthError={logout} />
+                <ActivityTab token={token} onAuthError={logout} />
+              </>
+            )}
 
             {dirty && tab !== "activity" && (
               <div className="st-savebar">
@@ -461,6 +466,68 @@ function ToolsTab({ config, draft, setDraft }: { config: VoiceConfig; draft: Voi
 }
 
 // ---------- Call history ----------
+
+/** Demo mode: show calls in real time on the public Live call page (#/live). Off by default for caller privacy. */
+function LiveDemoBlock({ token, onAuthError }: { token: string; onAuthError: (msg?: string) => void }) {
+  const [state, setState] = useState<{ on: boolean; available: boolean } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  useEffect(() => {
+    adminFetch<{ on: boolean; available: boolean }>(token, "/live-demo")
+      .then(setState)
+      .catch((e) => (e instanceof AuthError ? onAuthError(e.message) : setErr((e as Error).message)));
+  }, [token, onAuthError]);
+  const toggle = async (on: boolean) => {
+    setBusy(true);
+    setErr(null);
+    try {
+      await adminFetch(token, "/live-demo", { method: "PUT", body: JSON.stringify({ on }) });
+      setState((s) => (s ? { ...s, on } : s));
+    } catch (e) {
+      if (e instanceof AuthError) onAuthError(e.message);
+      else setErr((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+  const clear = async () => {
+    setBusy(true);
+    try {
+      await adminFetch(token, "/live-demo/clear", { method: "POST" });
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+  if (!state) return err ? <p className="error">{err}</p> : null;
+  return (
+    <div className="st-card st-lang" style={{ marginBottom: "1rem" }}>
+      <div className="st-tool-row">
+        <div className="st-tool-text">
+          <b>Show calls live (demo mode)</b>
+          <span>
+            While on, anyone can watch calls as they happen on the <a href="#/live">Live call</a> page: the words, the tools and the data sources. Caller numbers are
+            masked. Turn it off after your demo.
+          </span>
+        </div>
+        <label className="switch" title={state.on ? "Turn off" : "Turn on"}>
+          <input type="checkbox" checked={state.on} disabled={busy || !state.available} onChange={(e) => void toggle(e.target.checked)} aria-label={`Show calls live: ${state.on ? "on" : "off"}`} />
+          <span className="switch-track" aria-hidden="true" />
+        </label>
+      </div>
+      {state.on && (
+        <p className="hint" style={{ margin: "0.5rem 0 0" }}>
+          <button type="button" className="link-btn" onClick={() => void clear()} disabled={busy}>
+            Clear the live page
+          </button>{" "}
+          before a demo so it starts empty.
+        </p>
+      )}
+      {err && <p className="error">{err}</p>}
+    </div>
+  );
+}
 
 function ActivityTab({ token, onAuthError }: { token: string; onAuthError: (msg?: string) => void }) {
   const [calls, setCalls] = useState<CallRow[] | null>(null);

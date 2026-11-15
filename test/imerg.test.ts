@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { dapUrl, days, gridPoint, parsePoint, pointConstraint, PRODUCTS, retrieveSubset, type Fetcher, type Subset } from "../src/worker/imerg/client";
 import { compare } from "../src/worker/imerg/comparison";
@@ -7,6 +8,15 @@ import { mockAscii, mockDas, mockDds, mockGrid } from "./fixtures/imerg-mocks";
 afterEach(() => { clearMemoryCache(); vi.restoreAllMocks(); });
 const link = "https://opendap.earthdata.nasa.gov/collections/mock/granules/GPM_3IMERGDF.07%3Amock.nc4";
 describe("IMERG candidate adapter: hand-made protocol mocks, NOT live verification", () => {
+ it("uses exact retrieved Final metadata, but fails closed on unsupported V07C Int8 count types", () => {
+  const dds = readFileSync("test/fixtures/imerg-final-finney-20220701.dds", "utf8");
+  expect(pointConstraint(dds, mockGrid)).toContain("precipitation[0:1:0][792:1:792][1281:1:1281]");
+  expect(() => pointConstraint(mockDds.replace("Int32 precipitation_cnt", "Int8 precipitation_cnt"), mockGrid)).toThrow(/Unsupported/);
+ });
+ it("rejects embedded DAP errors even with HTTP-200-like response content", () => {
+  expect(() => pointConstraint('Error { code = 403; message = "mock EULA Acceptance Failure"; }', mockGrid)).toThrow();
+  expect(() => parsePoint('Dataset: mock\nError { code = 403; }', mockDas, "2022-07-01", mockGrid, link, "mock")).toThrow();
+ });
  it("uses containing cell centers and metadata dimension order, bounds date windows", () => {
   expect(gridPoint(38.1095, -100.706)).toMatchObject({ lat: 38.15, lon: -100.75 });
   expect(pointConstraint(mockDds, mockGrid)).toContain(`precipitation[0:1:0][${mockGrid.xi}:1:${mockGrid.xi}][${mockGrid.yi}:1:${mockGrid.yi}]`);

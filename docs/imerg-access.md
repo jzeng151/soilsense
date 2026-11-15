@@ -9,6 +9,7 @@ Authenticated terminal checks on 2026-11-15 used the server-side `EARTHDATA_TOKE
 - Legacy `gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/.../2022/07/...` returned HTTP 200 for Final DDS/DAS metadata. Those exact responses are checked in as `test/fixtures/imerg-final-finney-20220701.{dds,das}`. The Late DDS was also reachable.
 - The legacy constrained ASCII data request returned HTTP 401 with the supplied bearer credential. Metadata access is NOT successful rainfall retrieval.
 - No rainfall values were retrieved, no historical bundle was invented, and no live-data success is claimed. The candidate adapter uses CMR's service links and fails closed. Both access permissions/service health and an authenticated Worker point retrieval need verification before release.
+- Follow-up latest Late granule (2026-11-13, CMR `G4411794632-GES_DISC`): DAP4 DMR metadata succeeds, but DAP4 `.dap.csv` point retrieval returns HTTP 200 containing an embedded provider error, **EULA Acceptance Failure**. User must review provider terms at https://urs.earthdata.nasa.gov/approve_app?client_id=e2WVk8Pw6weeLUKZYOxvTQ ; no terms were accepted on their behalf. Latest V07C count variables are Int8, so full DAP2 DDS fails HTTP 400. The current candidate adapter needs a live-verified DAP4 point/count implementation for current Late evidence before release. A successful HTTP status or metadata response is not rainfall retrieval.
 
 ## Implemented contract
 

@@ -13,6 +13,7 @@
 // - Run ids are stable per field + data period (weekly) or field + crop + season + settings version
 //   (window), so repeated callbacks never create duplicate results.
 
+import { researchNoteFor } from "./researchNote";
 import { CROPS } from "../../engine/crops";
 import type { CropId } from "../../shared/types";
 import type { Env } from "../env";
@@ -158,7 +159,7 @@ export async function runRecurringCheck(
     const runId = `${field.id}:window:${payload.crop}:${payload.seasonYear}:v${payload.version}`;
     const existing = store.get(runId);
     if (existing) return existing;
-    return evaluateAndSave(store, baseRun(field, runId, "window", now.getTime()), env, field, now, deps, {
+    return evaluateAndSave(store, baseRun(field, runId, "window", now.getTime()), env, field, now, deps, settings.crop, {
       id: "window",
       text: `${CROPS[payload.crop!].name} reference stress window ${windowFor(payload.crop!, payload.seasonYear!).from} to ${windowFor(payload.crop!, payload.seasonYear!).to} opened: checking current conditions. This is an estimate from crop defaults, not an observed crop stage, and not a forecast.`,
       source: WINDOW_SOURCE,
@@ -182,7 +183,7 @@ export async function runRecurringCheck(
     store.insert(run);
     return run;
   }
-  return evaluateAndSave(store, baseRun(field, "", "weekly", now.getTime()), env, field, now, deps, null);
+  return evaluateAndSave(store, baseRun(field, "", "weekly", now.getTime()), env, field, now, deps, settings.crop, null);
 }
 
 async function evaluateAndSave(
@@ -192,6 +193,7 @@ async function evaluateAndSave(
   field: WatchedField,
   now: Date,
   deps: FieldWatchDeps,
+  crop: CropId | null,
   extraReason: WatchReason | null,
 ): Promise<AgentRun> {
   const today = now.toISOString().slice(0, 10);
@@ -230,6 +232,7 @@ async function evaluateAndSave(
   }
   const existing = store.get(done.runId);
   if (existing) return existing; // a repeated callback on the same data period
+  done.researchNote = await researchNoteFor(done.status, env, field, crop);
   store.insert(done);
   return done;
 }

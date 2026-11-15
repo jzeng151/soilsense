@@ -80,6 +80,56 @@ only when the **complete comparison key** matches and it re-validates, else the 
 rotation id + crop/cover sequence | priority | PLAN_ENGINE_VERSION | corpus version | embedding id |
 generation model | prompt version`. Any change ⇒ saved output is not reused.
 
+## Reviewed pipeline documents
+
+Live retrieval searches `corpus in [CORPUS_VERSION, docs-v1]` with the existing crop filter,
+score floor, ordering and two-passage limit. Pipeline vector hits are resolved by chunk ID through
+`ingest_chunks JOIN ingest_docs`; both rows must be `indexed`. Text and all source fields come from
+D1, never Vectorize or generated metadata. Missing DB, incomplete attribution, invalid URLs,
+invalid crop metadata and inconsistent offset lengths drop the passage. Exact slice/content verification
+belongs to pipeline ingestion before indexing; retrieval does not re-fetch extracted R2 objects.
+Pipeline passages add optional `origin: "docs"` and `publisher` fields to the existing response.
+The research route and explanation route both pass the optional D1 binding through.
+
+The `k1` comparison key and curated saved fallback are intentionally unchanged. Saved passages are
+still rehydrated **only from the curated corpus**; a saved explanation citing a pipeline chunk fails
+citation validation and falls back to the template rather than replaying stale/unreviewed pipeline text.
+Pipeline documents are live-only evidence in this increment; offline snapshots of them are not supported.
+
+### Hidden operator page
+
+Open `/#/admin/docs` (the hash router lives in `web/src/Shell.tsx`, not `App.tsx`). This page is not
+linked in the public navigation. Enter `ADMIN_TOKEN`; it stays in sessionStorage only, with a clear-token
+button. Refresh the list, upload a PDF/HTML/Markdown/text document, open its exact chunks and offsets,
+and supply reviewer/source metadata plus supported crop tags to approve or reject it. Refresh after
+approval: a queued upload or accepted review is **not** proof of indexing. The page reads back the
+selected document and list after reviews, and the list after uploads. The server enforces authorization.
+
+The typed client accepts both the documented camelCase API and the pipeline's raw D1 snake_case
+list/detail responses. When list chunk counts are absent, it asks the operator to inspect the document
+instead of inventing zero counts. Upload uses multipart field `file`, without manually setting its boundary.
+Track B owns these endpoints; this branch does not add or change ingestion or document routes.
+
+## Field Watch research notes
+
+Dry and Watch results from the field agent (live, replay, weekly and crop-window checks) store a
+`researchNote` in the existing SQLite run JSON. The note queries the same pinned research index for
+the dry-spell topic, using the confirmed watch-settings crop first, otherwise the demo planner's crop
+tags (`scripts/prefetch-demo.mjs`, mirrored on `WATCHED_FIELDS`). Those fallback tags are not a claim
+about the field's current crop. With neither, the note records `skipped` and a reason.
+
+The note includes at most two verbatim corpus passages, citation metadata, applicability, similarity
+scores, retrieval status/date, corpus and embedding identifiers, and a fixed context-not-advice line.
+There is no generation call and no change to rule v2. No passage above the shared `MIN_SCORE` yields
+`empty`; absent bindings or a retrieval failure yields `unavailable`. Retrieval has a 1.5-second
+ceiling and no retry. Notes do not reuse plan-specific saved explanations. Reopening the dashboard
+reads the stored note, not a fresh index query; older runs are left unchanged.
+
+`ScheduledCheck.tsx` renders notes through `ResearchNote.tsx` (no changes to `FieldWatchCard.tsx`).
+Local tests exercise mocked embedding/index results and actual SQLite round trips through the Agents
+stub. A deployed check with real Workers AI and Vectorize bindings is still required to assess live
+retrieval relevance for dry-spell queries; a similarity score is not agronomic confidence.
+
 ## Morning steps (Tunk) — nothing below has been run yet
 
 1. `npx wrangler login` (if needed), then `bash scripts/setup-research-index.sh`

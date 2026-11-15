@@ -1,4 +1,4 @@
-import { Hono, type MiddlewareHandler } from "hono";
+import { Hono, type Handler, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
 import type { CropId, PlanRequest, Priority } from "../../shared/types";
 import { currentUser } from "../lib/auth";
@@ -9,10 +9,15 @@ import { auth, type AppEnv } from "./auth";
 import { fieldWatch } from "./fieldwatch";
 import { scout } from "./scout";
 import { research } from "./research";
+import { docs } from "./docs";
 
 const PRIORITIES: Priority[] = ["profit", "soil", "risk", "balanced"];
 
+import { smap } from "./smap";
+
 export const api = new Hono<AppEnv>();
+
+import { cropTiming } from "./cropTiming";
 
 // ---- Simple per-isolate rate limit (use Cloudflare rate-limiting rules for hard limits). ----
 const hits = new Map<string, { count: number; reset: number }>();
@@ -40,6 +45,7 @@ api.use("*", async (c, next) => {
 
 // ---- Accounts: sign up / sign in / sign out, then require a signed-in user for the dashboard's data routes. ----
 api.route("/auth", auth);
+api.route("/docs", docs);
 
 function adminTokenMatches(header: string | undefined, token: string | undefined): boolean {
   if (!token || !header) return false;
@@ -213,14 +219,22 @@ api.route("/fieldwatch", fieldWatch);
 
 
 // Additive stretch evidence endpoint: never blocks plan construction.
-api.get("/vegetation", async (c) => {
+const vegetation: Handler<AppEnv> = async (c) => {
   const coords = parseCoords(c.req.query("lat"), c.req.query("lon"));
   const year = Number(c.req.query("year"));
   if (typeof coords === "string") return c.json({ error: coords }, 400);
   if (!Number.isInteger(year) || year < 2001 || year >= new Date().getUTCFullYear()) return c.json({ error: "year must be a completed year from 2001 onward" }, 400);
   const { getModisNdvi } = await import("../data/modis");
   return c.json(await getModisNdvi(c.env.DB, coords.lat, coords.lon, year));
-});
+
+};
+api.get("/vegetation", vegetation);
+api.post("/vegetation/prefetch", async (c, next) => {
+  if (!adminTokenMatches(c.req.header("Authorization"), c.env.ADMIN_TOKEN)) return c.json({ error: "Admin token required" }, 401);
+  await next();
+}, vegetation);
+
+
 // Cited research retrieval (Vectorize) and grounded explanations (Workers AI): see docs/RESEARCH.md.
 // Offline HLS snapshots: no secret or expensive COG decode is needed at request time.
 api.get("/hls", async c => {
@@ -230,6 +244,7 @@ api.get("/hls", async c => {
   return c.json(await getHlsEvidence(lat,lon,async () => c.env.ASSETS ? c.env.ASSETS.fetch(new Request("https://assets.local/data/hls-demo.json")) : new Response(null,{status:404})));
 });
 api.route("/research", research);
+api.route("/crop-timing", cropTiming);
 // U.S. Drought Monitor weekly county context (issue #31): /api/usdm/category, /timeline, /replay.
 import { usdm } from "./usdm";
 api.route("/usdm", usdm);
@@ -246,3 +261,8 @@ api.get("/economics-assumptions", async (c) => {
 });
 import { historicalScenarios } from "./historicalScenarios";
 api.route("/historical-scenarios", historicalScenarios);
+
+
+api.route("/smap", smap);
+import { groundwater } from "./groundwater";
+api.route("/groundwater", groundwater);

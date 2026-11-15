@@ -258,6 +258,7 @@ async function callModel(ai: AiLike, prompt: { system: string; user: string }, t
 // ---------- Orchestration ----------
 
 export interface ExplainDeps {
+  db?: D1Database;
   ai?: AiLike;
   index?: VectorIndexLike;
   saved: SavedBundle;
@@ -286,7 +287,7 @@ export async function explainRotation(deps: ExplainDeps, plan: PlanResponse, rot
   const saved = findSaved(deps.saved, key);
   const allRotationIds = [...plan.plans.map((p) => p.id), ...(plan.currentPractice ? [plan.currentPractice.id] : [])];
   const query = rotationQuery(rotation, plan.water);
-  let research: ResearchResult = await researchFor({ ai: deps.ai, index: deps.index, now, gatewayId: deps.gatewayId }, tagsForRotation(rotation), query, saved);
+  let research: ResearchResult = await researchFor({ ai: deps.ai, index: deps.index, db: deps.db, now, gatewayId: deps.gatewayId }, tagsForRotation(rotation), query, saved);
 
   const view = (ids: string[]): ExplainFactView[] =>
     ids.map((id) => facts.find((f) => f.id === id)).filter((f): f is ExplainFact => !!f).map(({ id, label, display, period, source }) => ({ id, label, display, period, source }));

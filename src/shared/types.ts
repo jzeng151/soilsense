@@ -394,6 +394,10 @@ export interface SecondOpinion {
   byCurrentCrop: Partial<Record<"corn" | "sorghum" | "soybean" | "wheat", { message: string | null; rotations: KStateRotation[] }>>;
 }
 
+
+
+
+
 // MODIS historical coarse-pixel vegetation evidence (#19).
 export interface ModisObservation {
   modisDate: string; compositeStart: string; compositeEnd: string; observationDate: string | null;
@@ -584,4 +588,8 @@ export interface WindScreen {
   rotations: WindRotationScreen[];
   limitations: string[];
   status: "ok" | "partial" | "unavailable";
+
+
+
+
 }

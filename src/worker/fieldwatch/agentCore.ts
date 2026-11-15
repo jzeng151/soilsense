@@ -5,6 +5,8 @@
 // it schedules the check CHECK_DELAY_SECONDS ahead on Cloudflare, so the result is produced and saved
 // even if the browser is closed, and reopening the page shows it without running anything again.
 
+import type { FieldResearchNote } from "../../shared/fieldResearch";
+import { researchNoteFor } from "./researchNote";
 import type { Env } from "../env";
 import { RULE_TEXT, RULE_VERSION, THRESHOLDS, evaluateField, isoDate, type DayMap, type KansasSignal, type WatchMetrics, type WatchReason, type WatchStatus } from "./rule";
 import { defaultDeps, sourcesFor, type FieldWatchDeps, type WatchedField } from "./run";
@@ -51,6 +53,8 @@ export interface AgentRun {
   metrics: WatchMetrics | null;
   snapshot: SnapshotRef | null;
   sources: { name: string; url: string; detail: string }[];
+  /** Optional for older persisted runs and non-alert results. */
+  researchNote?: FieldResearchNote;
 }
 
 export interface RunStore {
@@ -198,6 +202,7 @@ export async function executeRun(
   field: WatchedField,
   now: Date,
   deps: FieldWatchDeps = defaultDeps,
+  crop?: string | null,
 ): Promise<AgentRun | null> {
   const run = store.get(runId);
   if (!run) return null;
@@ -256,6 +261,7 @@ export async function executeRun(
       metrics: result.metrics,
       snapshot,
       sources: sourcesFor(field, kansas),
+      researchNote: await researchNoteFor(result.status, env, field, crop),
     };
     store.update(done);
     return done;

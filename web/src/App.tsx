@@ -13,9 +13,17 @@ import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { HlsEvidenceCard } from "./components/HlsEvidenceCard";
 import { Sprout } from "./components/Sprout";
+
+
 import { VegetationCard } from "./components/VegetationCard";
+
+import { CropTimingEvidence } from "./components/CropTimingEvidence";
+import { SmapCard } from "./components/SmapCard";
+import { GraceWellsCard } from "./components/GraceWellsCard";
 import { EconomicsCard } from "./components/EconomicsCard";
 import { HistoricalScenarios } from "./components/HistoricalScenarios";
+
+
 import { FieldWatchCard } from "./components/FieldWatchCard";
 import { UsdmContext } from "./components/UsdmContext";
 import { WindScreenCard } from "./components/WindScreenCard";
@@ -598,6 +606,10 @@ export function App() {
                 <UsdmContext plan={plan} />
                 <WindScreenCard plan={plan} />
                 <EconomicsCard plan={plan} />
+                <VegetationCard plan={plan} />
+                <HlsEvidenceCard key={`hls:${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
+                <SmapCard plan={plan} />
+                <GraceWellsCard plan={plan} />
                 {/* /stretch: data evidence */}
 
                 <div className="jr-card">
@@ -634,10 +646,11 @@ export function App() {
                   </div>
                 )}
 
-                {/* stretch: data evidence */}
-                <VegetationCard plan={plan} />
-                <HlsEvidenceCard key={`hls:${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
-                {/* /stretch: data evidence */}
+
+
+
+
+
                 <DataEvidence plan={plan} />
 
                 <details className="jr-more">
@@ -705,6 +718,7 @@ export function App() {
                 </details>
 
                 {/* stretch: data evidence */}
+                <CropTimingEvidence key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
                 <HistoricalScenarios key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
                 {/* /stretch: data evidence */}
 

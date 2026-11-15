@@ -49,6 +49,7 @@ export interface DayValues {
 export type DayMap = Map<string, DayValues>;
 
 export interface KansasSignal {
+  basis?: string | null;
   county: string;
   alert: string;
   droughtProbability: number | null;

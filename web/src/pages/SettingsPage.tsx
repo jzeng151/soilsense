@@ -1,4 +1,6 @@
+import { useI18n } from "../i18n";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { AIUsagePanel } from "../components/AIUsagePanel";
 import { notifySignedOut } from "../auth";
 
 // ---------- Types mirrored from src/worker/voiceSettings.ts ----------
@@ -103,6 +105,7 @@ const TOOL_DONE: Record<string, string> = {
 type Tab = "instructions" | "tools" | "activity";
 
 export function SettingsPage({ onMenu }: { onMenu: () => void }) {
+  const { t: tx, text: localize } = useI18n();
   const [token, setToken] = useState(readToken);
   // Only ask for a password if the server says one is required.
   const [needsLogin, setNeedsLogin] = useState(false);
@@ -181,7 +184,7 @@ export function SettingsPage({ onMenu }: { onMenu: () => void }) {
 
   return (
     <div className="app settings">
-      <button type="button" className="sb-toggle" aria-label="Open sidebar" onClick={onMenu}>
+      <button type="button" className="sb-toggle" aria-label={tx("Open sidebar")} onClick={onMenu}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 7h16M4 12h16M4 17h16" />
         </svg>
@@ -189,11 +192,11 @@ export function SettingsPage({ onMenu }: { onMenu: () => void }) {
       <main className="st-wrap">
         <header className="st-head">
           <div>
-            <h1>Phone agent</h1>
+            <h1>{tx("Phone agent")}</h1>
             {config && (
               <p className={`st-live ${live ? "ok" : "warn"}`}>
                 <span className="st-dot" aria-hidden="true" />
-                {live ? "Live on your phone number" : !config.status.gemini ? "Not working: AI key missing" : !config.status.twilio ? "Not working: Twilio not set up" : "Using the keypad menu instead"}
+                {live ? tx("Live on your phone number") : !config.status.gemini ? tx("Not working: AI key missing") : !config.status.twilio ? tx("Not working: Twilio not set up") : tx("Using the keypad menu instead")}
               </p>
             )}
           </div>
@@ -209,7 +212,7 @@ export function SettingsPage({ onMenu }: { onMenu: () => void }) {
             }}
           />
         ) : !config || !draft ? (
-          error ? <p className="error">{error}</p> : <p className="loading">Loading…</p>
+          error ? <p className="error">{error}</p> : <p className="loading">{tx("Loading…")}</p>
         ) : (
           <>
             <div className="st-tabs" role="tablist">
@@ -221,18 +224,19 @@ export function SettingsPage({ onMenu }: { onMenu: () => void }) {
                 ] as [Tab, string][]
               ).map(([id, label]) => (
                 <button key={id} type="button" role="tab" aria-selected={tab === id} className={tab === id ? "on" : ""} onClick={() => setTab(id)}>
-                  {label}
+                  {localize(label)}
                 </button>
               ))}
             </div>
 
             {error && <p className="error">{error}</p>}
-            {notice && <p className="st-notice">{notice}</p>}
+            {notice && <p className="st-notice">{localize(notice)}</p>}
 
             {tab === "instructions" && <InstructionsTab config={config} draft={draft} setDraft={setDraft} onReset={() => void reset()} saving={saving} />}
             {tab === "tools" && <ToolsTab config={config} draft={draft} setDraft={setDraft} />}
             {tab === "activity" && (
               <>
+                <AIUsagePanel />
                 <LiveDemoBlock token={token} onAuthError={logout} />
                 <ActivityTab token={token} onAuthError={logout} />
               </>
@@ -240,13 +244,11 @@ export function SettingsPage({ onMenu }: { onMenu: () => void }) {
 
             {dirty && tab !== "activity" && (
               <div className="st-savebar">
-                <span>Unsaved changes</span>
+                <span>{tx("Unsaved changes")}</span>
                 <div>
-                  <button type="button" className="ghost" onClick={() => setDraft(config.settings)} disabled={saving}>
-                    Undo
-                  </button>
+                  <button type="button" className="ghost" onClick={() => setDraft(config.settings)} disabled={saving}>{tx("Undo")}</button>
                   <button type="button" className="primary small" onClick={() => void save()} disabled={saving}>
-                    {saving ? "Saving…" : "Save"}
+                    {saving ? tx("Saving…") : tx("Save")}
                   </button>
                 </div>
               </div>
@@ -259,6 +261,7 @@ export function SettingsPage({ onMenu }: { onMenu: () => void }) {
 }
 
 function Login({ error, onLogin }: { error: string | null; onLogin: (t: string) => void }) {
+  const { t: tx } = useI18n();
   const [value, setValue] = useState("");
   const [checking, setChecking] = useState(false);
   const [err, setErr] = useState<string | null>(error);
@@ -277,11 +280,11 @@ function Login({ error, onLogin }: { error: string | null; onLogin: (t: string) 
   };
   return (
     <form className="st-card st-login" onSubmit={submit}>
-      <label htmlFor="admin-pw">Enter the admin password to continue</label>
+      <label htmlFor="admin-pw">{tx("Enter the admin password to continue")}</label>
       <div className="ask-row">
-        <input id="admin-pw" type="password" autoComplete="current-password" value={value} onChange={(e) => setValue(e.target.value)} placeholder="Password" />
+        <input id="admin-pw" type="password" autoComplete="current-password" value={value} onChange={(e) => setValue(e.target.value)} placeholder={tx("Password")} />
         <button type="submit" className="primary small" disabled={checking || !value.trim()}>
-          {checking ? "…" : "Unlock"}
+          {checking ? "…" : tx("Unlock")}
         </button>
       </div>
       {err && <p className="st-err">{err}</p>}
@@ -304,19 +307,16 @@ function InstructionsTab({
   onReset: () => void;
   saving: boolean;
 }) {
+  const { t: tx } = useI18n();
   const [confirm, setConfirm] = useState(false);
   const isDefault = JSON.stringify(config.settings) === JSON.stringify(config.defaults);
   return (
     <div className="st-card">
-      <label className="st-label" htmlFor="st-greeting">
-        First thing callers hear
-      </label>
+      <label className="st-label" htmlFor="st-greeting">{tx("First thing callers hear")}</label>
       <textarea id="st-greeting" className="set-text" rows={2} maxLength={config.limits.greeting} value={draft.greeting} onChange={(e) => setDraft({ ...draft, greeting: e.target.value })} />
 
-      <label className="st-label" htmlFor="st-instr">
-        Instructions for the agent
-      </label>
-      <p className="st-help">Tell it who it is, what to ask the caller, and how to explain the plan.</p>
+      <label className="st-label" htmlFor="st-instr">{tx("Instructions for the agent")}</label>
+      <p className="st-help">{tx("Tell it who it is, what to ask the caller, and how to explain the plan.")}</p>
       <textarea
         id="st-instr"
         className="set-text"
@@ -330,16 +330,13 @@ function InstructionsTab({
 
       <div className="st-card-foot">
         <details className="st-rules">
-          <summary>Built-in safety rules (always on)</summary>
+          <summary>{tx("Built-in safety rules (always on)")}</summary>
           <pre>{config.lockedRules.replace(/^Rules that always apply:\n/, "")}</pre>
         </details>
         {!isDefault &&
           (confirm ? (
-            <span className="st-confirm">
-              Go back to the original text?{" "}
-              <button type="button" className="link-btn" onClick={() => setConfirm(false)}>
-                No
-              </button>{" "}
+            <span className="st-confirm">{tx("Go back to the original text?")}{" "}
+              <button type="button" className="link-btn" onClick={() => setConfirm(false)}>{tx("No")}</button>{" "}
               <button
                 type="button"
                 className="link-btn st-danger"
@@ -348,14 +345,10 @@ function InstructionsTab({
                   setConfirm(false);
                   onReset();
                 }}
-              >
-                Yes, reset
-              </button>
+              >{tx("Yes, reset")}</button>
             </span>
           ) : (
-            <button type="button" className="link-btn" onClick={() => setConfirm(true)}>
-              Reset to original
-            </button>
+            <button type="button" className="link-btn" onClick={() => setConfirm(true)}>{tx("Reset to original")}</button>
           ))}
       </div>
     </div>
@@ -363,6 +356,7 @@ function InstructionsTab({
 }
 
 function LanguagesBlock({ config, draft, setDraft }: { config: VoiceConfig; draft: VoiceSettings; setDraft: (s: VoiceSettings) => void }) {
+  const { t: tx, text: localize } = useI18n();
   const lang = draft.languages;
   const toggle = (code: string) => {
     if (code === "en") return;
@@ -373,34 +367,35 @@ function LanguagesBlock({ config, draft, setDraft }: { config: VoiceConfig; draf
     <div className="st-lang">
       <div className="st-tool-row">
         <div className="st-tool-text">
-          <b>Speak the caller's language</b>
-          <span>The agent hears which language the caller speaks and answers in it, switching if they switch.</span>
+          <b>{tx("Speak the caller's language")}</b>
+          <span>{tx("The agent hears which language the caller speaks and answers in it, switching if they switch.")}</span>
         </div>
-        <label className="switch" title={lang.autoDetect ? "Turn off" : "Turn on"}>
+        <label className="switch" title={lang.autoDetect ? tx("Turn off") : tx("Turn on")}>
           <input
             type="checkbox"
             checked={lang.autoDetect}
             onChange={(e) => setDraft({ ...draft, languages: { ...lang, autoDetect: e.target.checked } })}
-            aria-label={`Speak the caller's language: ${lang.autoDetect ? "on" : "off"}`}
+            aria-label={tx("Speak the caller's language: {state}", { state: tx(lang.autoDetect ? "enabled" : "disabled") })}
           />
           <span className="switch-track" aria-hidden="true" />
         </label>
       </div>
       {lang.autoDetect ? (
-        <div className="st-langs" role="group" aria-label="Languages">
+        <div className="st-langs" role="group" aria-label={tx("Languages")}>
           {config.languages.map((l) => {
             const on = lang.enabled.includes(l.code);
             return (
-              <button key={l.code} type="button" className={`st-lang-chip ${on ? "on" : ""}`} aria-pressed={on} disabled={l.code === "en"} onClick={() => toggle(l.code)} title={l.name}>
+              <button key={l.code} type="button" className={`st-lang-chip ${on ? "on" : ""}`} aria-pressed={on} disabled={l.code === "en"} onClick={() => toggle(l.code)} title={localize(l.name)}>
                 {on ? "✓ " : ""}
-                {l.native}
-                {l.native !== l.name && <small> {l.name}</small>}
+                {/* WCAG 3.1.2: native names (Español, हिन्दी…) are in their own language. */}
+                <span lang={l.code}>{l.native}</span>
+                {l.native !== l.name && <small> {localize(l.name)}</small>}
               </button>
             );
           })}
         </div>
       ) : (
-        <p className="st-help">English only.</p>
+        <p className="st-help">{tx("English only.")}</p>
       )}
     </div>
   );
@@ -409,12 +404,13 @@ function LanguagesBlock({ config, draft, setDraft }: { config: VoiceConfig; draf
 // ---------- What it can do ----------
 
 function ToolsTab({ config, draft, setDraft }: { config: VoiceConfig; draft: VoiceSettings; setDraft: (s: VoiceSettings) => void }) {
+  const { t: tx, text: localize } = useI18n();
   const [editing, setEditing] = useState<ToolName | null>(null);
   const setTool = (name: ToolName, patch: Partial<{ enabled: boolean; description: string }>) =>
     setDraft({ ...draft, tools: { ...draft.tools, [name]: { ...draft.tools[name], ...patch } } });
   return (
     <div className="st-card">
-      <p className="st-help st-help-top">The agent decides by itself when to use each of these during a call.</p>
+      <p className="st-help st-help-top">{tx("The agent decides by itself when to use each of these during a call.")}</p>
       <ul className="st-tools">
         {config.tools.map((t) => {
           const cur = draft.tools[t.name];
@@ -423,21 +419,21 @@ function ToolsTab({ config, draft, setDraft }: { config: VoiceConfig; draft: Voi
             <li key={t.name} className={cur.enabled ? "" : "off"}>
               <div className="st-tool-row">
                 <div className="st-tool-text">
-                  <b>{t.title}</b>
-                  <span>{t.about}</span>
+                  <b>{localize(t.title)}</b>
+                  <span>{localize(t.about)}</span>
                 </div>
                 {t.required ? (
-                  <span className="st-always">Always on</span>
+                  <span className="st-always">{tx("Always on")}</span>
                 ) : (
-                  <label className="switch" title={cur.enabled ? "Turn off" : "Turn on"}>
-                    <input type="checkbox" checked={cur.enabled} onChange={(e) => setTool(t.name, { enabled: e.target.checked })} aria-label={`${t.title}: ${cur.enabled ? "on" : "off"}`} />
+                  <label className="switch" title={cur.enabled ? tx("Turn off") : tx("Turn on")}>
+                    <input type="checkbox" checked={cur.enabled} onChange={(e) => setTool(t.name, { enabled: e.target.checked })} aria-label={`${localize(t.title)}: ${tx(cur.enabled ? "enabled" : "disabled")}`} />
                     <span className="switch-track" aria-hidden="true" />
                   </label>
                 )}
               </div>
               {cur.enabled && (
                 <button type="button" className="link-btn st-edit" onClick={() => setEditing(open ? null : t.name)}>
-                  {open ? "Close" : "Edit when it's used"}
+                  {open ? tx("Close") : tx("Edit when it's used")}
                 </button>
               )}
               {open && cur.enabled && (
@@ -448,12 +444,10 @@ function ToolsTab({ config, draft, setDraft }: { config: VoiceConfig; draft: Voi
                     maxLength={config.limits.toolDescription}
                     value={cur.description}
                     onChange={(e) => setTool(t.name, { description: e.target.value })}
-                    aria-label={`When to use ${t.title}`}
+                    aria-label={tx("When to use {tool}", { tool: localize(t.title) })}
                   />
                   {cur.description !== t.defaultDescription && (
-                    <button type="button" className="link-btn" onClick={() => setTool(t.name, { description: t.defaultDescription })}>
-                      Use original text
-                    </button>
+                    <button type="button" className="link-btn" onClick={() => setTool(t.name, { description: t.defaultDescription })}>{tx("Use original text")}</button>
                   )}
                 </div>
               )}
@@ -469,6 +463,7 @@ function ToolsTab({ config, draft, setDraft }: { config: VoiceConfig; draft: Voi
 
 /** Demo mode: show calls in real time on the public Live call page (#/live). Off by default for caller privacy. */
 function LiveDemoBlock({ token, onAuthError }: { token: string; onAuthError: (msg?: string) => void }) {
+  const { t: tx } = useI18n();
   const [state, setState] = useState<{ on: boolean; available: boolean } | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -505,24 +500,17 @@ function LiveDemoBlock({ token, onAuthError }: { token: string; onAuthError: (ms
     <div className="st-card st-lang" style={{ marginBottom: "1rem" }}>
       <div className="st-tool-row">
         <div className="st-tool-text">
-          <b>Show calls live (demo mode)</b>
-          <span>
-            While on, anyone can watch calls as they happen on the <a href="#/live">Live call</a> page: the words, the tools and the data sources. Caller numbers are
-            masked. Turn it off after your demo.
-          </span>
+          <b>{tx("Show calls live (demo mode)")}</b>
+          <span>{tx("While on, anyone can watch calls as they happen on the")}{" "}<a href="#/live">{tx("Live call")}</a>{" "}{tx("page: the words, the tools and the data sources. Caller numbers are masked. Turn it off after your demo.")}</span>
         </div>
-        <label className="switch" title={state.on ? "Turn off" : "Turn on"}>
-          <input type="checkbox" checked={state.on} disabled={busy || !state.available} onChange={(e) => void toggle(e.target.checked)} aria-label={`Show calls live: ${state.on ? "on" : "off"}`} />
+        <label className="switch" title={state.on ? tx("Turn off") : tx("Turn on")}>
+          <input type="checkbox" checked={state.on} disabled={busy || !state.available} onChange={(e) => void toggle(e.target.checked)} aria-label={tx("Show calls live: {state}", { state: tx(state.on ? "enabled" : "disabled") })} />
           <span className="switch-track" aria-hidden="true" />
         </label>
       </div>
       {state.on && (
         <p className="hint" style={{ margin: "0.5rem 0 0" }}>
-          <button type="button" className="link-btn" onClick={() => void clear()} disabled={busy}>
-            Clear the live page
-          </button>{" "}
-          before a demo so it starts empty.
-        </p>
+          <button type="button" className="link-btn" onClick={() => void clear()} disabled={busy}>{tx("Clear the live page")}</button>{" "}{tx("before a demo so it starts empty.")}</p>
       )}
       {err && <p className="error">{err}</p>}
     </div>
@@ -530,6 +518,7 @@ function LiveDemoBlock({ token, onAuthError }: { token: string; onAuthError: (ms
 }
 
 function ActivityTab({ token, onAuthError }: { token: string; onAuthError: (msg?: string) => void }) {
+  const { t: tx } = useI18n();
   const [calls, setCalls] = useState<CallRow[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [events, setEvents] = useState<CallEvent[] | null>(null);
@@ -564,14 +553,12 @@ function ActivityTab({ token, onAuthError }: { token: string; onAuthError: (msg?
   }, [selected, token, onAuthError]);
 
   if (error) return <p className="error">{error}</p>;
-  if (!calls) return <p className="loading">Loading…</p>;
+  if (!calls) return <p className="loading">{tx("Loading…")}</p>;
   if (calls.length === 0)
     return (
       <div className="st-card st-empty">
-        <p>No calls yet. Call your Soil Sense number, then come back here.</p>
-        <button type="button" className="ghost" onClick={() => void refresh()} disabled={loading}>
-          Refresh
-        </button>
+        <p>{tx("No calls yet. Call your Soil Sense number, then come back here.")}</p>
+        <button type="button" className="ghost" onClick={() => void refresh()} disabled={loading}>{tx("Refresh")}</button>
       </div>
     );
 
@@ -579,9 +566,9 @@ function ActivityTab({ token, onAuthError }: { token: string; onAuthError: (msg?
     <div className="st-history">
       <div className="st-card st-calls">
         <div className="st-calls-head">
-          <b>Recent calls</b>
+          <b>{tx("Recent calls")}</b>
           <button type="button" className="link-btn" onClick={() => void refresh()} disabled={loading}>
-            {loading ? "…" : "Refresh"}
+            {loading ? "…" : tx("Refresh")}
           </button>
         </div>
         <ul>
@@ -590,9 +577,9 @@ function ActivityTab({ token, onAuthError }: { token: string; onAuthError: (msg?
               <button type="button" className={selected === c.callSid ? "on" : ""} onClick={() => setSelected(c.callSid)}>
                 <span className="st-call-when">
                   {fmtWhen(c.startedAt)}
-                  {c.problems > 0 && <span className="st-warn-dot" title="Something went wrong on this call" />}
+                  {c.problems > 0 && <span className="st-warn-dot" title={tx("Something went wrong on this call")} />}
                 </span>
-                <span className="st-call-where">{c.place ?? "No location"}</span>
+                <span className="st-call-where">{c.place ?? tx("No location")}</span>
               </button>
             </li>
           ))}
@@ -601,7 +588,7 @@ function ActivityTab({ token, onAuthError }: { token: string; onAuthError: (msg?
 
       <div className="st-card st-transcript">
         {!events ? (
-          <p className="loading">Loading…</p>
+          <p className="loading">{tx("Loading…")}</p>
         ) : (
           <ol>
             {events.map((e) => (
@@ -614,7 +601,21 @@ function ActivityTab({ token, onAuthError }: { token: string; onAuthError: (msg?
   );
 }
 
+/** A BCP 47 language tag for a detected language, or undefined (inherit the page's English). */
+function langTag(code: string | null | undefined): string | undefined {
+  return code && /^[a-z]{2,3}(-[A-Za-z]{2,4})?$/.test(code) ? code : undefined;
+}
+
+function langName(code: string): string {
+  try {
+    return new Intl.DisplayNames(["en"], { type: "language" }).of(code) ?? code.toUpperCase();
+  } catch {
+    return code.toUpperCase();
+  }
+}
+
 function TranscriptLine({ e }: { e: CallEvent }) {
+  const { t: tx, text: localize } = useI18n();
   const [open, setOpen] = useState(false);
   if (e.kind === "session_start" || e.kind === "session_end") return null;
 
@@ -622,10 +623,16 @@ function TranscriptLine({ e }: { e: CallEvent }) {
     return (
       <li className={`st-msg st-msg-${e.kind}`}>
         <span className="st-who">
-          {e.kind === "caller" ? "Caller" : "Agent"}
-          {e.kind === "caller" && e.name && <span className="st-lang-tag">{e.name.toUpperCase()}</span>}
+          {e.kind === "caller" ? tx("Caller") : tx("Agent")}
+          {e.kind === "caller" && e.name && (
+            <span className="st-lang-tag" title={localize(langName(e.name))}>
+              <span className="sr-only">{tx("speaking ")}</span>
+              {localize(langName(e.name))}
+            </span>
+          )}
         </span>
-        <p>{e.detail}</p>
+        {/* WCAG 3.1.2: tag each message with the language it was spoken in. */}
+        <p lang={langTag(e.name)}>{e.detail}</p>
       </li>
     );
   }
@@ -641,7 +648,7 @@ function TranscriptLine({ e }: { e: CallEvent }) {
   return (
     <li className={`st-step ${failed ? "fail" : ""}`}>
       <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
-        <span aria-hidden="true">{failed ? "✕" : "✓"}</span> {failed && e.kind === "tool" ? `${label} failed` : label}
+        <span aria-hidden="true">{failed ? "✕" : "✓"}</span> {failed && e.kind === "tool" ? tx("{tool} failed", { tool: localize(label) }) : localize(label)}
         {e.durationMs !== null && <span className="st-step-time">{fmtSecs(e.durationMs)}</span>}
       </button>
       {open && details && <pre>{details}</pre>}

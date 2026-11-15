@@ -4,6 +4,19 @@
 export type CropId = "corn" | "soybean" | "winter_wheat" | "oats" | "alfalfa" | "sorghum" | "fallow";
 export type CoverId = "none" | "cereal_rye" | "crimson_clover" | "hairy_vetch";
 export type Priority = "profit" | "soil" | "risk" | "balanced";
+/** Optional preferences, independent of the four unchanged priority weightings. */
+export const GOALS = ["water_conservation", "nitrogen_fixation", "erosion_control", "organic_matter", "forage_market"] as const;
+export type Goal = (typeof GOALS)[number];
+
+export interface GoalScore {
+  goal: Goal;
+  /** 0–1, relative to feasible candidate plans; equal metrics earn no bonus. */
+  normalized: number;
+  bonus: number;
+  /** Engine outputs or explicitly labeled rotation proxies, not measured field outcomes. */
+  metrics: { label: string; value: number; unit: string }[];
+  reason: string;
+}
 
 /**
  * How much water the field gets beyond rain: none; a limited allowance (about 10 in a year, as in K-State's
@@ -96,6 +109,11 @@ export interface ClimateSummary {
 }
 
 export interface ScoreBreakdown {
+  /** Additive preference bonus, at most 0.1 total; absent with no goals. */
+  goalsBonus?: number;
+  /** Unmodified priority subtotal before the optional bonus. */
+  priorityTotal?: number;
+  goals?: GoalScore[];
   climate: number;
   reliability: number;
   soil: number;
@@ -138,6 +156,8 @@ export interface RotationPlan {
   badYearsIn10: number;
   /** Average irrigation water pumped per calendar year over the plan, inches. */
   waterPumpedIn: number;
+  /** Simulated main-crop water use, inches/calendar year; supplied only with selected goals. */
+  waterUseIn?: number;
 }
 
 export interface ReasonFact {
@@ -148,11 +168,31 @@ export interface ReasonFact {
   kind: "climate" | "history" | "soil" | "agronomy" | "economics";
 }
 
+/** Farmer-entered measurements; never persisted on the server. Blank properties use the soil map. */
+export interface SoilTest {
+  ph?: number;
+  organicMatterPct?: number;
+  /** cm water / cm soil (equivalently in/in). Takes precedence over texture. */
+  awc?: number;
+  texture?: "sand" | "sandy_loam" | "loam" | "silt_loam" | "clay_loam" | "clay";
+}
+export interface FarmerYield {
+  crop: Exclude<CropId, "fallow">;
+  year: number;
+  value: number;
+  /** Grain in bu/acre; alfalfa hay in US short tons/acre. */
+  unit: "bu/acre" | "tons/acre";
+}
+
 export interface PlanRequest {
+  soilTest?: SoilTest;
+  yieldRecords?: FarmerYield[];
   lat: number;
   lon: number;
   irrigated: boolean;
   priority: Priority;
+  /** Optional multi-select of at most two distinct goals. Empty preserves existing rankings. */
+  goals?: Goal[];
   /** Water beyond rain. When missing, irrigated=true means "full" and false means "rain". */
   water?: WaterLevel;
   /** Optional override when satellite crop history is unavailable. Most recent last. */
@@ -387,8 +427,12 @@ export interface SecondOpinion {
   droughtChanceNow: number | null;
   /** Root-zone soil wetness now, as a percentile of past years at this time of year (0–100). */
   rootzonePctNow: number | null;
-  /** True when the district is on drought watch/warning, so the ranking uses dry-year scores. */
+  /** Ranking basis from the Kansas file; preferred over the legacy alert flag. */
+  basis?: string | null;
+  /** True when the ranking uses dry-year scores. */
   dryYearRanking: boolean;
+  /** True when R2 was unavailable and the bundled offline file was used. */
+  savedCopy?: boolean;
   rotations: KStateRotation[];
   /** Rankings limited to rotations that include the crop the farmer grows now. */
   byCurrentCrop: Partial<Record<"corn" | "sorghum" | "soybean" | "wheat", { message: string | null; rotations: KStateRotation[] }>>;

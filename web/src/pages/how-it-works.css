@@ -1,0 +1,41 @@
+.hiw { color: var(--color-text); }
+.hiw-wrap { max-width: 1200px; margin: auto; padding: 32px clamp(16px, 3vw, 40px) 64px; min-width: 0; }
+.hiw-head { padding: 16px 0 24px; }
+.hiw h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 16px 0; }
+.hiw h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 16px; }
+.hiw p, .hiw li, .hiw td, .hiw th, .hiw caption { line-height: 1.65; }
+.hiw section { margin-top: 32px; }
+.hiw a { color: var(--color-primary); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.hiw figure { margin: 0; }
+.hiw figcaption, .hiw caption { color: var(--color-text-2); font-size: .95rem; text-align: left; padding: 12px 0; }
+.hiw-diagram { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.hiw-flow { min-width: 0; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); padding: 12px 4px; }
+.hiw-flow h3 { font-size: 1rem; padding: 0 14px; min-height: 3em; }
+.hiw-flow svg { display: block; width: 100%; height: auto; }
+.hiw-flow rect { fill: var(--color-primary-soft); stroke: var(--color-primary); stroke-width: 1.5; }
+.hiw-flow rect.hiw-review { fill: var(--color-warning-soft); stroke: var(--color-warning); stroke-dasharray: 5 3; }
+.hiw-flow text { fill: var(--color-text); font: 14px var(--font-sans); }
+.hiw-edges { fill: none; stroke: var(--color-text-2); stroke-width: 1.5; }
+.hiw-arrow { fill: var(--color-text-2); }
+.hiw details { padding: 16px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); }
+.hiw summary { cursor: pointer; font-weight: 600; min-height: 28px; }
+.hiw-language { display: flex; gap: 8px; justify-content: flex-end; }
+.hiw-language button { min-width: 48px; min-height: 44px; border: 1px solid var(--color-primary); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text); cursor: pointer; }
+.hiw-language button[aria-pressed=true] { background: var(--color-primary); color: var(--color-on-primary); }
+.hiw-table { width: 100%; border-collapse: collapse; table-layout: fixed; background: var(--color-surface); font-size: .95rem; }
+.hiw-table th, .hiw-table td { padding: 14px; border-bottom: 1px solid var(--color-border); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.hiw-table thead { background: var(--color-primary-soft); }
+.hiw-binding { display: block; font-size: .8rem; color: var(--color-text-2); margin-top: 6px; }
+.hiw-table th { font-weight: 600; }
+.hiw-table th:first-child { width: 28%; }
+.hiw-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0; list-style: none; }
+.hiw-metrics li { background: var(--color-primary-soft); border: 1px solid var(--color-primary-border); border-radius: var(--radius-md); padding: 16px; }
+@media (max-width: 1100px) { .hiw-diagram { grid-template-columns: 1fr; } .hiw-flow { max-width: 420px; width: 100%; margin-inline: auto; box-sizing: border-box; } .hiw-flow h3 { min-height: 0; } }
+@media (max-width: 600px) {
+  .hiw-wrap { padding-top: 64px; }
+  .hiw-metrics { grid-template-columns: 1fr; }
+  /* Keep genuine table semantics and column headers; wrap within the viewport, never crop. */
+  .hiw-table { font-size: .85rem; }
+  .hiw-table th, .hiw-table td { padding: 9px 6px; }
+  .hiw-table th:first-child { width: 25%; }
+}

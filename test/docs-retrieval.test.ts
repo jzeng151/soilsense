@@ -20,7 +20,7 @@ function setup(over = {}) {
 }
 describe("reviewed document retrieval", () => {
   it.each([
-    { chunk_status: "pending" }, { chunk_status: "retired" }, { doc_status: "pending_review" },
+    { chunk_status: "pending" }, { chunk_status: "retired" }, { chunk_status: "excluded" }, { doc_status: "pending_review" },
     { doc_status: "approved" }, { doc_status: "rejected" }, { title: null }, { url: "javascript:alert(1)" },
     { publisher: "" }, { license: null }, { attribution: "" }, { applicability: "" },
     { year: null }, { crops_json: "not json" }, { crops_json: '["soybean"]' }, { end_offset: 999 },

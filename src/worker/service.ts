@@ -1,5 +1,6 @@
 // Fetches every data source for a location (in parallel, cached) and runs the engine.
 
+import { hasMeasurements } from "../shared/measurements";
 import { mergeDaymet } from "../engine/climate";
 import { buildPlan } from "../engine/plan";
 import type { FieldResponse, PlanRequest, PlanResponse } from "../shared/types";
@@ -13,6 +14,7 @@ import { getDailyClimate } from "./data/power";
 import { getSoil } from "./data/soil";
 import type { Env } from "./env";
 import { cached } from "./lib/cache";
+import { planMemory, writeFieldMemory } from "./fieldMemory";
 
 export function yearsFor(env: Env, now = new Date()) {
   const year = now.getUTCFullYear();
@@ -62,14 +64,15 @@ export interface PlanOpts {
 }
 
 /** Bump whenever the engine's output changes, so cached plans from older code are never served. */
-export const PLAN_ENGINE_VERSION = "e4-mvp-evidence";
+export const PLAN_ENGINE_VERSION = "e6-farmer-measurements";
 
 export async function makePlan(
   env: Env,
   request: PlanRequest,
   opts: PlanOpts = {},
 ): Promise<PlanResponse> {
-  if (opts.now) return makePlanFresh(env, request, opts); // tests pin the date: always compute
+  // Source datasets may still be cached, but never persist a response containing farmer measurements.
+  if (opts.now || hasMeasurements(request)) return makePlanFresh(env, request, opts);
   const water = request.water ?? (request.irrigated ? "full" : "rain");
   const key = [
     `plan:${PLAN_ENGINE_VERSION}`,
@@ -77,6 +80,7 @@ export async function makePlan(
     request.lon.toFixed(4),
     water,
     request.priority,
+    ...(request.goals?.length ? [`goals=${request.goals.join(",")}`] : []),
     (request.recentCrops ?? []).join(","),
     request.language ?? "en",
     opts.skipCropHistory ? "nocdl" : "cdl",
@@ -188,7 +192,7 @@ export async function logPlan(
   },
 ): Promise<string> {
   const id = crypto.randomUUID();
-  if (!env.DB) return id;
+  if (!env.DB || hasMeasurements(entry.plan.request)) return id;
   const top = entry.plan.plans[0];
   try {
     await env.DB.prepare(
@@ -211,6 +215,7 @@ export async function logPlan(
         entry.smsSent ? 1 : 0,
       )
       .run();
+    await writeFieldMemory(env, planMemory(entry.plan, id));
   } catch (err) {
     console.warn(JSON.stringify({ msg: "plan log failed", err: String(err) }));
   }

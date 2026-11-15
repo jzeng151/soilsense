@@ -3,6 +3,7 @@
 import { Hono } from "hono";
 import type { Env } from "../env";
 import { isLiveDemoOn, liveRoom } from "../live/publish";
+import type { LiveEvent } from "../live/room";
 
 export const live = new Hono<{ Bindings: Env }>();
 
@@ -30,7 +31,10 @@ live.get("/ws", async (c) => {
 /** Polling fallback: events after ?since=<seq>. */
 live.get("/events", async (c) => {
   const room = liveRoom(c.env);
-  if (!room || !(await isLiveDemoOn(c.env.DB))) return c.json({ demo: false, events: [] });
+  if (!room) return c.json({ demo: false, events: [] });
   const since = Number(c.req.query("since") ?? 0) || 0;
-  return c.json({ demo: true, events: await room.recent(since) });
+  const events = (await room.recent(since)) as unknown as LiveEvent[];
+  if (await isLiveDemoOn(c.env.DB)) return c.json({ demo: true, events });
+  // Demo mode off: calls stay private, but Field Watch checks (no personal data) are always shown.
+  return c.json({ demo: false, events: events.filter((e) => e.type === "fieldwatch.run") });
 });

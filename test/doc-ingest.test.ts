@@ -7,6 +7,11 @@ import { runDocIngest, type DocStepRunner } from "../src/worker/ingest/workflow"
 import { getChunks, getDoc } from "../src/worker/ingest/store";
 import { DOCS_LAYOUT, REVIEW_EVENT, REVIEW_TIMEOUT, type ReviewDecision, type DocIngestParams } from "../src/shared/ingest";
 
+vi.mock("../src/worker/ingest/url-https", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../src/worker/ingest/url-https")>();
+  return { ...actual, pinnedHttps: (url: URL) => fetch(url.href) };
+});
+
 const ctx = { waitUntil() {}, passThroughOnException() {}, props: {} } as unknown as ExecutionContext;
 const approval: ReviewDecision = { decision: "approve", reviewer: "test reviewer", crops: ["corn", "cover"], source: { title: "Reviewer supplied title", url: "https://example.org/paper", publisher: "Test publisher", year: 2026, license: "CC BY 4.0", attribution: "Test author", applicability: "Test fixture, not agronomic evidence" } };
 const firstParagraph = "Cover crops protect soil during winter and improve water infiltration. ".repeat(19).trim();
@@ -24,20 +29,22 @@ function fakeD1(): D1Database {
   });
   return { prepare: statement } as unknown as D1Database;
 }
+let harnessId = 0;
 function harness() {
+  const testIp = `192.0.2.${++harnessId}`;
   const DB = fakeD1();
-  const objects = new Map<string, { text: string; etag: string; type: string }>();
+  const objects = new Map<string, { text: string; etag: string; type: string; customMetadata?: Record<string, string> }>();
   let revision = 0;
   const DOCS = {
-    put: async (key: string, body: string | ArrayBuffer, options?: { httpMetadata?: { contentType?: string } }) => {
+    put: async (key: string, body: string | ArrayBuffer, options?: { httpMetadata?: { contentType?: string }; customMetadata?: Record<string, string> }) => {
       const text = typeof body === "string" ? body : new TextDecoder().decode(body);
-      const value = { text, etag: `etag-${++revision}`, type: options?.httpMetadata?.contentType ?? "text/plain" };
+      const value = { text, etag: `etag-${++revision}`, type: options?.httpMetadata?.contentType ?? "text/plain", customMetadata: options?.customMetadata };
       objects.set(key, value);
       return { key, etag: value.etag };
     },
     get: async (key: string) => {
       const o = objects.get(key);
-      return o ? { etag: o.etag, size: new TextEncoder().encode(o.text).byteLength, httpMetadata: { contentType: o.type }, text: async () => o.text, arrayBuffer: async () => new TextEncoder().encode(o.text).buffer } : null;
+      return o ? { customMetadata: o.customMetadata, etag: o.etag, size: new TextEncoder().encode(o.text).byteLength, httpMetadata: { contentType: o.type }, text: async () => o.text, arrayBuffer: async () => new TextEncoder().encode(o.text).buffer } : null;
     },
   };
   type Vector = { id: string; values: number[]; metadata: Record<string, string> };
@@ -47,33 +54,40 @@ function harness() {
     getByIds: async (ids: string[]) => ids.flatMap((id) => vectors.has(id) ? [vectors.get(id)!] : []),
     deleteByIds: vi.fn(async (ids: string[]) => { for (const id of ids) vectors.delete(id); return { mutationId: "delete" }; }),
   };
-  const AI = { run: vi.fn(async () => ({ data: [Array(768).fill(0.25) as number[]] })) };
-  let resolveReview: ((value: { payload: unknown }) => void) | undefined;
+  const AI = { run: vi.fn(async () => ({ data: [Array(768).fill(0.25) as number[]] })), toMarkdown: vi.fn() };
+  const reviewResolvers = new Map<string, (value: { payload: unknown }) => void>();
   let waiting: (() => void) | undefined;
   let params: DocIngestParams | undefined;
   let instanceId = "";
-  const step = (): DocStepRunner => ({
-    do: async (_name, _config, callback) => callback(),
-    waitForEvent: async (name, options) => {
-      expect(name).toBe("review");
-      expect(options).toEqual({ type: REVIEW_EVENT, timeout: REVIEW_TIMEOUT });
-      waiting?.();
-      return new Promise((resolve) => { resolveReview = resolve; });
-    },
-  });
+  const step = (): DocStepRunner => {
+    const workflowId = instanceId;
+    return {
+      do: async (_name, _config, callback) => callback(),
+      waitForEvent: async (name, options) => {
+        expect(name).toBe("review");
+        expect(options).toEqual({ type: REVIEW_EVENT, timeout: REVIEW_TIMEOUT });
+        waiting?.();
+        return new Promise((resolve) => { reviewResolvers.set(workflowId, resolve); });
+      },
+    };
+  };
   const DOC_INGEST = {
     create: vi.fn(async (input: { id: string; params: DocIngestParams }) => { params = input.params; instanceId = input.id; return { id: input.id }; }),
     get: vi.fn(async (id: string) => {
-      expect(id).toBe(instanceId);
-      return { sendEvent: vi.fn(async (event: { type: string; payload: unknown }) => { expect(event.type).toBe(REVIEW_EVENT); resolveReview?.({ payload: event.payload }); }) };
+      expect(reviewResolvers.has(id)).toBe(true);
+      return { sendEvent: vi.fn(async (event: { type: string; payload: unknown }) => { expect(event.type).toBe(REVIEW_EVENT); reviewResolvers.get(id)?.({ payload: event.payload }); }) };
     }),
   };
   const env = { DB, DOCS, DOC_INGEST, AI, RESEARCH_INDEX, ADMIN_TOKEN: "test-token", AI_GATEWAY_ID: "test-gateway" } as unknown as Env;
-  const request = (path: string, init: RequestInit = {}) => app.request(`/api/docs${path}`, init, env, ctx);
+  const request = (path: string, init: RequestInit = {}) => {
+    const headers = new Headers(init.headers);
+    headers.set("CF-Connecting-IP", testIp); // isolate the real app's rate limiter across tests
+    return app.request(`/api/docs${path}`, { ...init, headers }, env, ctx);
+  };
   const auth = { Authorization: "Bearer test-token" };
   const review = (docId: string, body: unknown) => request(`/${docId}/review`, { method: "POST", headers: { ...auth, "Content-Type": "application/json" }, body: JSON.stringify(body) });
-  async function upload(text: string) {
-    const response = await request("/upload?name=paper.txt", { method: "POST", headers: { ...auth, "Content-Type": "text/plain" }, body: text });
+  async function upload(text: string, name = "paper.txt") {
+    const response = await request(`/upload?name=${encodeURIComponent(name)}`, { method: "POST", headers: { ...auth, "Content-Type": name.endsWith(".pdf") ? "application/pdf" : "text/plain" }, body: text });
     expect(response.status).toBe(202);
     const body = await response.json() as { key: string; docId: string; eTag: string };
     const ack = vi.fn(), retry = vi.fn();
@@ -92,6 +106,29 @@ function harness() {
 }
 
 describe("document pipeline public seams", () => {
+  it("carries URL intake provenance through the queue and pending manifest without approving metadata", async () => {
+    const h = harness();
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => url.startsWith("https://cloudflare-dns.com/")
+      ? Response.json({ Status: 0, Answer: [{ type: 1, data: "129.130.1.1" }] })
+      : new Response(`<main><p>${firstParagraph}</p></main>`, { headers: { "content-type": "text/html" } })));
+    try {
+      const response = await h.request("/from-url", { method: "POST", headers: { ...h.auth, "Content-Type": "application/json" }, body: JSON.stringify({ url: "https://www.ksu.edu/research" }) });
+      expect(response.status).toBe(202);
+      const uploaded = await response.json() as { key: string; eTag: string; docId: string };
+      const ack = vi.fn();
+      await app.queue({ messages: [{ body: { account: "test", bucket: "soilsense-docs", action: "PutObject", object: { key: uploaded.key, eTag: uploaded.eTag }, eventTime: "2026-11-15T12:00:00Z" }, ack, retry: vi.fn() }] } as unknown as MessageBatch, h.env);
+      expect(ack).toHaveBeenCalledOnce();
+      const { run } = await h.start();
+      const detail = await (await h.request(`/${uploaded.docId}`)).json() as { provenance: unknown; doc: { title: string | null; status: string } };
+      expect(detail).toMatchObject({ provenance: { sourceUrl: "https://www.ksu.edu/research", intakeMethod: "html-fetch-fallback" }, doc: { title: null, status: "pending_review" } });
+      const manifest = [...h.objects.entries()].find(([key]) => key.startsWith("manifests/"))!;
+      expect(JSON.parse(manifest[1].text)).toMatchObject({ provenance: detail.provenance, source: null });
+      expect(h.AI.run).not.toHaveBeenCalled(); expect(h.vectors.size).toBe(0);
+      await h.review(uploaded.docId, { decision: "reject", reviewer: "test reviewer" });
+      expect(await run).toMatchObject({ outcome: "rejected" });
+      expect(JSON.parse(h.objects.get(manifest[0])!.text).provenance).toEqual(detail.provenance);
+    } finally { vi.unstubAllGlobals(); }
+  });
   it("uploads through R2 notification/queue, waits for review, then indexes exact sourced chunks", async () => {
     const h = harness();
     const uploaded = await h.upload(firstParagraph + "\n\n" + secondParagraph);
@@ -111,14 +148,60 @@ describe("document pipeline public seams", () => {
       expect(v.metadata).toMatchObject({ corpus: "docs-v1", source_id: uploaded.docId, doc_sha256: pending!.latest_sha256 });
       expect(v.values).toHaveLength(768);
     }
-    expect(h.AI.run).toHaveBeenCalledWith("@cf/baai/bge-base-en-v1.5", { text: [firstParagraph], pooling: "cls" }, { gateway: { id: "test-gateway" } });
+    expect(h.AI.run).toHaveBeenCalledWith("@cf/baai/bge-base-en-v1.5", { text: [firstParagraph], pooling: "cls" }, expect.objectContaining({ gateway: expect.objectContaining({ id: "test-gateway", skipCache: false, cacheTtl: 86400 }) }));
     expect(await getDoc(h.DB, uploaded.docId)).toMatchObject({ status: "indexed", title: approval.source!.title, reviewer: approval.reviewer, crops_json: '["corn","cover"]' });
-    expect(JSON.parse(h.objects.get(DOCS_LAYOUT.manifest(pending!.latest_sha256!))!.text)).toMatchObject({ status: "indexed", source: approval.source });
+    expect(JSON.parse(h.objects.get(DOCS_LAYOUT.manifest(pending!.latest_sha256!, uploaded.docId))!.text)).toMatchObject({ status: "indexed", source: approval.source });
     expect((await (await h.request("")).json() as { docs: unknown[] }).docs).toHaveLength(1);
 
     await h.upload(firstParagraph + "\n\n" + secondParagraph);
     expect(await runDocIngest(h.env, h.step(), h.params(), h.instanceId())).toMatchObject({ outcome: "unchanged" });
     expect(h.AI.run).toHaveBeenCalledTimes(2);
+  });
+
+  it("saves plain PDF text and conversion audit, then embeds only exact plain slices", async () => {
+    const h = harness();
+    const preamble = "# docs/paper.pdf\n\n## Metadata\nPDFFormatVersion: 1.7\nLanguage: en\nIsLinearized: false\n\n";
+    const markdown = "## Content\n\n# Limited irrigation\n\nA **bold** trial with `soil` and [source](https://example.org).\n\n- Corn treatment\n- Sorghum treatment\n\n| Crop | Site |\n| --- | --- |\n| Corn | Tribune |\n";
+    const plain = "Content\n\nLimited irrigation\n\nA bold trial with soil and source.\n\nCorn treatment\nSorghum treatment\n\nCrop · Site\nCorn · Tribune\n";
+    h.AI.toMarkdown.mockResolvedValue([{ format: "markdown", data: preamble + markdown }]);
+    const uploaded = await h.upload("constructed PDF bytes, not a real PDF", "paper.pdf");
+    const { run } = await h.start();
+    const doc = (await getDoc(h.DB, uploaded.docId))!;
+    const manifestKey = DOCS_LAYOUT.manifest(doc.latest_sha256!, uploaded.docId);
+    const manifest = JSON.parse(h.objects.get(manifestKey)!.text);
+    expect(manifest).toMatchObject({ ingestVersion: "ingest-v2", extraction: "workers-ai-tomarkdown+plain", converterPreamble: { removed: true, chars: preamble.length }, plainTextConversion: { format: "markdown-to-plain-v1", inputChars: markdown.length, outputChars: plain.length } });
+    expect(h.objects.get(manifest.extractedKey)?.text).toBe(plain);
+    const chunks = await getChunks(h.DB, uploaded.docId);
+    expect(chunks).toHaveLength(1);
+    for (const c of chunks) expect(plain.slice(c.start_offset, c.end_offset)).toBe(c.text);
+    await h.review(uploaded.docId, approval);
+    expect(await run).toMatchObject({ outcome: "indexed" });
+    expect(h.AI.run).toHaveBeenCalledWith("@cf/baai/bge-base-en-v1.5", { text: [plain.trim().replace(/\s+/g, " ")], pooling: "cls" }, expect.objectContaining({ gateway: expect.objectContaining({ id: "test-gateway", skipCache: false, cacheTtl: 86400 }) }));
+  });
+
+  it("isolates identical uploads under different keys while the older review is still pending", async () => {
+    const h = harness();
+    const old = await h.upload(firstParagraph, "old.txt");
+    const oldRun = await h.start();
+    const oldDoc = (await getDoc(h.DB, old.docId))!;
+    const oldKey = DOCS_LAYOUT.manifest(oldDoc.latest_sha256!, old.docId);
+    // Existing ingest-v1 workflows retain their legacy artifacts on deployment.
+    h.objects.set(DOCS_LAYOUT.manifest(oldDoc.latest_sha256!), h.objects.get(oldKey)!);
+    h.objects.delete(oldKey);
+    const next = await h.upload(firstParagraph, "new.txt");
+    const nextRun = await h.start();
+    const nextDoc = (await getDoc(h.DB, next.docId))!;
+    const nextKey = DOCS_LAYOUT.manifest(nextDoc.latest_sha256!, next.docId);
+    const nextManifest = h.objects.get(nextKey)!.text;
+    expect((await h.request(`/${old.docId}`)).status).toBe(200); // legacy read fallback
+    const nextChunks = await getChunks(h.DB, next.docId);
+    expect((await h.review(old.docId, { ...approval, excludeChunkIds: [nextChunks[0]!.chunk_id] })).status).toBe(400);
+    await h.review(old.docId, { decision: "reject", reviewer: "reviewer" });
+    expect(await oldRun.run).toMatchObject({ outcome: "rejected" });
+    expect(h.objects.get(nextKey)!.text).toBe(nextManifest);
+    await h.review(next.docId, approval);
+    expect(await nextRun.run).toMatchObject({ outcome: "indexed" });
+    expect(JSON.parse(h.objects.get(nextKey)!.text)).toMatchObject({ docId: next.docId, status: "indexed" });
   });
 
   it("changed uploads keep content ids/embeddings, refresh offsets/tags, and retire removed vectors only after approval", async () => {
@@ -139,6 +222,70 @@ describe("document pipeline public seams", () => {
     expect(h.vectors.has(`${kept.chunk_id}#cover`)).toBe(false);
     expect(h.vectors.size).toBe(2);
     expect(h.AI.run).toHaveBeenCalledTimes(3); // two original + only the new chunk
+  });
+
+  it("excludes reviewer-selected chunks without embedding/upserting them and audits the decision", async () => {
+    const h = harness(); const uploaded = await h.upload(firstParagraph + "\n\n" + secondParagraph);
+    const { run } = await h.start();
+    const chunks = await getChunks(h.DB, uploaded.docId);
+    const excluded = chunks.find((c) => c.text === secondParagraph)!;
+    expect((await h.review(uploaded.docId, { ...approval, excludeChunkIds: [excluded.chunk_id] })).status).toBe(202);
+    expect(await run).toMatchObject({ outcome: "indexed" });
+    expect(h.AI.run).toHaveBeenCalledTimes(1);
+    expect(h.vectors.size).toBe(2);
+    expect(h.RESEARCH_INDEX.upsert.mock.calls.flatMap(([rows]) => rows).every((v) => v.metadata.chunk_id !== excluded.chunk_id)).toBe(true);
+    expect((await getChunks(h.DB, uploaded.docId)).find((c) => c.chunk_id === excluded.chunk_id)).toMatchObject({ status: "excluded", vector_ids_json: "[]" });
+    const doc = await getDoc(h.DB, uploaded.docId);
+    const manifest = JSON.parse(h.objects.get(DOCS_LAYOUT.manifest(doc!.latest_sha256!, uploaded.docId))!.text);
+    expect(manifest.review.excludeChunkIds).toEqual([excluded.chunk_id]);
+    expect(manifest.chunks.find((c: { id: string }) => c.id === excluded.chunk_id).status).toBe("excluded");
+  });
+
+  it("validates exclusion types and membership in the current version, including kept chunks at shifted offsets", async () => {
+    const h = harness(); const uploaded = await h.upload(firstParagraph + "\n\n" + secondParagraph);
+    const first = await h.start(); await h.review(uploaded.docId, approval); await first.run;
+    const oldChunks = await getChunks(h.DB, uploaded.docId);
+    const kept = oldChunks.find((c) => c.text === firstParagraph)!;
+    const removed = oldChunks.find((c) => c.text === secondParagraph)!;
+    await h.upload(thirdParagraph + "\n\n" + firstParagraph);
+    const next = await h.start();
+    for (const excludeChunkIds of [["doc-foreign:chunk"], [removed.chunk_id], "not-an-array", [123], [kept.chunk_id, kept.chunk_id]]) {
+      expect((await h.review(uploaded.docId, { ...approval, excludeChunkIds })).status).toBe(400);
+    }
+    const detail = await (await h.request(`/${uploaded.docId}`)).json() as { chunks: { chunk_id: string; start_offset: number; text: string }[] };
+    expect(detail.chunks).toHaveLength(2);
+    expect(detail.chunks.find((c) => c.chunk_id === kept.chunk_id)?.start_offset).toBe(thirdParagraph.length + 2);
+    expect(detail.chunks.some((c) => c.chunk_id === removed.chunk_id)).toBe(false);
+    h.AI.run.mockClear(); h.RESEARCH_INDEX.upsert.mockClear();
+    expect((await h.review(uploaded.docId, { ...approval, excludeChunkIds: [kept.chunk_id] })).status).toBe(202);
+    expect(await next.run).toMatchObject({ outcome: "indexed" });
+    expect(h.AI.run).toHaveBeenCalledTimes(1);
+    expect(h.vectors.has(`${kept.chunk_id}#corn`)).toBe(false);
+    expect(h.vectors.has(`${kept.chunk_id}#cover`)).toBe(false);
+    expect((await getChunks(h.DB, uploaded.docId)).find((c) => c.chunk_id === kept.chunk_id)).toMatchObject({ status: "excluded", start_offset: thirdParagraph.length + 2 });
+    expect(h.RESEARCH_INDEX.upsert.mock.calls.flatMap(([rows]) => rows).every((v) => v.metadata.chunk_id !== kept.chunk_id)).toBe(true);
+  });
+
+  it("can approve with every chunk excluded without embedding or upserting", async () => {
+    const h = harness(); const uploaded = await h.upload(firstParagraph + "\n\n" + secondParagraph);
+    const { run } = await h.start();
+    const excludeChunkIds = (await getChunks(h.DB, uploaded.docId)).map((c) => c.chunk_id);
+    await h.review(uploaded.docId, { ...approval, excludeChunkIds });
+    expect(await run).toMatchObject({ outcome: "indexed" });
+    expect(h.AI.run).not.toHaveBeenCalled();
+    expect(h.RESEARCH_INDEX.upsert).not.toHaveBeenCalled();
+    expect(h.vectors.size).toBe(0);
+    expect((await getChunks(h.DB, uploaded.docId)).every((c) => c.status === "excluded")).toBe(true);
+  });
+
+  it("rejects foreign exclusions even when an event bypasses the HTTP review route", async () => {
+    const h = harness(); const uploaded = await h.upload(firstParagraph);
+    const runner = h.step();
+    runner.waitForEvent = async () => ({ payload: { ...approval, excludeChunkIds: ["doc-foreign:chunk"] } });
+    expect(await runDocIngest(h.env, runner, h.params(), h.instanceId())).toMatchObject({ outcome: "error" });
+    expect((await getDoc(h.DB, uploaded.docId))?.status).toBe("error");
+    expect(h.AI.run).not.toHaveBeenCalled();
+    expect(h.RESEARCH_INDEX.upsert).not.toHaveBeenCalled();
   });
 
   it("rejects without embedding or vector mutations", async () => {

@@ -91,7 +91,7 @@ research.post("/ingest", async (c) => {
   if (!adminOk(c.req.header("Authorization"), c.env.ADMIN_TOKEN)) return c.json({ error: "unauthorized" }, 401);
   const { ai, index, gatewayId } = deps(c.env);
   if (!ai || !index?.upsert) return c.json({ error: "AI and RESEARCH_INDEX bindings are required" }, 503);
-  const vectors = await buildVectors(ai, gatewayId);
+  const vectors = await buildVectors(ai, gatewayId, c.env.DB);
   const mutation = await index.upsert(vectors);
   return c.json({
     ok: true,

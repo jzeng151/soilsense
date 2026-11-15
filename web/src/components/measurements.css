@@ -1,0 +1,15 @@
+.measurements { margin-block: 1.5rem; }
+.measurements fieldset { min-width: 0; border: 1px solid var(--line, #c5c9bc); border-radius: .6rem; margin-block: 1rem; padding: .8rem; }
+.measurements legend { font-weight: 700; padding-inline: .3rem; }
+.measurements label { display: flex; flex-direction: column; gap: .35rem; min-width: 0; }
+.measurements input, .measurements select { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; min-height: 44px; font: inherit; padding: .5rem; border: 1px solid #697561; border-radius: .3rem; background: #fff; color: #182312; }
+.measurement-inputs { display: grid; gap: .8rem; margin-bottom: .8rem; }
+.measurement-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .65rem; margin-block: .8rem; }
+.measurement-row button { grid-column: 1 / -1; justify-self: start; }
+.measurements button { min-height: 44px; white-space: normal; text-align: start; }
+.measurements [aria-invalid=true] { border: 2px solid #a52b18; }
+.soil-comparison { min-width: 0; overflow-wrap: anywhere; }
+.soil-comparison table { table-layout: fixed; width: 100%; border-collapse: collapse; font-size: .85rem; }
+.soil-comparison caption { text-align: start; font-weight: 700; margin-block: .8rem; }
+.soil-comparison th, .soil-comparison td { text-align: start; vertical-align: top; padding: .45rem .3rem; border-bottom: 1px solid #c5c9bc; }
+@media (min-width: 650px) { .measurement-inputs { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

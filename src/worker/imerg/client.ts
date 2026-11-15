@@ -1,5 +1,5 @@
-// Candidate Earthdata DAP2 point adapter. Live authenticated retrieval is NOT yet verified.
-// No full NetCDF/HDF downloads. Mock tests are hand-made protocol examples, not NASA observations.
+// Bounded NASA GES DISC DAP4 point adapter; recorded live fixture under test/fixtures/imerg-live.
+import { dap4Constraint, parseDap4 } from "./dap4";
 import type { Env } from "../env";
 import { cached } from "../lib/cache";
 
@@ -40,23 +40,42 @@ export interface Subset {
 export type Fetcher = (url: string, init?: RequestInit) => Promise<Response>;
 const pending = new Map<string, Promise<Subset>>();
 
-// Never forward a bearer token to arbitrary CMR links or to redirect destinations.
 export function dapUrl(link: string): string {
   const u = new URL(link);
   if (u.protocol !== "https:" || u.hostname !== "opendap.earthdata.nasa.gov" || !u.pathname.startsWith("/collections/") || !u.pathname.includes("/granules/") || u.search || u.hash || u.username || u.password) throw new Error("Untrusted OPeNDAP link");
   return u.href;
 }
-async function text(url: string, token: string | undefined, fetcher: Fetcher): Promise<string> {
-  const r = await fetcher(url, { redirect: "error", signal: AbortSignal.timeout(15000), headers: token ? { Authorization: `Bearer ${token}` } : {} });
-  if (!r.ok) throw new Error(`Earthdata request failed (HTTP ${r.status}); access or product unavailable`);
-  // Bound response memory even when an upstream ignores a constraint.
+// Authenticate redirects only to exact verified NASA hosts, never arbitrary CMR hosts.
+const AUTH_HOSTS = new Set(["gpm1.gesdisc.eosdis.nasa.gov", "urs.earthdata.nasa.gov"]);
+export function legacyBase(link: string, product: string, date: string): string {
+  const cloud = dapUrl(link), file = decodeURIComponent(new URL(cloud).pathname.split("/").pop()!);
+  const m = file.match(new RegExp(`^${product}\\.07:(3B-DAY(-L)?\\.MS\\.MRG\\.3IMERG\\.${date.replaceAll("-", "")}-S000000-E235959\\.V07[A-Z]\\.nc4)$`));
+  if (!m || (product === "GPM_3IMERGDL") !== !!m[2]) throw new Error("Unexpected IMERG granule filename");
+  return `https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/${product}.07/${date.slice(0,4)}/${date.slice(5,7)}/${m[1]}`;
+}
+async function bytes(url: string, token: string | undefined, fetcher: Fetcher): Promise<Uint8Array> {
+  let r: Response | undefined;
+  for (let hop = 0; hop <= 4; hop++) {
+    const u = new URL(url);
+    if (token && (u.protocol !== "https:" || !AUTH_HOSTS.has(u.hostname) || u.username || u.password)) throw new Error("Untrusted Earthdata redirect");
+    try { r = await fetcher(url, { redirect: "manual", signal: AbortSignal.timeout(90000), headers: token ? { Authorization: `Bearer ${token}` } : {} }); }
+    catch { throw new Error(`Earthdata fetch timeout/network failure: ${u.hostname}${u.pathname}`); }
+    if (![301, 302, 303, 307, 308].includes(r.status)) break;
+    const location = r.headers.get("Location"); await r.body?.cancel();
+    if (!token || !location || hop === 4) throw new Error("Unsupported Earthdata redirect");
+    url = new URL(location, url).href;
+  }
+  if (!r?.ok) throw new Error(`Earthdata request failed (HTTP ${r?.status}); access or product unavailable`);
   const reader = r.body?.getReader();
   if (!reader) throw new Error("Empty Earthdata response");
   const chunks: Uint8Array[] = []; let size = 0;
   try { for (;;) { const { done, value } = await reader.read(); if (done) break; size += value.byteLength; if (size > 256000) throw new Error("Subset exceeds 256 KB limit"); chunks.push(value); } }
   finally { await reader.cancel(); }
-  const bytes = new Uint8Array(size); let at = 0; for (const c of chunks) { bytes.set(c, at); at += c.byteLength; }
-  return new TextDecoder().decode(bytes);
+  const data = new Uint8Array(size); let at = 0; for (const c of chunks) { data.set(c, at); at += c.byteLength; }
+  return data;
+}
+async function text(url: string, token: string | undefined, fetcher: Fetcher): Promise<string> {
+  return new TextDecoder().decode(await bytes(url, token, fetcher));
 }
 function attributeBlock(das: string, name: string): string {
   const b = das.match(new RegExp(`(?:^|\\n)\\s*${name}\\s*\\{([^}]*)\\}`));
@@ -105,7 +124,7 @@ export function parsePoint(ascii: string, das: string, date: string, grid: Retur
 }
 export async function retrieveSubset(env: Pick<Env, "EARTHDATA_TOKEN" | "DB">, lat: number, lon: number, start: string, end: string, stream: Stream, fetcher: Fetcher = fetch): Promise<Subset> {
   const dates = days(start, end), grid = gridPoint(lat, lon), product = PRODUCTS[stream];
-  const key = `imerg:V07:dap2-qa1:${stream}:${grid.key}:${start}:${end}`;
+    const key = `imerg:V07:dap4-qa2:${stream}:${grid.key}:${start}:${end}`;
   if (pending.has(key)) return pending.get(key)!;
   const run = cached(env.DB, key, stream === "final" ? 30 * 86400 : 3600, async () => {
     if (!env.EARTHDATA_TOKEN) throw new Error("Optional IMERG unavailable: EARTHDATA_TOKEN is not configured");
@@ -121,13 +140,16 @@ export async function retrieveSubset(env: Pick<Env, "EARTHDATA_TOKEN" | "DB">, l
       if (!e.time_start?.endsWith("T00:00:00.000Z") && !e.time_start?.endsWith("T00:00:00Z")) throw new Error("IMERG day is not UTC midnight");
       const link = e.links?.find((l) => !l.inherited && l.href?.startsWith("https://opendap.earthdata.nasa.gov/") && /opendap/i.test(l.title ?? ""))?.href;
       if (!link) throw new Error("No Worker-compatible OPeNDAP service link in CMR");
-      const base = dapUrl(link);
-      if (!decodeURIComponent(base).includes(`${product.shortName}.07`)) throw new Error("Unexpected IMERG product in service URL");
-      const dds = await text(`${base}.dds`, env.EARTHDATA_TOKEN, fetcher);
-      const das = await text(`${base}.das`, env.EARTHDATA_TOKEN, fetcher);
-      const url = `${base}.ascii?${encodeURI(pointConstraint(dds, grid))}`;
-      const ascii = await text(url, env.EARTHDATA_TOKEN, fetcher);
-      observations.push(parsePoint(ascii, das, date, grid, url, e.producer_granule_id ?? decodeURIComponent(base.split("/").pop()!)));
+      const base = legacyBase(link, product.shortName, date);
+      const revision = e.producer_granule_id ?? decodeURIComponent(base.split("/").pop()!);
+      const dayKey = `imerg-day:V07:dap4-qa2:${stream}:${grid.key}:${date}:${revision}`;
+      const { value: observation } = await cached(env.DB, dayKey, stream === "final" ? 30 * 86400 : 3600, async () => {
+        const dmr = await text(`${base}.dmr.xml`, env.EARTHDATA_TOKEN, fetcher);
+        const url = `${base}.dap?dap4.ce=${encodeURIComponent(dap4Constraint(dmr, grid))}`;
+        const data = await bytes(url, env.EARTHDATA_TOKEN, fetcher);
+        return parseDap4(data, date, grid, url, revision);
+      });
+      observations.push(observation);
     }
     return { schema: "soilsense.imerg-point/v1", product, stream, grid, units: "mm/day", timeStandard: "UTC", start, end, observations, retrievedAt: new Date().toISOString(), attribution: ATTRIBUTION, source: `https://disc.gsfc.nasa.gov/datasets/${product.shortName}_07/summary` } satisfies Subset;
   }).then(({ value }) => value);

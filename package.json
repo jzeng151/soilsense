@@ -12,6 +12,7 @@
     "build": "npm run build:web",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit && tsc -p web/tsconfig.json --noEmit",
     "a11y": "node scripts/a11y.mjs && node scripts/a11y-keyboard.mjs",
+    "e2e": "node scripts/e2e.mjs",
     "test": "vitest run",
     "db:migrate:local": "wrangler d1 migrations apply fieldshift --local -c wrangler.offline.jsonc",
     "db:migrate:remote": "wrangler d1 migrations apply fieldshift --remote",

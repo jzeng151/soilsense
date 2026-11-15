@@ -174,7 +174,7 @@ describe("factual field memory", () => {
       await writeFieldMemory(h.env, record);
       await writeFieldMemory(h.env, { ...record, field_id: "story-ia", record_id: "other" });
       expect(h.vectors.size).toBe(2);
-      expect(h.ai.run).toHaveBeenCalledWith(EMBEDDING.model, embeddingInput([record.summary]), undefined);
+      expect(h.ai.run).toHaveBeenCalledWith(EMBEDDING.model, embeddingInput([record.summary]), expect.anything());
       expect([...h.vectors.values()][0]).toMatchObject({ namespace: memoryNamespace(field.id), metadata: { field_id: field.id, kind: "watch", date: record.date, record_id: run.runId } });
       const chat = new ChatFieldMemory(h.env);
       const result = await chat.recall({ field_id: field.id, question: "past dry replays" });

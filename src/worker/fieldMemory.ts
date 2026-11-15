@@ -88,7 +88,7 @@ export async function writeFieldMemory(env: Env, record: FieldMemory | null): Pr
     // An out-of-order old source may have just expired; don't reintroduce its vector.
     if (!await db.prepare("SELECT vector_id FROM field_memory WHERE vector_id=?1").bind(id).first()) return "unavailable";
     if (!env.AI || !env.RESEARCH_INDEX) return "unavailable";
-    const [values] = await bounded(embed(env.AI, [record.summary], env.AI_GATEWAY_ID));
+    const [values] = await bounded(embed(env.AI, [record.summary], env.AI_GATEWAY_ID, { db: env.DB, feature: "field-memory-write" }));
     await bounded(env.RESEARCH_INDEX.upsert([{ id, namespace: memoryNamespace(record.field_id), values: values!, metadata: {
       field_id: record.field_id, kind: record.kind, date: record.date, record_id: record.record_id, embedding_id: EMBEDDING.id,
     } }]));
@@ -131,7 +131,7 @@ export class ChatFieldMemory {
     }
   }
   private async search(input: z.infer<typeof recallFieldSchema>): Promise<Omit<MemoryCitation, "citationId">[]> {
-    const [vector] = await embed(this.env.AI!, [input.question], this.env.AI_GATEWAY_ID);
+    const [vector] = await embed(this.env.AI!, [input.question], this.env.AI_GATEWAY_ID, { db: this.env.DB, feature: "field-memory-recall" });
     const matches = await this.env.RESEARCH_INDEX!.query(vector!, { namespace: memoryNamespace(input.field_id), topK: 8, returnMetadata: "all" });
     const records: Omit<MemoryCitation, "citationId">[] = [];
     for (const match of matches.matches.slice(0, 8)) {

@@ -12,6 +12,9 @@ import { SecondOpinion } from "./components/SecondOpinion";
 import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
+import { CropTimingEvidence } from "./components/CropTimingEvidence";
+import { SmapCard } from "./components/SmapCard";
+import { GraceWellsCard } from "./components/GraceWellsCard";
 import { EconomicsCard } from "./components/EconomicsCard";
 import { HistoricalScenarios } from "./components/HistoricalScenarios";
 import { FieldWatchCard } from "./components/FieldWatchCard";
@@ -596,6 +599,8 @@ export function App() {
                 <UsdmContext plan={plan} />
                 <WindScreenCard plan={plan} />
                 <EconomicsCard plan={plan} />
+                <SmapCard plan={plan} />
+                <GraceWellsCard plan={plan} />
                 {/* /stretch: data evidence */}
 
                 <div className="jr-card">
@@ -699,6 +704,7 @@ export function App() {
                 </details>
 
                 {/* stretch: data evidence */}
+                <CropTimingEvidence key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
                 <HistoricalScenarios key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
                 {/* /stretch: data evidence */}
 

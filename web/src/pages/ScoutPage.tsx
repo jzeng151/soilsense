@@ -285,6 +285,8 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
         {model && !model.configured && <span className="sc-warn">AI model not set up</span>}
       </header>
 
+      {model?.research === "unavailable" && <p className="sc-research-state" role="status">Research unavailable: retrieval bindings are not configured. No research citations can be verified until search is available.</p>}
+
       {empty ? (
         <div className="sc-hero">
           <Sprout mood="hello" width={128} />

@@ -1,7 +1,9 @@
 // Voice-agent settings that admins can edit from the dashboard (stored in D1 as JSON), plus the
 // locked rules that always apply. Editable: greeting, instructions, tool on/off and descriptions.
 
-export type VoiceToolName = "find_location" | "build_rotation_plan" | "send_plan_by_text" | "end_call";
+import { RESEARCH_CITATION_RULES, SEARCH_RESEARCH_DESCRIPTION } from "./research/chat";
+
+export type VoiceToolName = "find_location" | "build_rotation_plan" | "send_plan_by_text" | "end_call" | "search_research";
 
 export interface VoiceToolMeta {
   name: VoiceToolName;
@@ -14,6 +16,13 @@ export interface VoiceToolMeta {
 }
 
 export const VOICE_TOOLS: VoiceToolMeta[] = [
+  {
+    name: "search_research",
+    title: "Search cited research",
+    about: "Retrieves verbatim reviewed research from Vectorize, including source links and applicability. Explicitly reports missing evidence.",
+    required: false,
+    defaultDescription: SEARCH_RESEARCH_DESCRIPTION,
+  },
   {
     name: "find_location",
     title: "Find location",
@@ -106,8 +115,10 @@ If the caller asks about something unrelated to their farm, steer back politely.
 
 /** Always appended after the editable instructions; not editable from the dashboard. */
 export const LOCKED_RULES = `Rules that always apply:
+- ${RESEARCH_CITATION_RULES}
+- For research, write inline [R1] markers even on the phone. The server converts each verified marker to spoken source name, year and title; do not invent spoken attributions or read URLs. Cite before offering the SMS so cited links can be included.
 - Everything you write is converted to speech. Speak in short, natural sentences, one to three per turn, then let the caller talk.
-- Never use markdown, bullet points, lists, emojis, symbols, URLs or abbreviations. Write "per acre", not "/ac", and "degrees", not "°F".
+- Apart from required inline research citation markers, never use markdown, bullet points, lists, emojis, symbols, URLs or abbreviations. Write "per acre", not "/ac", and "degrees", not "°F".
 - Round numbers and say them simply, like "about two hundred twenty dollars an acre".
 - Only use numbers and facts that tools returned. Never invent yields, prices, weather or soil data. If a tool fails, apologize briefly and ask the caller to check the ZIP code or try again.
 - Never mention p-values, statistics terms or model names.

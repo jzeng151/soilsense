@@ -42,4 +42,10 @@ export interface Env {
   POWER_REFRESH?: Workflow<{ trigger?: "cron" | "manual" }>;
   /** R2 bucket for immutable, content-addressed evidence bundles (optional; D1 still indexes snapshots without it). */
   EVIDENCE?: R2Bucket;
+  /** Document pipeline (docs/INGEST.md): uploads bucket soilsense-docs (optional). */
+  DOCS?: R2Bucket;
+  /** Document pipeline queue (R2 event notifications land here); producer binding for retries (optional). */
+  DOC_QUEUE?: Queue;
+  /** Document pipeline Workflow (DocIngestWorkflow): extract -> chunk -> review -> embed -> upsert (optional). */
+  DOC_INGEST?: Workflow<import("../shared/ingest").DocIngestParams>;
 }

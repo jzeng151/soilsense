@@ -68,7 +68,8 @@
   --color-text: var(--soil-brown);
   --color-text-2: var(--bark);
   --color-muted: #6e5944;          /* 5.9:1 on cream */
-  --color-faint: #a89880;
+  --color-faint: #7d6650;          /* 5.0:1 on cream, 4.6:1 on subtle (WCAG 1.4.3) */
+  --color-input-border: #8c7a5c;   /* form-field outlines, 3.9:1 on cream (WCAG 1.4.11) */
   --color-heading: var(--canopy);  /* headlines on cream */
   --color-eyebrow: var(--topsoil); /* uppercase eyebrows on cream */
 
@@ -132,7 +133,8 @@
   --color-text: var(--field-cream);     /* cream on Canopy 7.5 */
   --color-text-2: var(--canopy-mist);
   --color-muted: #b9d3b6;
-  --color-faint: #8fb48d;
+  --color-faint: #b3d0af;           /* 4.9:1 on Canopy (WCAG 1.4.3) */
+  --color-input-border: #b3d0af;
   --color-heading: var(--field-cream);
   --color-primary: var(--light-gold);   /* light gold on Canopy 5.3 */
   --color-primary-soft: #2e7350;

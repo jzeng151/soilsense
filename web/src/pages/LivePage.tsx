@@ -34,6 +34,19 @@ const TOOLS: Record<string, string> = {
   end_call: "End the call",
 };
 
+/** A BCP 47 tag for a detected language, or undefined to inherit the page's English. */
+function langTag(code: string | undefined): string | undefined {
+  return code && /^[a-z]{2,3}(-[A-Za-z]{2,4})?$/.test(code) ? code : undefined;
+}
+
+function langName(code: string): string {
+  try {
+    return new Intl.DisplayNames(["en"], { type: "language" }).of(code) ?? code.toUpperCase();
+  } catch {
+    return code.toUpperCase();
+  }
+}
+
 const WATER: Record<string, string> = { rain: "Rain only", limited: "Limited water", full: "Full irrigation" };
 
 const ms = (n: unknown) => (typeof n === "number" ? (n >= 1000 ? `${(n / 1000).toFixed(1)} s` : `${Math.round(n)} ms`) : "");
@@ -181,6 +194,11 @@ function useLiveEvents() {
         if (!s.available) return setConn("unavailable");
         if (!s.demo) {
           setConn("off");
+          // Field Watch checks are shown even with demo mode off (no caller data).
+          fetch("/api/live/events?since=0")
+            .then((r) => r.json() as Promise<{ events: LiveEvent[] }>)
+            .then((j) => add(j.events ?? [], true))
+            .catch(() => undefined);
           retry = setTimeout(connect, 5000);
           return;
         }
@@ -421,11 +439,12 @@ export function LivePage({ onMenu }: { onMenu: () => void }) {
               {call && (
                 <span className="lv-muted">
                   {call.caller ?? "Caller"}
-                  {call.lastLang ? ` · speaking ${call.lastLang.toUpperCase()}` : ""}
+                  {call.lastLang ? ` · speaking ${langName(call.lastLang)}` : ""}
                 </span>
               )}
             </div>
-            <div className="lv-feed" ref={feed}>
+            {/* role=log + aria-live: screen readers hear new lines of the call as they arrive (WCAG 4.1.3). */}
+            <div className="lv-feed" ref={feed} role="log" aria-live="polite" aria-label="Call transcript" tabIndex={0}>
               {!call && <p className="lv-empty">When someone calls, the conversation shows up here.</p>}
               {call?.steps.map((s) =>
                 s.kind === "prefetch" ? (
@@ -444,11 +463,17 @@ export function LivePage({ onMenu }: { onMenu: () => void }) {
                   <div key={s.seq} className={`lv-say lv-say-${s.who}`}>
                     <span className="lv-who">
                       {s.who === "caller" ? "Farmer" : "Sprout"}
-                      {s.who === "caller" && s.lang ? <em>{s.lang.toUpperCase()}</em> : null}
+                      {s.who === "caller" && s.lang ? (
+                        <em title={langName(s.lang)}>
+                          <span className="sr-only">speaking </span>
+                          {langName(s.lang)}
+                        </em>
+                      ) : null}
                     </span>
-                    <p>
+                    {/* WCAG 3.1.2: each line carries the language it was spoken in, so screen readers pronounce it correctly. */}
+                    <p lang={langTag(s.lang)}>
                       {s.text}
-                      {s.interrupted && <small> (interrupted)</small>}
+                      {s.interrupted && <small lang="en"> (interrupted)</small>}
                     </p>
                   </div>
                 ) : s.kind === "tool" ? (

@@ -393,7 +393,8 @@ function LanguagesBlock({ config, draft, setDraft }: { config: VoiceConfig; draf
             return (
               <button key={l.code} type="button" className={`st-lang-chip ${on ? "on" : ""}`} aria-pressed={on} disabled={l.code === "en"} onClick={() => toggle(l.code)} title={l.name}>
                 {on ? "✓ " : ""}
-                {l.native}
+                {/* WCAG 3.1.2: native names (Español, हिन्दी…) are in their own language. */}
+                <span lang={l.code}>{l.native}</span>
                 {l.native !== l.name && <small> {l.name}</small>}
               </button>
             );
@@ -614,6 +615,19 @@ function ActivityTab({ token, onAuthError }: { token: string; onAuthError: (msg?
   );
 }
 
+/** A BCP 47 language tag for a detected language, or undefined (inherit the page's English). */
+function langTag(code: string | null | undefined): string | undefined {
+  return code && /^[a-z]{2,3}(-[A-Za-z]{2,4})?$/.test(code) ? code : undefined;
+}
+
+function langName(code: string): string {
+  try {
+    return new Intl.DisplayNames(["en"], { type: "language" }).of(code) ?? code.toUpperCase();
+  } catch {
+    return code.toUpperCase();
+  }
+}
+
 function TranscriptLine({ e }: { e: CallEvent }) {
   const [open, setOpen] = useState(false);
   if (e.kind === "session_start" || e.kind === "session_end") return null;
@@ -623,9 +637,15 @@ function TranscriptLine({ e }: { e: CallEvent }) {
       <li className={`st-msg st-msg-${e.kind}`}>
         <span className="st-who">
           {e.kind === "caller" ? "Caller" : "Agent"}
-          {e.kind === "caller" && e.name && <span className="st-lang-tag">{e.name.toUpperCase()}</span>}
+          {e.kind === "caller" && e.name && (
+            <span className="st-lang-tag" title={langName(e.name)}>
+              <span className="sr-only">speaking </span>
+              {langName(e.name)}
+            </span>
+          )}
         </span>
-        <p>{e.detail}</p>
+        {/* WCAG 3.1.2: tag each message with the language it was spoken in. */}
+        <p lang={langTag(e.name)}>{e.detail}</p>
       </li>
     );
   }

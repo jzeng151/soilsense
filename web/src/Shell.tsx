@@ -93,6 +93,10 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
 
   return (
     <div className={`shell route-${route}`}>
+      {/* WCAG 2.4.1: let keyboard and screen-reader users jump past the sidebar. */}
+      <a className="skip-link" href="#content" onClick={(e) => { e.preventDefault(); document.getElementById("content")?.focus(); }}>
+        Skip to main content
+      </a>
       <Sidebar
         route={route === "admin/docs" ? "planner" : route}
         user={user}
@@ -115,7 +119,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
           if (id === activeId) setActiveId(newChatId());
         }}
       />
-      <div className="shell-main">
+      <div className="shell-main" id="content" tabIndex={-1}>
         {route === "admin/docs" ? (
           <DocsAdmin />
         ) : route === "scout" ? (

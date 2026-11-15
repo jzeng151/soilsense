@@ -16,11 +16,15 @@ import { SecondOpinion } from "./components/SecondOpinion";
 import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
+
+import { VegetationCard } from "./components/VegetationCard";
+
 import { CropTimingEvidence } from "./components/CropTimingEvidence";
 import { SmapCard } from "./components/SmapCard";
 import { GraceWellsCard } from "./components/GraceWellsCard";
 import { EconomicsCard } from "./components/EconomicsCard";
 import { HistoricalScenarios } from "./components/HistoricalScenarios";
+
 import { FieldWatchCard } from "./components/FieldWatchCard";
 import { UsdmContext } from "./components/UsdmContext";
 import { WindScreenCard } from "./components/WindScreenCard";
@@ -633,6 +637,7 @@ function MainFlow() {
                 <UsdmContext plan={plan} />
                 <WindScreenCard plan={plan} />
                 <EconomicsCard plan={plan} />
+                <VegetationCard plan={plan} />
                 <SmapCard plan={plan} />
                 <GraceWellsCard plan={plan} />
                 {/* /stretch: data evidence */}
@@ -671,6 +676,9 @@ function MainFlow() {
                     />
                   </div>
                 )}
+
+
+
 
                 <DataEvidence plan={plan} />
 

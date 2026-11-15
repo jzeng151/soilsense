@@ -228,3 +228,5 @@ api.get("/economics-assumptions", async (c) => {
 });
 import { historicalScenarios } from "./historicalScenarios";
 api.route("/historical-scenarios", historicalScenarios);
+import { groundwater } from "./groundwater";
+api.route("/groundwater", groundwater);

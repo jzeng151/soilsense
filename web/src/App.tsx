@@ -9,6 +9,7 @@ import { SecondOpinion } from "./components/SecondOpinion";
 import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
+import { VegetationCard } from "./components/VegetationCard";
 import { FieldWatchCard } from "./components/FieldWatchCard";
 import { TrendChart, trendText, trendTone } from "./components/TrendChart";
 
@@ -610,6 +611,10 @@ export function App() {
                     />
                   </div>
                 )}
+
+                {/* stretch: data evidence */}
+                <VegetationCard plan={plan} />
+                {/* /stretch: data evidence */}
 
                 <details className="jr-more">
                   <summary>Compare with other options</summary>

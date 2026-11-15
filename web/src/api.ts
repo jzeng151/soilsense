@@ -29,3 +29,7 @@ export async function scoutStatus(): Promise<{ configured: boolean; model: strin
 export async function fetchSecondOpinion(countyFips: string, signal?: AbortSignal): Promise<SecondOpinion> {
   return handle(await fetch(`/api/second-opinion?fips=${encodeURIComponent(countyFips)}`, { signal }));
 }
+
+export async function fetchVegetation(lat: number, lon: number, year: number, signal?: AbortSignal): Promise<import("../../src/shared/types").ModisVegetation> {
+  return handle(await fetch(`/api/vegetation?lat=${lat}&lon=${lon}&year=${year}`, { signal }));
+}

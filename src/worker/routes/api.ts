@@ -209,3 +209,14 @@ api.get("/logs", async (c) => {
 api.route("/scout", scout);
 // Field Watch: background field checks (Cron Trigger) and their saved results.
 api.route("/fieldwatch", fieldWatch);
+
+
+// Additive stretch evidence endpoint: never blocks plan construction.
+api.get("/vegetation", async (c) => {
+  const coords = parseCoords(c.req.query("lat"), c.req.query("lon"));
+  const year = Number(c.req.query("year"));
+  if (typeof coords === "string") return c.json({ error: coords }, 400);
+  if (!Number.isInteger(year) || year < 2001 || year >= new Date().getUTCFullYear()) return c.json({ error: "year must be a completed year from 2001 onward" }, 400);
+  const { getModisNdvi } = await import("../data/modis");
+  return c.json(await getModisNdvi(c.env.DB, coords.lat, coords.lon, year));
+});

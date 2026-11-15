@@ -1,0 +1,97 @@
+{
+  "timestamp": "2026-11-15T23:46:41.772Z",
+  "revision": "386ebb6ab100d534ab96ff6b4ccdb62037465914",
+  "base": "http://127.0.0.1:8792/",
+  "browser": "159.0.8154.6",
+  "replayEnabled": false,
+  "aiEnabled": false,
+  "tests": [
+    {
+      "name": "landing-language",
+      "status": "passed",
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+      ],
+      "pageErrors": [],
+      "failedResponses": [
+        {
+          "url": "http://127.0.0.1:8792/api/auth/me",
+          "status": 401
+        }
+      ],
+      "blockedWrites": [],
+      "durationMs": 502
+    },
+    {
+      "name": "kansas-plan",
+      "status": "passed",
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+      ],
+      "pageErrors": [],
+      "failedResponses": [
+        {
+          "url": "http://127.0.0.1:8792/api/auth/me",
+          "status": 401
+        }
+      ],
+      "blockedWrites": [],
+      "evidence": [
+        {
+          "label": "Historical vegetation evidence",
+          "text": "Vegetation evidence · MODIS\n\nHistorical coarse/composite point pixel, not field measurements or a prediction for any proposed rotation. Low NDVI does not establish bare soil.\n\n2025: 23 of 23 expected composites pass strict QA (complete). Field-area coverage unknown.\n\n1.0\n0\n−0.2\nJan\nDec\nNDVI (dimensionless), 250 m nominal, 16-day composites. Dots only: gaps are not interpolated.\nDates, QA, sources and limits"
+        },
+        {
+          "label": "SMAP regional moisture evidence",
+          "text": "SMAP soil moisture · regional context\n\nAssimilated/model-derived regional soil moisture, not an in-field sensor or a counterfactual rotation response. Does not change crop rankings or Field Watch Dry/Watch/OK.\n\nAssimilated/model-derived regional soil moisture, not an in-field sensor or a counterfactual rotation response.\n\n2022 July 1 UTC seasonal window; requested baseline 2015–2025, replay year excluded. No pre-2015 SMAP history is fabricated.\n\nSurface (0–5 cm): 0.070 m³/m³\nRoot zone (0–100 cm): 0.174 m³/m³\n\nCell row 310, column 849; data retrieved 2026-11-15T13:19:49.440929+00:00. QA: v1 demonstration applicability screen: finite native values 0–0.9 m3/m3, soil_temp_layer1 >=273.15 K, snow_mass ==0 kg/m2. L4 geophysical fields have no L2 retrieval quality bitfield; no L2 flags invented. Not a validation of assimilation updates; SMAP outages can be model-only.. Record 2015-07-01T01:30:00Z to 2025-07-01T22:30:00Z.\n\nNASA / NSIDC SPL4SMGP v008 · DOI 10.5067/T5RUATAQREF8 · 9 km EASE-Grid 2.0, 3-hour time averages. Short records are not long-term drought normals."
+        },
+        {
+          "label": "Regional GRACE and Kansas well observations",
+          "text": "Regional water storage & nearby Kansas wells\n\nGRACE measures total terrestrial water storage across a broad region, not an individual aquifer, well or field. Groundwater, soil moisture, surface water and snow can contribute. These observations do not change crop rankings or Field Watch status.\n\nRegional-only total terrestrial water storage versus separate point well observations. Not a field/well forecast, pumping measurement or irrigation allocation.\n\nNASA/JPL GRACE/GRACE-FO RL06.3Mv04 CRI · mascon 861 · ~3-degree equal-area mascon; 0.5-degree display grid is NOT independent field-scale resolution. Native grid-cell center 38.25, -100.75 identifies a regional estimate, not the selected field.\n\n2004–2009 time-mean baseline (2004.000 to 2009.999); cm equivalent water thickness anomaly. Display period January 2015–December 2025. 21 missing months, including the inter-mission gap, remain gaps. Source coverage 2002-04-16T00:00:00Z to 2026-09-16T23:59:59Z. Retrieved 2026-11-15T13:29:00.029550+00:00.\n\nRepresentative grid cell in the actual native mascon_ID containing Finney demo; unscaled CRI lwe_thickness, no gain factors, no added GAD, no groundwater subtraction, no smoothing or rebaselining. Uncertainty is native mascon 1-sigma, not independent pixel errors.\n\nScale and interpretation limitation. Direction agreement is descriptive, not validation: total terrestrial storage includes groundwater, soil moisture, surface water and snow. Nearby wells do not validate a broad mascon or predict this field’s own well.\n\nMatched-period trend comparison and dated well records\nMonthly regional storage, uncertainty and gaps\n\nNASA/JPL / PO.DAAC product and citation · DOI 10.5067/TEMSC-3JC634. NASA/JPL, NASA/DLR GRACE and NASA/GFZ GRACE-FO; PO.DAAC.\n\nKansas Geological Survey WIZARD · KGS disclaimer. Local observations are not definitive validation of a mascon. No prediction of the farmer’s own well, pumping or allocation follows."
+        }
+      ],
+      "durationMs": 1388
+    },
+    {
+      "name": "field-watch",
+      "status": "skipped",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "failedResponses": [],
+      "blockedWrites": [],
+      "reason": "Read-only default: set E2E_REPLAY=1 to schedule one finney-ks demo replay.",
+      "durationMs": 3
+    },
+    {
+      "name": "sprout",
+      "status": "skipped",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "failedResponses": [],
+      "blockedWrites": [],
+      "reason": "Read-only default: set E2E_AI=1 to send one AI question (may incur inference cost).",
+      "durationMs": 3
+    },
+    {
+      "name": "admin-token-gate",
+      "status": "passed",
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+      ],
+      "pageErrors": [],
+      "failedResponses": [
+        {
+          "url": "http://127.0.0.1:8792/api/auth/me",
+          "status": 401
+        }
+      ],
+      "blockedWrites": [],
+      "durationMs": 340
+    }
+  ],
+  "counts": {
+    "passed": 3,
+    "failed": 0,
+    "skipped": 2
+  }
+}

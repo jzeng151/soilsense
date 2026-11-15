@@ -1,0 +1,199 @@
+{
+  "timestamp": "2026-11-15T22:44:48.279Z",
+  "revision": "4f44678df1d511b5f939d19aacb22bf288050870",
+  "base": "http://127.0.0.1:8792/",
+  "browser": "159.0.8154.6",
+  "replayEnabled": true,
+  "aiEnabled": true,
+  "tests": [
+    {
+      "name": "landing-language",
+      "status": "passed",
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+      ],
+      "pageErrors": [],
+      "failedResponses": [
+        {
+          "url": "http://127.0.0.1:8792/api/auth/me",
+          "status": 401
+        }
+      ],
+      "blockedWrites": [],
+      "durationMs": 3115
+    },
+    {
+      "name": "kansas-plan",
+      "status": "passed",
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+      ],
+      "pageErrors": [],
+      "failedResponses": [
+        {
+          "url": "http://127.0.0.1:8792/api/auth/me",
+          "status": 401
+        }
+      ],
+      "blockedWrites": [],
+      "evidence": [
+        {
+          "label": "Historical vegetation evidence",
+          "text": "Vegetation evidence · MODIS\n\nHistorical coarse/composite point pixel, not field measurements or a prediction for any proposed rotation. Low NDVI does not establish bare soil.\n\nVegetation unavailable; observations remain unknown."
+        },
+        {
+          "label": "SMAP regional moisture evidence",
+          "text": "SMAP soil moisture · regional context\n\nAssimilated/model-derived regional soil moisture, not an in-field sensor or a counterfactual rotation response. Does not change crop rankings or Field Watch Dry/Watch/OK.\n\nAssimilated/model-derived regional soil moisture, not an in-field sensor or a counterfactual rotation response.\n\n2022 July 1 UTC seasonal window; requested baseline 2015–2025, replay year excluded. No pre-2015 SMAP history is fabricated.\n\nSurface (0–5 cm): 0.070 m³/m³\nRoot zone (0–100 cm): 0.174 m³/m³\n\nCell row 310, column 849; data retrieved 2026-11-15T13:19:49.440929+00:00. QA: v1 demonstration applicability screen: finite native values 0–0.9 m3/m3, soil_temp_layer1 >=273.15 K, snow_mass ==0 kg/m2. L4 geophysical fields have no L2 retrieval quality bitfield; no L2 flags invented. Not a validation of assimilation updates; SMAP outages can be model-only.. Record 2015-07-01T01:30:00Z to 2025-07-01T22:30:00Z.\n\nNASA / NSIDC SPL4SMGP v008 · DOI 10.5067/T5RUATAQREF8 · 9 km EASE-Grid 2.0, 3-hour time averages. Short records are not long-term drought normals."
+        },
+        {
+          "label": "Regional GRACE and Kansas well observations",
+          "text": "Regional water storage & nearby Kansas wells\n\nGRACE measures total terrestrial water storage across a broad region, not an individual aquifer, well or field. Groundwater, soil moisture, surface water and snow can contribute. These observations do not change crop rankings or Field Watch status.\n\nRegional-only total terrestrial water storage versus separate point well observations. Not a field/well forecast, pumping measurement or irrigation allocation.\n\nNASA/JPL GRACE/GRACE-FO RL06.3Mv04 CRI · mascon 861 · ~3-degree equal-area mascon; 0.5-degree display grid is NOT independent field-scale resolution. Native grid-cell center 38.25, -100.75 identifies a regional estimate, not the selected field.\n\n2004–2009 time-mean baseline (2004.000 to 2009.999); cm equivalent water thickness anomaly. Display period January 2015–December 2025. 21 missing months, including the inter-mission gap, remain gaps. Source coverage 2002-04-16T00:00:00Z to 2026-09-16T23:59:59Z. Retrieved 2026-11-15T13:29:00.029550+00:00.\n\nRepresentative grid cell in the actual native mascon_ID containing Finney demo; unscaled CRI lwe_thickness, no gain factors, no added GAD, no groundwater subtraction, no smoothing or rebaselining. Uncertainty is native mascon 1-sigma, not independent pixel errors.\n\nScale and interpretation limitation. Direction agreement is descriptive, not validation: total terrestrial storage includes groundwater, soil moisture, surface water and snow. Nearby wells do not validate a broad mascon or predict this field’s own well.\n\nMatched-period trend comparison and dated well records\nMonthly regional storage, uncertainty and gaps\n\nNASA/JPL / PO.DAAC product and citation · DOI 10.5067/TEMSC-3JC634. NASA/JPL, NASA/DLR GRACE and NASA/GFZ GRACE-FO; PO.DAAC.\n\nKansas Geological Survey WIZARD · KGS disclaimer. Local observations are not definitive validation of a mascon. No prediction of the farmer’s own well, pumping or allocation follows."
+        }
+      ],
+      "durationMs": 101595
+    },
+    {
+      "name": "field-watch",
+      "status": "passed",
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+      ],
+      "pageErrors": [],
+      "failedResponses": [
+        {
+          "url": "http://127.0.0.1:8792/api/auth/me",
+          "status": 401
+        },
+        {
+          "url": "http://127.0.0.1:8792/api/auth/me",
+          "status": 401
+        }
+      ],
+      "blockedWrites": [],
+      "run": {
+        "runId": "finney-ks:jun-2022:2026-11-15T22:46:33.527Z",
+        "fieldId": "finney-ks",
+        "fieldName": "Finney County, KS",
+        "mode": "replay",
+        "replayId": "jun-2022",
+        "status": "dry",
+        "ruleVersion": 2,
+        "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st–30th, D1 = 11th–20th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+        "scheduledAt": 1794782793527,
+        "dueAt": 1794782838527,
+        "completedAt": 1794782838006,
+        "headline": "Historical replay: Dry spell starting: 0.37 in of rain in 14 days, drier than 97% of past years, and soil drier than usual (0th percentile)",
+        "reasons": [
+          {
+            "id": "rain14",
+            "text": "Rain Jun 14–Jun 27: 0.37 in, drier than 97% of the same two weeks in 1991–2021 (typical: 1.60 in).",
+            "source": "NASA POWER daily (PRECTOTCORR)"
+          },
+          {
+            "id": "balance14",
+            "text": "Water balance Jun 14–Jun 27 (context only): rain minus estimated crop water demand is −3.27 in (demand 3.64 in, FAO-56 Hargreaves).",
+            "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+          },
+          {
+            "id": "rootzone",
+            "text": "Root-zone soil wetness (7 days to Jun 27): 0th percentile for this time of year.",
+            "source": "NASA POWER daily (GWETROOT)"
+          }
+        ],
+        "metrics": {
+          "windowStart": "2022-06-14",
+          "dataThrough": "2022-06-27",
+          "rain14Mm": 9.5,
+          "normalRain14Mm": 40.6,
+          "rainPercentile": 3,
+          "et014Mm": 92.6,
+          "balance14Mm": -83.1,
+          "rootzoneDate": "2022-06-27",
+          "rootzoneWetness": 0.247,
+          "rootzonePercentile": 0,
+          "normalYears": 31,
+          "normalPeriod": "1991–2021",
+          "kansas": null
+        },
+        "snapshot": {
+          "label": "Historical replay",
+          "source": "NASA POWER daily (cached record 1991–2025), grid cell containing 38.1095, -100.706",
+          "comparisonYears": "1991–2021",
+          "windowStart": "2022-06-14",
+          "windowEnd": "2022-06-27",
+          "inputSha256": "84e190d19654433932da078b102a0015f7e04548dec9b687bdd2e22affde898c"
+        },
+        "sources": [
+          {
+            "name": "NASA POWER daily",
+            "url": "https://power.larc.nasa.gov/",
+            "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+          },
+          {
+            "name": "FAO-56 Hargreaves ET0",
+            "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+            "detail": "Crop water demand from daily temperature and latitude"
+          },
+          {
+            "name": "Kansas Crop Rotation Advice (team pipeline, V. Pisharody)",
+            "url": "https://pub-fe3948f31a9c462890b089ed5356c336.r2.dev/app_rotation_advice.json",
+            "detail": "Weekly drought outlook (unavailable for this run)"
+          }
+        ],
+        "researchNote": {
+          "status": "unavailable",
+          "passages": [],
+          "tags": [
+            "corn"
+          ],
+          "retrievedAt": null,
+          "corpusVersion": "soilsense-research-v1-2026-11-14",
+          "embedding": {
+            "id": "bge-base-en-v1.5/cls/768/v1",
+            "model": "@cf/baai/bge-base-en-v1.5",
+            "dimensions": 768,
+            "pooling": "cls"
+          },
+          "cropSource": "demo field configuration",
+          "template": "Research on corn in dry conditions (shown as context, not advice for this field):",
+          "query": "Research on corn during dry spells, drought and limited soil water.",
+          "reason": "research bindings not configured"
+        }
+      },
+      "completionMs": 45284,
+      "durationMs": 45768
+    },
+    {
+      "name": "sprout",
+      "status": "skipped",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "failedResponses": [],
+      "blockedWrites": [],
+      "reason": "AI unavailable: /api/scout/status configured=false.",
+      "durationMs": 12
+    },
+    {
+      "name": "admin-token-gate",
+      "status": "passed",
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+      ],
+      "pageErrors": [],
+      "failedResponses": [
+        {
+          "url": "http://127.0.0.1:8792/api/auth/me",
+          "status": 401
+        }
+      ],
+      "blockedWrites": [],
+      "durationMs": 213
+    }
+  ],
+  "counts": {
+    "passed": 4,
+    "failed": 0,
+    "skipped": 1
+  }
+}

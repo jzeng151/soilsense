@@ -1,0 +1,1868 @@
+{
+  "local": {
+    "timestamp": "2026-11-15T23:36:43.148Z",
+    "base": "http://127.0.0.1:8792",
+    "tests": [
+      {
+        "name": "health",
+        "method": "GET",
+        "path": "/api/health",
+        "httpStatus": 200,
+        "elapsedMs": 38,
+        "details": {
+          "ok": true,
+          "service": "soilsense",
+          "db": true,
+          "ai": false,
+          "twilio": false,
+          "keys": [
+            "ok",
+            "service",
+            "db",
+            "ai",
+            "twilio"
+          ]
+        }
+      },
+      {
+        "name": "healthz",
+        "method": "GET",
+        "path": "/healthz",
+        "httpStatus": 200,
+        "elapsedMs": 32,
+        "details": {
+          "ok": true,
+          "keys": [
+            "ok"
+          ]
+        }
+      },
+      {
+        "name": "field-Iowa",
+        "method": "GET",
+        "path": "/api/field?lat=42.0563&lon=-93.495",
+        "httpStatus": 200,
+        "elapsedMs": 33,
+        "details": {
+          "lat": 42.0563,
+          "lon": -93.495,
+          "keys": [
+            "lat",
+            "lon",
+            "county",
+            "soil",
+            "cropHistory"
+          ],
+          "soil": {
+            "available": true,
+            "source": "USDA NRCS SSURGO via Soil Data Access"
+          },
+          "cropHistory": {
+            "available": true,
+            "years": 10
+          }
+        }
+      },
+      {
+        "name": "field-Illinois",
+        "method": "GET",
+        "path": "/api/field?lat=40.048&lon=-88.33",
+        "httpStatus": 200,
+        "elapsedMs": 9,
+        "details": {
+          "lat": 40.048,
+          "lon": -88.33,
+          "keys": [
+            "lat",
+            "lon",
+            "county",
+            "soil",
+            "cropHistory"
+          ],
+          "soil": {
+            "available": true,
+            "source": "USDA NRCS SSURGO via Soil Data Access"
+          },
+          "cropHistory": {
+            "available": true,
+            "years": 10
+          }
+        }
+      },
+      {
+        "name": "field-Kansas",
+        "method": "GET",
+        "path": "/api/field?lat=38.1095&lon=-100.706",
+        "httpStatus": 200,
+        "elapsedMs": 23,
+        "details": {
+          "lat": 38.1095,
+          "lon": -100.706,
+          "keys": [
+            "lat",
+            "lon",
+            "county",
+            "soil",
+            "cropHistory"
+          ],
+          "soil": {
+            "available": true,
+            "source": "USDA NRCS SSURGO via Soil Data Access"
+          },
+          "cropHistory": {
+            "available": true,
+            "years": 10
+          }
+        }
+      },
+      {
+        "name": "field-Nebraska",
+        "method": "GET",
+        "path": "/api/field?lat=40.73&lon=-96.55",
+        "httpStatus": 200,
+        "elapsedMs": 32,
+        "details": {
+          "lat": 40.73,
+          "lon": -96.55,
+          "keys": [
+            "lat",
+            "lon",
+            "county",
+            "soil",
+            "cropHistory"
+          ],
+          "soil": {
+            "available": true,
+            "source": "USDA NRCS SSURGO via Soil Data Access"
+          },
+          "cropHistory": {
+            "available": true,
+            "years": 10
+          }
+        }
+      },
+      {
+        "name": "research-status",
+        "method": "GET",
+        "path": "/api/research/status",
+        "httpStatus": 200,
+        "elapsedMs": 24,
+        "details": {
+          "corpusVersion": "soilsense-research-v1-2026-11-14",
+          "chunks": 13,
+          "ai": false,
+          "scoringVersion": "e6-farmer-measurements",
+          "savedEntries": 0,
+          "keys": [
+            "corpusVersion",
+            "chunks",
+            "sources",
+            "embedding",
+            "generation",
+            "index",
+            "ai",
+            "retrieval",
+            "scoringVersion",
+            "savedEntries"
+          ],
+          "sourcesCount": 3,
+          "indexBound": false
+        }
+      },
+      {
+        "name": "research-corpus",
+        "method": "GET",
+        "path": "/api/research/corpus",
+        "httpStatus": 200,
+        "elapsedMs": 33,
+        "details": {
+          "corpusVersion": "soilsense-research-v1-2026-11-14",
+          "curatedAt": "2026-11-14",
+          "excerptRule": "Each chunk is a contiguous verbatim excerpt of the source; only whitespace/line breaks are normalized to single spaces. Verify with: node scripts/verify-research-corpus.mjs",
+          "keys": [
+            "corpusVersion",
+            "curatedAt",
+            "excerptRule",
+            "sources",
+            "chunks"
+          ],
+          "sourcesCount": 3,
+          "chunksCount": 13
+        }
+      },
+      {
+        "name": "scout-status",
+        "method": "GET",
+        "path": "/api/scout/status",
+        "httpStatus": 200,
+        "elapsedMs": 32,
+        "details": {
+          "configured": false,
+          "model": null,
+          "provider": null,
+          "fallback": null,
+          "research": "unavailable",
+          "keys": [
+            "configured",
+            "model",
+            "provider",
+            "fallback",
+            "research"
+          ]
+        }
+      },
+      {
+        "name": "fieldwatch",
+        "method": "GET",
+        "path": "/api/fieldwatch/latest",
+        "httpStatus": 200,
+        "elapsedMs": 29,
+        "details": {
+          "lastCronAt": null,
+          "lastCheckAt": null,
+          "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st–30th, D1 = 11th–20th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+          "keys": [
+            "runs",
+            "lastCronAt",
+            "lastCheckAt",
+            "rule",
+            "thresholds",
+            "schedule",
+            "fields"
+          ],
+          "runsCount": 0,
+          "fieldsCount": 4,
+          "runs": []
+        }
+      },
+      {
+        "name": "fieldwatch-history",
+        "method": "GET",
+        "path": "/api/fieldwatch/runs?field=finney-ks&limit=2",
+        "httpStatus": 200,
+        "elapsedMs": 24,
+        "details": {
+          "keys": [
+            "runs"
+          ],
+          "runsCount": 0,
+          "runs": []
+        }
+      },
+      {
+        "name": "agent-options",
+        "method": "GET",
+        "path": "/api/fieldwatch/agent/options",
+        "httpStatus": 200,
+        "elapsedMs": 23,
+        "details": {
+          "delaySeconds": 45,
+          "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st–30th, D1 = 11th–20th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+          "available": true,
+          "keys": [
+            "delaySeconds",
+            "fields",
+            "replays",
+            "weekly",
+            "rule",
+            "available"
+          ],
+          "fieldsCount": 4,
+          "replaysCount": 1
+        }
+      },
+      {
+        "name": "agent-runs",
+        "method": "GET",
+        "path": "/api/fieldwatch/agent/finney-ks/runs?limit=2",
+        "httpStatus": 200,
+        "elapsedMs": 39,
+        "details": {
+          "now": 1794785806028,
+          "keys": [
+            "runs",
+            "now"
+          ],
+          "runsCount": 2,
+          "runs": [
+            {
+              "runId": "finney-ks:jun-2022:2026-11-15T23:35:24.810Z",
+              "fieldId": "finney-ks",
+              "status": "dry",
+              "completedAt": 1794785769043,
+              "kansas": null
+            },
+            {
+              "runId": "finney-ks:jun-2022:2026-11-15T23:33:18.218Z",
+              "fieldId": "finney-ks",
+              "status": "dry",
+              "completedAt": 1794785643023,
+              "kansas": null
+            }
+          ]
+        }
+      },
+      {
+        "name": "weekly-watch",
+        "method": "GET",
+        "path": "/api/fieldwatch/agent/finney-ks/watch",
+        "httpStatus": 200,
+        "elapsedMs": 36,
+        "details": {
+          "schedule": "Mondays at 14:00 UTC (8:00 am CST / 9:00 am CDT)",
+          "scheduledJobs": 0,
+          "keys": [
+            "settings",
+            "schedule",
+            "scheduledJobs",
+            "runs"
+          ],
+          "runsCount": 0,
+          "runs": [],
+          "settings": {
+            "enabled": false,
+            "crop": null,
+            "version": 6,
+            "updatedAt": 1794785724417,
+            "weeklyScheduleId": null,
+            "nextWeeklyAt": null,
+            "windowScheduleId": null,
+            "nextWindow": null
+          }
+        }
+      },
+      {
+        "name": "imerg",
+        "method": "GET",
+        "path": "/api/imerg/comparison/finney-ks",
+        "httpStatus": 200,
+        "elapsedMs": 33,
+        "details": {
+          "state": "unavailable",
+          "note": "Optional IMERG evidence has not been retrieved for this window, or its cache expired. POWER and Field Watch are unchanged.",
+          "keys": [
+            "state",
+            "note"
+          ]
+        }
+      },
+      {
+        "name": "smap",
+        "method": "GET",
+        "path": "/api/smap?lat=38.1095&lon=-100.706&year=2022",
+        "httpStatus": 200,
+        "elapsedMs": 24,
+        "details": {
+          "status": "available",
+          "note": "Assimilated/model-derived regional soil moisture, not an in-field sensor or a counterfactual rotation response.",
+          "keys": [
+            "status",
+            "note",
+            "bundle",
+            "evidence"
+          ]
+        }
+      },
+      {
+        "name": "smap-catalog",
+        "method": "GET",
+        "path": "/api/smap/catalog",
+        "httpStatus": 200,
+        "elapsedMs": 24,
+        "details": {
+          "status": "catalog-only",
+          "collection": "C3480440870-NSIDC_CPRD",
+          "keys": [
+            "status",
+            "collection"
+          ]
+        }
+      },
+      {
+        "name": "modis",
+        "method": "GET",
+        "path": "/api/vegetation?lat=38.1095&lon=-100.706&year=2025",
+        "httpStatus": 200,
+        "elapsedMs": 25,
+        "details": {
+          "status": "complete",
+          "product": "MOD13Q1",
+          "version": "061",
+          "lat": 38.1095,
+          "lon": -100.706,
+          "year": 2025,
+          "resolution": "250 m nominal; MODIS sinusoidal grid",
+          "interval": "16-day composite (last interval ends December 31)",
+          "units": "NDVI (dimensionless)",
+          "scale": 0.0001,
+          "expectedCount": 23,
+          "validCount": 23,
+          "retrievedAt": "2026-11-15T22:47:33.135Z",
+          "docsUrl": "https://lpdaac.usgs.gov/documents/621/MOD13_User_Guide_V61.pdf",
+          "attribution": "Didan, K. (2021), MOD13Q1.061, NASA LP DAAC, doi:10.5067/MODIS/MOD13Q1.061. Subsets: ORNL DAAC TESViS RESTful Web Service (2018), doi:10.3334/ORNLDAAC/1600.",
+          "note": "Coarse historical point pixel, not a field measurement or observations of alternative rotations. Low NDVI does not establish bare soil; residue and mixed pixels remain unresolved. No interpolation or cross-sensor merging. Field-area coverage is unknown. MODIS uses provider NDVI, not reflectance-derived field NDVI.",
+          "keys": [
+            "status",
+            "product",
+            "version",
+            "lat",
+            "lon",
+            "year",
+            "resolution",
+            "interval",
+            "units",
+            "scale",
+            "expectedCount",
+            "validCount",
+            "observations",
+            "requestUrls",
+            "retrievedAt",
+            "docsUrl",
+            "attribution",
+            "note"
+          ],
+          "observationsCount": 23,
+          "requestUrlsCount": 4
+        }
+      },
+      {
+        "name": "groundwater",
+        "method": "GET",
+        "path": "/api/groundwater?lat=38.1095&lon=-100.706",
+        "httpStatus": 200,
+        "elapsedMs": 26,
+        "details": {
+          "status": "available",
+          "note": "Regional-only total terrestrial water storage versus separate point well observations. Not a field/well forecast, pumping measurement or irrigation allocation.",
+          "keys": [
+            "status",
+            "note",
+            "bundle",
+            "comparison"
+          ]
+        }
+      },
+      {
+        "name": "usdm-category",
+        "method": "GET",
+        "path": "/api/usdm/category?fips=20055&date=2022-06-28",
+        "httpStatus": 200,
+        "elapsedMs": 33,
+        "details": {
+          "fips": "20055",
+          "date": "2022-06-28",
+          "historical": true,
+          "countyName": "Finney County",
+          "stateCode": "KS",
+          "status": "matched",
+          "ageDays": 0,
+          "snapshotId": "usdm-county-20055-2022-06-28",
+          "label": "Historical: D3 extreme drought over 88% of Finney County, KS; up to D4 exceptional drought in part of the county (USDM map valid 2022-06-28)",
+          "keys": [
+            "fips",
+            "date",
+            "historical",
+            "countyName",
+            "stateCode",
+            "source",
+            "status",
+            "week",
+            "ageDays",
+            "snapshotId",
+            "label"
+          ]
+        }
+      },
+      {
+        "name": "usdm-timeline",
+        "method": "GET",
+        "path": "/api/usdm/timeline?fips=20055&start=2022-05-01&end=2022-09-30",
+        "httpStatus": 200,
+        "elapsedMs": 32,
+        "details": {
+          "fips": "20055",
+          "countyName": "Finney County",
+          "stateCode": "KS",
+          "expectedWeeks": 23,
+          "observedWeeks": 23,
+          "droughtWeeks": 23,
+          "mixedWeeks": 13,
+          "status": "complete",
+          "note": "23 of 23 weekly maps observed; drought (D1–D4) covered most of the county in 23 of 23 observed weeks.",
+          "keys": [
+            "fips",
+            "countyName",
+            "stateCode",
+            "window",
+            "expectedWeeks",
+            "observedWeeks",
+            "missingWeeks",
+            "weeks",
+            "counts",
+            "droughtWeeks",
+            "mixedWeeks",
+            "status",
+            "note",
+            "source"
+          ],
+          "missingWeeksCount": 0,
+          "weeksCount": 23
+        }
+      },
+      {
+        "name": "usdm-replay",
+        "method": "GET",
+        "path": "/api/usdm/replay?fips=20055&years=2022",
+        "httpStatus": 200,
+        "elapsedMs": 24,
+        "details": {
+          "keys": [
+            "timelines"
+          ],
+          "timelinesCount": 1
+        }
+      },
+      {
+        "name": "crop-timing",
+        "method": "GET",
+        "path": "/api/crop-timing?lat=38.1095&lon=-100.706&year=2022&planting=2022-05-01",
+        "httpStatus": 200,
+        "elapsedMs": 41,
+        "details": {
+          "keys": [
+            "timing",
+            "weather",
+            "nassComparison"
+          ],
+          "timing": {
+            "status": "estimated",
+            "planting": "2022-05-01",
+            "silking": "2022-07-08",
+            "maturity": "2022-08-19"
+          }
+        }
+      },
+      {
+        "name": "historical-scenarios",
+        "method": "GET",
+        "path": "/api/historical-scenarios?lat=38.1095&lon=-100.706",
+        "httpStatus": 200,
+        "elapsedMs": 89,
+        "details": {
+          "keys": [
+            "rule",
+            "candidateYears",
+            "candidates",
+            "tiedYears",
+            "hot",
+            "reference",
+            "replay2022",
+            "catalog",
+            "limitations",
+            "snapshot"
+          ],
+          "candidatesCount": 35,
+          "tiedYearsCount": 1,
+          "catalogCount": 3,
+          "limitationsCount": 5
+        }
+      },
+      {
+        "name": "economics",
+        "method": "GET",
+        "path": "/api/economics-assumptions?state=KS",
+        "httpStatus": 200,
+        "elapsedMs": 44,
+        "details": {
+          "regionNote": "KS: Approximate irrigated-practice potential",
+          "adjustments": "Nitrogen, cover costs/credits, alfalfa establishment, irrigation pumping, rotation yield effects and cost scaling remain approximate defaults.",
+          "note": "These are fallback assumptions, NOT a claim that NASS overrides were used or that any sourced budget governs the ranked plans. See the plan's own assumptions for overrides. Regional averages and modelled potential are not field yields.",
+          "keys": [
+            "regionNote",
+            "crops",
+            "adjustments",
+            "note",
+            "reference"
+          ],
+          "cropsCount": 7
+        }
+      },
+      {
+        "name": "second-opinion",
+        "method": "GET",
+        "path": "/api/second-opinion?fips=20055",
+        "httpStatus": 200,
+        "elapsedMs": 23,
+        "details": {
+          "source": "K-State recommended rain-fed rotations, ranked by our team's Kansas model (NASA POWER weather)",
+          "sourceUrl": "https://pub-fe3948f31a9c462890b089ed5356c336.r2.dev/app_rotation_advice.json",
+          "dataThrough": "2026-11-09",
+          "disclaimer": "Decision support from NASA POWER weather data (rain, water demand and heat stress; freeze risk was tested and not needed) and FAO crop methods, not a guarantee. Weather only (no prices, costs, soils or irrigation). Check with K-State Research and Extension before acting.",
+          "county": "Finney County",
+          "region": "west",
+          "alert": "normal",
+          "droughtChanceNow": 0.07,
+          "rootzonePctNow": 89,
+          "basis": "normal-year water",
+          "dryYearRanking": false,
+          "savedCopy": false,
+          "keys": [
+            "source",
+            "sourceUrl",
+            "dataThrough",
+            "disclaimer",
+            "county",
+            "region",
+            "alert",
+            "droughtChanceNow",
+            "rootzonePctNow",
+            "basis",
+            "dryYearRanking",
+            "rotations",
+            "byCurrentCrop",
+            "savedCopy"
+          ],
+          "rotationsCount": 3
+        }
+      },
+      {
+        "name": "refresh-status",
+        "method": "GET",
+        "path": "/api/refresh/status",
+        "httpStatus": 200,
+        "elapsedMs": 34,
+        "details": {
+          "workflowBound": true,
+          "evidenceBucketBound": true,
+          "note": "Freshness is judged by the observed data-through date, not by when the data were downloaded. Historical replay data are a separate stream and never change here.",
+          "keys": [
+            "farms",
+            "policy",
+            "schedule",
+            "workflowBound",
+            "evidenceBucketBound",
+            "note"
+          ],
+          "farmsCount": 4,
+          "farms": [
+            {
+              "farmId": "story-ia",
+              "state": "never"
+            },
+            {
+              "farmId": "champaign-il",
+              "state": "never"
+            },
+            {
+              "farmId": "finney-ks",
+              "state": "never"
+            },
+            {
+              "farmId": "lancaster-ne",
+              "state": "never"
+            }
+          ]
+        }
+      },
+      {
+        "name": "live-status",
+        "method": "GET",
+        "path": "/api/live/status",
+        "httpStatus": 200,
+        "elapsedMs": 32,
+        "details": {
+          "demo": false,
+          "available": true,
+          "phone": null,
+          "keys": [
+            "demo",
+            "available",
+            "phone"
+          ]
+        }
+      },
+      {
+        "name": "live-events",
+        "method": "GET",
+        "path": "/api/live/events",
+        "httpStatus": 200,
+        "elapsedMs": 37,
+        "details": {
+          "demo": false,
+          "keys": [
+            "demo",
+            "events"
+          ],
+          "eventsCount": 0
+        }
+      },
+      {
+        "name": "auth-me",
+        "method": "GET",
+        "path": "/api/auth/me",
+        "httpStatus": 401,
+        "elapsedMs": 23,
+        "details": {
+          "error": "Not signed in.",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "admin-check",
+        "method": "GET",
+        "path": "/api/admin/check",
+        "httpStatus": 401,
+        "elapsedMs": 22,
+        "details": {
+          "error": "Please sign in.",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "admin-usage",
+        "method": "GET",
+        "path": "/api/admin/ai-usage",
+        "httpStatus": 401,
+        "elapsedMs": 32,
+        "details": {
+          "error": "Please sign in.",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "docs-list",
+        "method": "GET",
+        "path": "/api/docs",
+        "httpStatus": 403,
+        "elapsedMs": 22,
+        "details": {
+          "error": "Set ADMIN_TOKEN first",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "docs-detail",
+        "method": "GET",
+        "path": "/api/docs/verification-nonexistent",
+        "httpStatus": 403,
+        "elapsedMs": 24,
+        "details": {
+          "error": "Set ADMIN_TOKEN first",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "docs-upload-gate",
+        "method": "POST",
+        "path": "/api/docs/upload?name=verification.txt",
+        "httpStatus": 403,
+        "elapsedMs": 23,
+        "details": {
+          "error": "Set ADMIN_TOKEN first",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "docs-url-gate",
+        "method": "POST",
+        "path": "/api/docs/from-url",
+        "httpStatus": 403,
+        "elapsedMs": 32,
+        "details": {
+          "error": "Set ADMIN_TOKEN first",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "docs-review-gate",
+        "method": "POST",
+        "path": "/api/docs/verification/review",
+        "httpStatus": 403,
+        "elapsedMs": 9,
+        "details": {
+          "error": "Set ADMIN_TOKEN first",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "refresh-gate",
+        "method": "POST",
+        "path": "/api/refresh/run",
+        "httpStatus": 403,
+        "elapsedMs": 32,
+        "details": {
+          "error": "Manual refresh is disabled until ADMIN_TOKEN is set.",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "research-ingest-gate",
+        "method": "POST",
+        "path": "/api/research/ingest",
+        "httpStatus": 403,
+        "elapsedMs": 30,
+        "details": {
+          "error": "Set the ADMIN_TOKEN secret first.",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "plan-validation",
+        "method": "POST",
+        "path": "/api/plan",
+        "httpStatus": 400,
+        "elapsedMs": 23,
+        "details": {
+          "error": "goals must be distinct",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "cached-plan",
+        "method": "POST",
+        "path": "/api/plan",
+        "httpStatus": 200,
+        "elapsedMs": 46,
+        "details": {
+          "generatedAt": "2026-11-15T22:53:51.158Z",
+          "disclaimer": "SoilSense is decision support, not a guarantee. It does not forecast this season's weather. Economics are indicative and based on editable price and cost assumptions. Review any plan with your county extension agent or agronomist.",
+          "water": "full",
+          "keys": [
+            "request",
+            "generatedAt",
+            "location",
+            "soil",
+            "cropHistory",
+            "climate",
+            "plans",
+            "currentPractice",
+            "facts",
+            "explanation",
+            "assumptions",
+            "powerEvidence",
+            "dataSources",
+            "disclaimer",
+            "water",
+            "waterOptions",
+            "droughtReplays",
+            "validation"
+          ],
+          "plansCount": 3,
+          "factsCount": 21,
+          "assumptionsCount": 23,
+          "dataSourcesCount": 9,
+          "waterOptionsCount": 3,
+          "droughtReplaysCount": 3,
+          "validationCount": 4,
+          "soil": {
+            "available": true,
+            "source": "USDA NRCS SSURGO via Soil Data Access"
+          },
+          "cropHistory": {
+            "available": true,
+            "years": 10
+          },
+          "plans": [
+            {
+              "id": "plan-1",
+              "label": "Soybean → Corn → Soybean",
+              "total": 0.85
+            },
+            {
+              "id": "plan-2",
+              "label": "Soybean → Winter wheat → Soybean",
+              "total": 0.816
+            },
+            {
+              "id": "plan-3",
+              "label": "Soybean → Grain sorghum → Soybean",
+              "total": 0.807
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "deployed": {
+    "timestamp": "2026-11-15T22:53:52.126Z",
+    "base": "https://soilsense-jason.jason-zeng151.workers.dev",
+    "tests": [
+      {
+        "name": "health",
+        "method": "GET",
+        "path": "/api/health",
+        "httpStatus": 200,
+        "elapsedMs": 374,
+        "details": {
+          "ok": true,
+          "service": "soilsense",
+          "db": true,
+          "ai": true,
+          "twilio": false,
+          "keys": [
+            "ok",
+            "service",
+            "db",
+            "ai",
+            "twilio"
+          ]
+        }
+      },
+      {
+        "name": "healthz",
+        "method": "GET",
+        "path": "/healthz",
+        "httpStatus": 200,
+        "elapsedMs": 58,
+        "details": {
+          "ok": true,
+          "keys": [
+            "ok"
+          ]
+        }
+      },
+      {
+        "name": "field-Iowa",
+        "method": "GET",
+        "path": "/api/field?lat=42.0563&lon=-93.495",
+        "httpStatus": 200,
+        "elapsedMs": 16499,
+        "details": {
+          "lat": 42.0563,
+          "lon": -93.495,
+          "keys": [
+            "lat",
+            "lon",
+            "county",
+            "soil",
+            "cropHistory"
+          ],
+          "soil": {
+            "available": true,
+            "source": "USDA NRCS SSURGO via Soil Data Access"
+          },
+          "cropHistory": {
+            "available": true,
+            "years": 3
+          }
+        }
+      },
+      {
+        "name": "field-Illinois",
+        "method": "GET",
+        "path": "/api/field?lat=40.048&lon=-88.33",
+        "httpStatus": 200,
+        "elapsedMs": 16615,
+        "details": {
+          "lat": 40.048,
+          "lon": -88.33,
+          "keys": [
+            "lat",
+            "lon",
+            "county",
+            "soil",
+            "cropHistory"
+          ],
+          "soil": {
+            "available": true,
+            "source": "USDA NRCS SSURGO via Soil Data Access"
+          },
+          "cropHistory": {
+            "available": false,
+            "years": 0,
+            "note": "Satellite crop history is unavailable right now. Tell us your last two crops instead."
+          }
+        }
+      },
+      {
+        "name": "field-Kansas",
+        "method": "GET",
+        "path": "/api/field?lat=38.1095&lon=-100.706",
+        "httpStatus": 200,
+        "elapsedMs": 61,
+        "details": {
+          "lat": 38.1095,
+          "lon": -100.706,
+          "keys": [
+            "lat",
+            "lon",
+            "county",
+            "soil",
+            "cropHistory"
+          ],
+          "soil": {
+            "available": true,
+            "source": "USDA NRCS SSURGO via Soil Data Access"
+          },
+          "cropHistory": {
+            "available": false,
+            "years": 0,
+            "note": "Satellite crop history is unavailable right now. Tell us your last two crops instead."
+          }
+        }
+      },
+      {
+        "name": "field-Nebraska",
+        "method": "GET",
+        "path": "/api/field?lat=40.73&lon=-96.55",
+        "httpStatus": 200,
+        "elapsedMs": 301,
+        "details": {
+          "lat": 40.73,
+          "lon": -96.55,
+          "keys": [
+            "lat",
+            "lon",
+            "county",
+            "soil",
+            "cropHistory"
+          ],
+          "soil": {
+            "available": true,
+            "source": "USDA NRCS SSURGO via Soil Data Access"
+          },
+          "cropHistory": {
+            "available": false,
+            "years": 0,
+            "note": "Satellite crop history is unavailable right now. Tell us your last two crops instead."
+          }
+        }
+      },
+      {
+        "name": "research-status",
+        "method": "GET",
+        "path": "/api/research/status",
+        "httpStatus": 200,
+        "elapsedMs": 48,
+        "details": {
+          "corpusVersion": "soilsense-research-v1-2026-11-14",
+          "chunks": 13,
+          "ai": true,
+          "scoringVersion": "e6-farmer-measurements",
+          "savedEntries": 0,
+          "keys": [
+            "corpusVersion",
+            "chunks",
+            "sources",
+            "embedding",
+            "generation",
+            "index",
+            "ai",
+            "retrieval",
+            "scoringVersion",
+            "savedEntries"
+          ],
+          "sourcesCount": 3,
+          "indexBound": true
+        }
+      },
+      {
+        "name": "research-corpus",
+        "method": "GET",
+        "path": "/api/research/corpus",
+        "httpStatus": 200,
+        "elapsedMs": 49,
+        "details": {
+          "corpusVersion": "soilsense-research-v1-2026-11-14",
+          "curatedAt": "2026-11-14",
+          "excerptRule": "Each chunk is a contiguous verbatim excerpt of the source; only whitespace/line breaks are normalized to single spaces. Verify with: node scripts/verify-research-corpus.mjs",
+          "keys": [
+            "corpusVersion",
+            "curatedAt",
+            "excerptRule",
+            "sources",
+            "chunks"
+          ],
+          "sourcesCount": 3,
+          "chunksCount": 13
+        }
+      },
+      {
+        "name": "scout-status",
+        "method": "GET",
+        "path": "/api/scout/status",
+        "httpStatus": 200,
+        "elapsedMs": 50,
+        "details": {
+          "configured": true,
+          "model": "@cf/google/gemma-4-26b-a4b-it",
+          "provider": "workers-ai",
+          "fallback": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+          "research": "configured",
+          "keys": [
+            "configured",
+            "model",
+            "provider",
+            "fallback",
+            "research"
+          ]
+        }
+      },
+      {
+        "name": "fieldwatch",
+        "method": "GET",
+        "path": "/api/fieldwatch/latest",
+        "httpStatus": 200,
+        "elapsedMs": 74,
+        "details": {
+          "lastCronAt": 1794781052766,
+          "lastCheckAt": 1794781052766,
+          "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st–30th, D1 = 11th–20th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+          "keys": [
+            "runs",
+            "lastCronAt",
+            "lastCheckAt",
+            "rule",
+            "thresholds",
+            "schedule",
+            "fields"
+          ],
+          "runsCount": 4,
+          "fieldsCount": 4,
+          "runs": [
+            {
+              "runId": "story-ia:2026-11-12",
+              "fieldId": "story-ia",
+              "status": "ok",
+              "trigger": "cron",
+              "kansas": null
+            },
+            {
+              "runId": "champaign-il:2026-11-12",
+              "fieldId": "champaign-il",
+              "status": "watch",
+              "trigger": "cron",
+              "kansas": null
+            },
+            {
+              "runId": "finney-ks:2026-11-12",
+              "fieldId": "finney-ks",
+              "status": "ok",
+              "trigger": "cron",
+              "kansas": {
+                "county": "Finney County",
+                "alert": "normal",
+                "basis": "normal-year water",
+                "droughtProbability": 0.07,
+                "rootzonePct": 89,
+                "dataThrough": "2026-11-09"
+              }
+            },
+            {
+              "runId": "lancaster-ne:2026-11-12",
+              "fieldId": "lancaster-ne",
+              "status": "ok",
+              "trigger": "cron",
+              "kansas": null
+            }
+          ]
+        }
+      },
+      {
+        "name": "fieldwatch-history",
+        "method": "GET",
+        "path": "/api/fieldwatch/runs?field=finney-ks&limit=2",
+        "httpStatus": 200,
+        "elapsedMs": 67,
+        "details": {
+          "keys": [
+            "runs"
+          ],
+          "runsCount": 1,
+          "runs": [
+            {
+              "runId": "finney-ks:2026-11-12",
+              "fieldId": "finney-ks",
+              "status": "ok",
+              "trigger": "cron",
+              "kansas": {
+                "county": "Finney County",
+                "alert": "normal",
+                "basis": "normal-year water",
+                "droughtProbability": 0.07,
+                "rootzonePct": 89,
+                "dataThrough": "2026-11-09"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "agent-options",
+        "method": "GET",
+        "path": "/api/fieldwatch/agent/options",
+        "httpStatus": 200,
+        "elapsedMs": 63,
+        "details": {
+          "delaySeconds": 45,
+          "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st–30th, D1 = 11th–20th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+          "available": true,
+          "keys": [
+            "delaySeconds",
+            "fields",
+            "replays",
+            "weekly",
+            "rule",
+            "available"
+          ],
+          "fieldsCount": 4,
+          "replaysCount": 1
+        }
+      },
+      {
+        "name": "agent-runs",
+        "method": "GET",
+        "path": "/api/fieldwatch/agent/finney-ks/runs?limit=2",
+        "httpStatus": 200,
+        "elapsedMs": 332,
+        "details": {
+          "now": 1794783268505,
+          "keys": [
+            "runs",
+            "now"
+          ],
+          "runsCount": 2,
+          "runs": [
+            {
+              "runId": "finney-ks:jun-2022:2026-11-15T22:47:22.527Z",
+              "fieldId": "finney-ks",
+              "status": "dry",
+              "completedAt": 1794782887000,
+              "kansas": null
+            },
+            {
+              "runId": "finney-ks:jun-2022:2026-11-15T18:02:58.919Z",
+              "fieldId": "finney-ks",
+              "status": "dry",
+              "completedAt": 1794765823000,
+              "kansas": null
+            }
+          ]
+        }
+      },
+      {
+        "name": "weekly-watch",
+        "method": "GET",
+        "path": "/api/fieldwatch/agent/finney-ks/watch",
+        "httpStatus": 200,
+        "elapsedMs": 44,
+        "details": {
+          "schedule": "Mondays at 14:00 UTC (8:00 am CST / 9:00 am CDT)",
+          "scheduledJobs": 0,
+          "keys": [
+            "settings",
+            "schedule",
+            "scheduledJobs",
+            "runs"
+          ],
+          "runsCount": 0,
+          "runs": [],
+          "settings": {
+            "enabled": false,
+            "crop": null,
+            "version": 0,
+            "updatedAt": null,
+            "weeklyScheduleId": null,
+            "nextWeeklyAt": null,
+            "windowScheduleId": null,
+            "nextWindow": null
+          }
+        }
+      },
+      {
+        "name": "imerg",
+        "method": "GET",
+        "path": "/api/imerg/comparison/finney-ks",
+        "httpStatus": 200,
+        "elapsedMs": 48,
+        "details": {
+          "state": "unavailable",
+          "note": "Optional IMERG evidence has not been retrieved for this window, or its cache expired. POWER and Field Watch are unchanged.",
+          "keys": [
+            "state",
+            "note"
+          ]
+        }
+      },
+      {
+        "name": "smap",
+        "method": "GET",
+        "path": "/api/smap?lat=38.1095&lon=-100.706&year=2022",
+        "httpStatus": 200,
+        "elapsedMs": 73,
+        "details": {
+          "status": "available",
+          "note": "Assimilated/model-derived regional soil moisture, not an in-field sensor or a counterfactual rotation response.",
+          "keys": [
+            "status",
+            "note",
+            "bundle",
+            "evidence"
+          ]
+        }
+      },
+      {
+        "name": "smap-catalog",
+        "method": "GET",
+        "path": "/api/smap/catalog",
+        "httpStatus": 200,
+        "elapsedMs": 255,
+        "details": {
+          "status": "catalog-only",
+          "collection": "C3480440870-NSIDC_CPRD",
+          "keys": [
+            "status",
+            "collection"
+          ]
+        }
+      },
+      {
+        "name": "modis",
+        "method": "GET",
+        "path": "/api/vegetation?lat=38.1095&lon=-100.706&year=2025",
+        "httpStatus": 200,
+        "elapsedMs": 58,
+        "details": {
+          "status": "complete",
+          "product": "MOD13Q1",
+          "version": "061",
+          "lat": 38.1095,
+          "lon": -100.706,
+          "year": 2025,
+          "resolution": "250 m nominal; MODIS sinusoidal grid",
+          "interval": "16-day composite (last interval ends December 31)",
+          "units": "NDVI (dimensionless)",
+          "scale": 0.0001,
+          "expectedCount": 23,
+          "validCount": 23,
+          "retrievedAt": "2026-11-15T20:46:46.749Z",
+          "docsUrl": "https://lpdaac.usgs.gov/documents/621/MOD13_User_Guide_V61.pdf",
+          "attribution": "Didan, K. (2021), MOD13Q1.061, NASA LP DAAC, doi:10.5067/MODIS/MOD13Q1.061. Subsets: ORNL DAAC TESViS RESTful Web Service (2018), doi:10.3334/ORNLDAAC/1600.",
+          "note": "Coarse historical point pixel, not a field measurement or observations of alternative rotations. Low NDVI does not establish bare soil; residue and mixed pixels remain unresolved. No interpolation or cross-sensor merging. Field-area coverage is unknown. MODIS uses provider NDVI, not reflectance-derived field NDVI.",
+          "keys": [
+            "status",
+            "product",
+            "version",
+            "lat",
+            "lon",
+            "year",
+            "resolution",
+            "interval",
+            "units",
+            "scale",
+            "expectedCount",
+            "validCount",
+            "observations",
+            "requestUrls",
+            "retrievedAt",
+            "docsUrl",
+            "attribution",
+            "note"
+          ],
+          "observationsCount": 23,
+          "requestUrlsCount": 4
+        }
+      },
+      {
+        "name": "groundwater",
+        "method": "GET",
+        "path": "/api/groundwater?lat=38.1095&lon=-100.706",
+        "httpStatus": 200,
+        "elapsedMs": 62,
+        "details": {
+          "status": "available",
+          "note": "Regional-only total terrestrial water storage versus separate point well observations. Not a field/well forecast, pumping measurement or irrigation allocation.",
+          "keys": [
+            "status",
+            "note",
+            "bundle",
+            "comparison"
+          ]
+        }
+      },
+      {
+        "name": "usdm-category",
+        "method": "GET",
+        "path": "/api/usdm/category?fips=20055&date=2022-06-28",
+        "httpStatus": 200,
+        "elapsedMs": 369,
+        "details": {
+          "fips": "20055",
+          "date": "2022-06-28",
+          "historical": true,
+          "countyName": "Finney County",
+          "stateCode": "KS",
+          "status": "matched",
+          "ageDays": 0,
+          "snapshotId": "usdm-county-20055-2022-06-28",
+          "label": "Historical: D3 extreme drought over 88% of Finney County, KS; up to D4 exceptional drought in part of the county (USDM map valid 2022-06-28)",
+          "keys": [
+            "fips",
+            "date",
+            "historical",
+            "countyName",
+            "stateCode",
+            "source",
+            "status",
+            "week",
+            "ageDays",
+            "snapshotId",
+            "label"
+          ]
+        }
+      },
+      {
+        "name": "usdm-timeline",
+        "method": "GET",
+        "path": "/api/usdm/timeline?fips=20055&start=2022-05-01&end=2022-09-30",
+        "httpStatus": 200,
+        "elapsedMs": 44,
+        "details": {
+          "fips": "20055",
+          "countyName": "Finney County",
+          "stateCode": "KS",
+          "expectedWeeks": 23,
+          "observedWeeks": 23,
+          "droughtWeeks": 23,
+          "mixedWeeks": 13,
+          "status": "complete",
+          "note": "23 of 23 weekly maps observed; drought (D1–D4) covered most of the county in 23 of 23 observed weeks.",
+          "keys": [
+            "fips",
+            "countyName",
+            "stateCode",
+            "window",
+            "expectedWeeks",
+            "observedWeeks",
+            "missingWeeks",
+            "weeks",
+            "counts",
+            "droughtWeeks",
+            "mixedWeeks",
+            "status",
+            "note",
+            "source"
+          ],
+          "missingWeeksCount": 0,
+          "weeksCount": 23
+        }
+      },
+      {
+        "name": "usdm-replay",
+        "method": "GET",
+        "path": "/api/usdm/replay?fips=20055&years=2022",
+        "httpStatus": 200,
+        "elapsedMs": 32,
+        "details": {
+          "keys": [
+            "timelines"
+          ],
+          "timelinesCount": 1
+        }
+      },
+      {
+        "name": "crop-timing",
+        "method": "GET",
+        "path": "/api/crop-timing?lat=38.1095&lon=-100.706&year=2022&planting=2022-05-01",
+        "httpStatus": 200,
+        "elapsedMs": 2081,
+        "details": {
+          "keys": [
+            "timing",
+            "weather",
+            "nassComparison"
+          ],
+          "timing": {
+            "status": "estimated",
+            "planting": "2022-05-01",
+            "silking": "2022-07-08",
+            "maturity": "2022-08-19"
+          }
+        }
+      },
+      {
+        "name": "historical-scenarios",
+        "method": "GET",
+        "path": "/api/historical-scenarios?lat=38.1095&lon=-100.706",
+        "httpStatus": 200,
+        "elapsedMs": 228,
+        "details": {
+          "keys": [
+            "rule",
+            "candidateYears",
+            "candidates",
+            "tiedYears",
+            "hot",
+            "reference",
+            "replay2022",
+            "catalog",
+            "limitations",
+            "snapshot"
+          ],
+          "candidatesCount": 35,
+          "tiedYearsCount": 1,
+          "catalogCount": 3,
+          "limitationsCount": 5
+        }
+      },
+      {
+        "name": "economics",
+        "method": "GET",
+        "path": "/api/economics-assumptions?state=KS",
+        "httpStatus": 200,
+        "elapsedMs": 36,
+        "details": {
+          "regionNote": "KS: Approximate irrigated-practice potential",
+          "adjustments": "Nitrogen, cover costs/credits, alfalfa establishment, irrigation pumping, rotation yield effects and cost scaling remain approximate defaults.",
+          "note": "These are fallback assumptions, NOT a claim that NASS overrides were used or that any sourced budget governs the ranked plans. See the plan's own assumptions for overrides. Regional averages and modelled potential are not field yields.",
+          "keys": [
+            "regionNote",
+            "crops",
+            "adjustments",
+            "note",
+            "reference"
+          ],
+          "cropsCount": 7
+        }
+      },
+      {
+        "name": "second-opinion",
+        "method": "GET",
+        "path": "/api/second-opinion?fips=20055",
+        "httpStatus": 200,
+        "elapsedMs": 51,
+        "details": {
+          "source": "K-State recommended rain-fed rotations, ranked by our team's Kansas model (NASA POWER weather)",
+          "sourceUrl": "https://pub-fe3948f31a9c462890b089ed5356c336.r2.dev/app_rotation_advice.json",
+          "dataThrough": "2026-11-09",
+          "disclaimer": "Decision support from NASA POWER weather data (rain, water demand and heat stress; freeze risk was tested and not needed) and FAO crop methods, not a guarantee. Weather only (no prices, costs, soils or irrigation). Check with K-State Research and Extension before acting.",
+          "county": "Finney County",
+          "region": "west",
+          "alert": "normal",
+          "droughtChanceNow": 0.07,
+          "rootzonePctNow": 89,
+          "basis": "normal-year water",
+          "dryYearRanking": false,
+          "savedCopy": false,
+          "keys": [
+            "source",
+            "sourceUrl",
+            "dataThrough",
+            "disclaimer",
+            "county",
+            "region",
+            "alert",
+            "droughtChanceNow",
+            "rootzonePctNow",
+            "basis",
+            "dryYearRanking",
+            "rotations",
+            "byCurrentCrop",
+            "savedCopy"
+          ],
+          "rotationsCount": 3
+        }
+      },
+      {
+        "name": "refresh-status",
+        "method": "GET",
+        "path": "/api/refresh/status",
+        "httpStatus": 200,
+        "elapsedMs": 58,
+        "details": {
+          "workflowBound": true,
+          "evidenceBucketBound": true,
+          "note": "Freshness is judged by the observed data-through date, not by when the data were downloaded. Historical replay data are a separate stream and never change here.",
+          "keys": [
+            "farms",
+            "policy",
+            "schedule",
+            "workflowBound",
+            "evidenceBucketBound",
+            "note"
+          ],
+          "farmsCount": 4,
+          "farms": [
+            {
+              "farmId": "story-ia",
+              "state": "never"
+            },
+            {
+              "farmId": "champaign-il",
+              "state": "never"
+            },
+            {
+              "farmId": "finney-ks",
+              "state": "never"
+            },
+            {
+              "farmId": "lancaster-ne",
+              "state": "never"
+            }
+          ]
+        }
+      },
+      {
+        "name": "live-status",
+        "method": "GET",
+        "path": "/api/live/status",
+        "httpStatus": 200,
+        "elapsedMs": 43,
+        "details": {
+          "demo": false,
+          "available": true,
+          "phone": null,
+          "keys": [
+            "demo",
+            "available",
+            "phone"
+          ]
+        }
+      },
+      {
+        "name": "live-events",
+        "method": "GET",
+        "path": "/api/live/events",
+        "httpStatus": 200,
+        "elapsedMs": 361,
+        "details": {
+          "demo": false,
+          "keys": [
+            "demo",
+            "events"
+          ],
+          "eventsCount": 40
+        }
+      },
+      {
+        "name": "auth-me",
+        "method": "GET",
+        "path": "/api/auth/me",
+        "httpStatus": 401,
+        "elapsedMs": 33,
+        "details": {
+          "error": "Not signed in.",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "admin-check",
+        "method": "GET",
+        "path": "/api/admin/check",
+        "httpStatus": 401,
+        "elapsedMs": 34,
+        "details": {
+          "error": "Please sign in.",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "admin-usage",
+        "method": "GET",
+        "path": "/api/admin/ai-usage",
+        "httpStatus": 401,
+        "elapsedMs": 46,
+        "details": {
+          "error": "Please sign in.",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "docs-list",
+        "method": "GET",
+        "path": "/api/docs",
+        "httpStatus": 200,
+        "elapsedMs": 46,
+        "details": {
+          "keys": [
+            "docs"
+          ],
+          "docsCount": 2
+        }
+      },
+      {
+        "name": "docs-detail",
+        "method": "GET",
+        "path": "/api/docs/verification-nonexistent",
+        "httpStatus": 404,
+        "elapsedMs": 44,
+        "details": {
+          "error": "Document not found",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "docs-upload-gate",
+        "method": "POST",
+        "path": "/api/docs/upload?name=verification.txt",
+        "httpStatus": 401,
+        "elapsedMs": 42,
+        "details": {
+          "error": "unauthorized",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "docs-url-gate",
+        "method": "POST",
+        "path": "/api/docs/from-url",
+        "httpStatus": 401,
+        "elapsedMs": 36,
+        "details": {
+          "error": "unauthorized",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "docs-review-gate",
+        "method": "POST",
+        "path": "/api/docs/verification/review",
+        "httpStatus": 401,
+        "elapsedMs": 31,
+        "details": {
+          "error": "unauthorized",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "refresh-gate",
+        "method": "POST",
+        "path": "/api/refresh/run",
+        "httpStatus": 401,
+        "elapsedMs": 57,
+        "details": {
+          "error": "unauthorized",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "research-ingest-gate",
+        "method": "POST",
+        "path": "/api/research/ingest",
+        "httpStatus": 401,
+        "elapsedMs": 32,
+        "details": {
+          "error": "unauthorized",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "plan-validation",
+        "method": "POST",
+        "path": "/api/plan",
+        "httpStatus": 400,
+        "elapsedMs": 37,
+        "details": {
+          "error": "goals must be distinct",
+          "keys": [
+            "error"
+          ]
+        }
+      },
+      {
+        "name": "cached-plan",
+        "method": "POST",
+        "path": "/api/plan",
+        "httpStatus": 200,
+        "elapsedMs": 67,
+        "details": {
+          "generatedAt": "2026-11-15T22:37:52.822Z",
+          "disclaimer": "SoilSense is decision support, not a guarantee. It does not forecast this season's weather. Economics are indicative and based on editable price and cost assumptions. Review any plan with your county extension agent or agronomist.",
+          "water": "full",
+          "keys": [
+            "request",
+            "generatedAt",
+            "location",
+            "soil",
+            "cropHistory",
+            "climate",
+            "plans",
+            "currentPractice",
+            "facts",
+            "explanation",
+            "assumptions",
+            "powerEvidence",
+            "dataSources",
+            "disclaimer",
+            "water",
+            "waterOptions",
+            "droughtReplays",
+            "validation"
+          ],
+          "plansCount": 3,
+          "factsCount": 21,
+          "assumptionsCount": 23,
+          "dataSourcesCount": 9,
+          "waterOptionsCount": 3,
+          "droughtReplaysCount": 3,
+          "validationCount": 4,
+          "soil": {
+            "available": true,
+            "source": "USDA NRCS SSURGO via Soil Data Access"
+          },
+          "cropHistory": {
+            "available": true,
+            "years": 10
+          },
+          "plans": [
+            {
+              "id": "plan-1",
+              "label": "Soybean → Corn → Soybean",
+              "total": 0.85
+            },
+            {
+              "id": "plan-2",
+              "label": "Soybean → Winter wheat → Soybean",
+              "total": 0.816
+            },
+            {
+              "id": "plan-3",
+              "label": "Soybean → Grain sorghum → Soybean",
+              "total": 0.807
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

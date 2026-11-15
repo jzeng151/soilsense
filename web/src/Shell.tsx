@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { App } from "./App";
+import { LanguageProvider } from "./i18n";
+import { HowItWorksPage } from "./pages/HowItWorksPage";
 import { DocsAdmin } from "./components/DocsAdmin";
 import type { UIMessage } from "ai";
 import { firstUserText, GUEST_ID, loadChats, newChatId, saveChats, titleFrom, type ScoutChat } from "./chats";
@@ -17,6 +19,7 @@ const routeFromHash = (): WorkspaceRoute => {
   if (h === "#/admin/docs") return "admin/docs";
   if (h.startsWith("#/scout")) return "scout";
   if (h.startsWith("#/sources")) return "sources";
+  if (h === "#/how-it-works") return "how-it-works";
   if (h.startsWith("#/live")) return "live";
   if (h.startsWith("#/settings")) return "settings";
   if (h.startsWith("#/signin")) return "signin";
@@ -45,7 +48,7 @@ export function Shell() {
   }, []);
 
   return (
-    <Workspace
+    <LanguageProvider><Workspace
       key={user?.id ?? GUEST_ID}
       user={user}
       onSignedIn={setUser}
@@ -53,7 +56,7 @@ export function Shell() {
         await signOut();
         setUser(null);
       }}
-    />
+    /></LanguageProvider>
   );
 }
 
@@ -126,6 +129,8 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
           <ScoutPage key={activeId} chatId={activeId} initialMessages={active?.messages ?? []} onMessages={saveMessages} onMenu={() => setSidebarOpen(true)} />
         ) : route === "live" ? (
           <LivePage onMenu={() => setSidebarOpen(true)} />
+        ) : route === "how-it-works" ? (
+          <HowItWorksPage onMenu={() => setSidebarOpen(true)} />
         ) : route === "sources" ? (
           <SourcesPage onMenu={() => setSidebarOpen(true)} />
         ) : route === "settings" || route === "signin" ? (

@@ -1,5 +1,5 @@
 import "./i18n.css";
-import { LanguageProvider, useI18n, translate, cropName } from "./i18n";
+import { useI18n, translate, cropName } from "./i18n";
 import type { Language, TranslationKey } from "./i18n";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CropId, FieldResponse, Goal, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
@@ -167,7 +167,7 @@ function Progress({ step, canGo, go }: { step: Step; canGo: (s: Step) => boolean
 }
 
 export function App() {
-  return <LanguageProvider><MainFlow /></LanguageProvider>;
+  return <MainFlow />;
 }
 
 function MainFlow() {

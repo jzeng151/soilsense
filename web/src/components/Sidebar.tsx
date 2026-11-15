@@ -2,8 +2,9 @@ import { useEffect, useRef } from "react";
 import type { User } from "../auth";
 import type { ScoutChat } from "../chats";
 import { LogoMark } from "./Logo";
+import { howItWorksCopy, useI18n } from "../i18n";
 
-export type Route = "planner" | "scout" | "live" | "sources" | "settings" | "signin";
+export type Route = "planner" | "scout" | "live" | "sources" | "how-it-works" | "settings" | "signin";
 
 interface Props {
   route: Route;
@@ -22,6 +23,7 @@ interface Props {
 
 export function Sidebar({ route, user, onSignOut, open, onClose, chats, activeChatId, onNavigate, onNewChat, onOpenChat, onDeleteChat }: Props) {
   const panel = useRef<HTMLElement>(null);
+  const { language } = useI18n();
   useEffect(() => {
     if (!open || !window.matchMedia("(max-width: 860px)").matches) return;
     const previous = document.activeElement as HTMLElement | null;
@@ -91,6 +93,10 @@ export function Sidebar({ route, user, onSignOut, open, onClose, chats, activeCh
               <path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" />
             </svg>
             Sources
+          </a>
+          <a href="#/how-it-works" className={route === "how-it-works" ? "on" : ""} aria-current={route === "how-it-works" ? "page" : undefined} onClick={() => onNavigate("how-it-works")}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7h.01" /></svg>
+            {howItWorksCopy.title[language]}
           </a>
           <a href="#/settings" className={route === "settings" ? "on" : ""} onClick={() => onNavigate("settings")}>
             <svg viewBox="0 0 24 24" aria-hidden="true">

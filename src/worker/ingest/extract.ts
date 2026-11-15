@@ -1,3 +1,4 @@
+import { markdownAI } from "../lib/ai";
 import { Parser } from "htmlparser2";
 import { marked, type Token, type MarkedToken } from "marked";
 
@@ -96,13 +97,13 @@ function plainTokens(tokens: Token[]): string {
  * then Markdown formatting is converted to plain text without correcting words.
  * Offsets refer to this returned text, saved unchanged to R2, not the PDF/HTML.
  */
-export async function extractText(ai: Ai | undefined, bytes: ArrayBuffer, name: string, contentType?: string): Promise<Extraction> {
+export async function extractText(ai: Ai | undefined, bytes: ArrayBuffer, name: string, contentType?: string, policy: { gatewayId?: string; db?: D1Database } = {}): Promise<Extraction> {
   const extension = name.toLowerCase().match(/\.[^.\/]+$/)?.[0];
   const mime = contentType?.split(";")[0]?.trim().toLowerCase();
   let result: Extraction;
   if (extension === ".pdf" || (!extension && mime === "application/pdf")) {
     if (!ai) throw new Error("PDF extraction requires a Workers AI binding (toMarkdown)");
-    const [converted] = await ai.toMarkdown([{ name, blob: new Blob([bytes], { type: "application/pdf" }) }]);
+    const [converted] = await markdownAI(ai, [{ name, blob: new Blob([bytes], { type: "application/pdf" }) }], { ...policy, feature: "document-extraction", timeoutMs: 60_000 });
     if (!converted) throw new Error(`PDF extraction returned no result: ${name}`);
     if (converted.format === "error") throw new Error(`PDF extraction failed for ${name}: ${converted.error}`);
     if (typeof converted.data !== "string") throw new Error(`PDF extraction returned no text: ${name}`);

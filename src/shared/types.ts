@@ -168,7 +168,25 @@ export interface ReasonFact {
   kind: "climate" | "history" | "soil" | "agronomy" | "economics";
 }
 
+/** Farmer-entered measurements; never persisted on the server. Blank properties use the soil map. */
+export interface SoilTest {
+  ph?: number;
+  organicMatterPct?: number;
+  /** cm water / cm soil (equivalently in/in). Takes precedence over texture. */
+  awc?: number;
+  texture?: "sand" | "sandy_loam" | "loam" | "silt_loam" | "clay_loam" | "clay";
+}
+export interface FarmerYield {
+  crop: Exclude<CropId, "fallow">;
+  year: number;
+  value: number;
+  /** Grain in bu/acre; alfalfa hay in US short tons/acre. */
+  unit: "bu/acre" | "tons/acre";
+}
+
 export interface PlanRequest {
+  soilTest?: SoilTest;
+  yieldRecords?: FarmerYield[];
   lat: number;
   lon: number;
   irrigated: boolean;

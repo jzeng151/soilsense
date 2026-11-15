@@ -5,6 +5,8 @@ import { watchText, useI18n } from "../i18n";
 
 import { useCallback, useEffect, useState } from "react";
 import type { FieldResearchNote } from "../../../src/shared/fieldResearch";
+import type { DistrictOutlook as Outlook } from "../../../src/shared/districtOutlook";
+import { DistrictOutlook } from "./DistrictOutlook";
 import { ResearchNote } from "./ResearchNote";
 
 type Status = "pending" | "ok" | "watch" | "dry" | "insufficient" | "inactive" | "error";
@@ -27,6 +29,7 @@ interface AgentRun {
   headline: string | null;
   reasons: Reason[];
   researchNote?: FieldResearchNote;
+  districtOutlook?: Outlook;
   metrics: { rainPercentile: number | null; rootzonePercentile: number | null; rain14Mm: number | null; normalPeriod: string | null } | null;
   snapshot: { label: string; source: string; comparisonYears: string; windowStart: string | null; windowEnd: string | null; inputSha256: string | null } | null;
 }
@@ -228,7 +231,7 @@ export function ScheduledCheck() {
                       <ResearchNote note={r.researchNote} />
                       {r.reasons.length > 0 && (
                         <ul className="fw-reasons">
-                          {r.reasons.map((x) => (
+                          {r.reasons.filter((x) => x.id !== "kansas").map((x) => (
                             <li key={x.id}>
                               {watchText(x.text, language)}
                               <small>{x.source}</small>
@@ -247,6 +250,7 @@ export function ScheduledCheck() {
                       </p>
                     </div>
                   </details>
+                  <DistrictOutlook outlook={r.districtOutlook} />
                 </li>
               ))}
             </ul>

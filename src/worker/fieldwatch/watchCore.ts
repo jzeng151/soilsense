@@ -14,6 +14,7 @@
 //   (window), so repeated callbacks never create duplicate results.
 
 import { researchNoteFor } from "./researchNote";
+import { watchMemory, writeFieldMemory } from "../fieldMemory";
 import { CROPS } from "../../engine/crops";
 import type { CropId } from "../../shared/types";
 import type { Env } from "../env";
@@ -181,6 +182,7 @@ export async function runRecurringCheck(
       sources: sourcesFor(field, null),
     };
     store.insert(run);
+    await writeFieldMemory(env, watchMemory(run));
     return run;
   }
   return evaluateAndSave(store, baseRun(field, "", "weekly", now.getTime()), env, field, now, deps, settings.crop, null);
@@ -216,6 +218,7 @@ async function evaluateAndSave(
         ...(stale ? [{ id: "stale", text: `Weekly checks need a 14-day window ending within ${FRESH_DAYS} days of the check; this one ends ${through ?? "—"}.`, source: "SoilSense freshness rule" }] : []),
         ...live.result.reasons,
       ],
+      districtOutlook: live.districtOutlook,
       metrics: live.result.metrics,
       snapshot: live.snapshot,
       sources: sourcesFor(field, live.kansas),
@@ -234,5 +237,6 @@ async function evaluateAndSave(
   if (existing) return existing; // a repeated callback on the same data period
   done.researchNote = await researchNoteFor(done.status, env, field, crop);
   store.insert(done);
+  await writeFieldMemory(env, watchMemory(done));
   return done;
 }

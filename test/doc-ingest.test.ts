@@ -120,7 +120,7 @@ describe("document pipeline public seams", () => {
       expect(v.metadata).toMatchObject({ corpus: "docs-v1", source_id: uploaded.docId, doc_sha256: pending!.latest_sha256 });
       expect(v.values).toHaveLength(768);
     }
-    expect(h.AI.run).toHaveBeenCalledWith("@cf/baai/bge-base-en-v1.5", { text: [firstParagraph], pooling: "cls" }, { gateway: { id: "test-gateway" } });
+    expect(h.AI.run).toHaveBeenCalledWith("@cf/baai/bge-base-en-v1.5", { text: [firstParagraph], pooling: "cls" }, expect.objectContaining({ gateway: expect.objectContaining({ id: "test-gateway", skipCache: false, cacheTtl: 86400 }) }));
     expect(await getDoc(h.DB, uploaded.docId)).toMatchObject({ status: "indexed", title: approval.source!.title, reviewer: approval.reviewer, crops_json: '["corn","cover"]' });
     expect(JSON.parse(h.objects.get(DOCS_LAYOUT.manifest(pending!.latest_sha256!, uploaded.docId))!.text)).toMatchObject({ status: "indexed", source: approval.source });
     expect((await (await h.request("")).json() as { docs: unknown[] }).docs).toHaveLength(1);
@@ -148,7 +148,7 @@ describe("document pipeline public seams", () => {
     for (const c of chunks) expect(plain.slice(c.start_offset, c.end_offset)).toBe(c.text);
     await h.review(uploaded.docId, approval);
     expect(await run).toMatchObject({ outcome: "indexed" });
-    expect(h.AI.run).toHaveBeenCalledWith("@cf/baai/bge-base-en-v1.5", { text: [plain.trim().replace(/\s+/g, " ")], pooling: "cls" }, { gateway: { id: "test-gateway" } });
+    expect(h.AI.run).toHaveBeenCalledWith("@cf/baai/bge-base-en-v1.5", { text: [plain.trim().replace(/\s+/g, " ")], pooling: "cls" }, expect.objectContaining({ gateway: expect.objectContaining({ id: "test-gateway", skipCache: false, cacheTtl: 86400 }) }));
   });
 
   it("isolates identical uploads under different keys while the older review is still pending", async () => {

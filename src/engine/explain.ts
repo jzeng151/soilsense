@@ -25,7 +25,7 @@ const PRIORITY_WORDS: Record<Priority, { en: string; es: string }> = {
   balanced: { en: "a balance of profit, soil and risk", es: "un balance entre ganancia, suelo y riesgo" },
 };
 
-const CROP_ES: Record<CropId, string> = {
+export const CROP_ES: Record<CropId, string> = {
   corn: "maíz",
   soybean: "soja",
   winter_wheat: "trigo de invierno",

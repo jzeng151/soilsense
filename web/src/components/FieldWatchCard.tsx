@@ -5,6 +5,8 @@ import { translate, watchText, useI18n } from "../i18n";
 import { useCallback, useEffect, useState } from "react";
 import "./fieldwatch.css";
 import { Sprout } from "./Sprout";
+import type { DistrictOutlook as Outlook } from "../../../src/shared/districtOutlook";
+import { DistrictOutlook } from "./DistrictOutlook";
 import { ScheduledCheck } from "./ScheduledCheck";
 
 type Status = "ok" | "watch" | "dry" | "insufficient" | "error";
@@ -21,6 +23,7 @@ interface Run {
   status: Status;
   headline: string;
   reasons: Reason[];
+  metrics?: { districtOutlook?: Outlook };
   sources: { name: string; url: string; detail: string }[];
   trigger: "cron" | "manual";
   checkedAt: number;
@@ -135,7 +138,7 @@ export function FieldWatchCard() {
                 </summary>
                 <div className="fw-detail">
                   <ul className="fw-reasons">
-                    {r.reasons.map((x) => (
+                    {r.reasons.filter((x) => x.id !== "kansas").map((x) => (
                       <li key={x.id}>
                         {watchText(x.text, language)}
                         <small>{x.source}</small>
@@ -145,6 +148,7 @@ export function FieldWatchCard() {
                   <p className="fw-meta">{tx("Run")}{" "}<code>{r.runId}</code> · {r.trigger === "cron" ? tx("automatic (Cron Trigger)") : tx("run by hand")}{" "}{tx("· checked")}{" "}{r.checkCount}{tx("× on this data")}</p>
                 </div>
               </details>
+              <DistrictOutlook outlook={r.metrics?.districtOutlook} />
             </li>
           ))}
         </ul>

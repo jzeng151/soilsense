@@ -3,6 +3,7 @@
 // rest of the dashboard. Scripts can use `Authorization: Bearer <ADMIN_TOKEN>` if that secret is set.
 
 import { Hono } from "hono";
+import { aiUsage } from "../lib/ai";
 import { currentUser } from "../lib/auth";
 import { isLiveDemoOn, liveRoom, setLiveDemo } from "../live/publish";
 import type { AppEnv } from "./auth";
@@ -37,6 +38,13 @@ admin.use("*", async (c, next) => {
 
 const migrationHint = (err: unknown) =>
   /no such table/i.test(String(err)) ? "The database is missing the settings tables. Run: npm run db:migrate:remote (or db:migrate:local)." : "Database error.";
+
+admin.get("/ai-usage", async (c) => {
+  const given = (c.req.header("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+  if (!c.env.ADMIN_TOKEN || !safeEqual(given, c.env.ADMIN_TOKEN)) return c.json({ error: "Admin token required" }, 401);
+  try { return c.json(await aiUsage(c.env.DB)); }
+  catch { return c.json({ error: "AI usage unavailable" }, 503); }
+});
 
 admin.get("/check", (c) => c.json({ ok: true }));
 

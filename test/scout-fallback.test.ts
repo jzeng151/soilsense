@@ -1,5 +1,5 @@
 import type { LanguageModel, TextStreamPart, ToolSet } from "ai";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { firstWorking } from "../src/worker/routes/scout";
 
 type Part = TextStreamPart<ToolSet>;
@@ -43,6 +43,26 @@ describe("Scout model fallback", () => {
   it("falls back when the first model stays silent", async () => {
     const s = await firstWorking([m("@cf/a"), m("gemini")], (x) => (x.id === "@cf/a" ? fromParts([start], true) : fromParts([text("ok")])), 50);
     expect(await read(s)).toEqual(["text:ok"]);
+  });
+
+  it("bounds even the final silent model and aborts it", async () => {
+    vi.useFakeTimers();
+    try {
+      let signal: AbortSignal | undefined;
+      const pending = firstWorking([m("@cf/last")], (_, attempt) => { signal = attempt; return fromParts([start], true); }, 50);
+      await vi.advanceTimersByTimeAsync(50);
+      expect(await read(await pending)).toEqual(["start", "error"]);
+      expect(signal?.aborted).toBe(true);
+      expect(vi.getTimerCount()).toBe(0);
+    } finally { vi.useRealTimers(); }
+  });
+
+  it("never retries a stream once a tool call or partial answer is visible", async () => {
+    const used: string[] = [];
+    const toolCall = { type: "tool-call", toolCallId: "one", toolName: "send_plan_by_text", input: {} } as Part;
+    const result = await firstWorking([m("@cf/first"), m("gemini")], candidate => { used.push(candidate.id); return fromParts([toolCall, err]); });
+    expect(await read(result)).toEqual(["tool-call", "error"]);
+    expect(used).toEqual(["@cf/first"]);
   });
 
   it("shows the error when the last model fails too", async () => {

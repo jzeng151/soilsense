@@ -5,6 +5,7 @@
 
 import { useState } from "react";
 import type { DroughtReplay as Replay, ReplayPlanOutcome, RotationPlan, WaterLevel, WaterOption } from "../../../src/shared/types";
+import { Definition } from "./Glossary";
 import { CROP_COLORS, money } from "./PlanCard";
 import "../evidence.css";
 
@@ -150,7 +151,7 @@ export function DroughtReplay({ replays }: { replays: Replay[] }) {
   const w = r.weather;
   return (
     <div className="wi-replay">
-      <p className="wi-lead">These were the worst years on this field since 1991. Pick one to replay it with that year's real weather:</p>
+      <p className="wi-lead"><Definition term="historical-replay" />: pick one of the field model’s worst past weather years. This is history, not a forecast.</p>
       <div className="wi-years" role="tablist">
         {replays.map((x, k) => (
           <button key={x.year} type="button" role="tab" aria-selected={k === i} className={k === i ? "on" : ""} onClick={() => setI(k)}>

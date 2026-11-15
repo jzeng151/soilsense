@@ -1,3 +1,4 @@
+import { generateAI, type AiRunner } from "../lib/ai";
 import { Hono, type Handler, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
 import { GOALS, type CropId, type Goal, type PlanRequest, type Priority } from "../../shared/types";
@@ -194,11 +195,11 @@ api.post("/ask", async (c) => {
         "If the facts do not answer it, say so and suggest asking their county extension agent. Never invent numbers, prices, or guarantees. Use US units.";
       const user = `Recommended plan: ${String(body.planLabel ?? "").slice(0, 200)}\nSummary: ${String(body.summary ?? "").slice(0, 800)}\nFacts:\n- ${facts.join("\n- ")}\n\nQuestion: ${question}`;
       // Routed through Cloudflare AI Gateway (logs, analytics, caching). "default" is created automatically on first use.
-      const out = (await (c.env.AI as unknown as { run: (m: string, i: unknown, o?: unknown) => Promise<{ response?: string }> }).run(
-        c.env.AI_MODEL ?? "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      const out = (await generateAI(c.env.AI as unknown as AiRunner,
         { messages: [{ role: "system", content: system }, { role: "user", content: user }], max_tokens: 300, temperature: 0.2 },
-        { gateway: { id: c.env.AI_GATEWAY_ID ?? "default" } },
-      )) as { response?: string };
+        { feature: "plan-ask", gatewayId: c.env.AI_GATEWAY_ID, db: c.env.DB, timeoutMs: 12_000 },
+        c.env.AI_MODEL,
+      )).output as { response?: string };
       if (out?.response) return c.json({ answer: out.response.trim(), source: "workers-ai" });
     } catch (err) {
       console.warn(JSON.stringify({ msg: "workers ai failed", err: String(err) }));

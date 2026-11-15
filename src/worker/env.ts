@@ -4,7 +4,7 @@ export interface Env {
   DB?: D1Database;
   AI?: Ai;
   AI_MODEL?: string;
-  /** Cloudflare AI Gateway id for Workers AI calls (default "default", auto-created on first request). */
+  /** Cloudflare AI Gateway id for every model/provider call (default "default", auto-created on first request). */
   AI_GATEWAY_ID?: string;
   /** Scout's model: a Workers AI model ("@cf/...") or a Gemini model; the other provider is the fallback. */
   SCOUT_MODEL?: string;

@@ -6,7 +6,7 @@
 // even if the browser is closed, and reopening the page shows it without running anything again.
 
 import type { Env } from "../env";
-import { RULE_TEXT, RULE_VERSION, THRESHOLDS, evaluateField, isoDate, type DayMap, type WatchMetrics, type WatchReason, type WatchStatus } from "./rule";
+import { RULE_TEXT, RULE_VERSION, THRESHOLDS, evaluateField, isoDate, type DayMap, type KansasSignal, type WatchMetrics, type WatchReason, type WatchStatus } from "./rule";
 import { defaultDeps, sourcesFor, type FieldWatchDeps, type WatchedField } from "./run";
 
 export const CHECK_DELAY_SECONDS = 45;
@@ -17,8 +17,10 @@ export const REPLAY_PRESETS = [
 ] as const;
 export type ReplayId = (typeof REPLAY_PRESETS)[number]["id"];
 
-export type CheckMode = "live" | "replay";
-export type AgentRunStatus = "pending" | WatchStatus | "error";
+/** live/replay: asked for by a visitor. weekly: the enabled weekly check. window: a crop stress window opening. */
+export type CheckMode = "live" | "replay" | "weekly" | "window";
+/** "inactive": the confirmed crop's reference window isn't open, so no stress result is given. */
+export type AgentRunStatus = "pending" | WatchStatus | "inactive" | "error";
 
 export interface SnapshotRef {
   /** "Historical replay" results use only data up to the replay window; "Current conditions" use the latest NASA days. */
@@ -157,6 +159,34 @@ async function inputHash(map: DayMap, m: WatchMetrics): Promise<string | null> {
   return sha256(JSON.stringify(days));
 }
 
+/** Evaluate the rule on the latest NASA days for a field ("Current conditions"). Throws if a data service fails. */
+export async function evaluateLive(
+  env: Env,
+  field: WatchedField,
+  now: Date,
+  deps: FieldWatchDeps = defaultDeps,
+  history?: Awaited<ReturnType<FieldWatchDeps["history"]>>,
+): Promise<{ result: ReturnType<typeof evaluateField>; kansas: KansasSignal | null; snapshot: SnapshotRef }> {
+  const [hist, recent, kansas] = await Promise.all([
+    history ? Promise.resolve(history) : deps.history(env, field, now),
+    deps.recent(env.DB, field, now),
+    field.state === "KS" ? deps.kansas(env.DB, field.fips) : Promise.resolve(null),
+  ]);
+  const result = evaluateField({ fieldName: field.name, lat: field.lat, today: isoDate(now), recent, history: hist.map, historyYears: { first: hist.first, last: hist.last }, kansas });
+  return {
+    result,
+    kansas,
+    snapshot: {
+      label: "Current conditions",
+      source: `NASA POWER daily (last ~60 days) at the grid cell containing ${field.lat}, ${field.lon}`,
+      comparisonYears: `${hist.first}–${hist.last}`,
+      windowStart: result.metrics.windowStart,
+      windowEnd: result.metrics.dataThrough,
+      inputSha256: await inputHash(recent, result.metrics),
+    },
+  };
+}
+
 /**
  * Run a scheduled check exactly once. Re-running a run id that already finished returns the saved
  * result unchanged (no second evaluation, no second record). Never throws: failures become "error".
@@ -212,18 +242,10 @@ export async function executeRun(
         inputSha256: await inputHash(recentMap, result.metrics),
       };
     } else {
-      const [recent, ks] = await Promise.all([deps.recent(env.DB, field, now), field.state === "KS" ? deps.kansas(env.DB, field.fips) : Promise.resolve(null)]);
-      kansas = ks;
-      recentMap = recent;
-      result = evaluateField({ fieldName: field.name, lat: field.lat, today: isoDate(now), recent, history: history.map, historyYears: { first: history.first, last: history.last }, kansas });
-      snapshot = {
-        label: "Current conditions",
-        source: `NASA POWER daily (last ~60 days) at the grid cell containing ${field.lat}, ${field.lon}`,
-        comparisonYears: `${history.first}–${history.last}`,
-        windowStart: result.metrics.windowStart,
-        windowEnd: result.metrics.dataThrough,
-        inputSha256: await inputHash(recentMap, result.metrics),
-      };
+      const live = await evaluateLive(env, field, now, deps, history);
+      kansas = live.kansas;
+      result = live.result;
+      snapshot = live.snapshot;
     }
     const done: AgentRun = {
       ...run,

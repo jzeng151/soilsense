@@ -354,7 +354,10 @@ export function App() {
                 📍 Use my location
               </button>
             </div>
-            {zipMsg && <p className="jr-note">{zipMsg}</p>}
+            {/* WCAG 4.1.3: ZIP lookup results are announced to screen readers. */}
+            <p className="jr-note" role="status">
+              {zipMsg}
+            </p>
 
             <p className="jr-tap">Then tap your field on the map.</p>
             <MapPicker point={point} onPick={pick} focus={focus} />

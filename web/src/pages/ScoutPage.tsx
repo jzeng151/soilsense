@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { scoutStatus } from "../api";
 import { authFetch } from "../auth";
 import { ScoutMessage } from "../components/ScoutMessage";
+import { detectLang } from "../lang";
 import { LogoMark } from "../components/Logo";
 import { Sprout } from "../components/Sprout";
 
@@ -313,9 +314,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
           <div className="sc-thread" ref={contentRef} aria-live="polite">
             {messages.map((m) =>
               m.role === "user" ? (
-                <div key={m.id} className="sc-msg sc-user">
-                  {m.parts.map((p) => (p.type === "text" ? p.text : "")).join("")}
-                </div>
+                <UserMessage key={m.id} text={m.parts.map((p) => (p.type === "text" ? p.text : "")).join("")} />
               ) : (
                 <ScoutMessage key={m.id} message={m} streaming={busy && m.id === last?.id} />
               ),
@@ -352,6 +351,15 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+/** The farmer's message, tagged with its language when it isn't English (WCAG 3.1.2). */
+function UserMessage({ text }: { text: string }) {
+  return (
+    <div className="sc-msg sc-user" lang={detectLang(text)}>
+      {text}
     </div>
   );
 }

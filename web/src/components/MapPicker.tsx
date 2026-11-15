@@ -76,6 +76,14 @@ export function MapPicker({ point, onPick, focus }: Props) {
       )
       .addTo(m);
     m.on("click", (e: L.LeafletMouseEvent) => pickRef.current(e.latlng.lat, e.latlng.lng));
+    // WCAG 2.1.1 Keyboard: Leaflet already pans with the arrow keys and zooms with + and −;
+    // Enter or Space chooses the spot under the crosshair in the middle of the map.
+    el.current.addEventListener("keydown", (e) => {
+      if (e.target !== el.current || (e.key !== "Enter" && e.key !== " ")) return;
+      e.preventDefault();
+      const c = m.getCenter();
+      pickRef.current(c.lat, c.lng);
+    });
     // MODIS pixels are 250 m: past regional zoom, switch to high-resolution imagery so fields are visible.
     m.on("zoomend", () => {
       if (m.getZoom() >= 11 && m.hasLayer(nasa)) {
@@ -111,5 +119,12 @@ export function MapPicker({ point, onPick, focus }: Props) {
     if (focus && map.current) map.current.flyTo([focus.lat, focus.lon], focus.zoom, { duration: 0.8 });
   }, [focus]);
 
-  return <div ref={el} className="map" role="application" aria-label="Map: tap your field" />;
+  return (
+    <>
+      <div ref={el} className="map" role="application" aria-label="Map: tap your field" aria-describedby="map-keys" />
+      <p id="map-keys" className="sr-only">
+        Keyboard: use the arrow keys to move the map and plus or minus to zoom, then press Enter to choose the spot in the middle.
+      </p>
+    </>
+  );
 }

@@ -1,0 +1,17 @@
+.docs-admin { width: min(100%, 56rem); margin: 0 auto; padding: 1.25rem; box-sizing: border-box; overflow-wrap: anywhere; }
+.docs-admin *, .docs-admin *::before, .docs-admin *::after { box-sizing: border-box; min-width: 0; }
+.docs-admin form, .docs-admin section { margin-block: 1.5rem; }
+.docs-admin label { display: grid; gap: .35rem; margin-block: .8rem; }
+.docs-admin input:not([type="checkbox"]), .docs-admin textarea { width: 100%; max-width: 100%; padding: .65rem; font: inherit; }
+.docs-admin fieldset { margin-block: 1rem; padding: .8rem; }
+.docs-admin .docs-checkbox { display: flex; align-items: center; gap: .6rem; }
+.docs-admin .docs-checkbox input { flex: 0 0 auto; }
+.docs-admin button { min-height: 44px; white-space: normal; overflow-wrap: anywhere; padding: .6rem .9rem; }
+.docs-admin button:focus-visible, .docs-admin input:focus-visible, .docs-admin textarea:focus-visible, .docs-admin summary:focus-visible { outline: 3px solid #147c63; outline-offset: 3px; }
+.docs-admin .docs-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.docs-admin ul { padding-left: 1.2rem; }
+.docs-admin li { margin-block: 1rem; }
+.docs-admin pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; border-left: 3px solid #9dbdaf; padding: .8rem; }
+.docs-admin h3 { font-size: 1rem; }
+.docs-admin details { margin-block: 1rem; }
+.docs-admin summary { cursor: pointer; padding-block: .7rem; }

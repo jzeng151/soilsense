@@ -1,6 +1,7 @@
 import type { ResearchPassage, ResearchResult } from "./research";
 
-export interface ChatResearchPassage extends ResearchPassage {
+// `publisher` is optional on ResearchPassage (pipeline documents add it); chat passages always carry it, null when unknown.
+export interface ChatResearchPassage extends Omit<ResearchPassage, "publisher"> {
   /** Stable for this server-owned turn (web) or call (phone); never supplied by the model. */
   citationId: string;
   publisher: string | null;

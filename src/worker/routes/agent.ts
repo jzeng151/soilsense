@@ -46,13 +46,12 @@ function tokenSecret(env: Env): string | null {
 /** Callers are told up front that the call is recorded (consent is required in several US states). */
 export const RECORDING_NOTICE = "This call is recorded to help improve Soil Sense.";
 
-/** The greeting exactly as the caller hears it: recording notice, greeting, and (multi-language) the other languages. */
-export function spokenGreeting({ greeting, languages }: Pick<VoiceAgentSettings, "greeting" | "languages">): string {
-  const others = languages.enabled.filter((c) => c !== "en").map(languageName);
-  const base = `${RECORDING_NOTICE} ${greeting}`;
-  if (!languages.autoDetect || others.length === 0) return base;
-  const list = others.length > 1 ? `${others.slice(0, -1).join(", ")} or ${others[others.length - 1]}` : others[0];
-  return `${base} You can also talk to me in ${list}.`;
+/**
+ * The greeting exactly as the caller hears it: the recording notice, then the saved greeting.
+ * Languages are not announced; the caller's language is still detected each turn (multi mode).
+ */
+export function spokenGreeting({ greeting }: Pick<VoiceAgentSettings, "greeting">): string {
+  return `${RECORDING_NOTICE} ${greeting}`;
 }
 
 /** TwiML that connects the call to the agent. Falls back to the keypad menu if the session fails. */

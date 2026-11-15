@@ -1,4 +1,6 @@
 export interface Env {
+  /** Earthdata bearer token: server-side only, never exposed in evidence URLs. */
+  EARTHDATA_TOKEN?: string;
   ASSETS?: Fetcher;
   DB?: D1Database;
   AI?: Ai;

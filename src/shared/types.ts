@@ -124,6 +124,8 @@ export interface PlanYear {
 }
 
 export interface RotationPlan {
+  /** Factual crop-phase metadata; never a universal pest-protection claim. */
+  includes_non_corn_year?: boolean;
   id: string;
   label: string;
   years: PlanYear[];
@@ -182,6 +184,19 @@ export interface PlanResponse {
   waterOptions?: WaterOption[];
   /** The field's own worst past years, replayed for the current crops and the plan. */
   droughtReplays?: DroughtReplay[];
+  /** Original POWER request provenance, never the plan generation timestamp. */
+  powerEvidence?: PowerEvidence;
+}
+
+export interface PowerEvidence {
+  url: string;
+  version: string | null;
+  retrievedAt: string | null;
+  period: string;
+  observedThrough: string | null;
+  validValues: number;
+  expectedValues: number;
+  cached: boolean;
 }
 
 /** Model hindcast vs. USDA NASS county yields for one crop. */

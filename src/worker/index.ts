@@ -11,6 +11,7 @@ import { live } from "./routes/live";
 
 // Durable Object classes must be exported from the main module.
 export { LiveRoom } from "./live/room";
+export { FieldAgent } from "./fieldwatch/agent";
 
 const app = new Hono<{ Bindings: Env }>();
 

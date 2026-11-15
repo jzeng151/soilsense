@@ -32,4 +32,6 @@ export interface Env {
   LIVE_ROOM?: DurableObjectNamespace;
   /** Name of the live room instance (default "demo"). */
   LIVE_ROOM_NAME?: string;
+  /** Field Watch agents (Agents SDK, class FieldAgent): one instance per watched field, named by field id. */
+  FIELD_AGENT?: DurableObjectNamespace;
 }

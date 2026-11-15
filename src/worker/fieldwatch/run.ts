@@ -52,7 +52,7 @@ export interface FieldWatchDeps {
   kansas: (db: D1Database | undefined, fips: string) => Promise<KansasSignal | null>;
 }
 
-const defaultDeps: FieldWatchDeps = {
+export const defaultDeps: FieldWatchDeps = {
   recent: (db, f, today) => getRecentDays(db, f.lat, f.lon, today),
   history: async (env, f, today) => {
     const y = yearsFor(env, today);
@@ -61,7 +61,7 @@ const defaultDeps: FieldWatchDeps = {
   kansas: (db, fips) => getKansasSignal(db, fips),
 };
 
-function sourcesFor(f: WatchedField, kansas: KansasSignal | null) {
+export function sourcesFor(f: WatchedField, kansas: KansasSignal | null) {
   const s = [
     { name: "NASA POWER daily", url: "https://power.larc.nasa.gov/", detail: "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year" },
     { name: "FAO-56 Hargreaves ET0", url: "https://www.fao.org/4/x0490e/x0490e00.htm", detail: "Crop water demand from daily temperature and latitude" },

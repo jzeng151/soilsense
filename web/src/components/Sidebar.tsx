@@ -2,11 +2,12 @@ import type { User } from "../auth";
 import type { ScoutChat } from "../chats";
 import { LogoMark } from "./Logo";
 
-export type Route = "planner" | "scout" | "sources" | "settings";
+export type Route = "planner" | "scout" | "sources" | "settings" | "signin";
 
 interface Props {
   route: Route;
-  user: User;
+  /** null = public visitor (no account needed). */
+  user: User | null;
   onSignOut: () => void;
   open: boolean;
   onClose: () => void;
@@ -89,20 +90,26 @@ export function Sidebar({ route, user, onSignOut, open, onClose, chats, activeCh
           Data: NASA · USDA · FCC — see all sources
         </a>
 
-        <div className="sb-user">
-          <span className="sb-avatar" aria-hidden="true">
-            {user.email.charAt(0).toUpperCase()}
-          </span>
-          <span className="sb-email" title={user.email}>
-            {user.email}
-          </span>
-          <button type="button" className="sb-signout" onClick={onSignOut} aria-label="Sign out" title="Sign out">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3" />
-              <path d="M10 17l-5-5 5-5M5 12h11" />
-            </svg>
-          </button>
-        </div>
+        {user ? (
+          <div className="sb-user">
+            <span className="sb-avatar" aria-hidden="true">
+              {user.email.charAt(0).toUpperCase()}
+            </span>
+            <span className="sb-email" title={user.email}>
+              {user.email}
+            </span>
+            <button type="button" className="sb-signout" onClick={onSignOut} aria-label="Sign out" title="Sign out">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3" />
+                <path d="M10 17l-5-5 5-5M5 12h11" />
+              </svg>
+            </button>
+          </div>
+        ) : (
+          <a className="sb-team" href="#/signin" onClick={() => onNavigate("signin")}>
+            Team sign-in
+          </a>
+        )}
       </aside>
     </>
   );

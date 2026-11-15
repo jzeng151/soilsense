@@ -42,3 +42,53 @@
 .vd-key-barreal { border: 0; height: 7px; border-radius: 3px; background: var(--ink); }
 .vd-key-barmodel { border: 0; height: 7px; border-radius: 3px; background: var(--color-success); }
 @media (max-width: 560px) { .vd-bars li { grid-template-columns: 5.5rem 1fr 3.8rem; } }
+
+/* ---- What-if: bad years, water options, bad-year replay ---- */
+.wi-lead { margin: 0 0 0.8rem; color: var(--color-text-2); }
+.wi-note { margin: 0.6rem 0 0; font-size: 0.82rem; color: var(--muted); }
+.wi-bad { margin-top: 1rem; padding: 0.8rem 0.9rem; border-radius: 12px; background: var(--color-subtle); border: 1px solid var(--color-border); display: grid; gap: 0.45rem; }
+.wi-bad-row { display: grid; grid-template-columns: 9rem auto 1fr; gap: 0.7rem; align-items: center; font-size: 0.95rem; }
+.wi-bad-label { color: var(--muted); }
+.wi-bad-plan b { color: var(--color-text); }
+.wi-dots { display: inline-flex; gap: 3px; }
+.wi-dots span { width: 12px; height: 12px; border-radius: 3px; }
+.wi-dots .bad { background: var(--color-warning); }
+.wi-dots .ok { background: var(--color-success-soft); border: 1px solid var(--color-border); }
+@media (max-width: 560px) { .wi-bad-row { grid-template-columns: 1fr; gap: 0.2rem; } }
+
+.wi-water-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.7rem; }
+.wi-water-grid li { border: 1px solid var(--line); border-radius: 12px; padding: 0.8rem 0.9rem; display: flex; flex-direction: column; gap: 0.45rem; background: var(--card); }
+.wi-water-grid li.on { border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); background: var(--green-soft); }
+.wi-water-title { margin: 0; font-weight: 700; }
+.wi-water-hint { margin: 0; font-size: 0.82rem; color: var(--muted); }
+.wi-water-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.3rem; margin: 0.2rem 0 0; }
+.wi-water-stats dt { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+.wi-water-stats dd { margin: 0; font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.wi-water-stats dd small { font-weight: 500; color: var(--muted); font-size: 0.72rem; }
+.wi-water-grid .ghost { margin-top: auto; }
+.wi-current { margin-top: auto; font-size: 0.82rem; font-weight: 700; color: var(--green); }
+
+.wi-years { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.7rem; }
+.wi-years button { border: 1px solid var(--line); background: var(--card); color: var(--color-text); border-radius: 999px; padding: 0.35rem 0.9rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.wi-years button.on { background: var(--color-warning-soft); border-color: var(--color-warning); color: var(--color-text); }
+.wi-weather { margin: 0 0 0.8rem; font-size: 0.92rem; }
+.wi-outcomes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.7rem; }
+.wi-outcome { border: 1px solid var(--line); border-radius: 12px; padding: 0.75rem 0.85rem; }
+.wi-outcome.muted { background: var(--color-subtle); }
+.wi-outcome-title { margin: 0; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 700; }
+.wi-outcome-label { margin: 0.1rem 0 0.5rem; font-weight: 700; }
+.wi-outcome ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+.wi-outcome li { display: grid; grid-template-columns: 0.8rem 1fr auto auto; gap: 0.5rem; align-items: center; font-size: 0.9rem; }
+.wi-swatch { width: 0.8rem; height: 0.8rem; border-radius: 3px; }
+.wi-crop small { color: var(--muted); }
+.wi-yield { display: grid; text-align: right; font-variant-numeric: tabular-nums; }
+.wi-yield small { font-size: 0.75rem; color: var(--muted); }
+.wi-yield small.warn { color: var(--color-warning); }
+.wi-yield small.neg, .wi-money.neg { color: var(--color-danger); }
+.wi-money { font-weight: 750; font-variant-numeric: tabular-nums; min-width: 4rem; text-align: right; }
+.wi-real { margin-top: 0.8rem; padding: 0.6rem 0.8rem; border-radius: 10px; background: var(--color-subtle); border: 1px solid var(--color-border); font-size: 0.9rem; color: var(--color-text-2); }
+.top-stats { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+.plan-row-bad { font-size: 0.78rem; color: var(--muted); font-weight: 600; white-space: nowrap; }
+.jr-tiles-3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 640px) { .jr-tiles-3 { grid-template-columns: 1fr; } }
+.top-stats .stat-words { font-size: 1rem; white-space: nowrap; }

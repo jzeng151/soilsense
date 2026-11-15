@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { App } from "./App";
 import type { UIMessage } from "ai";
-import { firstUserText, loadChats, newChatId, saveChats, titleFrom, type ScoutChat } from "./chats";
+import { firstUserText, GUEST_ID, loadChats, newChatId, saveChats, titleFrom, type ScoutChat } from "./chats";
 import { Sidebar, type Route } from "./components/Sidebar";
 import { ScoutPage } from "./pages/ScoutPage";
 import { SettingsPage } from "./pages/SettingsPage";
@@ -14,45 +14,36 @@ const routeFromHash = (): Route => {
   if (h.startsWith("#/scout")) return "scout";
   if (h.startsWith("#/sources")) return "sources";
   if (h.startsWith("#/settings")) return "settings";
+  if (h.startsWith("#/signin")) return "signin";
   return "planner";
 };
 
-/** Checks the session first: shows the sign-in screen, or the app for a signed-in user. */
+/**
+ * The app opens straight away for everyone: no account needed for the planner, Scout or Sources.
+ * A team member can sign in (sidebar link) to reach Settings, which edits the live phone agent.
+ */
 export function Shell() {
-  const [user, setUser] = useState<User | null | undefined>(undefined);
-  const [checkError, setCheckError] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-  const check = useCallback(() => {
-    setCheckError(null);
+  // Quietly pick up an existing team session; if the check fails, just stay a public visitor.
+  useEffect(() => {
     getMe()
       .then(setUser)
-      .catch((e: unknown) => setCheckError(e instanceof Error ? e.message : "Couldn't reach SoilSense."));
+      .catch(() => setUser(null));
   }, []);
 
-  useEffect(check, [check]);
-
-  // Any API call that comes back 401 (expired or revoked session) returns to the sign-in screen.
+  // A 401 (expired team session) simply returns to public mode.
   useEffect(() => {
     const onSignedOut = () => setUser(null);
     window.addEventListener(SIGNED_OUT_EVENT, onSignedOut);
     return () => window.removeEventListener(SIGNED_OUT_EVENT, onSignedOut);
   }, []);
 
-  if (checkError)
-    return (
-      <div className="auth-splash">
-        <p>{checkError}</p>
-        <button type="button" className="auth-submit" onClick={check}>
-          Try again
-        </button>
-      </div>
-    );
-  if (user === undefined) return <div className="auth-splash" aria-busy="true" aria-label="Loading" />;
-  if (user === null) return <AuthPage onSignedIn={setUser} />;
   return (
     <Workspace
-      key={user.id}
+      key={user?.id ?? GUEST_ID}
       user={user}
+      onSignedIn={setUser}
       onSignOut={async () => {
         await signOut();
         setUser(null);
@@ -61,10 +52,11 @@ export function Shell() {
   );
 }
 
-function Workspace({ user, onSignOut }: { user: User; onSignOut: () => void }) {
+function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSignedIn: (u: User) => void; onSignOut: () => void }) {
   const [route, setRoute] = useState<Route>(routeFromHash);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [chats, setChats] = useState<ScoutChat[]>(() => loadChats(user.id));
+  const ownerId = user?.id ?? GUEST_ID;
+  const [chats, setChats] = useState<ScoutChat[]>(() => loadChats(ownerId));
   // Always points at a chat; a brand-new chat only enters the list once it has messages.
   const [activeId, setActiveId] = useState<string>(newChatId);
 
@@ -74,7 +66,7 @@ function Workspace({ user, onSignOut }: { user: User; onSignOut: () => void }) {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
-  useEffect(() => saveChats(user.id, chats), [user.id, chats]);
+  useEffect(() => saveChats(ownerId, chats), [ownerId, chats]);
 
   const go = useCallback((r: Route) => {
     setRoute(r);
@@ -123,8 +115,18 @@ function Workspace({ user, onSignOut }: { user: User; onSignOut: () => void }) {
           <ScoutPage key={activeId} chatId={activeId} initialMessages={active?.messages ?? []} onMessages={saveMessages} onMenu={() => setSidebarOpen(true)} />
         ) : route === "sources" ? (
           <SourcesPage onMenu={() => setSidebarOpen(true)} />
-        ) : route === "settings" ? (
-          <SettingsPage onMenu={() => setSidebarOpen(true)} />
+        ) : route === "settings" || route === "signin" ? (
+          user && route === "settings" ? (
+            <SettingsPage onMenu={() => setSidebarOpen(true)} />
+          ) : (
+            // Settings changes the live phone agent, so it needs a team account.
+            <AuthPage
+              onSignedIn={(u) => {
+                onSignedIn(u);
+                if (route === "signin") go("planner");
+              }}
+            />
+          )
         ) : (
           <>
             <button type="button" className="sb-toggle" aria-label="Open sidebar" onClick={() => setSidebarOpen(true)}>

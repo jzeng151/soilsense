@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { CropId, FieldResponse, PlanResponse, Priority, ReasonFact, RotationPlan } from "../../src/shared/types";
+import type { CropId, FieldResponse, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
 import { askQuestion, fetchField, fetchPlan } from "./api";
 import { DEMO_FARMS, MapPicker } from "./components/MapPicker";
 import { HarvestCheck, SatelliteNote } from "./components/HarvestCheck";
+import { BadYears, DroughtReplay, WATER_LABELS, WaterOptions } from "./components/WhatIf";
 import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { TrendChart, trendText, trendTone } from "./components/TrendChart";
@@ -56,6 +57,8 @@ function plain(text: string): string {
     .replace(/\s*\([^)]*\bp\s*[=<]\s*[\d.]+[^)]*\)/g, "")
     .replace(/,?\s*and that change is statistically real/gi, "")
     .replace(/no statistically clear change/gi, "no clear change")
+    .replace(/Growing degree days \(May–Sep\)/g, "Growing-season warmth (May–Sep)")
+    .replace(/°F·days/g, "heat units")
     .replace(/\s+\./g, ".");
 }
 
@@ -92,11 +95,11 @@ function tradeoff(best: RotationPlan, current: RotationPlan | null): string | nu
   if (!current) return null;
   const less = Math.round(current.avgNetReturnPerAcre - best.avgNetReturnPerAcre);
   if (less < 5) return null;
-  const tenths = (r: number) => Math.round(r * 10);
-  const now = tenths(current.scores.reliability);
-  const ours = tenths(best.scores.reliability);
-  if (ours <= now) return `In an average year this plan earns about $${less}/acre less than what you do now. We suggest it because it is better for your soil and fits your goal.`;
-  return `In an average year this plan earns about $${less}/acre less than what you do now. But its crops come through in about ${ours} of 10 years here, against ${now} of 10 for your current crops, so you lose a harvest far less often.`;
+  // Use the same bad-years numbers shown in the dots above, so the page never contradicts itself.
+  const nowOk = 10 - current.badYearsIn10;
+  const oursOk = 10 - best.badYearsIn10;
+  if (oursOk <= nowOk) return `On average this plan earns about $${less}/acre a year less than what you do now. We suggest it because it is better for your soil and fits your goal.`;
+  return `On average your current crops earn about $${less}/acre a year more, because their good years pay very well. But those good years are rare here: your current crops come through in about ${nowOk} of 10 years, this plan in about ${oursOk}. A few bad years in a row cost far more than that average difference.`;
 }
 
 function soilName(name: string | undefined): string | undefined {
@@ -141,7 +144,7 @@ export function App() {
   const [fieldLoading, setFieldLoading] = useState(false);
   const [thisYear, setThisYear] = useState<CropId | "">("");
   const [guessed, setGuessed] = useState(false);
-  const [irrigated, setIrrigated] = useState(false);
+  const [water, setWater] = useState<WaterLevel>("rain");
   const [priority, setPriority] = useState<Priority>("balanced");
   const [plan, setPlan] = useState<PlanResponse | null>(null);
   const [planLoading, setPlanLoading] = useState(false);
@@ -225,8 +228,10 @@ export function App() {
 
   const lastMapped = useMemo(() => [...(field?.cropHistory.years ?? [])].reverse().find((y) => y.crop) ?? null, [field]);
 
-  const run = useCallback(async () => {
+  const run = useCallback(async (waterOverride?: WaterLevel) => {
     if (!point || !thisYear) return;
+    const w = waterOverride ?? water;
+    if (waterOverride) setWater(waterOverride);
     setPlanLoading(true);
     setLoadingStep(0);
     setError(null);
@@ -238,7 +243,7 @@ export function App() {
     if (lastMapped?.crop && lastMapped.year < THIS_SEASON) recentCrops.push(lastMapped.crop);
     recentCrops.push(thisYear);
     try {
-      const res = await fetchPlan({ lat: point.lat, lon: point.lon, irrigated, priority, recentCrops }, ctrl.signal);
+      const res = await fetchPlan({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, recentCrops }, ctrl.signal);
       setPlan(res);
       setAnswer(null);
     } catch (e) {
@@ -246,7 +251,7 @@ export function App() {
     } finally {
       if (planAbort.current === ctrl) setPlanLoading(false);
     }
-  }, [point, thisYear, irrigated, priority, lastMapped, go]);
+  }, [point, thisYear, water, priority, lastMapped, go]);
 
   // Walk through the loading messages while the plan is being built.
   useEffect(() => {
@@ -349,7 +354,7 @@ export function App() {
                   type="button"
                   className="chip-btn"
                   onClick={() => {
-                    setIrrigated(d.irrigated);
+                    setWater(d.irrigated ? "full" : "rain");
                     void pick(d.lat, d.lon);
                   }}
                 >
@@ -432,11 +437,13 @@ export function App() {
               <legend>
                 <span className="jr-qn">2</span> How is it watered?
               </legend>
-              <div className="jr-tiles jr-tiles-2" role="radiogroup">
-                {[false, true].map((v) => (
-                  <button key={String(v)} type="button" role="radio" aria-checked={irrigated === v} className={irrigated === v ? "on" : ""} onClick={() => setIrrigated(v)}>
-                    <b>{v ? "💧 Irrigated" : "🌧️ Rain only"}</b>
-                    <small>{v ? "Pivots, drip or flood" : "No watering system"}</small>
+              <div className="jr-tiles jr-tiles-3" role="radiogroup">
+                {(["rain", "limited", "full"] as WaterLevel[]).map((v) => (
+                  <button key={v} type="button" role="radio" aria-checked={water === v} className={water === v ? "on" : ""} onClick={() => setWater(v)}>
+                    <b>
+                      {v === "rain" ? "🌧️" : WATER_LABELS[v].icon} {WATER_LABELS[v].title}
+                    </b>
+                    <small>{v === "rain" ? "No watering system" : WATER_LABELS[v].hint}</small>
                   </button>
                 ))}
               </div>
@@ -508,15 +515,36 @@ export function App() {
                   </p>
                   <h1 className="jr-title">{planSentence(best)}</h1>
                   <TopPlan plan={best} compareTo={plan.currentPractice} />
+                  <BadYears plan={best} current={plan.currentPractice} />
+                  {(plan.water ?? water) === "rain" && Math.max(...plan.plans.map((p) => p.avgNetReturnPerAcre)) < 15 && (
+                    <p className="jr-tradeoff">
+                      At today's prices, none of the rotations we compared reliably makes money on this field without irrigation. This plan is the best balance of cost, risk and soil: it
+                      fails less often and protects the ground until prices or water improve.
+                    </p>
+                  )}
                   {tradeoff(best, plan.currentPractice) && <p className="jr-tradeoff">{tradeoff(best, plan.currentPractice)}</p>}
                   <p className="jr-context">
-                    Based on: {CROP_OPTIONS.find((c) => c.id === thisYear)?.label.toLowerCase()} in {THIS_SEASON} · {irrigated ? "irrigated" : "rain only"} ·{" "}
+                    Based on: {CROP_OPTIONS.find((c) => c.id === thisYear)?.label.toLowerCase()} in {THIS_SEASON} · {WATER_LABELS[plan.water ?? water].title.toLowerCase()} ·{" "}
                     {PRIORITIES.find((p) => p.id === priority)?.label.toLowerCase()}{" "}
                     <button type="button" className="link-btn" onClick={() => go("questions")}>
                       Change
                     </button>
                   </p>
                 </div>
+
+                {plan.waterOptions && plan.waterOptions.length > 1 && (
+                  <div className="jr-card">
+                    <h2 className="jr-h2">What if your water changes?</h2>
+                    <WaterOptions options={plan.waterOptions} current={plan.water ?? water} busy={planLoading} onChoose={(w) => void run(w)} />
+                  </div>
+                )}
+
+                {plan.droughtReplays && plan.droughtReplays.length > 0 && (
+                  <div className="jr-card">
+                    <h2 className="jr-h2">Replay a bad year on your field</h2>
+                    <DroughtReplay key={`${plan.generatedAt}-${plan.water}`} replays={plan.droughtReplays} />
+                  </div>
+                )}
 
                 <div className="jr-card">
                   <h2 className="jr-h2">Why we suggest this</h2>
@@ -533,7 +561,7 @@ export function App() {
                     <HarvestCheck
                       validation={plan.validation ?? []}
                       waterCheck={plan.waterCheck}
-                      irrigated={plan.request.irrigated}
+                      irrigated={(plan.water ?? water) !== "rain"}
                       planCrops={best.years.map((y) => y.crop)}
                       place={plan.location.county ? `${plan.location.county.countyName}, ${plan.location.county.stateCode}` : null}
                     />

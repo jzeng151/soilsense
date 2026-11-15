@@ -11,6 +11,12 @@ export const CROP_COLORS: Record<CropId, string> = {
   fallow: "var(--crop-fallow)",
 };
 
+/** Plain words for a yearly net return: near zero reads as "about break-even", not "−$5". */
+export function profitWords(n: number): string {
+  if (Math.abs(n) < 15) return "about break-even";
+  return n < 0 ? `loses about ${money(-n)}` : money(n);
+}
+
 export function money(n: number): string {
   return `${n < 0 ? "−" : ""}$${Math.abs(Math.round(n)).toLocaleString("en-US")}`;
 }
@@ -38,8 +44,8 @@ export function TopPlan({ plan, compareTo }: { plan: RotationPlan; compareTo: Ro
         <div>
           <dt>Estimated profit</dt>
           <dd>
-            {money(plan.avgNetReturnPerAcre)}
-            <small>/acre/year</small>
+            <span className={Math.abs(plan.avgNetReturnPerAcre) < 15 || plan.avgNetReturnPerAcre < 0 ? "stat-words" : undefined}>{profitWords(plan.avgNetReturnPerAcre)}</span>
+            {Math.abs(plan.avgNetReturnPerAcre) >= 15 && <small>/acre/year</small>}
           </dd>
         </div>
         {delta !== null && (
@@ -50,6 +56,13 @@ export function TopPlan({ plan, compareTo }: { plan: RotationPlan; compareTo: Ro
             </dd>
           </div>
         )}
+        <div>
+          <dt>Bad years</dt>
+          <dd>
+            {plan.badYearsIn10}
+            <small> in 10</small>
+          </dd>
+        </div>
         <div>
           <dt>Cover crops</dt>
           <dd>
@@ -77,6 +90,7 @@ export function PlanRow({ plan, title, compareTo, muted }: { plan: RotationPlan;
       <span className="plan-row-money">
         {money(plan.avgNetReturnPerAcre)}
         <small>/acre/yr</small>
+        <span className="plan-row-bad">{plan.badYearsIn10}/10 bad years</span>
         {delta !== null && <DeltaTag delta={delta} />}
       </span>
     </li>

@@ -77,12 +77,13 @@ export function HarvestCheck({
   return (
     <div className="vd">
       <p className="vd-lead">
-        We replayed every past year on your field and compared the result with what farmers in {place ?? "your county"} really harvested, as recorded by the USDA.
+        This tests our model itself, separately from your plan: we replayed every past year on your field and compared the result with what farmers in {place ?? "your county"} really
+        harvested, as recorded by the USDA.
       </p>
       {ordered.map((v) => (
         <article key={v.crop} className="vd-crop">
           <h3>
-            {v.cropName} <small>grown after {v.afterCropName.toLowerCase()}</small>
+            {v.cropName} <small>model test: grown after {v.afterCropName.toLowerCase()}, the usual rotation here</small>
           </h3>
           <p className="vd-verdict">{sentence(v)}</p>
           <ul className="vd-stats">

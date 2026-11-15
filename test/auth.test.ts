@@ -106,12 +106,15 @@ describe("auth routes", () => {
     expect(res.status).toBe(403);
   });
 
-  it("protects dashboard data routes but not health", async () => {
+  it("keeps the dashboard public but Settings protected", async () => {
     const env = { DB: fakeD1(), ADMIN_TOKEN: "admin-secret" };
     expect((await app.request("/api/health", {}, env, ctx)).status).toBe(200);
-    expect((await app.request("/api/field?lat=42&lon=-93", {}, env, ctx)).status).toBe(401);
-    expect((await app.request("/api/plan", json({ lat: 51.5, lon: -0.12 }), env, ctx)).status).toBe(401);
-    expect((await app.request("/api/scout/status", {}, env, ctx)).status).toBe(401);
+    // Public demo: no account needed (400s only because London is outside the US).
+    expect((await app.request("/api/field?lat=51.5&lon=-0.12", {}, env, ctx)).status).toBe(400);
+    expect((await app.request("/api/plan", json({ lat: 51.5, lon: -0.12 }), env, ctx)).status).toBe(400);
+    expect((await app.request("/api/scout/status", {}, env, ctx)).status).toBe(200);
+    // Settings edits the live phone agent: still needs a team session or the admin token.
+    expect((await app.request("/api/admin/check", {}, env, ctx)).status).toBe(401);
 
     // A signed-in user gets through (400 here only because London is outside the US).
     const signup = await app.request("/api/auth/signup", json({ email: "a@b.co", password: "longenough" }), env, ctx);

@@ -178,7 +178,7 @@ export function buildFacts(args: {
       const nDiff = currentPractice.totalNitrogenLbPerAcre - top.totalNitrogenLbPerAcre;
       facts.push({
         id: "vs-current",
-        text: `Compared with continuing the current pattern (${currentPractice.label.replace("Current pattern: ", "")}): estimated ${d >= 0 ? "+" : "−"}$${Math.abs(d)}/acre per year, ${nDiff >= 0 ? `${nDiff} lb/acre less` : `${-nDiff} lb/acre more`} nitrogen over 3 years, soil score ${round(top.scores.soil * 100, 0)} vs ${round(currentPractice.scores.soil * 100, 0)}.`,
+        text: `Compared with continuing the current pattern (${currentPractice.label.replace("Current pattern: ", "")}): estimated ${d >= 0 ? "+" : "−"}$${Math.abs(d)}/acre per year, ${nDiff >= 0 ? `${nDiff} lb/acre less` : `${-nDiff} lb/acre more`} nitrogen over 3 years, and a soil-health score of ${round(top.scores.soil * 100, 0)} vs ${round(currentPractice.scores.soil * 100, 0)} out of 100.`,
         source: "SoilSense engine (economics are indicative, based on editable price/cost assumptions)",
         kind: "economics",
       });

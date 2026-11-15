@@ -56,10 +56,17 @@ describe("plan request validation", () => {
       lat: 42.03,
       lon: -93.62,
       irrigated: true,
+      water: "full",
       priority: "soil",
       recentCrops: ["corn", "soybean"],
       language: "en",
     });
+  });
+  it("accepts a water level and keeps irrigated in step", () => {
+    expect(validatePlanRequest({ lat: 42.03, lon: -93.62, water: "limited" })).toMatchObject({ water: "limited", irrigated: true });
+    expect(validatePlanRequest({ lat: 42.03, lon: -93.62, water: "rain" })).toMatchObject({ water: "rain", irrigated: false });
+    expect(validatePlanRequest({ lat: 42.03, lon: -93.62 })).toMatchObject({ water: "rain", irrigated: false });
+    expect(typeof validatePlanRequest({ lat: 42.03, lon: -93.62, water: "lots" })).toBe("string");
   });
   it("rejects bad input", () => {
     expect(typeof validatePlanRequest({ lat: 51.5, lon: -0.1 })).toBe("string");

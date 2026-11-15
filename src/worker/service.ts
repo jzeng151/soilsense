@@ -45,24 +45,29 @@ export async function makePlan(
 ): Promise<PlanResponse> {
   const now = opts.now ?? new Date();
   const years = yearsFor(env, now);
+  // Per-source timing, logged once per plan (helps find slow upstream services).
+  const t0 = Date.now();
+  const timing: Record<string, number> = {};
+  const timed = <T>(label: string, p: Promise<T>): Promise<T> => p.finally(() => (timing[label] = Date.now() - t0));
   const [powerClimate, daymet, soil, cropHistory, county] = await Promise.all([
-    getDailyClimate(env.DB, request.lat, request.lon, years.historyStart, years.historyEnd),
-    getDaymet(env.DB, request.lat, request.lon, years.historyStart, years.historyEnd),
-    getSoil(env.DB, request.lat, request.lon),
+    timed("power", getDailyClimate(env.DB, request.lat, request.lon, years.historyStart, years.historyEnd)),
+    timed("daymet", getDaymet(env.DB, request.lat, request.lon, years.historyStart, years.historyEnd)),
+    timed("soil", getSoil(env.DB, request.lat, request.lon)),
     opts.skipCropHistory
       ? Promise.resolve({ available: false, source: "Farmer input (phone call)", years: [] })
-      : getCropHistory(env.DB, request.lat, request.lon, years.cdlLastYear),
-    getCounty(env.DB, request.lat, request.lon),
+      : timed("cdl", getCropHistory(env.DB, request.lat, request.lon, years.cdlLastYear)),
+    timed("county", getCounty(env.DB, request.lat, request.lon)),
   ]);
   // Weather: average of NASA POWER and NASA Daymet when Daymet answered; NASA POWER alone otherwise.
   const climate = daymet ? mergeDaymet(powerClimate, daymet).climate : powerClimate;
   const [nass, losses, openEt] = await Promise.all([
-    getNassData(env.DB, env.NASS_API_KEY, county, now.getUTCFullYear()),
-    getCountyLosses(env.ASSETS, county),
+    timed("nass", getNassData(env.DB, env.NASS_API_KEY, county, now.getUTCFullYear())),
+    timed("rma", getCountyLosses(env.ASSETS, county)),
     // OpenET only helps where we know what grew; skip it for phone calls without crop history.
-    cropHistory.years.length ? getOpenEt(env.DB, env.OPENET_API_KEY, request.lat, request.lon, years.historyEnd) : Promise.resolve(null),
+    cropHistory.years.length ? timed("openet", getOpenEt(env.DB, env.OPENET_API_KEY, request.lat, request.lon, years.historyEnd)) : Promise.resolve(null),
   ]);
-  return buildPlan({
+  const tEngine = Date.now();
+  const plan = buildPlan({
     request,
     climate,
     soil,
@@ -75,6 +80,10 @@ export async function makePlan(
     planStartYear: years.planStartYear,
     now,
   });
+  timing.engine = Date.now() - tEngine;
+  timing.total = Date.now() - t0;
+  console.log(JSON.stringify({ msg: "plan timing", lat: request.lat, lon: request.lon, ms: timing }));
+  return plan;
 }
 
 export async function logPlan(

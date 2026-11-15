@@ -21,9 +21,9 @@ describe("worker routes", () => {
     expect(res.status).toBe(400);
   });
 
-  it("requires sign-in for plans", async () => {
-    const res = await app.request("/api/plan", { method: "POST", body: JSON.stringify({ lat: 42, lon: -93 }), headers: { "Content-Type": "application/json" } }, {}, ctx);
-    expect(res.status).toBe(401);
+  it("plans are public: no sign-in needed (400 here only because London is outside the US)", async () => {
+    const res = await app.request("/api/plan", { method: "POST", body: JSON.stringify({ lat: 51.5, lon: -0.12 }), headers: { "Content-Type": "application/json" } }, {}, ctx);
+    expect(res.status).toBe(400);
   });
 
   it("rejects unsigned Twilio webhooks", async () => {

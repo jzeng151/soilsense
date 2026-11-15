@@ -5,6 +5,12 @@ export type CropId = "corn" | "soybean" | "winter_wheat" | "oats" | "alfalfa" | 
 export type CoverId = "none" | "cereal_rye" | "crimson_clover" | "hairy_vetch";
 export type Priority = "profit" | "soil" | "risk" | "balanced";
 
+/**
+ * How much water the field gets beyond rain: none; a limited allowance (about 10 in a year, as in K-State's
+ * Tribune limited-irrigation trial, e.g. a declining well or an allocation); or full irrigation.
+ */
+export type WaterLevel = "rain" | "limited" | "full";
+
 export interface LatLon {
   lat: number;
   lon: number;
@@ -113,6 +119,8 @@ export interface PlanYear {
   yieldUnit: string;
   nitrogenLbPerAcre: number;
   netReturnPerAcre: number;
+  /** Average irrigation water pumped for this crop year, inches (0 when rain-fed). */
+  waterPumpedIn?: number;
 }
 
 export interface RotationPlan {
@@ -124,6 +132,10 @@ export interface RotationPlan {
   totalNitrogenLbPerAcre: number;
   coverYears: number;
   notes: string[];
+  /** How many years in 10 the plan's crops would be badly stressed (from the 35-year replay), 0-10. */
+  badYearsIn10: number;
+  /** Average irrigation water pumped per calendar year over the plan, inches. */
+  waterPumpedIn: number;
 }
 
 export interface ReasonFact {
@@ -139,6 +151,8 @@ export interface PlanRequest {
   lon: number;
   irrigated: boolean;
   priority: Priority;
+  /** Water beyond rain. When missing, irrigated=true means "full" and false means "rain". */
+  water?: WaterLevel;
   /** Optional override when satellite crop history is unavailable. Most recent last. */
   recentCrops?: CropId[];
   language?: "en" | "es";
@@ -162,6 +176,12 @@ export interface PlanResponse {
   validation?: CropValidation[];
   /** Our crop water use vs. water use measured from satellites on this field (OpenET), when available. */
   waterCheck?: WaterCheck;
+  /** The water level this plan was built for. */
+  water?: WaterLevel;
+  /** Best plan under each water level (rain only, limited, full irrigation). */
+  waterOptions?: WaterOption[];
+  /** The field's own worst past years, replayed for the current crops and the plan. */
+  droughtReplays?: DroughtReplay[];
 }
 
 /** Model hindcast vs. USDA NASS county yields for one crop. */
@@ -260,6 +280,53 @@ export interface NassData {
   districtName: string | null;
   prices: Partial<Record<CropId, CropPrice>>;
   errors: string[];
+}
+
+/** One crop's outcome in a replayed past year. */
+export interface ReplayCropOutcome {
+  crop: CropId;
+  cropName: string;
+  afterCropName: string;
+  /** Estimated yield in that year's real weather on this field (typical plan yield × that year's relative outcome). */
+  yield: number;
+  unit: string;
+  /** Percent above/below this crop's typical yield here. */
+  pctVsTypical: number;
+  /** Net return that year at today's prices and typical costs, $/acre. */
+  netPerAcre: number;
+  mainStress: string | null;
+}
+
+export interface ReplayPlanOutcome {
+  label: string;
+  crops: ReplayCropOutcome[];
+  /** Average net return across the rotation's crops that year, $/acre (null if no crop could be replayed). */
+  avgNetPerAcre: number | null;
+}
+
+/** "Replay a bad year": history, never a forecast. */
+export interface DroughtReplay {
+  year: number;
+  weather: { seasonRainIn: number | null; typicalSeasonRainIn: number | null; hotDays: number | null; typicalHotDays: number | null };
+  /** The farmer's current crops (null when unknown). */
+  current: ReplayPlanOutcome | null;
+  /** Our recommended plan. */
+  plan: ReplayPlanOutcome;
+  /** What really happened to the county's harvest that year (USDA NASS), % vs. the long-term trend. */
+  /** fields: "rain-fed" = USDA non-irrigated series; "all" = all fields combined (irrigated included). */
+  county: { crop: CropId; cropName: string; actualPct: number; fields: "rain-fed" | "all" }[];
+  /** Main reason crop insurance paid out that year in the county (USDA RMA). */
+  insurance: { crop: CropId; cropName: string; cause: string }[];
+}
+
+/** Best plan for each water level, so a farmer can see what changes if the well runs low or dry. */
+export interface WaterOption {
+  water: WaterLevel;
+  bestLabel: string;
+  crops: CropId[];
+  badYearsIn10: number;
+  avgNetReturnPerAcre: number;
+  waterPumpedIn: number;
 }
 
 export interface FieldResponse {

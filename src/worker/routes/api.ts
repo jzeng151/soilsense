@@ -47,13 +47,19 @@ function adminTokenMatches(header: string | undefined, token: string | undefined
   return diff === 0;
 }
 
+/**
+ * Sign-in gate for data routes. Off: the planner, Scout and the field lookup are public so anyone (judges,
+ * farmers) can use them without an account; the per-IP POST rate limit above still applies. Settings
+ * (/api/admin/*) stays protected separately. To require accounts again, set REQUIRE_SIGN_IN to true.
+ */
+const REQUIRE_SIGN_IN = false;
 const requireUser: MiddlewareHandler<AppEnv> = async (c, next) => {
   // Scripts (e.g. scripts/prefetch-demo.mjs) may use the ADMIN_TOKEN instead of a session.
   if (adminTokenMatches(c.req.header("Authorization"), c.env.ADMIN_TOKEN)) return next();
   if (!(await currentUser(c))) return c.json({ error: "Sign in to continue." }, 401);
   await next();
 };
-for (const path of ["/field", "/plan", "/ask", "/scout/*"]) api.use(path, requireUser);
+if (REQUIRE_SIGN_IN) for (const path of ["/field", "/plan", "/ask", "/scout/*"]) api.use(path, requireUser);
 
 function parseCoords(lat: unknown, lon: unknown): { lat: number; lon: number } | string {
   const la = Number(lat);
@@ -77,7 +83,10 @@ export function validatePlanRequest(body: unknown): PlanRequest | string {
     recentCrops = b.recentCrops as CropId[];
   }
   const language = b.language === "es" ? "es" : "en";
-  return { ...coords, irrigated: b.irrigated === true, priority, recentCrops, language };
+  // Water beyond rain: "rain" | "limited" | "full". Older clients send only `irrigated`.
+  if (b.water !== undefined && b.water !== "rain" && b.water !== "limited" && b.water !== "full") return 'water must be "rain", "limited" or "full"';
+  const water = (b.water as "rain" | "limited" | "full" | undefined) ?? (b.irrigated === true ? "full" : "rain");
+  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language };
 }
 
 function upstreamMessage(err: unknown): { status: 502 | 500; body: { error: string; detail?: string } } {

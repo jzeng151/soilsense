@@ -10,7 +10,7 @@ import { createGoogle } from "@ai-sdk/google";
 import { type ModelMessage, stepCountIs, streamText, tool } from "ai";
 import { z } from "zod";
 import { ALL_CROPS } from "../../engine/crops";
-import type { CropId, PlanResponse, Priority } from "../../shared/types";
+import type { CropId, PlanResponse, Priority, WaterLevel } from "../../shared/types";
 import { lookupZip } from "../data/geo";
 import type { Env } from "../env";
 import { maskPhone, sendSms, xmlEscape } from "../lib/twilio";
@@ -61,7 +61,7 @@ export async function agentTwiml(env: Env, requestUrl: string, callSid: string):
     ...(multi
       ? // Automatic language detection: Deepgram must transcribe and ElevenLabs must speak.
         [`language="multi"`, `transcriptionProvider="Deepgram"`, `speechModel="nova-3-general"`, `ttsProvider="ElevenLabs"`]
-      : [`language="en-US"`, `hints="${xmlEscape("corn, soybeans, soybean, wheat, winter wheat, oats, alfalfa, hay, sorghum, irrigated, rain-fed, dryland, ZIP code")}"`]),
+      : [`language="en-US"`, `hints="${xmlEscape("corn, soybeans, soybean, wheat, winter wheat, oats, alfalfa, hay, sorghum, irrigated, limited water, rain-fed, dryland, ZIP code")}"`]),
   ];
   return (
     `<?xml version="1.0" encoding="UTF-8"?><Response>` +
@@ -92,8 +92,13 @@ function planForVoice(p: PlanResponse, place: string | undefined) {
     label: r.label,
     years: r.years.map((y) => `${y.year}: ${y.cropName}${y.cover === "none" ? "" : ` with ${y.coverName} over winter`}`),
     netReturnPerAcrePerYear: r.avgNetReturnPerAcre,
+    badYearsIn10: r.badYearsIn10,
+    ...(r.waterPumpedIn ? { irrigationInchesPerYear: r.waterPumpedIn } : {}),
   });
   const current = p.currentPractice;
+  const worst = p.droughtReplays?.[0];
+  const outcome = (o: { label: string; avgNetPerAcre: number | null; crops: { cropName: string; pctVsTypical: number | null; mainStress: string | null }[] } | null) =>
+    o && { label: o.label, netPerAcre: o.avgNetPerAcre, crops: o.crops.map((c) => `${c.cropName}: ${c.pctVsTypical == null ? "no estimate" : `${c.pctVsTypical > 0 ? "+" : ""}${Math.round(c.pctVsTypical)}% vs a typical year`}${c.mainStress ? ` (${c.mainStress})` : ""}`) };
   return {
     place: place ?? (p.location.county ? `${p.location.county.countyName}, ${p.location.county.stateCode}` : undefined),
     soil: p.soil.available ? [p.soil.mapUnitName?.split(",")[0] ?? p.soil.componentName, p.soil.drainageClass].filter(Boolean).join(", ") : "not mapped",
@@ -103,7 +108,24 @@ function planForVoice(p: PlanResponse, place: string | undefined) {
       .map((i) => `${i.label}: ${i.changePerDecade > 0 ? "up" : "down"} ${Math.abs(Math.round(i.changePerDecade * 10) / 10)} ${i.unit} per decade since ${p.climate.firstYear}`),
     recommended: p.plans[0] ? describe(p.plans[0]) : null,
     otherOptions: p.plans.slice(1).map(describe),
-    ifTheyKeepCurrentPattern: current ? { label: current.label.replace("Current pattern: ", ""), netReturnPerAcrePerYear: current.avgNetReturnPerAcre } : null,
+    ifTheyKeepCurrentPattern: current
+      ? { label: current.label.replace("Current pattern: ", ""), netReturnPerAcrePerYear: current.avgNetReturnPerAcre, badYearsIn10: current.badYearsIn10 }
+      : null,
+    waterUsed: p.water ?? (p.request.irrigated ? "full" : "rain"),
+    // Best plan if their water changed: "rain" = no irrigation, "limited" = about 10 inches a year, "full" = full irrigation.
+    ifWaterChanged: (p.waterOptions ?? []).map((o) => ({ water: o.water, best: o.bestLabel, netReturnPerAcrePerYear: o.avgNetReturnPerAcre, badYearsIn10: o.badYearsIn10 })),
+    // This field's worst past year, replayed with real weather: history, not a forecast.
+    worstPastYear: worst
+      ? {
+          year: worst.year,
+          seasonRainInches: worst.weather.seasonRainIn,
+          typicalSeasonRainInches: worst.weather.typicalSeasonRainIn,
+          theirCurrentCrops: outcome(worst.current),
+          recommendedPlan: outcome(worst.plan),
+          countyActual: worst.county.map((c) => `${c.cropName}: ${Math.round(c.actualPct)}% vs trend`),
+          insuranceCause: worst.insurance.map((i) => `${i.cropName}: ${i.cause}`),
+        }
+      : null,
     reasons: p.facts.slice(0, 8).map((f) => plainFact(f.text)),
   };
 }
@@ -341,12 +363,15 @@ class CallSession {
       }),
       build_rotation_plan: tool({
         description:
-          "Analyze the field: 35 years of NASA POWER climate trends, USDA soil and crop history, and the ranked 3-year rotations with net return per acre.",
+          "Analyze the field: 35 years of NASA climate, USDA soil and crop history, and the ranked 3-year rotations with net return per acre and how many years in 10 each would have a bad harvest. Also returns the best plan for each water level and a replay of this field's worst past year.",
         inputSchema: z.object({
           lat: z.number(),
           lon: z.number(),
           place_name: z.string().optional().describe("Town and state from find_location, e.g. 'Ames, IA'"),
-          irrigated: z.boolean().optional().describe("true only if the caller said the field is irrigated"),
+          water: z
+            .enum(["rain", "limited", "full"])
+            .optional()
+            .describe('Water beyond rain: "rain" (no irrigation, the default), "limited" (some irrigation, about 10 inches a year or a weak well) or "full" (fully irrigated)'),
           priority: z.enum(PRIORITIES).optional().describe("What the caller cares most about; default balanced"),
           recent_crops: z
             .array(z.enum(ALL_CROPS as [CropId, ...CropId[]]))
@@ -360,14 +385,14 @@ class CallSession {
             lat,
             lon,
             place_name,
-            irrigated,
+            water,
             priority,
             recent_crops,
           }: {
             lat: number;
             lon: number;
             place_name?: string;
-            irrigated?: boolean;
+            water?: WaterLevel;
             priority?: Priority;
             recent_crops?: CropId[];
           }) => {
@@ -382,7 +407,8 @@ class CallSession {
           const request = {
             lat,
             lon,
-            irrigated: irrigated === true,
+            irrigated: (water ?? "rain") !== "rain",
+            water: water ?? "rain",
             priority: priority ?? "balanced",
             recentCrops: recent_crops?.length ? recent_crops : undefined,
             // The engine writes text messages in English or Spanish.

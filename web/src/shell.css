@@ -217,3 +217,5 @@
 .sb-email { flex: 1; min-width: 0; font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sb-signout { display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 8px; background: transparent; color: var(--sb-muted); cursor: pointer; flex-shrink: 0; }
 .sb-signout:hover { background: var(--sb-hover); color: var(--sb-ink); }
+.sb-team { display: block; margin-top: 0.4rem; padding: 0.55rem 0.5rem 0.2rem; border-top: 1px solid var(--color-border); color: var(--sb-muted); font-size: 0.82rem; text-decoration: none; }
+.sb-team:hover { color: var(--sb-ink); text-decoration: underline; }

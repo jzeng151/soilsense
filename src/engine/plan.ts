@@ -1,12 +1,13 @@
 // Pure orchestration: data in, full plan response out. No network calls here,
 // so the whole engine is unit-testable with fixtures.
 
-import type { CountyInfo, CountyLosses, CropHistory, CropId, CropValidation, EtMonth, NassData, PlanRequest, PlanResponse, SoilProfile, WaterCheck } from "../shared/types";
+import type { CountyInfo, CountyLosses, CropHistory, CropId, CropValidation, DroughtReplay, EtMonth, NassData, PlanRequest, PlanResponse, SoilProfile, WaterCheck, WaterLevel, WaterOption } from "../shared/types";
 import { buildIndicators, type DailyClimate } from "./climate";
 import { buildExplanation, buildFacts } from "./explain";
 import { ALL_CROPS, CROPS } from "./crops";
 import { availableCrops, FALLOW_MAX_ANNUAL_RAIN_MM, statePotential } from "./regions";
-import { buildWaterContext, evaluateCropClimate, makeReplay, meanAnnualRainMm, runEngine } from "./rotation";
+import { buildDroughtReplays } from "./droughtReplay";
+import { buildWaterContext, evaluateCropClimate, LIMITED_IRRIGATION_MM, makeReplay, meanAnnualRainMm, runEngine } from "./rotation";
 import { usdaInputs, type RecentYield, type ValidationSeries } from "./usda";
 import { checkWaterUse, validateCrop, type YieldRecord } from "./validate";
 
@@ -91,62 +92,105 @@ export function effectiveHistory(cropHistory: CropHistory, recentCrops?: CropId[
     .slice(-3);
 }
 
+/** The water level a request asks for (older clients send only `irrigated`). */
+export function waterLevelOf(request: PlanRequest): WaterLevel {
+  return request.water ?? (request.irrigated ? "full" : "rain");
+}
+
+const WATER_WORDS: Record<WaterLevel, string> = {
+  rain: "rain only",
+  limited: "limited irrigation (about 10 in a year)",
+  full: "full irrigation",
+};
+
 export function buildPlan(inputs: PlanInputs): PlanResponse {
   const { request, climate, soil, cropHistory, county, planStartYear, now } = inputs;
   const history = effectiveHistory(cropHistory, request.recentCrops);
   const targetYear = planStartYear + 1;
+  const level = waterLevelOf(request);
 
   const climateSummary = buildIndicators(climate, { lat: request.lat, lon: request.lon });
-  const cropClimate = evaluateCropClimate(climate, soil, request.irrigated, targetYear);
 
   // Winter wheat for the first plan year must be sown by about Oct 15 of the year before.
   const wheatDeadline = new Date(Date.UTC(planStartYear - 1, 9, 15));
   const firstYearWheatAllowed = now.getTime() < wheatDeadline.getTime();
 
-  const water = buildWaterContext(climate, soil, request.irrigated);
-  const annualRain = meanAnnualRainMm(water);
-  const region = availableCrops(county?.stateCode, ALL_CROPS);
-  // Fallow where it is a real practice (dry, rain-fed), or where the farmer already uses it.
-  const fallowAllowed = (!request.irrigated && annualRain < FALLOW_MAX_ANNUAL_RAIN_MM) || history.includes("fallow");
-  const crops = fallowAllowed ? [...region.crops, "fallow" as CropId] : region.crops;
-  // USDA inputs: recent yield for THIS field's practice, the series to check against, and prices.
-  const usda = inputs.nass ? usdaInputs(inputs.nass, request.irrigated, now.getUTCFullYear()) : null;
-  const recentYields: Partial<Record<CropId, RecentYield>> = usda
-    ? usda.recent
-    : Object.fromEntries(Object.entries(inputs.yieldOverrides ?? {}).map(([c, v]) => [c, { value: v as number, basis: "county average (all fields)" }]));
-  const validationSeries: Partial<Record<CropId, ValidationSeries>> = usda
-    ? usda.validation
-    : Object.fromEntries(Object.entries(inputs.yieldHistory ?? {}).map(([c, r]) => [c, { records: r as YieldRecord[], practice: "all", area: "county" }]));
-  const prices = usda?.prices ?? {};
-
-  // Replay the real past years (rain-fed, no trend shifting) for each crop after its usual previous crop here.
+  const annualRain = meanAnnualRainMm(buildWaterContext(climate, soil, false));
   const dryRegion = annualRain < FALLOW_MAX_ANNUAL_RAIN_MM;
+  const region = availableCrops(county?.stateCode, ALL_CROPS);
+  const prices = inputs.nass?.prices ?? {};
+  const priceMap = Object.fromEntries(Object.entries(prices).map(([c, p]) => [c, p!.price])) as Partial<Record<CropId, number>>;
+
+  // Real past years replayed rain-fed, without trend shifting: used to check the model and to calibrate.
   const replay = makeReplay(climate, soil, false);
+  const fullReplay = makeReplay(climate, soil, true);
   const replays = new Map<CropId, ReturnType<typeof replay>>();
   for (const crop of region.crops) replays.set(crop, replay(crop, usualPreviousCrop(crop, dryRegion)));
-  // Calibration uses the field's own practice: an irrigated field is replayed with water need met.
-  const calReplay = request.irrigated ? makeReplay(climate, soil, true) : replay;
   const fracOf = (rs: ReturnType<typeof replay>) => {
     const r = rs.slice(-10);
     return r.length ? r.reduce((a, y) => a + y.yieldFrac, 0) / r.length : 0;
   };
   const recentFrac = (crop: CropId) => fracOf(replays.get(crop) ?? []);
-  const calFrac = (crop: CropId) => (request.irrigated ? fracOf(calReplay(crop, usualPreviousCrop(crop, dryRegion))) : recentFrac(crop));
-
-  // Yield potential: start from the state table, then calibrate to what the county really harvests:
-  // potential = county average / the share of potential the model says recent weather allowed.
   const table = statePotential(county?.stateCode);
-  const yieldOverrides: Partial<Record<CropId, number>> = { ...table };
-  for (const [c, rec] of Object.entries(recentYields) as [CropId, RecentYield][]) {
-    if (c === "fallow") continue;
-    const base = table[c] ?? CROPS[c].baseYield;
-    const frac = Math.max(0.25, calFrac(c));
-    yieldOverrides[c] = Math.round(Math.min(POTENTIAL_BOUNDS[1] * base, Math.max(POTENTIAL_BOUNDS[0] * base, rec.value / frac)) * 10) / 10;
-  }
+
+  /** Everything that depends on how much water the field gets. */
+  const plansFor = (w: WaterLevel) => {
+    const full = w === "full";
+    const allowance = w === "limited" ? LIMITED_IRRIGATION_MM : 0;
+    const cropClimate = evaluateCropClimate(climate, soil, full, targetYear);
+    const water = buildWaterContext(climate, soil, full, allowance);
+    // Fallow where it is a real practice (dry, rain-fed), or where the farmer already uses it.
+    const fallowAllowed = (w === "rain" && dryRegion) || history.includes("fallow");
+    const crops = fallowAllowed ? [...region.crops, "fallow" as CropId] : region.crops;
+    // USDA yields for the field's practice: irrigated fields (full or limited) are calibrated to irrigated
+    // harvests with water need met; the limited-water simulation then shows the shortfall.
+    const usda = inputs.nass ? usdaInputs(inputs.nass, w !== "rain", now.getUTCFullYear()) : null;
+    const recentYields: Partial<Record<CropId, RecentYield>> = usda
+      ? usda.recent
+      : Object.fromEntries(Object.entries(inputs.yieldOverrides ?? {}).map(([c, v]) => [c, { value: v as number, basis: "county average (all fields)" }]));
+    const calFrac = (crop: CropId) => (w === "rain" ? recentFrac(crop) : fracOf(fullReplay(crop, usualPreviousCrop(crop, dryRegion))));
+    // Yield potential: the state table, calibrated to what the county really harvests:
+    // potential = county average ÷ the share of potential the model says recent weather allowed.
+    const yieldOverrides: Partial<Record<CropId, number>> = { ...table };
+    for (const [c, rec] of Object.entries(recentYields) as [CropId, RecentYield][]) {
+      if (c === "fallow") continue;
+      const base = table[c] ?? CROPS[c].baseYield;
+      const frac = Math.max(0.25, calFrac(c));
+      yieldOverrides[c] = Math.round(Math.min(POTENTIAL_BOUNDS[1] * base, Math.max(POTENTIAL_BOUNDS[0] * base, rec.value / frac)) * 10) / 10;
+    }
+    const result = runEngine({
+      cropClimate,
+      history,
+      priority: request.priority,
+      planStartYear,
+      baseYieldOverrides: yieldOverrides,
+      firstYearWheatAllowed,
+      crops,
+      irrigated: full,
+      water,
+      prices: priceMap,
+    });
+    return { ...result, cropClimate, crops, fallowAllowed, recentYields, usda, allowance };
+  };
+
+  const main = plansFor(level);
+  const { plans, currentPractice, cropClimate, crops, fallowAllowed, recentYields } = main;
+
+  // What if the water changes? Best plan for each level (the requested one is reused).
+  const waterOptions: WaterOption[] = (["rain", "limited", "full"] as WaterLevel[]).flatMap((w) => {
+    const best = (w === level ? main : plansFor(w)).plans[0];
+    return best
+      ? [{ water: w, bestLabel: best.label, crops: best.years.map((y) => y.crop), badYearsIn10: best.badYearsIn10, avgNetReturnPerAcre: best.avgNetReturnPerAcre, waterPumpedIn: best.waterPumpedIn }]
+      : [];
+  });
 
   // The model's rain-fed replay is checked against USDA's non-irrigated yields where they exist.
   // With only the combined series, skip crops that are clearly not grown rain-fed here (model says under
   // 45% of potential): those county yields come from irrigated fields.
+  const rainUsda = inputs.nass ? usdaInputs(inputs.nass, false, now.getUTCFullYear()) : null;
+  const validationSeries: Partial<Record<CropId, ValidationSeries>> = rainUsda
+    ? rainUsda.validation
+    : Object.fromEntries(Object.entries(inputs.yieldHistory ?? {}).map(([c, r]) => [c, { records: r as YieldRecord[], practice: "all", area: "county" }]));
   const validation: CropValidation[] = [];
   for (const [c, series] of Object.entries(validationSeries) as [CropId, ValidationSeries][]) {
     const r = replays.get(c);
@@ -156,25 +200,40 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   }
   validation.sort((a, b) => b.years.length - a.years.length || b.correlation - a.correlation);
 
+  // The field's water level, replayed on real past years (no trend shifting).
+  const fieldReplay = level === "full" ? fullReplay : level === "limited" ? makeReplay(climate, soil, false, LIMITED_IRRIGATION_MM) : replay;
+
   // Water check: our crop water use vs. OpenET's measured water use, for the crops actually grown here.
   let waterCheck: WaterCheck | null = null;
   if (inputs.openEt?.length && cropHistory.years.length) {
-    const fieldReplay = request.irrigated ? makeReplay(climate, soil, true) : replay;
     waterCheck = checkWaterUse(inputs.openEt, cropHistory.years, fieldReplay, (c) => usualPreviousCrop(c, dryRegion));
   }
 
-  const { plans, currentPractice } = runEngine({
-    cropClimate,
-    history,
-    priority: request.priority,
-    planStartYear,
-    baseYieldOverrides: yieldOverrides,
-    firstYearWheatAllowed,
-    crops,
-    irrigated: request.irrigated,
-    water,
-    prices: Object.fromEntries(Object.entries(prices).map(([c, p]) => [c, p!.price])) as Partial<Record<CropId, number>>,
-  });
+  // "Replay a bad year": the field's own worst past years, current crops vs. the plan, next to reality.
+  const droughtReplays: DroughtReplay[] = plans[0]
+    ? buildDroughtReplays({
+        climate: climateSummary,
+        replay: fieldReplay,
+        plan: plans[0],
+        current: currentPractice,
+        lastCrop: history[history.length - 1] ?? null,
+        usualPrev: (c) => usualPreviousCrop(c, dryRegion),
+        prices: priceMap,
+        countyYields: Object.fromEntries(
+          [...new Set([...Object.keys(validationSeries), ...Object.keys(inputs.nass?.county ?? {})])].map((c) => {
+            const crop = c as CropId;
+            const list: { records: YieldRecord[]; fields: "rain-fed" | "all" }[] = [];
+            const v = validationSeries[crop];
+            if (v) list.push({ records: v.records, fields: v.practice === "rain-fed" ? "rain-fed" : "all" });
+            // USDA stopped rain-fed splits around 2010: fall back to the all-fields county series for recent years.
+            const all = inputs.nass?.county[crop]?.all;
+            if (all?.length && v?.practice !== "all") list.push({ records: all, fields: "all" });
+            return [crop, list];
+          }),
+        ),
+        losses: inputs.losses ?? null,
+      })
+    : [];
 
   const facts = buildFacts({
     climate: climateSummary,
@@ -184,7 +243,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     effectiveHistory: history,
     plans,
     currentPractice,
-    irrigated: request.irrigated,
+    irrigated: level === "full",
     losses: inputs.losses ?? null,
     countyName: county?.countyName ?? null,
   });
@@ -200,7 +259,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   });
 
   return {
-    request,
+    request: { ...request, water: level, irrigated: level !== "rain" },
     generatedAt: now.toISOString(),
     location: { county, lat: request.lat, lon: request.lon },
     soil,
@@ -213,8 +272,10 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     assumptions: [
       ...ASSUMPTIONS,
       ...region.notes,
+      `Water: ${WATER_WORDS[level]}.${level === "limited" ? " Limited irrigation covers the crop's shortfall first, up to about 10 inches a season, as in K-State's Tribune limited-irrigation trial; stored soil water covers the rest." : ""} Pumping costs about $8 per inch of water per acre.`,
+      "Bad years out of 10: how often a crop would have been badly stressed when replayed through the 35 years of NASA weather (shifted to today's climate trends), averaged over the plan's crops.",
       Object.keys(recentYields).length
-        ? `Yield potential is calibrated to real USDA NASS harvests for ${request.irrigated ? "irrigated" : "rain-fed"} fields: recent average ÷ the share of potential the model says recent weather allowed (kept within 60–115% of the state value).`
+        ? `Yield potential is calibrated to real USDA NASS harvests for ${level === "rain" ? "rain-fed" : "irrigated"} fields: recent average ÷ the share of potential the model says recent weather allowed (kept within 60–115% of the state value).`
         : `Yield potential uses approximate ${county?.stateCode ?? "Iowa"} state values (add a USDA NASS API key for county averages).`,
       ...(Object.entries(recentYields) as [CropId, RecentYield][])
         .filter(([c]) => (crops as CropId[]).includes(c))
@@ -228,9 +289,13 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
           ]
         : ["Prices are approximate defaults (add a USDA NASS API key for current state prices)."]),
       `This area averages about ${Math.round(annualRain / 25.4)} inches of rain a year; fallow was ${fallowAllowed ? "" : "not "}considered.`,
+      "Replayed past years are history, not a forecast: each uses that year's real NASA weather on this soil, compared with what the county really harvested (USDA NASS) and why crop insurance paid out (USDA RMA).",
     ],
     dataSources: DATA_SOURCES,
     disclaimer: DISCLAIMER,
+    water: level,
+    waterOptions,
+    ...(droughtReplays.length ? { droughtReplays } : {}),
     ...(validation.length ? { validation } : {}),
     ...(waterCheck ? { waterCheck } : {}),
   };

@@ -27,8 +27,11 @@ export const PRIORITY_WEIGHTS: Record<Priority, Omit<ScoreBreakdown, "total">> =
 const STRESS_THRESHOLD = 0.6;
 /** A crop must come through without stress in at least 40% of (recent-weighted) years to be recommended. */
 const MIN_RECOMMENDED_RELIABILITY = 0.4;
-/** Pumping, energy and maintenance for center-pivot irrigation, $/acre/season (editable assumption). */
-const IRRIGATION_COST_PER_ACRE = 110;
+/**
+ * Pumping cost per inch of irrigation water, $/acre (energy, maintenance, labor; approximate K-State center-pivot
+ * budget). About 14 in of full irrigation therefore costs about $110/acre, as the earlier flat assumption did.
+ */
+const IRRIGATION_COST_PER_INCH = 8;
 /** $/acre/year below the best plan at which the profit score reaches zero. */
 const PROFIT_SCALE_PER_ACRE = 200;
 const DEFAULT_AWC = 0.17; // cm/cm, typical loam
@@ -83,8 +86,14 @@ export interface WaterContext {
   profileMm: number;
   /** Plant-available water the whole profile (to 2 m) can hold, mm (80% of AWC, as at planting before). */
   profileCap: number;
+  /** Full irrigation: the crop's water need is always met. */
   irrigated: boolean;
+  /** Limited irrigation: up to this much water can be pumped per crop season, mm (0 = rain only). */
+  allowanceMm: number;
 }
+
+/** Limited irrigation allowance, mm per season: about 10 inches, as in K-State's Tribune limited-irrigation trial. */
+export const LIMITED_IRRIGATION_MM = 254;
 
 /**
  * Between crops the soil keeps each month's rain minus what evaporates from the bare, residue-covered
@@ -99,7 +108,7 @@ const FALL_ESTABLISHMENT_USE_MM = 90;
 /** A winter cover crop uses part of the water that would otherwise be stored. */
 const COVER_WATER_USE = 0.4;
 
-export function buildWaterContext(climate: DailyClimate, soil: SoilProfile, irrigated: boolean): WaterContext {
+export function buildWaterContext(climate: DailyClimate, soil: SoilProfile, irrigated: boolean, allowanceMm = 0): WaterContext {
   const monthRain = climate.years.map((ys) => {
     const m = new Array<number>(13).fill(0);
     for (const d of ys.days) m[d.month] = (m[d.month] ?? 0) + (d.prcp ?? 0);
@@ -125,6 +134,7 @@ export function buildWaterContext(climate: DailyClimate, soil: SoilProfile, irri
     profileMm,
     profileCap: 0.8 * awc * profileMm,
     irrigated,
+    allowanceMm: irrigated ? 0 : Math.max(0, allowanceMm),
   };
 }
 
@@ -426,6 +436,8 @@ interface YearOutcome {
   storageAfter: number;
   /** Water the crop used over its season (rain it could use + soil water drawn, or full need if irrigated), mm. */
   waterUse: number;
+  /** Irrigation water pumped for this crop, mm. */
+  pumped: number;
 }
 
 /** One crop in one weather year, starting with `storage` mm of plant-available water in the profile. */
@@ -436,7 +448,7 @@ function runCropYear(crop: CropId, idx: number, storage: number, input: EngineIn
     // No crop uses water; the soil keeps the season's rain minus bare-soil evaporation.
     let stored = 0;
     for (let m = def.season.from[0]; m <= def.season.to[0]; m++) stored += storedInMonth(ctx, idx, m);
-    return { score: 1, yieldFrac: 0, worst: null, storageAfter: Math.min(ctx.profileCap, storage + stored), waterUse: 0 };
+    return { score: 1, yieldFrac: 0, worst: null, storageAfter: Math.min(ctx.profileCap, storage + stored), waterUse: 0, pumped: 0 };
   }
   const y = input.cropClimate[crop].yearly;
   const effRain = y.effRain[idx] as number;
@@ -447,11 +459,17 @@ function runCropYear(crop: CropId, idx: number, storage: number, input: EngineIn
   const accessible = Math.min(storage, rootCap);
   let water = 1;
   let draw = 0;
-  if (!ctx.irrigated) {
-    const ratio = (effRain + accessible) / need;
+  let pumped = 0;
+  const deficit = Math.max(0, need - effRain);
+  if (ctx.irrigated) {
+    pumped = deficit;
+  } else {
+    // Limited irrigation covers the shortfall first, up to the allowance; stored soil water covers the rest.
+    pumped = Math.min(ctx.allowanceMm, deficit);
+    const ratio = (effRain + pumped + accessible) / need;
     const thr = def.waterYieldThreshold;
     water = clamp((ratio - thr) / (1 - thr));
-    draw = clamp(need - effRain, 0, accessible);
+    draw = clamp(deficit - pumped, 0, accessible);
   }
   const nonWater = y.nonWater[idx] as number;
   const nwWorstVal = y.nonWaterWorstVal[idx] as number;
@@ -459,8 +477,8 @@ function runCropYear(crop: CropId, idx: number, storage: number, input: EngineIn
   // Water limits yield in proportion (water-production function); other stresses are damped as before.
   const yieldFrac = water * (0.5 + 0.5 * nonWater);
   const worst: StressFactor | null = water < nwWorstVal ? "water" : (y.nonWaterWorst[idx] ?? null);
-  const waterUse = ctx.irrigated ? need : Math.min(need, effRain + draw);
-  return { score, yieldFrac, worst, storageAfter: storage - draw, waterUse };
+  const waterUse = ctx.irrigated ? need : Math.min(need, effRain + pumped + draw);
+  return { score, yieldFrac, worst, storageAfter: storage - draw, waterUse, pumped };
 }
 
 interface SimulatedYear {
@@ -468,6 +486,8 @@ interface SimulatedYear {
   reliability: number;
   mainStress: StressFactor | null;
   yieldFrac: number;
+  /** Average irrigation pumped, mm. */
+  pumpedMm: number;
 }
 
 /**
@@ -478,7 +498,7 @@ function simulate(seq: CropId[], covers: CoverId[], input: EngineInput): Simulat
   const ctx = input.water;
   const n = ctx.n;
   const prevCrop = input.history[input.history.length - 1] ?? null;
-  const acc = seq.map(() => ({ w: 0, score: 0, reliable: 0, yieldFrac: 0, stress: new Map<StressFactor, number>() }));
+  const acc = seq.map(() => ({ w: 0, score: 0, reliable: 0, yieldFrac: 0, pumped: 0, stress: new Map<StressFactor, number>() }));
 
   for (let i = 0; i < n; i++) {
     let prevIdx = (i - 1 + n) % n;
@@ -508,6 +528,7 @@ function simulate(seq: CropId[], covers: CoverId[], input: EngineInput): Simulat
       a.w += w;
       a.score += w * out.score;
       a.yieldFrac += w * out.yieldFrac;
+      a.pumped += w * out.pumped;
       if (out.score >= STRESS_THRESHOLD) a.reliable += w;
       else if (out.worst) a.stress.set(out.worst, (a.stress.get(out.worst) ?? 0) + 1);
     }
@@ -516,7 +537,7 @@ function simulate(seq: CropId[], covers: CoverId[], input: EngineInput): Simulat
     let mainStress: StressFactor | null = null;
     let best = 0;
     for (const [k, v] of a.stress) if (v > best) [mainStress, best] = [k, v];
-    return { climateScore: a.score / a.w, reliability: a.reliable / a.w, mainStress, yieldFrac: a.yieldFrac / a.w };
+    return { climateScore: a.score / a.w, reliability: a.reliable / a.w, mainStress, yieldFrac: a.yieldFrac / a.w, pumpedMm: a.pumped / a.w };
   });
 }
 
@@ -563,7 +584,8 @@ function evaluate(seq: CropId[], covers: CoverId[], input: EngineInput): RawPlan
     const n = nitrogenNeed(crop, prev, coverBefore) * clamp(yieldRatio, 0.4, 1.2);
     const establishment = crop === "alfalfa" && stand === 1 ? 150 : 0;
     const costScale = 0.3 + 0.7 * Math.min(1.2, yieldRatio);
-    const irrigationCost = input.irrigated && !def.perennial ? IRRIGATION_COST_PER_ACRE : input.irrigated ? IRRIGATION_COST_PER_ACRE * 1.2 : 0;
+    // Pumping cost scales with the water actually pumped (energy, maintenance, labor).
+    const irrigationCost = (s.pumpedMm / 25.4) * IRRIGATION_COST_PER_INCH;
     const cost = def.costPerAcre * costScale + irrigationCost + establishment + n * NITROGEN_PRICE_PER_LB + COVERS[coverAfter].costPerAcre;
     const net = expectedYield * (input.prices?.[crop] ?? def.pricePerUnit) - cost;
     return {
@@ -579,6 +601,7 @@ function evaluate(seq: CropId[], covers: CoverId[], input: EngineInput): RawPlan
       yieldUnit: def.yieldUnit,
       nitrogenLbPerAcre: Math.round(n),
       netReturnPerAcre: Math.round(net),
+      waterPumpedIn: round(s.pumpedMm / 25.4, 1),
     };
   });
 
@@ -628,7 +651,20 @@ function toPlan(raw: RawPlan, profitNorm: (v: number) => number, priority: Prior
     totalNitrogenLbPerAcre: Math.round(raw.totalN),
     coverYears: raw.covers.filter((c) => c !== "none").length,
     notes,
+    badYearsIn10: badYearsIn10(raw.years),
+    waterPumpedIn: round(raw.years.reduce((a, y) => a + (y.waterPumpedIn ?? 0), 0) / Math.max(1, raw.years.length), 1),
   };
+}
+
+/**
+ * Bad years out of 10: for each crop year, the recent-weighted share of the 35 replayed years in which the crop
+ * was badly stressed (stress score below 0.6); averaged over the crop years (fallow years excluded).
+ */
+export function badYearsIn10(years: PlanYear[]): number {
+  const cropped = years.filter((y) => y.crop !== "fallow");
+  if (!cropped.length) return 0;
+  const bad = cropped.reduce((a, y) => a + (1 - y.reliability), 0) / cropped.length;
+  return Math.round(bad * 10);
 }
 
 /** What the farmer would most likely do without advice, inferred from recent history. */
@@ -720,6 +756,8 @@ export interface ReplayYear {
   mainStress: StressFactor | null;
   /** Modelled crop water use over the season, mm. */
   waterUse: number;
+  /** Irrigation pumped that season, mm. */
+  pumped: number;
 }
 
 /**
@@ -732,8 +770,8 @@ export function replayCropByYear(climate: DailyClimate, soil: SoilProfile, crop:
 }
 
 /** Prepares the weather once, then replays any (crop, previous crop) pair against the actual years. */
-export function makeReplay(climate: DailyClimate, soil: SoilProfile, irrigated: boolean): (crop: CropId, prevCrop: CropId) => ReplayYear[] {
-  const water = buildWaterContext(climate, soil, irrigated);
+export function makeReplay(climate: DailyClimate, soil: SoilProfile, irrigated: boolean, allowanceMm = 0): (crop: CropId, prevCrop: CropId) => ReplayYear[] {
+  const water = buildWaterContext(climate, soil, irrigated, allowanceMm);
   const cropClimate = evaluateCropClimate(climate, soil, irrigated, climate.lastYear, { adjustTrends: false });
   const input: EngineInput = { cropClimate, water, history: [], priority: "balanced", planStartYear: 0, firstYearWheatAllowed: true };
   return (crop, prevCrop) => replayPair(climate, water, input, crop, prevCrop);
@@ -756,7 +794,7 @@ function replayPair(climate: DailyClimate, water: WaterContext, input: EngineInp
       storage = r.storageAfter;
       lastEnd = CROPS[c].season.to[0];
       lastIdx = idx;
-      if (k === steps.length - 1) out.push({ year: climate.years[i]!.year, yieldFrac: r.yieldFrac, score: r.score, mainStress: r.worst, waterUse: r.waterUse });
+      if (k === steps.length - 1) out.push({ year: climate.years[i]!.year, yieldFrac: r.yieldFrac, score: r.score, mainStress: r.worst, waterUse: r.waterUse, pumped: r.pumped });
     });
   }
   return out;

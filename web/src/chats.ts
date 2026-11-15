@@ -25,11 +25,14 @@ function migrate(chat: ScoutChat): ScoutChat {
 /** Each account gets its own history, so people sharing a computer don't see each other's chats. */
 const userKey = (userId: string) => `${KEY}:${userId}`;
 
+/** Chat history owner when nobody is signed in (the public demo). */
+export const GUEST_ID = "guest";
+
 export function loadChats(userId: string): ScoutChat[] {
   try {
     let raw = localStorage.getItem(userKey(userId));
     // Chats saved before accounts existed go to the first account that signs in on this browser.
-    const legacy = raw === null ? localStorage.getItem(KEY) : null;
+    const legacy = raw === null && userId !== GUEST_ID ? localStorage.getItem(KEY) : null;
     if (legacy !== null) {
       raw = legacy;
       localStorage.setItem(userKey(userId), legacy);

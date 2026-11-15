@@ -3,6 +3,7 @@
 // saved explanation (exact comparison key only) or the deterministic template. The model never changes
 // scores, rankings or facts.
 
+import { generateAI } from "../lib/ai";
 import type { PlanResponse, RotationPlan } from "../../shared/types";
 import type { ComparisonKeyParts, ExplainFactView, ExplanationResponse, ResearchPassage, ResearchResult } from "../../shared/research";
 import { CORPUS_VERSION, EMBEDDING, GENERATION } from "./config";
@@ -230,29 +231,13 @@ function modelText(out: unknown): string {
   return typeof c === "string" ? c : "";
 }
 
-async function callModel(ai: AiLike, prompt: { system: string; user: string }, timeoutMs: number, gatewayId?: string): Promise<string> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const timeout = new Promise<never>((_, reject) => {
-    timer = setTimeout(() => reject(Object.assign(new Error("generation timed out"), { name: "TimeoutError" })), timeoutMs);
-  });
-  try {
-    const run = ai.run(
-      GENERATION.model,
-      {
-        messages: [
-          { role: "system", content: prompt.system },
-          { role: "user", content: prompt.user },
-        ],
-        max_tokens: GENERATION.maxTokens,
-        temperature: GENERATION.temperature,
-        chat_template_kwargs: { enable_thinking: false },
-      },
-      gatewayId ? { gateway: { id: gatewayId } } : undefined,
-    );
-    return modelText(await Promise.race([run, timeout]));
-  } finally {
-    if (timer !== undefined) clearTimeout(timer);
-  }
+async function callModel(ai: AiLike, prompt: { system: string; user: string }, timeoutMs: number, gatewayId?: string, db?: D1Database): Promise<{ text: string; model: string }> {
+  const result = await generateAI(ai, {
+    messages: [{ role: "system", content: prompt.system }, { role: "user", content: prompt.user }],
+    max_tokens: GENERATION.maxTokens,
+    temperature: GENERATION.temperature,
+  }, { feature: "research-explain", timeoutMs, gatewayId, db });
+  return { text: modelText(result.output), model: result.model };
 }
 
 // ---------- Orchestration ----------
@@ -330,9 +315,10 @@ export async function explainRotation(deps: ExplainDeps, plan: PlanResponse, rot
     "Weather facts are historical replays, not forecasts.",
   ];
   let text: string;
+  let model: string;
   try {
-    // Exactly one attempt: no retry loop (a retired model, 410/5028, would never recover).
-    text = await callModel(deps.ai, buildPrompt(rotation, facts, research.passages, gaps), deps.timeoutMs ?? GENERATION.timeoutMs, deps.gatewayId);
+    // Bounded Gemma → Llama chain; both outputs share the same validation below.
+    ({ text, model } = await callModel(deps.ai, buildPrompt(rotation, facts, research.passages, gaps), deps.timeoutMs ?? GENERATION.timeoutMs, deps.gatewayId, deps.db));
   } catch (err) {
     const kind = classifyAiError(err);
     console.warn(JSON.stringify({ msg: "explanation generation failed", kind, model: GENERATION.model, err: String(err).slice(0, 200) }));
@@ -344,14 +330,14 @@ export async function explainRotation(deps: ExplainDeps, plan: PlanResponse, rot
     return { response: respond("template", { ...templateNarrative(rotation, facts), citations: [] }, { reason: `model output rejected: ${v.reason}` }), capture: null };
   }
   const generatedAt = now().toISOString();
-  const response = respond("live", v, { model: { id: GENERATION.model, promptVersion: GENERATION.promptVersion } });
+  const response = respond("live", v, { model: { id: model, promptVersion: GENERATION.promptVersion } });
   const capture: SavedEntry | null =
     research.status === "live" || research.status === "empty"
       ? {
           comparisonKey: key,
           keyParts,
           research: { ...research, query },
-          explanation: { narrative: v.narrative, citations: v.citations, factIds: v.factIds, generatedAt, modelId: GENERATION.model, promptVersion: GENERATION.promptVersion },
+          explanation: { narrative: v.narrative, citations: v.citations, factIds: v.factIds, generatedAt, modelId: model, promptVersion: GENERATION.promptVersion },
         }
       : null;
   return { response, capture };

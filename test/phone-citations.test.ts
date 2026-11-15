@@ -35,12 +35,13 @@ it("phone protocol validates split citations before speech, logs research, and a
   await session.onMessage(JSON.stringify({ type: "setup", callSid: "fixture-call", from: "+15005550009", to: "+15005550006", customParameters: { token } }));
 
   type Executable = { execute: (input: unknown, options: unknown) => Promise<unknown> };
+  const readable = (iterator: AsyncGenerator) => new ReadableStream({ async pull(controller) { const part = await iterator.next(); if (part.done) controller.close(); else controller.enqueue(part.value); } }, { highWaterMark: 0 });
   let smsSawAttribution = false;
   vi.mocked(streamText).mockImplementation((options) => {
     const tools = options.tools as unknown as Record<string, Executable>;
     const execute = (name: string, input: unknown) => tools[name]!.execute(input, { toolCallId: name, messages: [], context: {} });
     return {
-      fullStream: (async function* () {
+      fullStream: readable((async function* () {
         await execute("search_research", { question: "rotation", crops: chunk.crops });
         await execute("build_rotation_plan", { lat: 38, lon: -100, recent_crops: ["corn"] });
         yield { type: "text-delta", text: "Research evidence [R" };
@@ -48,7 +49,7 @@ it("phone protocol validates split citations before speech, logs research, and a
         yield { type: "text-end", id: "fixture-text" };
         smsSawAttribution = ws.send.mock.calls.some(([raw]) => String(raw).includes(source.title));
         await execute("send_plan_by_text", {});
-      })(),
+      })()),
       responseMessages: Promise.resolve([]),
     } as unknown as ReturnType<typeof streamText>;
   });

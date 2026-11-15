@@ -1,5 +1,5 @@
 export interface Env {
-  /** Earthdata bearer credential; server-side only. */
+  /** Earthdata bearer token: server-side only, never exposed in evidence URLs. */
   EARTHDATA_TOKEN?: string;
   /** Independent second-product Workflow on the existing daily refresh cron. */
   IMERG_REFRESH?: Workflow<{ trigger?: "cron" | "manual" }>;
@@ -7,7 +7,7 @@ export interface Env {
   DB?: D1Database;
   AI?: Ai;
   AI_MODEL?: string;
-  /** Cloudflare AI Gateway id for Workers AI calls (default "default", auto-created on first request). */
+  /** Cloudflare AI Gateway id for every model/provider call (default "default", auto-created on first request). */
   AI_GATEWAY_ID?: string;
   /** Scout's model: a Workers AI model ("@cf/...") or a Gemini model; the other provider is the fallback. */
   SCOUT_MODEL?: string;
@@ -46,6 +46,8 @@ export interface Env {
   EVIDENCE?: R2Bucket;
   /** Document pipeline (docs/INGEST.md): uploads bucket soilsense-docs (optional). */
   DOCS?: R2Bucket;
+  /** Optional Browser Rendering for URL intake; absence uses local HTML-to-text. */
+  BROWSER?: Fetcher;
   /** Document pipeline queue (R2 event notifications land here); producer binding for retries (optional). */
   DOC_QUEUE?: Queue;
   /** Document pipeline Workflow (DocIngestWorkflow): extract -> chunk -> review -> embed -> upsert (optional). */

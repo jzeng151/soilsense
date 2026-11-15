@@ -1,5 +1,8 @@
+import { useI18n } from "./i18n";
 import { useCallback, useEffect, useState } from "react";
 import { App } from "./App";
+import { LanguageProvider } from "./i18n";
+import { HowItWorksPage } from "./pages/HowItWorksPage";
 import { DocsAdmin } from "./components/DocsAdmin";
 import type { UIMessage } from "ai";
 import { firstUserText, GUEST_ID, loadChats, newChatId, saveChats, titleFrom, type ScoutChat } from "./chats";
@@ -17,6 +20,7 @@ const routeFromHash = (): WorkspaceRoute => {
   if (h === "#/admin/docs") return "admin/docs";
   if (h.startsWith("#/scout")) return "scout";
   if (h.startsWith("#/sources")) return "sources";
+  if (h === "#/how-it-works") return "how-it-works";
   if (h.startsWith("#/live")) return "live";
   if (h.startsWith("#/settings")) return "settings";
   if (h.startsWith("#/signin")) return "signin";
@@ -45,7 +49,7 @@ export function Shell() {
   }, []);
 
   return (
-    <Workspace
+    <LanguageProvider><Workspace
       key={user?.id ?? GUEST_ID}
       user={user}
       onSignedIn={setUser}
@@ -53,11 +57,12 @@ export function Shell() {
         await signOut();
         setUser(null);
       }}
-    />
+    /></LanguageProvider>
   );
 }
 
 function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSignedIn: (u: User) => void; onSignOut: () => void }) {
+  const { t: tx } = useI18n();
   const [route, setRoute] = useState<WorkspaceRoute>(routeFromHash);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const ownerId = user?.id ?? GUEST_ID;
@@ -95,7 +100,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
     <div className={`shell route-${route}`}>
       {/* WCAG 2.4.1: let keyboard and screen-reader users jump past the sidebar. */}
       <a className="skip-link" href="#content" onClick={(e) => { e.preventDefault(); document.getElementById("content")?.focus(); }}>
-        Skip to main content
+        {tx("Skip to main content")}
       </a>
       <Sidebar
         route={route === "admin/docs" ? "planner" : route}
@@ -126,6 +131,8 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
           <ScoutPage key={activeId} chatId={activeId} initialMessages={active?.messages ?? []} onMessages={saveMessages} onMenu={() => setSidebarOpen(true)} />
         ) : route === "live" ? (
           <LivePage onMenu={() => setSidebarOpen(true)} />
+        ) : route === "how-it-works" ? (
+          <HowItWorksPage onMenu={() => setSidebarOpen(true)} />
         ) : route === "sources" ? (
           <SourcesPage onMenu={() => setSidebarOpen(true)} />
         ) : route === "settings" || route === "signin" ? (
@@ -142,7 +149,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
           )
         ) : (
           <>
-            <button type="button" className="sb-toggle" aria-label="Open sidebar" onClick={() => setSidebarOpen(true)}>
+            <button type="button" className="sb-toggle" aria-label={tx("Open sidebar")} onClick={() => setSidebarOpen(true)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4 7h16M4 12h16M4 17h16" />
               </svg>

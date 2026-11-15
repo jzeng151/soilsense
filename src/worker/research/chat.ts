@@ -22,13 +22,14 @@ export class ChatResearch {
     const input = searchResearchSchema.parse(raw);
     // No saved comparison bundle is valid for an arbitrary chat question. Do not substitute one.
     const tags = input.crops?.length ? input.crops : [...RESEARCH_TAGS];
+    const ctrl = new AbortController();
     let timer: ReturnType<typeof setTimeout> | undefined;
     const timeout = new Promise<Awaited<ReturnType<typeof researchFor>>>(resolve => {
       timer = setTimeout(() => {
         void researchFor({}, tags, input.question, null).then(r => resolve({ ...r, reason: "Research retrieval timed out; no passages verified." }));
       }, 12_000);
     });
-    const result = await Promise.race([researchFor(this.deps, tags, input.question, null), timeout]).finally(() => { if (timer !== undefined) clearTimeout(timer); });
+    const result = await Promise.race([researchFor({ ...this.deps, signal: ctrl.signal }, tags, input.question, null), timeout]).finally(() => { ctrl.abort(); if (timer !== undefined) clearTimeout(timer); });
     return {
       ...result,
       passages: result.passages.slice(0, MAX_PASSAGES).map(p => {

@@ -1,3 +1,4 @@
+import { cropText, useI18n } from "../i18n";
 // "Second opinion" (Kansas only): K-State's recommended rain-fed rotations for the county, ranked by our team's
 // separate Kansas model (kansas-crop-rotation/, weather only, published weekly to Cloudflare R2).
 // Rules: say clearly it's a separate model; show the "agree" badge only when the two really match; note when the
@@ -30,6 +31,7 @@ function lastCropOf(history: CropHistory): Their | null {
 }
 
 function Rotation({ r, ours }: { r: KStateRotation; ours: boolean }) {
+  const { t: tx, text: localize, language } = useI18n();
   return (
     <li className={`so-rot${ours ? " so-ours" : ""}`}>
       <span className="so-rank">#{r.rank}</span>
@@ -38,17 +40,17 @@ function Rotation({ r, ours }: { r: KStateRotation; ours: boolean }) {
           ? r.crops.map((c, i) => (
               <span key={i} className="so-chip">
                 <span className="wi-swatch" style={{ background: CROP_COLORS[c] }} aria-hidden="true" />
-                {SHORT[c]}
+                {cropText(SHORT[c], language)}
                 {i < r.crops.length - 1 && <span className="so-arrow" aria-hidden="true">→</span>}
               </span>
             ))
           : r.name}
       </span>
-      <span className="so-weight" title="Their model splits 100% across its top 3 by how well each did in this county's past weather">
+      <span className="so-weight" title={tx("Their model splits 100% across its top 3 by how well each did in this county's past weather")}>
         {r.weightPct}%
       </span>
-      {ours && <span className="so-tag">same crops as our plan</span>}
-      {r.note && <small className="so-note">{r.note}</small>}
+      {ours && <span className="so-tag">{tx("same crops as our plan")}</span>}
+      {r.note && <small className="so-note">{localize(r.note)}</small>}
     </li>
   );
 }
@@ -71,6 +73,7 @@ export function SecondOpinion({ countyFips, ...props }: CardProps & { countyFips
 
 /** Loaded card kept separate so rendering and provenance are testable without network or DOM mocks. */
 export function SecondOpinionCard({ op, plan, history, recentCrops, irrigated }: CardProps & { op: Opinion }) {
+  const { t: tx, text: localize, language } = useI18n();
   const planCrops = plan.years.map((y) => y.crop);
   const farmerCrop = recentCrops?.at(-1);
   const current = farmerCrop ? (THEIR_CROP[farmerCrop] ?? null) : lastCropOf(history);
@@ -83,37 +86,28 @@ export function SecondOpinionCard({ op, plan, history, recentCrops, irrigated }:
   const dryYearRanking = op.basis ? op.basis.startsWith("dry-year") : op.dryYearRanking;
   const top = op.rotations[0];
   const partial = !irrigated && countyRank === null && currentRank === null && top ? partialOverlap(planCrops, top) : null;
-  const words = (cs: CropId[]) => cs.map((c) => SHORT[c].toLowerCase()).join(" and ");
+  const words = (cs: CropId[]) => cs.map((c) => cropText(SHORT[c], language).toLowerCase()).join(tx(" and "));
 
   return (
     <div className="jr-card">
-      <h2 className="jr-h2">Second opinion</h2>
-      <p className="wi-lead">
-        K-State's recommended rain-fed rotations for {op.county}, ranked for this county's weather by a <b>separate model built by our team</b>.
+      <h2 className="jr-h2">{tx("Second opinion")}</h2>
+      <p className="wi-lead">{tx("K-State's recommended rain-fed rotations for")}{" "}{op.county}{tx(", ranked for this county's weather by a")}{" "}<b>{tx("separate model built by our team")}</b>.
       </p>
 
-      {agree && <p className="so-badge so-agree">✅ Two independent models agree: their top rotation uses the same crops as our plan.</p>}
+      {agree && <p className="so-badge so-agree">{tx("✅ Two independent models agree: their top rotation uses the same crops as our plan.")}</p>}
       {onList && (
-        <p className="so-badge">
-          Our plan's crops are also on their list
-          {countyRank !== null ? ` (#${countyRank} for the county)` : currentRank !== null && current ? ` (#${currentRank} if you're growing ${current} now)` : ""}, but not their top pick.
-        </p>
+        <p className="so-badge">{tx("Our plan's crops are also on their list")}{countyRank !== null ? tx(" (#{rank} for the county)", { rank: countyRank }) : currentRank !== null && current ? tx(" (#{rank} if you are growing {crop} now)", { rank: currentRank, crop: cropText(current, language).toLowerCase() }) : ""}{tx(", but not their top pick.")}</p>
       )}
       {partial && (
-        <p className="so-badge">
-          Partly agree: both build the rotation around {words(partial.shared)}
-          {partial.theirsOnly.length > 0 ? `; their top pick also includes ${words(partial.theirsOnly)}` : ""}.
+        <p className="so-badge">{tx("Partly agree: both build the rotation around")}{" "}{words(partial.shared)}
+          {partial.theirsOnly.length > 0 ? tx("; their top pick also includes {crops}", { crops: words(partial.theirsOnly) }) : ""}.
         </p>
       )}
       {!irrigated && countyRank === null && currentRank === null && !partial && (
-        <p className="so-badge">
-          The two models differ. That can happen: theirs looks at weather only, while ours also weighs your soil, crop prices, costs and what you grew before.
-        </p>
+        <p className="so-badge">{tx("The two models differ. That can happen: theirs looks at weather only, while ours also weighs your soil, crop prices, costs and what you grew before.")}</p>
       )}
       {irrigated && (
-        <p className="so-badge">
-          Your plan assumes irrigation; K-State's list is for dryland fields, so the two aren't directly comparable.
-        </p>
+        <p className="so-badge">{tx("Your plan assumes irrigation; K-State's list is for dryland fields, so the two aren't directly comparable.")}</p>
       )}
 
       <ul className="so-list">
@@ -125,22 +119,21 @@ export function SecondOpinionCard({ op, plan, history, recentCrops, irrigated }:
       {current && forCurrent && (
         <div className="so-current">
           <p>
-            <b>If you're growing {current} now</b>
+            <b>{tx("If you're growing")}{" "}{cropText(current, language).toLowerCase()}{" "}{tx("now")}</b>
             {forCurrent.rotations[0]
-              ? `, their first choice is ${forCurrent.rotations[0].crops.map((c) => SHORT[c]).join(" → ") || forCurrent.rotations[0].name} (${forCurrent.rotations[0].weightPct}%).`
+              ? tx(", their first choice is {crops} ({weight}%).", { crops: forCurrent.rotations[0].crops.map((c) => cropText(SHORT[c], language)).join(" → ") || forCurrent.rotations[0].name, weight: forCurrent.rotations[0].weightPct })
               : "."}
           </p>
-          <p className="wi-note">{farmerCrop ? "Based on your current-crop answer." : "Based on satellite crop history."}</p>
-          {forCurrent.message && <p className="so-msg">{forCurrent.message}</p>}
+          <p className="wi-note">{farmerCrop ? tx("Based on your current-crop answer.") : tx("Based on satellite crop history.")}</p>
+          {forCurrent.message && <p className="so-msg">{localize(forCurrent.message)}</p>}
         </div>
       )}
 
-      {dryYearRanking && <p className="wi-note">Ranked for a drier-than-normal season.</p>}
-      <p className="wi-note">
-        Based on NASA data through {op.dataThrough}. {op.savedCopy && `Using saved copy, data through ${op.dataThrough}. `}{op.disclaimer}
+      {dryYearRanking && <p className="wi-note">{tx("Ranked for a drier-than-normal season.")}</p>}
+      <p className="wi-note">{tx("Based on NASA data through")}{" "}{op.dataThrough}. {op.savedCopy && tx("Using saved copy, data through {date}. ", { date: op.dataThrough })}{localize(op.disclaimer)}
       </p>
       <details className="wi-note">
-        <summary>Data credits</summary>
+        <summary>{tx("Data credits")}</summary>
         {/* Exact credit lines from kansas-crop-rotation/reports/REFERENCES.md. */}
         <p>The data was obtained from National Aeronautics and Space Administration (NASA) Langley Research Center's Prediction Of Worldwide Energy Resources (POWER) project funded through the NASA Earth Science Division.</p>
         <p>The data was obtained from the POWER Project's Daily API v2.10.3 on 2026/11/14.</p>

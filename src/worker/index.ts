@@ -3,6 +3,7 @@
 import { imergRefresh } from "./refresh/imerg-routes";
 import { startImergRefresh } from "./refresh/imerg-workflow";
 export { ImergRefreshWorkflow } from "./refresh/imerg-workflow";
+import { imerg } from "./imerg/routes";
 import { Hono } from "hono";
 import type { Env } from "./env";
 import { api } from "./routes/api";
@@ -39,6 +40,7 @@ app.route("/api/live", live);
 // NASA POWER snapshot refresh (Workflow) status, evidence manifests and the admin-only trigger.
 app.route("/api/refresh/imerg", imergRefresh);
 app.route("/api/refresh", refresh);
+app.route("/api/imerg", imerg);
 app.route("/api", api);
 app.route("/voice", voice);
 

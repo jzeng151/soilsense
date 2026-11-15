@@ -1,12 +1,13 @@
 import "./i18n.css";
-import { LanguageProvider, useI18n, translate, cropName } from "./i18n";
+import { useI18n, translate, translateKnown, cropName } from "./i18n";
 import type { Language, TranslationKey } from "./i18n";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { CropId, FieldResponse, Goal, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
+import type { CropId, FieldResponse, Goal, PlanRequest, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
+import { MeasurementPanel, SoilComparison } from "./components/Measurements";
 import { GoalPicker } from "./components/GoalPicker";
 import { Glossary, Definition } from "./components/Glossary";
 import { askQuestion, fetchField, fetchPlan } from "./api";
-import { DataEvidence, DecisionNotice } from "./components/DataEvidence";
+import { DataEvidence, DecisionNotice, evidenceText } from "./components/DataEvidence";
 import { PlanAssumptions } from "./components/PlanAssumptions";
 import { DEMO_FARMS, MapPicker } from "./components/MapPicker";
 import { HarvestCheck, SatelliteNote } from "./components/HarvestCheck";
@@ -167,7 +168,7 @@ function Progress({ step, canGo, go }: { step: Step; canGo: (s: Step) => boolean
 }
 
 export function App() {
-  return <LanguageProvider><MainFlow /></LanguageProvider>;
+  return <MainFlow />;
 }
 
 function MainFlow() {
@@ -188,6 +189,9 @@ function MainFlow() {
   const [planLoading, setPlanLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [error, setError] = useState<TranslationKey | null>(null);
+  const [measurements, setMeasurements] = useState<Pick<PlanRequest, "soilTest" | "yieldRecords">>({});
+  const [measurementsValid, setMeasurementsValid] = useState(true);
+  const changeMeasurements = useCallback((value: Pick<PlanRequest, "soilTest" | "yieldRecords">, valid: boolean) => { setMeasurements(value); setMeasurementsValid(valid); }, []);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<{ q: string; a: string } | null>(null);
   const [asking, setAsking] = useState(false);
@@ -270,7 +274,7 @@ function MainFlow() {
   const lastMapped = useMemo(() => [...(field?.cropHistory.years ?? [])].reverse().find((y) => y.crop) ?? null, [field]);
 
   const run = useCallback(async (waterOverride?: WaterLevel) => {
-    if (!point || !thisYear) return;
+    if (!point || !thisYear || !measurementsValid) return;
     const w = waterOverride ?? water;
     if (waterOverride) setWater(waterOverride);
     setPlanLoading(true);
@@ -286,7 +290,7 @@ function MainFlow() {
     if (lastMapped?.crop && lastMapped.year < THIS_SEASON) recentCrops.push(lastMapped.crop);
     recentCrops.push(thisYear);
     try {
-      const res = await fetchPlan({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, goals, recentCrops, language }, ctrl.signal);
+      const res = await fetchPlan({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, goals, recentCrops, language, ...measurements }, ctrl.signal);
       setPlan(res);
       setAnswer(null);
     } catch (e) {
@@ -294,7 +298,7 @@ function MainFlow() {
     } finally {
       if (planAbort.current === ctrl) setPlanLoading(false);
     }
-  }, [point, thisYear, water, priority, goals, lastMapped, go, language]);
+  }, [point, thisYear, water, priority, goals, lastMapped, go, language, measurements, measurementsValid]);
 
   // Regenerate the server summary when switching languages on an existing result.
   useEffect(() => {
@@ -377,7 +381,7 @@ function MainFlow() {
         </div>
       </header>
 
-      <main className="jr-main" ref={top} tabIndex={-1} aria-label="Crop rotation planner">
+      <main className="jr-main" ref={top} tabIndex={-1} aria-label={t("Crop rotation planner")}>
         <Progress step={step} canGo={canGo} go={go} />
         <Glossary />
 
@@ -528,7 +532,7 @@ function MainFlow() {
               <legend>
                 <span className="jr-qn">3</span> {t("What matters most to you?")}
               </legend>
-              <div className="jr-tiles jr-tiles-2" role="group" aria-label="Your priority">
+              <div className="jr-tiles jr-tiles-2" role="group" aria-label={t("Your priority")}>
                 {PRIORITIES.map((p) => (
                   <button key={p.id} type="button" aria-pressed={priority === p.id} className={priority === p.id ? "on" : ""} onClick={() => setPriority(p.id)}>
                     <b>{t(p.label)}</b>
@@ -539,12 +543,13 @@ function MainFlow() {
             </fieldset>
 
             <GoalPicker value={goals} onChange={setGoals} water={water} />
+            {point && <MeasurementPanel key={`${point.lat},${point.lon}`} fieldKey={`${point.lat},${point.lon}`} soil={field.soil} onChange={changeMeasurements} />}
 
             <div className="jr-actions">
               <button type="button" className="ghost" onClick={() => go("field")}>
                 {t("← Back")}
               </button>
-              <button type="button" className="primary" disabled={!thisYear || planLoading} onClick={() => void run()}>
+              <button type="button" className="primary" disabled={!thisYear || planLoading || !measurementsValid} onClick={() => void run()}>
                 {thisYear ? t("Show my plan →") : t("Pick what you grew to continue")}
               </button>
             </div>
@@ -684,6 +689,11 @@ function MainFlow() {
 
 
 
+                {(plan.request.soilTest || plan.request.yieldRecords?.length) && <div className="jr-card">
+                  <h2 className="jr-h2">{t("Your measurements in this plan")}</h2>
+                  {plan.request.soilTest && <SoilComparison soil={plan.soil} test={plan.request.soilTest} />}
+                  <ul className="reasons">{plan.facts.filter((f) => f.id.startsWith("farmer-")).map((f) => <li key={f.id}>{f.text}</li>)}</ul>
+                </div>}
                 <DataEvidence plan={plan} />
 
                 <details className="jr-more">
@@ -706,15 +716,15 @@ function MainFlow() {
                 <details className="jr-more">
                   <summary>{t("How the weather on your field has changed")}</summary>
                   <p className="hint">
-                    {plan.climate.firstYear}–{plan.climate.lastYear}, from NASA data: a <Definition term="regional-grid" />, not an individual field station.
+                    {plan.climate.firstYear}–{plan.climate.lastYear}, {t("from NASA data:")} <Definition term="regional-grid" />, {t("not an individual field station.")}
                   </p>
                   {changes.length > 0 ? (
                     <ul className="changes">
                       {changes.map((c) => (
                         <li key={c.id}>
                           <span className={`arrow arrow-${trendTone(c)}`}>{trendTone(c) === "up" ? "▲" : "▼"}</span>
-                          <b>{c.label}</b>
-                          <span>{trendText(c)}</span>
+                          <b>{translateKnown(language, c.label)}</b>
+                          <span>{trendText(c, language)}</span>
                         </li>
                       ))}
                     </ul>
@@ -782,13 +792,13 @@ function MainFlow() {
                         <a href={d.url} target="_blank" rel="noreferrer">
                           {d.name}
                         </a>{" "}
-                        — {d.usedFor}
+                        — {translateKnown(language, d.usedFor)}
                       </li>
                     ))}
                   </ul>
                   <ul>
                     {plan.assumptions.map((a) => (
-                      <li key={a}>{a}</li>
+                      <li key={a}>{evidenceText(a, language)}</li>
                     ))}
                   </ul>
                 </details>

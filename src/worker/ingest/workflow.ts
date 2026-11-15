@@ -27,12 +27,12 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
       const object = await bucket.get(params.key);
       if (!object) throw new Error("Uploaded object missing");
       // R2 has no historical reads: never ingest newer bytes under an old notification's identity.
-      if (params.eTag && object.etag !== params.eTag.replace(/^\"|\"$/g, "")) return { stale: true, sha: "", unchanged: false, size: 0, contentType: "" };
+      if (params.eTag && object.etag !== params.eTag.replace(/^\"|\"$/g, "")) return { stale: true, sha: "", unchanged: false, size: 0, contentType: "", provenance: null };
       if (object.size > 10 * 1024 * 1024) throw new Error("Upload exceeds 10 MB");
       const bytes = await object.arrayBuffer();
       const sha = await sha256Hex(bytes);
       const previous = await getDoc(db, docId);
-      return { stale: false, sha, unchanged: previous?.latest_sha256 === sha, size: bytes.byteLength, contentType: object.httpMetadata?.contentType ?? "application/octet-stream" };
+      return { stale: false, sha, unchanged: previous?.latest_sha256 === sha, size: bytes.byteLength, contentType: object.httpMetadata?.contentType ?? "application/octet-stream", provenance: object.customMetadata?.sourceUrl ? { sourceUrl: object.customMetadata.sourceUrl, retrievedAt: object.customMetadata.retrievedAt ?? null, resolvedUrl: object.customMetadata.resolvedUrl ?? null, intakeMethod: object.customMetadata.intakeMethod ?? null } : null };
     });
     if (read.stale || read.unchanged) return { outcome: read.stale ? "superseded" : "unchanged", docId };
     await step.do("record received", IO, async () => {
@@ -45,7 +45,7 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
       if (!object) throw new Error("Uploaded object missing");
       const bytes = await object.arrayBuffer();
       if (await sha256Hex(bytes) !== read.sha) throw new Error("Upload changed during extraction; await its new notification");
-      const result = await extractText(env.AI, bytes, params.key, read.contentType);
+      const result = await extractText(env.AI, bytes, params.key, read.contentType, { gatewayId: env.AI_GATEWAY_ID, db: env.DB });
       if (!result.text.trim()) throw new Error("Document has no extractable text");
       const key = DOCS_LAYOUT.extracted(read.sha, docId);
       await bucket.put(key, result.text, { httpMetadata: { contentType: "text/plain; charset=utf-8" } });
@@ -81,7 +81,7 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
       const chunks = await loadChunks();
       const excluded = new Set(review?.decision === "approve" ? review.excludeChunkIds ?? [] : []);
       const reviewedChunks = chunks.map((chunk) => ({ ...chunk, status: excluded.has(chunk.id) ? "excluded" : status === "indexed" ? "indexed" : "pending" }));
-      await bucket.put(DOCS_LAYOUT.manifest(read.sha, docId), JSON.stringify({ docId, sha256: read.sha, key: params.key, ingestVersion: INGEST_VERSION, extraction: extraction.method, converterPreamble: extraction.converterPreamble, plainTextConversion: extraction.plainTextConversion, extractedKey: extraction.key, status, source: review?.source ?? null, review: review ?? null, chunks: reviewedChunks, diff: plan }), { httpMetadata: { contentType: "application/json" } });
+      await bucket.put(DOCS_LAYOUT.manifest(read.sha, docId), JSON.stringify({ docId, sha256: read.sha, key: params.key, ingestVersion: INGEST_VERSION, extraction: extraction.method, converterPreamble: extraction.converterPreamble, plainTextConversion: extraction.plainTextConversion, extractedKey: extraction.key, status, provenance: read.provenance, source: review?.source ?? null, review: review ?? null, chunks: reviewedChunks, diff: plan }), { httpMetadata: { contentType: "application/json" } });
     };
     await step.do("pending review", IO, async () => {
       await assertCurrent(db, docId, instanceId);
@@ -136,7 +136,7 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
           }
           // Kept chunks retain embeddings, but refresh version metadata and reviewer-selected crop tags.
           const old = oldIds.length ? await index.getByIds(oldIds) : [];
-          const values = old[0]?.values ?? (await embed(ai, [chunk.text], env.AI_GATEWAY_ID))[0]!;
+          const values = old[0]?.values ?? (await embed(ai, [chunk.text], env.AI_GATEWAY_ID, { db: env.DB, corpusEmbedding: true, feature: "document-embedding" }))[0]!;
           const vectors = crops.map((crop) => {
             const metadata: DocVectorMetadata = { crop, corpus: DOCS_CORPUS, chunk_id: id, source_id: docId, doc_sha256: read.sha };
             return { id: docVectorId(id, crop), values: Array.from(values), metadata };

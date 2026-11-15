@@ -7,11 +7,13 @@
 
 import { imergContextFor } from "./imergContext";
 import type { ImergContext } from "../../shared/imergContext";
+import type { DistrictOutlook } from "../../shared/districtOutlook";
 import type { FieldResearchNote } from "../../shared/fieldResearch";
 import { researchNoteFor } from "./researchNote";
 import type { Env } from "../env";
+import { watchMemory, writeFieldMemory } from "../fieldMemory";
 import { RULE_TEXT, RULE_VERSION, THRESHOLDS, evaluateField, isoDate, type DayMap, type KansasSignal, type WatchMetrics, type WatchReason, type WatchStatus } from "./rule";
-import { defaultDeps, sourcesFor, type FieldWatchDeps, type WatchedField } from "./run";
+import { defaultDeps, loadDistrictOutlook, sourcesFor, type FieldWatchDeps, type WatchedField } from "./run";
 
 export const CHECK_DELAY_SECONDS = 45;
 
@@ -58,6 +60,7 @@ export interface AgentRun {
   /** Optional for older persisted runs and non-alert results. */
   researchNote?: FieldResearchNote;
   imergContext?: ImergContext;
+  districtOutlook?: DistrictOutlook;
 }
 
 export interface RunStore {
@@ -173,7 +176,7 @@ export async function evaluateLive(
   now: Date,
   deps: FieldWatchDeps = defaultDeps,
   history?: Awaited<ReturnType<FieldWatchDeps["history"]>>,
-): Promise<{ result: ReturnType<typeof evaluateField>; kansas: KansasSignal | null; snapshot: SnapshotRef; imergContext: ImergContext }> {
+): Promise<{ result: ReturnType<typeof evaluateField>; kansas: KansasSignal | null; districtOutlook?: DistrictOutlook; snapshot: SnapshotRef; imergContext: ImergContext }> {
   const [hist, recent, kansas] = await Promise.all([
     history ? Promise.resolve(history) : deps.history(env, field, now),
     deps.recent(env.DB, field, now),
@@ -184,6 +187,7 @@ export async function evaluateLive(
     result,
     kansas,
     imergContext: await imergContextFor(env, field, now, recent),
+    districtOutlook: await loadDistrictOutlook(env, field, now, kansas, deps),
     snapshot: {
       label: "Current conditions",
       source: `NASA POWER daily (last ~60 days) at the grid cell containing ${field.lat}, ${field.lon}`,
@@ -218,6 +222,7 @@ export async function executeRun(
     let snapshot: SnapshotRef;
     let kansas = null;
     let imergContext: ImergContext | undefined;
+    let districtOutlook: DistrictOutlook | undefined;
     if (run.mode === "replay") {
       const preset = REPLAY_PRESETS.find((p) => p.id === run.replayId);
       if (!preset) throw new Error(`unknown replay ${run.replayId}`);
@@ -239,6 +244,7 @@ export async function executeRun(
           sources: sourcesFor(field, null),
         };
         store.update(done);
+        await writeFieldMemory(env, watchMemory(done));
         return done;
       }
       // "today" is the day after the window, so the rule picks exactly this window when its data are complete.
@@ -254,6 +260,7 @@ export async function executeRun(
     } else {
       const live = await evaluateLive(env, field, now, deps, history);
       kansas = live.kansas;
+      districtOutlook = live.districtOutlook;
       result = live.result;
       snapshot = live.snapshot;
       imergContext = live.imergContext;
@@ -264,6 +271,7 @@ export async function executeRun(
       completedAt: now.getTime(),
       headline: run.mode === "replay" ? `Historical replay: ${result.headline}` : result.headline,
       reasons: result.reasons,
+      districtOutlook,
       metrics: result.metrics,
       imergContext,
       snapshot,
@@ -271,6 +279,7 @@ export async function executeRun(
       researchNote: await researchNoteFor(result.status, env, field, crop),
     };
     store.update(done);
+    await writeFieldMemory(env, watchMemory(done));
     return done;
   } catch (err) {
     const failed: AgentRun = {
@@ -281,6 +290,7 @@ export async function executeRun(
       reasons: [{ id: "error", text: String(err instanceof Error ? err.message : err).slice(0, 300), source: "SoilSense" }],
     };
     store.update(failed);
+    await writeFieldMemory(env, watchMemory(failed));
     return failed;
   }
 }

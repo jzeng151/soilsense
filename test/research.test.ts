@@ -254,6 +254,29 @@ describe("research retrieval", () => {
 // ---------- Explanations ----------
 
 describe("grounded explanations", () => {
+  it("validates fallback output identically and records the actual answering model", async () => {
+    const plan = fakePlan();
+    const underlying = mockAi().ai;
+    let malicious = false;
+    const ai: AiLike = { run: async (model, input, options) => {
+      if (model === EMBEDDING.model) return underlying.run(model, input, options);
+      if (model === GENERATION.model) throw new Error("primary unavailable");
+      expect(model).toBe("@cf/meta/llama-3.3-70b-instruct-fp8-fast");
+      return { response: JSON.stringify(malicious ? { ...GOOD(), narrative: "It earns {{made-up/fact}}." } : GOOD()) };
+    } };
+    const settings = await deps({ score: 0.1 });
+    const good = await explainRotation({ ...settings, ai }, plan, plan.plans[0]!);
+    expect(good.response.status).toBe("live");
+    expect(good.response.model?.id).toBe("@cf/meta/llama-3.3-70b-instruct-fp8-fast");
+    expect(good.capture?.explanation?.modelId).toBe("@cf/meta/llama-3.3-70b-instruct-fp8-fast");
+    malicious = true;
+    const bad = await explainRotation({ ...settings, ai }, plan, plan.plans[0]!);
+    expect(bad.response.status).toBe("template");
+    expect(bad.response.reason).toContain("rejected");
+    expect(bad.capture).toBeNull();
+    expect(plan.plans[0]!.avgNetReturnPerAcre).toBe(140);
+  });
+
   it("renders a valid live explanation with numbers only from approved facts", async () => {
     const plan = fakePlan();
     const d = await deps();

@@ -1,5 +1,7 @@
+import { generateAI, type AiRunner } from "../lib/ai";
 import { Hono, type Handler, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
+import { hasMeasurements, validateMeasurements } from "../../shared/measurements";
 import { GOALS, type CropId, type Goal, type PlanRequest, type Priority } from "../../shared/types";
 import { currentUser } from "../lib/auth";
 import { UpstreamError } from "../lib/http";
@@ -8,6 +10,7 @@ import { getField, isInContiguousUS, logPlan, makePlan } from "../service";
 import { auth, type AppEnv } from "./auth";
 import { fieldWatch } from "./fieldwatch";
 import { scout } from "./scout";
+import { getMemoryRecord } from "../fieldMemory";
 import { research } from "./research";
 import { docs } from "./docs";
 
@@ -102,7 +105,9 @@ export function validatePlanRequest(body: unknown): PlanRequest | string {
   // Water beyond rain: "rain" | "limited" | "full". Older clients send only `irrigated`.
   if (b.water !== undefined && b.water !== "rain" && b.water !== "limited" && b.water !== "full") return 'water must be "rain", "limited" or "full"';
   const water = (b.water as "rain" | "limited" | "full" | undefined) ?? (b.irrigated === true ? "full" : "rain");
-  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language, ...(goals !== undefined ? { goals } : {}) };
+  const measurements = validateMeasurements(b);
+  if (typeof measurements === "string") return measurements;
+  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language, ...measurements, ...(goals !== undefined ? { goals } : {}) };
 }
 
 function upstreamMessage(err: unknown): { status: 502 | 500; body: { error: string; detail?: string } } {
@@ -136,6 +141,19 @@ api.get("/second-opinion", async (c) => {
   return c.json(opinion);
 });
 
+// Citation target resolves only retained, public demo records; no owner/caller data is exposed.
+api.get("/field-memory/:field/:vector", async (c) => {
+  if (!c.env.DB) return c.json({ error: "Field memory unavailable" }, 503);
+  try {
+    const record = await getMemoryRecord(c.env.DB, c.req.param("field"), c.req.param("vector"));
+    if (!record) return c.json({ error: "Field memory record not found" }, 404);
+    c.header("Cache-Control", "no-store");
+    return c.json(record);
+  } catch {
+    return c.json({ error: "Field memory unavailable" }, 503);
+  }
+});
+
 api.post("/plan", async (c) => {
   let body: unknown;
   try {
@@ -150,6 +168,7 @@ api.post("/plan", async (c) => {
     const plan = await makePlan(c.env, req);
     c.executionCtx.waitUntil(logPlan(c.env, { channel: "web", plan }));
     c.header("Server-Timing", `plan;dur=${Date.now() - started}`);
+    if (hasMeasurements(req)) c.header("Cache-Control", "private, no-store");
     return c.json(plan);
   } catch (err) {
     const e = upstreamMessage(err);
@@ -194,11 +213,11 @@ api.post("/ask", async (c) => {
         "If the facts do not answer it, say so and suggest asking their county extension agent. Never invent numbers, prices, or guarantees. Use US units.";
       const user = `Recommended plan: ${String(body.planLabel ?? "").slice(0, 200)}\nSummary: ${String(body.summary ?? "").slice(0, 800)}\nFacts:\n- ${facts.join("\n- ")}\n\nQuestion: ${question}`;
       // Routed through Cloudflare AI Gateway (logs, analytics, caching). "default" is created automatically on first use.
-      const out = (await (c.env.AI as unknown as { run: (m: string, i: unknown, o?: unknown) => Promise<{ response?: string }> }).run(
-        c.env.AI_MODEL ?? "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      const out = (await generateAI(c.env.AI as unknown as AiRunner,
         { messages: [{ role: "system", content: system }, { role: "user", content: user }], max_tokens: 300, temperature: 0.2 },
-        { gateway: { id: c.env.AI_GATEWAY_ID ?? "default" } },
-      )) as { response?: string };
+        { feature: "plan-ask", gatewayId: c.env.AI_GATEWAY_ID, db: c.env.DB, timeoutMs: 12_000 },
+        c.env.AI_MODEL,
+      )).output as { response?: string };
       if (out?.response) return c.json({ answer: out.response.trim(), source: "workers-ai" });
     } catch (err) {
       console.warn(JSON.stringify({ msg: "workers ai failed", err: String(err) }));

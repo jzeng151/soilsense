@@ -14,6 +14,7 @@ import { getDailyClimate } from "./data/power";
 import { getSoil } from "./data/soil";
 import type { Env } from "./env";
 import { cached } from "./lib/cache";
+import { planMemory, writeFieldMemory } from "./fieldMemory";
 
 export function yearsFor(env: Env, now = new Date()) {
   const year = now.getUTCFullYear();
@@ -214,6 +215,7 @@ export async function logPlan(
         entry.smsSent ? 1 : 0,
       )
       .run();
+    await writeFieldMemory(env, planMemory(entry.plan, id));
   } catch (err) {
     console.warn(JSON.stringify({ msg: "plan log failed", err: String(err) }));
   }

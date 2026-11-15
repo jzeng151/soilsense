@@ -10,6 +10,7 @@ import { getField, isInContiguousUS, logPlan, makePlan } from "../service";
 import { auth, type AppEnv } from "./auth";
 import { fieldWatch } from "./fieldwatch";
 import { scout } from "./scout";
+import { getMemoryRecord } from "../fieldMemory";
 import { research } from "./research";
 import { docs } from "./docs";
 
@@ -138,6 +139,19 @@ api.get("/second-opinion", async (c) => {
   if (!opinion) return c.json({ error: "No second opinion for this county" }, 404);
   c.header("Cache-Control", "public, max-age=3600");
   return c.json(opinion);
+});
+
+// Citation target resolves only retained, public demo records; no owner/caller data is exposed.
+api.get("/field-memory/:field/:vector", async (c) => {
+  if (!c.env.DB) return c.json({ error: "Field memory unavailable" }, 503);
+  try {
+    const record = await getMemoryRecord(c.env.DB, c.req.param("field"), c.req.param("vector"));
+    if (!record) return c.json({ error: "Field memory record not found" }, 404);
+    c.header("Cache-Control", "no-store");
+    return c.json(record);
+  } catch {
+    return c.json({ error: "Field memory unavailable" }, 503);
+  }
 });
 
 api.post("/plan", async (c) => {

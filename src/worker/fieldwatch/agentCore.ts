@@ -9,6 +9,7 @@ import type { DistrictOutlook } from "../../shared/districtOutlook";
 import type { FieldResearchNote } from "../../shared/fieldResearch";
 import { researchNoteFor } from "./researchNote";
 import type { Env } from "../env";
+import { watchMemory, writeFieldMemory } from "../fieldMemory";
 import { RULE_TEXT, RULE_VERSION, THRESHOLDS, evaluateField, isoDate, type DayMap, type KansasSignal, type WatchMetrics, type WatchReason, type WatchStatus } from "./rule";
 import { defaultDeps, loadDistrictOutlook, sourcesFor, type FieldWatchDeps, type WatchedField } from "./run";
 
@@ -238,6 +239,7 @@ export async function executeRun(
           sources: sourcesFor(field, null),
         };
         store.update(done);
+        await writeFieldMemory(env, watchMemory(done));
         return done;
       }
       // "today" is the day after the window, so the rule picks exactly this window when its data are complete.
@@ -270,6 +272,7 @@ export async function executeRun(
       researchNote: await researchNoteFor(result.status, env, field, crop),
     };
     store.update(done);
+    await writeFieldMemory(env, watchMemory(done));
     return done;
   } catch (err) {
     const failed: AgentRun = {
@@ -280,6 +283,7 @@ export async function executeRun(
       reasons: [{ id: "error", text: String(err instanceof Error ? err.message : err).slice(0, 300), source: "SoilSense" }],
     };
     store.update(failed);
+    await writeFieldMemory(env, watchMemory(failed));
     return failed;
   }
 }

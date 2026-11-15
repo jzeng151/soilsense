@@ -29,6 +29,7 @@ import type { CropId, PlanResponse, Priority } from "../../shared/types";
 import { lookupZip } from "../data/geo";
 import type { Env } from "../env";
 import { getField, isInContiguousUS, makePlan } from "../service";
+import { ChatFieldMemory, FIELD_MEMORY_RULES, recallFieldSchema } from "../fieldMemory";
 import { checkedCitationStream } from "../research/chatStream";
 import { ChatResearch, RESEARCH_CITATION_RULES, SEARCH_RESEARCH_DESCRIPTION, searchResearchSchema } from "../research/chat";
 
@@ -50,6 +51,7 @@ You can call tools that reach every Soil Sense data source:
 
 Rules:
 - ${RESEARCH_CITATION_RULES}
+- ${FIELD_MEMORY_RULES}
 - Use tools whenever a question depends on data. Never invent numbers; quote what the tools return and name the source (NASA POWER, USDA SSURGO, USDA CDL, USDA NASS).
 - Coverage is the contiguous United States only. If the user gives a place without coordinates or a ZIP, ask for a ZIP code or lat/lon.
 - If the user does not say whether a field is irrigated, assume rain-fed and say so. Default priority is "balanced".
@@ -152,7 +154,7 @@ async function usageAnalytics(env: Env, days: number) {
 
 // ---------- Tools (AI SDK) ----------
 
-export function makeTools(env: Env, writer: UIMessageStreamWriter, research: ChatResearch) {
+export function makeTools(env: Env, writer: UIMessageStreamWriter, research: ChatResearch, memory = new ChatFieldMemory(env)) {
   const cited = new Set<string>();
   /** Emit each dataset a tool actually used as a source part (once per answer). */
   const cite = (toolName: string) => {
@@ -164,6 +166,11 @@ export function makeTools(env: Env, writer: UIMessageStreamWriter, research: Cha
   };
 
   return {
+    recall_field_history: tool({
+      description: "Recall dated public demo field history (not current conditions). field_id: story-ia, champaign-il, finney-ks, lancaster-ne. Returns deterministic summaries, original record ids, dates and F citation ids; cite [F1].",
+      inputSchema: recallFieldSchema,
+      execute: input => memory.recall(input),
+    }),
     search_research: tool({
       description: SEARCH_RESEARCH_DESCRIPTION,
       inputSchema: searchResearchSchema,
@@ -310,7 +317,8 @@ scout.post("/chat", async (c) => {
       const modelMessages = await convertToModelMessages(messages);
       // Trust only tool results produced server-side this turn, never client-supplied tool history.
       const research = new ChatResearch({ ai: env.AI, index: env.RESEARCH_INDEX, db: env.DB, gatewayId: env.AI_GATEWAY_ID });
-      const tools = makeTools(env, writer, research);
+      const memory = new ChatFieldMemory(env);
+      const tools = makeTools(env, writer, research, memory);
       const { stream, model } = await firstWorking(candidates, (m, signal) =>
         streamText({
           model: m.model,
@@ -332,7 +340,7 @@ scout.post("/chat", async (c) => {
           sendSources: true,
           // Which model answered (shown under the reply; Workers AI first, Gemini as backup).
           messageMetadata: ({ part }) => (part.type === "start" ? { model: model.id, provider: model.provider } : undefined),
-        }), research),
+        }), research, memory),
       );
     },
   });

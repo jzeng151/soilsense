@@ -14,6 +14,7 @@
 //   (window), so repeated callbacks never create duplicate results.
 
 import { researchNoteFor } from "./researchNote";
+import { watchMemory, writeFieldMemory } from "../fieldMemory";
 import { CROPS } from "../../engine/crops";
 import type { CropId } from "../../shared/types";
 import type { Env } from "../env";
@@ -181,6 +182,7 @@ export async function runRecurringCheck(
       sources: sourcesFor(field, null),
     };
     store.insert(run);
+    await writeFieldMemory(env, watchMemory(run));
     return run;
   }
   return evaluateAndSave(store, baseRun(field, "", "weekly", now.getTime()), env, field, now, deps, settings.crop, null);
@@ -235,5 +237,6 @@ async function evaluateAndSave(
   if (existing) return existing; // a repeated callback on the same data period
   done.researchNote = await researchNoteFor(done.status, env, field, crop);
   store.insert(done);
+  await writeFieldMemory(env, watchMemory(done));
   return done;
 }

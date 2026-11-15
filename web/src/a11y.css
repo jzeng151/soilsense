@@ -1,7 +1,7 @@
 /* Shared interaction guarantees. Loaded last so compact variants keep usable hit areas. */
 button, [role="button"], select, input:not([type="checkbox"]):not([type="radio"]),
 summary { min-height: 44px; }
-.jr-main { grid-template-columns: minmax(0, 1fr); }
+.jr-main { grid-template-columns: minmax(0, 1fr); overflow-wrap: anywhere; }
 .jr-main > * { min-width: 0; }
 .jr-main a { overflow-wrap: anywhere; }
 .sb-close { display: none; }

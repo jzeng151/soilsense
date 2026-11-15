@@ -60,4 +60,4 @@ try {
   await mkdir(output.replace(/[/\\][^/\\]+$/, ''), {recursive:true});
   await writeFile(output, JSON.stringify(report, null, 2) + '\n');
 }
-if (report.scans.length !== 12 || report.scans.some(s=>s.violations.length)) process.exitCode = 1;
+if (report.scans.length !== 12 || report.scans.some(s=>s.violations.length || s.inventory.horizontalOverflow)) process.exitCode = 1;

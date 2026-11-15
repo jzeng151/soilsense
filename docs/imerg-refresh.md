@@ -25,7 +25,7 @@ The older Final DDS/DAS fixtures remain metadata only. No newly retrieved Final 
 
 Live workerd exposed a bug Node mocks did not: `redirect: "error"` is unsupported at the edge. Discovery now uses `redirect: "manual"` and rejects non-OK redirects, with a regression test. The local server was stopped and port 8793 verified closed. No real deployment, remote D1 migration, production cron run or genuinely revised provider product was exercised. Revision/outage/partial-data retention remain deterministic tests, not claimed live provider events. Consumer integration is now covered by SQLite-backed weekly/window replays with recorded real IMERG observations; POWER inputs in those decision-invariance tests are explicitly constructed, not observed.
 
-## Cloudflare setup for Tunk
+## Cloud setup for owner
 
 Default `wrangler.jsonc` intentionally does **not** bind IMERG_REFRESH: deploying this PR requires no new Cloudflare resources. The Env binding and scheduled start are optional; absent/missing/stale IMERG never prevents a POWER check. `wrangler.offline.jsonc` enables the Workflow only for local verification (do not use it as the production deployment config).
 
@@ -40,7 +40,33 @@ To opt in after review (not executed remotely here):
 
 Verify after deploy: an authenticated real 14-day point subset for each distinct demo cell; original-source sums; repeat-run deduplication; a real revised Late product; upstream outage with last-good retention; R2/D1 status and manifest read-back; cron execution and actual event consumption. No claim of current data should be made while these are unverified.
 
-IMERG daily UTC and POWER daily LST are **not aligned day-for-day**. Their multi-day totals are descriptive independent context; neither is field truth or agronomic confidence. #13's optional comparison and historical cache do not depend on this Workflow. Both PRs contain the same verified DAP4 point client so each branches independently from `origin/next`; keep one identical client on integration.
+IMERG daily UTC and POWER daily LST are **not aligned day-for-day**. Their multi-day totals are descriptive independent context; neither is field truth or agronomic confidence. #13's optional comparison and historical cache do not depend on this Workflow. The merged #71 comparison routes and this Workflow both import the single `src/worker/imerg/client.ts` / `dap4.ts` adapter; no second adapter is introduced.
+
+## Current-next scheduled-event verification (2026-11-15)
+
+After merging current `origin/next`, including #71, a **fresh isolated local D1/R2/Workflow state directory** was migrated locally (IMERG stays `0006`). Ignored `.dev.vars` supplied real provider access; no deployment or remote migration was run.
+
+```sh
+npx wrangler dev -c wrangler.offline.jsonc --test-scheduled --port 8796 --ip 127.0.0.1 --persist-to <native-scratch>/imerg-scheduled-state
+curl --fail 'http://127.0.0.1:8796/__scheduled?cron=43%205%20*%20*%20*'
+npx wrangler workflows instances describe soilsense-imerg-refresh imerg-daily-2026-11-15 --local --port 8796 --json -c wrangler.offline.jsonc
+```
+
+The first trigger attempt exposed a local verification trap: static SPA routing returned HTTP 200 **HTML** instead of running the scheduled handler. The offline config now includes `/__scheduled` in `assets.run_worker_first`; it then returned `Ran scheduled event`. A regression test guards that route and the default-config opt-out, plus independent POWER dispatch when IMERG is absent or fails to start.
+
+The actual scheduled handler started both product Workflows. IMERG instance `imerg-daily-2026-11-15` completed from **22:49:53.818Z to 22:50:43.411Z**, publishing all four real **Nov 1–14 Late V07C** windows. All public status/manifest/bundle responses were read back; Python independently checked four fields, fourteen distinct observed days each, count 48 throughout, exact manifest/bundle agreement and totals. The immutable IDs and totals matched the earlier real fixtures exactly: **no provider revision was observed**. POWER also published four cells independently.
+
+A repeated scheduled trigger retained the same daily instance. A new local manual Workflow instance (`wrangler workflows trigger ... --local --port 8796`, not an HTTP authorization bypass) completed with all four outcomes `unchanged`. That repeat reused the valid one-hour observation cache; it is **not** an independent fresh-provider revision probe. D1 read-back after the repeat contained exactly **4 snapshots, 4 current pointers, 4 accepted events**. `scheduled-20261115.json` and `scheduled-repeat-20261115.json` retain the real Workflow summary and public storage read-backs. Unit-test failure/revision cases remain explicitly constructed simulations.
+
+Both deployment-config dry runs passed with `--outdir C:/Users/steve/AppData/Local/hermes/profiles/renshuu/cache/scratch/dryrun-imerg`: default has POWER_REFRESH/DOC_INGEST but **no IMERG_REFRESH**; `-c wrangler.offline.jsonc` explicitly opts in. Dry runs are not deployed binding verification.
+
+### Still unmet / deployed checks
+
+- Observe actual Cloudflare 05:43 UTC cron delivery (not the locally invoked scheduled-event handler), remote migration/binding/secret permissions, successful remote Workflow/storage read-back and production weekly/crop-window timer consumption. The local handler check closes only the local scheduler-to-Workflow path.
+- Observe a genuinely revised same-period Late provider subset after cache expiry; compare source observations/hash, retain the old immutable object, verify the new current pointer and one new accepted event per field, and confirm historical Final/replays remain independent. Today's real observations were unchanged, so this criterion stays open.
+- Observe an actual upstream outage/access error or partial product through the real deployed pipeline; verify bounded retries, sanitized visible attempt status, unchanged last-good pointer/events and stale-context fallback as the observed-day age increases. No actual outage/partial product occurred in this run. Deterministic failure tests do not close this live-provider criterion.
+
+The integration remains **draft** pending these operational/provider criteria; it is conflict-resolved and locally verified, not claimed production-verified.
 
 ## Primary sources and attribution
 

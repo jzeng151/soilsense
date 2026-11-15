@@ -1,0 +1,1322 @@
+{
+  "retrievedAt": "2026-11-15T22:52:11.092179+00:00",
+  "verification": "real-provider local workerd; scheduled trigger or explicitly labelled controlled access failure",
+  "workflow": {
+    "id": "imerg-live-repeat-20261115",
+    "status": "complete",
+    "params": {
+      "trigger": "manual"
+    },
+    "queued": "2026-11-15T22:51:49.908Z",
+    "start": "2026-11-15T22:51:49.908Z",
+    "end": "2026-11-15T22:51:50.236Z",
+    "output": {
+      "instanceId": "imerg-live-repeat-20261115",
+      "runDate": "2026-11-15",
+      "cells": [
+        {
+          "cell": "1320_865",
+          "outcome": "unchanged",
+          "snapshotId": "iml-ca2ad2cfa8974c32ba82750c",
+          "dataThrough": "2026-11-14"
+        },
+        {
+          "cell": "1300_916",
+          "outcome": "unchanged",
+          "snapshotId": "iml-852e196ae2dce8dccfc9cf99",
+          "dataThrough": "2026-11-14"
+        },
+        {
+          "cell": "1281_792",
+          "outcome": "unchanged",
+          "snapshotId": "iml-127d90f486c227f480c2ab6f",
+          "dataThrough": "2026-11-14"
+        },
+        {
+          "cell": "1307_834",
+          "outcome": "unchanged",
+          "snapshotId": "iml-a05b2976689f3ac333e0ac68",
+          "dataThrough": "2026-11-14"
+        }
+      ]
+    },
+    "error": null,
+    "step_count": 13
+  },
+  "steps": [
+    {
+      "name": "imerg discover completed Late day-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:49.916Z",
+          "end": "2026-11-15T22:51:50.094Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "imerg fetch 1320_865-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:50.099Z",
+          "end": "2026-11-15T22:51:50.104Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "imerg validate 1320_865-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:50.107Z",
+          "end": "2026-11-15T22:51:50.115Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "imerg publish 1320_865-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:50.118Z",
+          "end": "2026-11-15T22:51:50.137Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "imerg fetch 1300_916-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:50.141Z",
+          "end": "2026-11-15T22:51:50.146Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "imerg validate 1300_916-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:50.150Z",
+          "end": "2026-11-15T22:51:50.156Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "imerg publish 1300_916-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:50.159Z",
+          "end": "2026-11-15T22:51:50.170Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "imerg fetch 1281_792-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:50.174Z",
+          "end": "2026-11-15T22:51:50.180Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "imerg validate 1281_792-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:50.183Z",
+          "end": "2026-11-15T22:51:50.189Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "imerg publish 1281_792-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:50.191Z",
+          "end": "2026-11-15T22:51:50.201Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "imerg fetch 1307_834-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:50.205Z",
+          "end": "2026-11-15T22:51:50.210Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "imerg validate 1307_834-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:50.214Z",
+          "end": "2026-11-15T22:51:50.219Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "imerg publish 1307_834-1",
+      "success": true,
+      "attempts": [
+        {
+          "start": "2026-11-15T22:51:50.223Z",
+          "end": "2026-11-15T22:51:50.233Z",
+          "success": true,
+          "error": null
+        }
+      ]
+    }
+  ],
+  "status": {
+    "product": "GPM_3IMERGDL V07 Late",
+    "stream": "current-late",
+    "farms": [
+      {
+        "farmId": "story-ia",
+        "usable": true,
+        "reason": null,
+        "snapshot": {
+          "id": "iml-ca2ad2cfa8974c32ba82750c",
+          "dataThrough": "2026-11-14",
+          "state": "fresh",
+          "ageDays": 1
+        },
+        "lastAttempt": {
+          "attempted_at": 1794783109907,
+          "outcome": "unchanged",
+          "detail": "{\"candidateId\":\"iml-ca2ad2cfa8974c32ba82750c\",\"dataThrough\":\"2026-11-14\"}",
+          "instance_id": "imerg-live-repeat-20261115",
+          "trigger": "manual"
+        }
+      },
+      {
+        "farmId": "champaign-il",
+        "usable": true,
+        "reason": null,
+        "snapshot": {
+          "id": "iml-852e196ae2dce8dccfc9cf99",
+          "dataThrough": "2026-11-14",
+          "state": "fresh",
+          "ageDays": 1
+        },
+        "lastAttempt": {
+          "attempted_at": 1794783109907,
+          "outcome": "unchanged",
+          "detail": "{\"candidateId\":\"iml-852e196ae2dce8dccfc9cf99\",\"dataThrough\":\"2026-11-14\"}",
+          "instance_id": "imerg-live-repeat-20261115",
+          "trigger": "manual"
+        }
+      },
+      {
+        "farmId": "finney-ks",
+        "usable": true,
+        "reason": null,
+        "snapshot": {
+          "id": "iml-127d90f486c227f480c2ab6f",
+          "dataThrough": "2026-11-14",
+          "state": "fresh",
+          "ageDays": 1
+        },
+        "lastAttempt": {
+          "attempted_at": 1794783109907,
+          "outcome": "unchanged",
+          "detail": "{\"candidateId\":\"iml-127d90f486c227f480c2ab6f\",\"dataThrough\":\"2026-11-14\"}",
+          "instance_id": "imerg-live-repeat-20261115",
+          "trigger": "manual"
+        }
+      },
+      {
+        "farmId": "lancaster-ne",
+        "usable": true,
+        "reason": null,
+        "snapshot": {
+          "id": "iml-a05b2976689f3ac333e0ac68",
+          "dataThrough": "2026-11-14",
+          "state": "fresh",
+          "ageDays": 1
+        },
+        "lastAttempt": {
+          "attempted_at": 1794783109907,
+          "outcome": "unchanged",
+          "detail": "{\"candidateId\":\"iml-a05b2976689f3ac333e0ac68\",\"dataThrough\":\"2026-11-14\"}",
+          "instance_id": "imerg-live-repeat-20261115",
+          "trigger": "manual"
+        }
+      }
+    ],
+    "policy": {
+      "windowDays": 14,
+      "maxAgeDays": 3,
+      "requiredSamplesPerDay": 48,
+      "minCompleteness": 1
+    },
+    "workflowBound": true,
+    "credentialConfigured": true,
+    "schedule": "43 5 * * *",
+    "note": "Freshness uses observed UTC data-through, not download time. POWER and historical Final are independent. Accepted IMERG evidence is context only, never a new Field Watch rule."
+  },
+  "fields": [
+    {
+      "field": "story-ia",
+      "snapshotId": "iml-ca2ad2cfa8974c32ba82750c",
+      "totalMm": 46.82500037737191,
+      "manifest": {
+        "manifest": {
+          "snapshotId": "iml-ca2ad2cfa8974c32ba82750c",
+          "contentHash": "ca2ad2cfa8974c32ba82750c22c0c2e4c95521a7b859ed88cd8132b6df94e394",
+          "product": {
+            "shortName": "GPM_3IMERGDL",
+            "version": "07",
+            "stream": "Late",
+            "latency": "No earlier than 14 hours after closure of the UTC day; delivery can lag",
+            "doi": "10.5067/GPM/IMERGDL/DAY/07"
+          },
+          "stream": "current-late",
+          "grid": {
+            "lat": 42.05,
+            "lon": -93.45,
+            "yi": 1320,
+            "xi": 865,
+            "key": "1320_865",
+            "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+            "support": "Grid-cell point estimate, not a field-area measurement"
+          },
+          "units": "mm/day",
+          "timeStandard": "UTC",
+          "observationPeriod": {
+            "start": "2026-11-01",
+            "end": "2026-11-14"
+          },
+          "dataThrough": "2026-11-14",
+          "retrievedAt": "2026-11-15T22:50:14.966Z",
+          "attribution": "NASA GES DISC; Huffman, G.J.; Stocker, E.F.; Bolvin, D.T.; Nelkin, E.J.; Tan, J. GPM IMERG daily V07. See product DOI for citation.",
+          "source": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
+          "sourceUrls": [
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D"
+          ],
+          "validation": {
+            "policy": {
+              "windowDays": 14,
+              "maxAgeDays": 3,
+              "requiredSamplesPerDay": 48,
+              "minCompleteness": 1
+            },
+            "passed": true
+          },
+          "replacementPolicy": "Late-only current stream: a later observed end date supersedes older data; a revised same-period Late subset gets a new immutable hash and replaces the current pointer. Historical Final bundles remain independent; Final never silently replaces Late. Older periods never move pointers backwards.",
+          "objects": {
+            "bundle": "public/imerg-late/v1/ca2ad2cfa8974c32ba82750c22c0c2e4c95521a7b859ed88cd8132b6df94e394/bundle.json",
+            "source": "public/imerg-late/v1/ca2ad2cfa8974c32ba82750c22c0c2e4c95521a7b859ed88cd8132b6df94e394/source.json"
+          }
+        },
+        "bundleUrl": "/api/refresh/imerg/snapshots/iml-ca2ad2cfa8974c32ba82750c/bundle"
+      },
+      "bundle": {
+        "manifest": {
+          "snapshotId": "iml-ca2ad2cfa8974c32ba82750c",
+          "contentHash": "ca2ad2cfa8974c32ba82750c22c0c2e4c95521a7b859ed88cd8132b6df94e394",
+          "product": {
+            "shortName": "GPM_3IMERGDL",
+            "version": "07",
+            "stream": "Late",
+            "latency": "No earlier than 14 hours after closure of the UTC day; delivery can lag",
+            "doi": "10.5067/GPM/IMERGDL/DAY/07"
+          },
+          "stream": "current-late",
+          "grid": {
+            "lat": 42.05,
+            "lon": -93.45,
+            "yi": 1320,
+            "xi": 865,
+            "key": "1320_865",
+            "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+            "support": "Grid-cell point estimate, not a field-area measurement"
+          },
+          "units": "mm/day",
+          "timeStandard": "UTC",
+          "observationPeriod": {
+            "start": "2026-11-01",
+            "end": "2026-11-14"
+          },
+          "dataThrough": "2026-11-14",
+          "retrievedAt": "2026-11-15T22:50:14.966Z",
+          "attribution": "NASA GES DISC; Huffman, G.J.; Stocker, E.F.; Bolvin, D.T.; Nelkin, E.J.; Tan, J. GPM IMERG daily V07. See product DOI for citation.",
+          "source": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
+          "sourceUrls": [
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D"
+          ],
+          "validation": {
+            "policy": {
+              "windowDays": 14,
+              "maxAgeDays": 3,
+              "requiredSamplesPerDay": 48,
+              "minCompleteness": 1
+            },
+            "passed": true
+          },
+          "replacementPolicy": "Late-only current stream: a later observed end date supersedes older data; a revised same-period Late subset gets a new immutable hash and replaces the current pointer. Historical Final bundles remain independent; Final never silently replaces Late. Older periods never move pointers backwards.",
+          "objects": {
+            "bundle": "public/imerg-late/v1/ca2ad2cfa8974c32ba82750c22c0c2e4c95521a7b859ed88cd8132b6df94e394/bundle.json",
+            "source": "public/imerg-late/v1/ca2ad2cfa8974c32ba82750c22c0c2e4c95521a7b859ed88cd8132b6df94e394/source.json"
+          }
+        },
+        "snapshot": {
+          "schema": "soilsense.imerg-late-snapshot/v1",
+          "stream": "current-late",
+          "product": {
+            "shortName": "GPM_3IMERGDL",
+            "version": "07",
+            "stream": "Late",
+            "latency": "No earlier than 14 hours after closure of the UTC day; delivery can lag",
+            "doi": "10.5067/GPM/IMERGDL/DAY/07"
+          },
+          "grid": {
+            "lat": 42.05,
+            "lon": -93.45,
+            "yi": 1320,
+            "xi": 865,
+            "key": "1320_865",
+            "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+            "support": "Grid-cell point estimate, not a field-area measurement"
+          },
+          "units": "mm/day",
+          "timeStandard": "UTC",
+          "start": "2026-11-01",
+          "dataThrough": "2026-11-14",
+          "observations": [
+            {
+              "date": "2026-11-01",
+              "mm": 0.009999999776482582,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-02",
+              "mm": 13.975000381469727,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-03",
+              "mm": 31.625,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-04",
+              "mm": 1.125,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-05",
+              "mm": 0.08999999612569809,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-06",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-07",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-08",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-09",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-10",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-11",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-12",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-13",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-14",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B865%3A1%3A865%5D%5B1320%3A1%3A1320%5D%3B%2Flat%5B1320%3A1%3A1320%5D%3B%2Flon%5B865%3A1%3A865%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4"
+            }
+          ],
+          "replacementPolicy": "Late-only current stream: a later observed end date supersedes older data; a revised same-period Late subset gets a new immutable hash and replaces the current pointer. Historical Final bundles remain independent; Final never silently replaces Late. Older periods never move pointers backwards."
+        }
+      }
+    },
+    {
+      "field": "champaign-il",
+      "snapshotId": "iml-852e196ae2dce8dccfc9cf99",
+      "totalMm": 10.804999720305204,
+      "manifest": {
+        "manifest": {
+          "snapshotId": "iml-852e196ae2dce8dccfc9cf99",
+          "contentHash": "852e196ae2dce8dccfc9cf99dac875974c808e3103fbb0385852271b8ac92a31",
+          "product": {
+            "shortName": "GPM_3IMERGDL",
+            "version": "07",
+            "stream": "Late",
+            "latency": "No earlier than 14 hours after closure of the UTC day; delivery can lag",
+            "doi": "10.5067/GPM/IMERGDL/DAY/07"
+          },
+          "stream": "current-late",
+          "grid": {
+            "lat": 40.05,
+            "lon": -88.35,
+            "yi": 1300,
+            "xi": 916,
+            "key": "1300_916",
+            "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+            "support": "Grid-cell point estimate, not a field-area measurement"
+          },
+          "units": "mm/day",
+          "timeStandard": "UTC",
+          "observationPeriod": {
+            "start": "2026-11-01",
+            "end": "2026-11-14"
+          },
+          "dataThrough": "2026-11-14",
+          "retrievedAt": "2026-11-15T22:50:23.250Z",
+          "attribution": "NASA GES DISC; Huffman, G.J.; Stocker, E.F.; Bolvin, D.T.; Nelkin, E.J.; Tan, J. GPM IMERG daily V07. See product DOI for citation.",
+          "source": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
+          "sourceUrls": [
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D"
+          ],
+          "validation": {
+            "policy": {
+              "windowDays": 14,
+              "maxAgeDays": 3,
+              "requiredSamplesPerDay": 48,
+              "minCompleteness": 1
+            },
+            "passed": true
+          },
+          "replacementPolicy": "Late-only current stream: a later observed end date supersedes older data; a revised same-period Late subset gets a new immutable hash and replaces the current pointer. Historical Final bundles remain independent; Final never silently replaces Late. Older periods never move pointers backwards.",
+          "objects": {
+            "bundle": "public/imerg-late/v1/852e196ae2dce8dccfc9cf99dac875974c808e3103fbb0385852271b8ac92a31/bundle.json",
+            "source": "public/imerg-late/v1/852e196ae2dce8dccfc9cf99dac875974c808e3103fbb0385852271b8ac92a31/source.json"
+          }
+        },
+        "bundleUrl": "/api/refresh/imerg/snapshots/iml-852e196ae2dce8dccfc9cf99/bundle"
+      },
+      "bundle": {
+        "manifest": {
+          "snapshotId": "iml-852e196ae2dce8dccfc9cf99",
+          "contentHash": "852e196ae2dce8dccfc9cf99dac875974c808e3103fbb0385852271b8ac92a31",
+          "product": {
+            "shortName": "GPM_3IMERGDL",
+            "version": "07",
+            "stream": "Late",
+            "latency": "No earlier than 14 hours after closure of the UTC day; delivery can lag",
+            "doi": "10.5067/GPM/IMERGDL/DAY/07"
+          },
+          "stream": "current-late",
+          "grid": {
+            "lat": 40.05,
+            "lon": -88.35,
+            "yi": 1300,
+            "xi": 916,
+            "key": "1300_916",
+            "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+            "support": "Grid-cell point estimate, not a field-area measurement"
+          },
+          "units": "mm/day",
+          "timeStandard": "UTC",
+          "observationPeriod": {
+            "start": "2026-11-01",
+            "end": "2026-11-14"
+          },
+          "dataThrough": "2026-11-14",
+          "retrievedAt": "2026-11-15T22:50:23.250Z",
+          "attribution": "NASA GES DISC; Huffman, G.J.; Stocker, E.F.; Bolvin, D.T.; Nelkin, E.J.; Tan, J. GPM IMERG daily V07. See product DOI for citation.",
+          "source": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
+          "sourceUrls": [
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D"
+          ],
+          "validation": {
+            "policy": {
+              "windowDays": 14,
+              "maxAgeDays": 3,
+              "requiredSamplesPerDay": 48,
+              "minCompleteness": 1
+            },
+            "passed": true
+          },
+          "replacementPolicy": "Late-only current stream: a later observed end date supersedes older data; a revised same-period Late subset gets a new immutable hash and replaces the current pointer. Historical Final bundles remain independent; Final never silently replaces Late. Older periods never move pointers backwards.",
+          "objects": {
+            "bundle": "public/imerg-late/v1/852e196ae2dce8dccfc9cf99dac875974c808e3103fbb0385852271b8ac92a31/bundle.json",
+            "source": "public/imerg-late/v1/852e196ae2dce8dccfc9cf99dac875974c808e3103fbb0385852271b8ac92a31/source.json"
+          }
+        },
+        "snapshot": {
+          "schema": "soilsense.imerg-late-snapshot/v1",
+          "stream": "current-late",
+          "product": {
+            "shortName": "GPM_3IMERGDL",
+            "version": "07",
+            "stream": "Late",
+            "latency": "No earlier than 14 hours after closure of the UTC day; delivery can lag",
+            "doi": "10.5067/GPM/IMERGDL/DAY/07"
+          },
+          "grid": {
+            "lat": 40.05,
+            "lon": -88.35,
+            "yi": 1300,
+            "xi": 916,
+            "key": "1300_916",
+            "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+            "support": "Grid-cell point estimate, not a field-area measurement"
+          },
+          "units": "mm/day",
+          "timeStandard": "UTC",
+          "start": "2026-11-01",
+          "dataThrough": "2026-11-14",
+          "observations": [
+            {
+              "date": "2026-11-01",
+              "mm": 3.315000057220459,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-02",
+              "mm": 0.28999999165534973,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-03",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-04",
+              "mm": 5.299999713897705,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-05",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-06",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-07",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-08",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-09",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-10",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-11",
+              "mm": 1.2649999856948853,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-12",
+              "mm": 0.5899999737739563,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-13",
+              "mm": 0.044999998062849045,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-14",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B916%3A1%3A916%5D%5B1300%3A1%3A1300%5D%3B%2Flat%5B1300%3A1%3A1300%5D%3B%2Flon%5B916%3A1%3A916%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4"
+            }
+          ],
+          "replacementPolicy": "Late-only current stream: a later observed end date supersedes older data; a revised same-period Late subset gets a new immutable hash and replaces the current pointer. Historical Final bundles remain independent; Final never silently replaces Late. Older periods never move pointers backwards."
+        }
+      }
+    },
+    {
+      "field": "finney-ks",
+      "snapshotId": "iml-127d90f486c227f480c2ab6f",
+      "totalMm": 19.26499963272363,
+      "manifest": {
+        "manifest": {
+          "snapshotId": "iml-127d90f486c227f480c2ab6f",
+          "contentHash": "127d90f486c227f480c2ab6f355b0e3ab3689a7ff132ebbfb91515f27287d859",
+          "product": {
+            "shortName": "GPM_3IMERGDL",
+            "version": "07",
+            "stream": "Late",
+            "latency": "No earlier than 14 hours after closure of the UTC day; delivery can lag",
+            "doi": "10.5067/GPM/IMERGDL/DAY/07"
+          },
+          "stream": "current-late",
+          "grid": {
+            "lat": 38.15,
+            "lon": -100.75,
+            "yi": 1281,
+            "xi": 792,
+            "key": "1281_792",
+            "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+            "support": "Grid-cell point estimate, not a field-area measurement"
+          },
+          "units": "mm/day",
+          "timeStandard": "UTC",
+          "observationPeriod": {
+            "start": "2026-11-01",
+            "end": "2026-11-14"
+          },
+          "dataThrough": "2026-11-14",
+          "retrievedAt": "2026-11-15T22:50:32.836Z",
+          "attribution": "NASA GES DISC; Huffman, G.J.; Stocker, E.F.; Bolvin, D.T.; Nelkin, E.J.; Tan, J. GPM IMERG daily V07. See product DOI for citation.",
+          "source": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
+          "sourceUrls": [
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D"
+          ],
+          "validation": {
+            "policy": {
+              "windowDays": 14,
+              "maxAgeDays": 3,
+              "requiredSamplesPerDay": 48,
+              "minCompleteness": 1
+            },
+            "passed": true
+          },
+          "replacementPolicy": "Late-only current stream: a later observed end date supersedes older data; a revised same-period Late subset gets a new immutable hash and replaces the current pointer. Historical Final bundles remain independent; Final never silently replaces Late. Older periods never move pointers backwards.",
+          "objects": {
+            "bundle": "public/imerg-late/v1/127d90f486c227f480c2ab6f355b0e3ab3689a7ff132ebbfb91515f27287d859/bundle.json",
+            "source": "public/imerg-late/v1/127d90f486c227f480c2ab6f355b0e3ab3689a7ff132ebbfb91515f27287d859/source.json"
+          }
+        },
+        "bundleUrl": "/api/refresh/imerg/snapshots/iml-127d90f486c227f480c2ab6f/bundle"
+      },
+      "bundle": {
+        "manifest": {
+          "snapshotId": "iml-127d90f486c227f480c2ab6f",
+          "contentHash": "127d90f486c227f480c2ab6f355b0e3ab3689a7ff132ebbfb91515f27287d859",
+          "product": {
+            "shortName": "GPM_3IMERGDL",
+            "version": "07",
+            "stream": "Late",
+            "latency": "No earlier than 14 hours after closure of the UTC day; delivery can lag",
+            "doi": "10.5067/GPM/IMERGDL/DAY/07"
+          },
+          "stream": "current-late",
+          "grid": {
+            "lat": 38.15,
+            "lon": -100.75,
+            "yi": 1281,
+            "xi": 792,
+            "key": "1281_792",
+            "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+            "support": "Grid-cell point estimate, not a field-area measurement"
+          },
+          "units": "mm/day",
+          "timeStandard": "UTC",
+          "observationPeriod": {
+            "start": "2026-11-01",
+            "end": "2026-11-14"
+          },
+          "dataThrough": "2026-11-14",
+          "retrievedAt": "2026-11-15T22:50:32.836Z",
+          "attribution": "NASA GES DISC; Huffman, G.J.; Stocker, E.F.; Bolvin, D.T.; Nelkin, E.J.; Tan, J. GPM IMERG daily V07. See product DOI for citation.",
+          "source": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
+          "sourceUrls": [
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D"
+          ],
+          "validation": {
+            "policy": {
+              "windowDays": 14,
+              "maxAgeDays": 3,
+              "requiredSamplesPerDay": 48,
+              "minCompleteness": 1
+            },
+            "passed": true
+          },
+          "replacementPolicy": "Late-only current stream: a later observed end date supersedes older data; a revised same-period Late subset gets a new immutable hash and replaces the current pointer. Historical Final bundles remain independent; Final never silently replaces Late. Older periods never move pointers backwards.",
+          "objects": {
+            "bundle": "public/imerg-late/v1/127d90f486c227f480c2ab6f355b0e3ab3689a7ff132ebbfb91515f27287d859/bundle.json",
+            "source": "public/imerg-late/v1/127d90f486c227f480c2ab6f355b0e3ab3689a7ff132ebbfb91515f27287d859/source.json"
+          }
+        },
+        "snapshot": {
+          "schema": "soilsense.imerg-late-snapshot/v1",
+          "stream": "current-late",
+          "product": {
+            "shortName": "GPM_3IMERGDL",
+            "version": "07",
+            "stream": "Late",
+            "latency": "No earlier than 14 hours after closure of the UTC day; delivery can lag",
+            "doi": "10.5067/GPM/IMERGDL/DAY/07"
+          },
+          "grid": {
+            "lat": 38.15,
+            "lon": -100.75,
+            "yi": 1281,
+            "xi": 792,
+            "key": "1281_792",
+            "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+            "support": "Grid-cell point estimate, not a field-area measurement"
+          },
+          "units": "mm/day",
+          "timeStandard": "UTC",
+          "start": "2026-11-01",
+          "dataThrough": "2026-11-14",
+          "observations": [
+            {
+              "date": "2026-11-01",
+              "mm": 1.5699999332427979,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-02",
+              "mm": 1.1699999570846558,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-03",
+              "mm": 5.284999847412109,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-04",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-05",
+              "mm": 7.75,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-06",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-07",
+              "mm": 0.004999999888241291,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-08",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-09",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-10",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-11",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-12",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-13",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-14",
+              "mm": 3.484999895095825,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B792%3A1%3A792%5D%5B1281%3A1%3A1281%5D%3B%2Flat%5B1281%3A1%3A1281%5D%3B%2Flon%5B792%3A1%3A792%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4"
+            }
+          ],
+          "replacementPolicy": "Late-only current stream: a later observed end date supersedes older data; a revised same-period Late subset gets a new immutable hash and replaces the current pointer. Historical Final bundles remain independent; Final never silently replaces Late. Older periods never move pointers backwards."
+        }
+      }
+    },
+    {
+      "field": "lancaster-ne",
+      "snapshotId": "iml-a05b2976689f3ac333e0ac68",
+      "totalMm": 21.3949983259663,
+      "manifest": {
+        "manifest": {
+          "snapshotId": "iml-a05b2976689f3ac333e0ac68",
+          "contentHash": "a05b2976689f3ac333e0ac6829bfc7b0f0c5acd564fa5596d7a3a20209977ae4",
+          "product": {
+            "shortName": "GPM_3IMERGDL",
+            "version": "07",
+            "stream": "Late",
+            "latency": "No earlier than 14 hours after closure of the UTC day; delivery can lag",
+            "doi": "10.5067/GPM/IMERGDL/DAY/07"
+          },
+          "stream": "current-late",
+          "grid": {
+            "lat": 40.75,
+            "lon": -96.55,
+            "yi": 1307,
+            "xi": 834,
+            "key": "1307_834",
+            "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+            "support": "Grid-cell point estimate, not a field-area measurement"
+          },
+          "units": "mm/day",
+          "timeStandard": "UTC",
+          "observationPeriod": {
+            "start": "2026-11-01",
+            "end": "2026-11-14"
+          },
+          "dataThrough": "2026-11-14",
+          "retrievedAt": "2026-11-15T22:50:43.366Z",
+          "attribution": "NASA GES DISC; Huffman, G.J.; Stocker, E.F.; Bolvin, D.T.; Nelkin, E.J.; Tan, J. GPM IMERG daily V07. See product DOI for citation.",
+          "source": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
+          "sourceUrls": [
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D"
+          ],
+          "validation": {
+            "policy": {
+              "windowDays": 14,
+              "maxAgeDays": 3,
+              "requiredSamplesPerDay": 48,
+              "minCompleteness": 1
+            },
+            "passed": true
+          },
+          "replacementPolicy": "Late-only current stream: a later observed end date supersedes older data; a revised same-period Late subset gets a new immutable hash and replaces the current pointer. Historical Final bundles remain independent; Final never silently replaces Late. Older periods never move pointers backwards.",
+          "objects": {
+            "bundle": "public/imerg-late/v1/a05b2976689f3ac333e0ac6829bfc7b0f0c5acd564fa5596d7a3a20209977ae4/bundle.json",
+            "source": "public/imerg-late/v1/a05b2976689f3ac333e0ac6829bfc7b0f0c5acd564fa5596d7a3a20209977ae4/source.json"
+          }
+        },
+        "bundleUrl": "/api/refresh/imerg/snapshots/iml-a05b2976689f3ac333e0ac68/bundle"
+      },
+      "bundle": {
+        "manifest": {
+          "snapshotId": "iml-a05b2976689f3ac333e0ac68",
+          "contentHash": "a05b2976689f3ac333e0ac6829bfc7b0f0c5acd564fa5596d7a3a20209977ae4",
+          "product": {
+            "shortName": "GPM_3IMERGDL",
+            "version": "07",
+            "stream": "Late",
+            "latency": "No earlier than 14 hours after closure of the UTC day; delivery can lag",
+            "doi": "10.5067/GPM/IMERGDL/DAY/07"
+          },
+          "stream": "current-late",
+          "grid": {
+            "lat": 40.75,
+            "lon": -96.55,
+            "yi": 1307,
+            "xi": 834,
+            "key": "1307_834",
+            "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+            "support": "Grid-cell point estimate, not a field-area measurement"
+          },
+          "units": "mm/day",
+          "timeStandard": "UTC",
+          "observationPeriod": {
+            "start": "2026-11-01",
+            "end": "2026-11-14"
+          },
+          "dataThrough": "2026-11-14",
+          "retrievedAt": "2026-11-15T22:50:43.366Z",
+          "attribution": "NASA GES DISC; Huffman, G.J.; Stocker, E.F.; Bolvin, D.T.; Nelkin, E.J.; Tan, J. GPM IMERG daily V07. See product DOI for citation.",
+          "source": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
+          "sourceUrls": [
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+            "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D"
+          ],
+          "validation": {
+            "policy": {
+              "windowDays": 14,
+              "maxAgeDays": 3,
+              "requiredSamplesPerDay": 48,
+              "minCompleteness": 1
+            },
+            "passed": true
+          },
+          "replacementPolicy": "Late-only current stream: a later observed end date supersedes older data; a revised same-period Late subset gets a new immutable hash and replaces the current pointer. Historical Final bundles remain independent; Final never silently replaces Late. Older periods never move pointers backwards.",
+          "objects": {
+            "bundle": "public/imerg-late/v1/a05b2976689f3ac333e0ac6829bfc7b0f0c5acd564fa5596d7a3a20209977ae4/bundle.json",
+            "source": "public/imerg-late/v1/a05b2976689f3ac333e0ac6829bfc7b0f0c5acd564fa5596d7a3a20209977ae4/source.json"
+          }
+        },
+        "snapshot": {
+          "schema": "soilsense.imerg-late-snapshot/v1",
+          "stream": "current-late",
+          "product": {
+            "shortName": "GPM_3IMERGDL",
+            "version": "07",
+            "stream": "Late",
+            "latency": "No earlier than 14 hours after closure of the UTC day; delivery can lag",
+            "doi": "10.5067/GPM/IMERGDL/DAY/07"
+          },
+          "grid": {
+            "lat": 40.75,
+            "lon": -96.55,
+            "yi": 1307,
+            "xi": 834,
+            "key": "1307_834",
+            "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+            "support": "Grid-cell point estimate, not a field-area measurement"
+          },
+          "units": "mm/day",
+          "timeStandard": "UTC",
+          "start": "2026-11-01",
+          "dataThrough": "2026-11-14",
+          "observations": [
+            {
+              "date": "2026-11-01",
+              "mm": 1.1399999856948853,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261101-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-02",
+              "mm": 3.3899998664855957,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261102-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-03",
+              "mm": 16.849998474121094,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261103-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-04",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261104-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-05",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261105-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-06",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261106-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-07",
+              "mm": 0.014999999664723873,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261107-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-08",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261108-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-09",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261109-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-10",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261110-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-11",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261111-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-12",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261112-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-13",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261113-S000000-E235959.V07C.nc4"
+            },
+            {
+              "date": "2026-11-14",
+              "mm": 0,
+              "count": 48,
+              "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B834%3A1%3A834%5D%5B1307%3A1%3A1307%5D%3B%2Flat%5B1307%3A1%3A1307%5D%3B%2Flon%5B834%3A1%3A834%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+              "revision": "3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4"
+            }
+          ],
+          "replacementPolicy": "Late-only current stream: a later observed end date supersedes older data; a revised same-period Late subset gets a new immutable hash and replaces the current pointer. Historical Final bundles remain independent; Final never silently replaces Late. Older periods never move pointers backwards."
+        }
+      }
+    }
+  ]
+}

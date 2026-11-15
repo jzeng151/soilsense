@@ -29,6 +29,8 @@ import type { CropId, PlanResponse, Priority } from "../../shared/types";
 import { lookupZip } from "../data/geo";
 import type { Env } from "../env";
 import { getField, isInContiguousUS, makePlan } from "../service";
+import { checkedCitationStream } from "../research/chatStream";
+import { ChatResearch, RESEARCH_CITATION_RULES, SEARCH_RESEARCH_DESCRIPTION, searchResearchSchema } from "../research/chat";
 
 export const scout = new Hono<{ Bindings: Env }>();
 
@@ -47,6 +49,7 @@ You can call tools that reach every Soil Sense data source:
 - get_usage_analytics: aggregate stats over plans Soil Sense has generated (web and phone).
 
 Rules:
+- ${RESEARCH_CITATION_RULES}
 - Use tools whenever a question depends on data. Never invent numbers; quote what the tools return and name the source (NASA POWER, USDA SSURGO, USDA CDL, USDA NASS).
 - Coverage is the contiguous United States only. If the user gives a place without coordinates or a ZIP, ask for a ZIP code or lat/lon.
 - If the user does not say whether a field is irrigated, assume rain-fed and say so. Default priority is "balanced".
@@ -149,7 +152,7 @@ async function usageAnalytics(env: Env, days: number) {
 
 // ---------- Tools (AI SDK) ----------
 
-function makeTools(env: Env, writer: UIMessageStreamWriter) {
+export function makeTools(env: Env, writer: UIMessageStreamWriter, research: ChatResearch) {
   const cited = new Set<string>();
   /** Emit each dataset a tool actually used as a source part (once per answer). */
   const cite = (toolName: string) => {
@@ -161,6 +164,15 @@ function makeTools(env: Env, writer: UIMessageStreamWriter) {
   };
 
   return {
+    search_research: tool({
+      description: SEARCH_RESEARCH_DESCRIPTION,
+      inputSchema: searchResearchSchema,
+      execute: async (input) => {
+        const result = await research.search(input);
+        writer.write({ type: "data-research-status", data: { status: result.status, reason: result.reason } });
+        return result;
+      },
+    }),
     find_location: tool({
       description: "Look up a US 5-digit ZIP code and return its place name, state, latitude and longitude.",
       inputSchema: z.object({ zip: z.string().describe("5-digit US ZIP code") }),
@@ -265,7 +277,7 @@ async function underScoutLimit(env: Env, ip: string): Promise<boolean> {
 
 scout.get("/status", (c) => {
   const models = scoutModels(c.env);
-  return c.json({ configured: models.length > 0, model: models[0]?.id ?? null, provider: models[0]?.provider ?? null, fallback: models[1]?.id ?? null });
+  return c.json({ configured: models.length > 0, model: models[0]?.id ?? null, provider: models[0]?.provider ?? null, fallback: models[1]?.id ?? null, research: c.env.AI && c.env.RESEARCH_INDEX ? "configured" : "unavailable" });
 });
 
 scout.post("/chat", async (c) => {
@@ -296,7 +308,9 @@ scout.post("/chat", async (c) => {
     },
     execute: async ({ writer }) => {
       const modelMessages = await convertToModelMessages(messages);
-      const tools = makeTools(env, writer);
+      // Trust only tool results produced server-side this turn, never client-supplied tool history.
+      const research = new ChatResearch({ ai: env.AI, index: env.RESEARCH_INDEX, db: env.DB, gatewayId: env.AI_GATEWAY_ID });
+      const tools = makeTools(env, writer, research);
       const { stream, model } = await firstWorking(candidates, (m) =>
         streamText({
           model: m.model,
@@ -309,13 +323,13 @@ scout.post("/chat", async (c) => {
         }).stream,
       );
       writer.merge(
-        toUIMessageStream({
+        checkedCitationStream(toUIMessageStream({
           stream,
           sendReasoning: true,
           sendSources: true,
           // Which model answered (shown under the reply; Workers AI first, Gemini as backup).
           messageMetadata: ({ part }) => (part.type === "start" ? { model: model.id, provider: model.provider } : undefined),
-        }),
+        }), research),
       );
     },
   });

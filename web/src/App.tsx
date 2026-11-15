@@ -9,6 +9,7 @@ import { SecondOpinion } from "./components/SecondOpinion";
 import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
+import { PrismCrosscheck } from "./components/PrismCrosscheck";
 import { FieldWatchCard } from "./components/FieldWatchCard";
 import { TrendChart, trendText, trendTone } from "./components/TrendChart";
 
@@ -668,6 +669,10 @@ export function App() {
                     ))}
                   </ul>
                 </details>
+
+                {/* stretch: data evidence */}
+                <PrismCrosscheck key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
+                {/* /stretch: data evidence */}
 
                 <form className="jr-card ask" onSubmit={ask}>
                   <h2 className="jr-h2">

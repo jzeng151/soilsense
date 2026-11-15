@@ -212,3 +212,5 @@ api.route("/scout", scout);
 api.route("/fieldwatch", fieldWatch);
 // Cited research retrieval (Vectorize) and grounded explanations (Workers AI): see docs/RESEARCH.md.
 api.route("/research", research);
+import { prismCrosscheck } from "./prismCrosscheck";
+api.route("/prism-crosscheck", prismCrosscheck);

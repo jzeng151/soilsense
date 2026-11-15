@@ -119,7 +119,8 @@ select, .ask input { padding: 0.7rem 0.8rem; border: 1px solid var(--line); bord
 .charts summary, .fine summary { cursor: pointer; font-weight: 600; color: var(--green); }
 .trends { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.75rem; margin-top: 0.9rem; }
 .trend { margin: 0; border: 1px solid var(--line); border-radius: 12px; padding: 0.7rem 0.8rem 0.4rem; }
-.trend figcaption { display: flex; justify-content: space-between; gap: 0.5rem; align-items: flex-start; font-size: 0.85rem; margin-bottom: 0.3rem; }
+.trend figcaption { display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-start; font-size: 0.85rem; margin-bottom: 0.3rem; }
+.trend figcaption .badge { max-width: 100%; white-space: normal; }
 .trend-title { font-weight: 650; }
 .trend svg { width: 100%; height: auto; display: block; }
 .trend .grid { stroke: var(--color-chart-grid); }
@@ -372,3 +373,6 @@ a.sb-foot:hover { color: var(--color-text); text-decoration: underline; }
 .jr-note:empty { margin: 0; }
 /* 1.4.1 Use of Color: map credit links are underlined, not just colored. */
 .leaflet-control-attribution a { text-decoration: underline; color: var(--color-info); }
+/* Keep screen-reader-only labels inside their message box; otherwise, inside a scrolling transcript,
+   they are placed relative to the page and stretch it (which also un-sticks the sidebar). */
+.lv-say, .st-msg, .lv-who, .st-who { position: relative; }

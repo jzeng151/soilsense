@@ -10,6 +10,7 @@ import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
 import { FieldWatchCard } from "./components/FieldWatchCard";
+import { WindScreenCard } from "./components/WindScreenCard";
 import { TrendChart, trendText, trendTone } from "./components/TrendChart";
 
 // A simple three-step journey: 1) find your field, 2) three quick questions, 3) your plan.
@@ -576,6 +577,10 @@ export function App() {
                     <DroughtReplay key={`${plan.generatedAt}-${plan.water}`} replays={plan.droughtReplays} />
                   </div>
                 )}
+
+                {/* stretch: data evidence */}
+                <WindScreenCard plan={plan} />
+                {/* /stretch: data evidence */}
 
                 <div className="jr-card">
                   <h2 className="jr-h2">Why we suggest this</h2>

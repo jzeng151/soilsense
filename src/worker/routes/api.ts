@@ -209,3 +209,6 @@ api.get("/logs", async (c) => {
 api.route("/scout", scout);
 // Field Watch: background field checks (Cron Trigger) and their saved results.
 api.route("/fieldwatch", fieldWatch);
+// Wind-erosion exposure screen (issues #40, #17): POST /api/wind-screen. Separate from /api/plan so plans never wait on it.
+import { windScreen } from "./windScreen";
+api.route("/wind-screen", windScreen);

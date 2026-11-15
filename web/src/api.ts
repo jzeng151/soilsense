@@ -29,3 +29,11 @@ export async function scoutStatus(): Promise<{ configured: boolean; model: strin
 export async function fetchSecondOpinion(countyFips: string, signal?: AbortSignal): Promise<SecondOpinion> {
   return handle(await fetch(`/api/second-opinion?fips=${encodeURIComponent(countyFips)}`, { signal }));
 }
+
+/** Wind-erosion exposure screen for the field and rotation calendars (issues #40, #17). */
+export async function fetchWindScreen(
+  body: { lat: number; lon: number; lastCrop: string | null; rotations: { label: string; years: { year: number; crop: string; cover: string }[] }[] },
+  signal?: AbortSignal,
+): Promise<import("../../src/shared/types").WindScreen> {
+  return handle(await fetch("/api/wind-screen", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal }));
+}

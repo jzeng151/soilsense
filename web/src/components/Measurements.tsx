@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { FarmerYield, PlanRequest, SoilProfile, SoilTest } from "../../../src/shared/types";
 import { TEXTURE_AWC, validateMeasurements } from "../../../src/shared/measurements";
 import { cropName, useI18n, type TranslationKey } from "../i18n";
@@ -46,7 +46,8 @@ export function MeasurementPanel({ fieldKey, soil, onChange }: { fieldKey: strin
   };
   const parsed = useMemo(() => parse(draft), [draft]);
   const invalid = typeof parsed === "string";
-  useEffect(() => { onChange(typeof parsed === "string" ? {} : parsed, typeof parsed !== "string"); }, [parsed, onChange]);
+  // Update the parent's submission gate before paint; a passive effect can leave one stale-enabled frame.
+  useLayoutEffect(() => { onChange(typeof parsed === "string" ? {} : parsed, typeof parsed !== "string"); }, [parsed, onChange]);
   useEffect(() => {
     try { localStorage.setItem(measurementStorageKey(fieldKey), JSON.stringify(draft)); setStorageFailed(false); }
     catch { setStorageFailed(true); }

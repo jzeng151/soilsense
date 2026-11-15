@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-11-15T23:42:49.178Z",
+  "browser": "159.0.8154.6",
+  "axeVersion": "4.14.0",
+  "fullReportSha256": "192e6c789800e18f356cf84fe9f281ad16e0832f1c6c220178f285a13f7a9675",
+  "scope": "Built local Kansas planner, real provider requests; optional IMERG cache cold at this demo grid. No production deployment. Selected WCAG tags only, not conformance certification.",
+  "audit": [
+    {
+      "width": 1280,
+      "language": "en",
+      "rows": 74,
+      "violations": 0,
+      "incomplete": 0,
+      "pageErrors": [],
+      "prismCardOverflow": false,
+      "wholePageOverflow": false,
+      "dimensions": {
+        "scroll": 1280,
+        "client": 1280,
+        "body": 1280
+      }
+    },
+    {
+      "width": 320,
+      "language": "en",
+      "rows": 74,
+      "violations": 0,
+      "incomplete": 0,
+      "pageErrors": [],
+      "prismCardOverflow": false,
+      "wholePageOverflow": false,
+      "dimensions": {
+        "scroll": 320,
+        "client": 320,
+        "body": 320
+      }
+    },
+    {
+      "width": 320,
+      "language": "es",
+      "rows": 74,
+      "violations": 0,
+      "incomplete": 0,
+      "pageErrors": [],
+      "prismCardOverflow": false,
+      "wholePageOverflow": true,
+      "dimensions": {
+        "scroll": 340,
+        "client": 320,
+        "body": 340
+      }
+    }
+  ]
+}

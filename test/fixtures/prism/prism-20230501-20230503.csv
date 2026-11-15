@@ -1,0 +1,14 @@
+PRISM Time Series Data
+Location:  Lat: 38.0000   Lon: -101.2500   Elev: unknown
+"Climate variables: ppt,tmin,tmax"
+Spatial resolution: 4km
+Period: 2023-05-01 - 2023-05-03
+Dataset: AN91d
+PRISM day definition: 24 hours ending at 1200 UTC on the day shown
+Grid Cell Interpolation: Off
+Time series generated: 2026-Nov-15
+Details: http://www.prism.oregonstate.edu/documents/PRISM_datasets.pdf
+Date,ppt (mm),tmin (degrees C),tmax (degrees C)
+2023-05-01,0.00,3.1,19.5
+2023-05-02,0.00,3.6,22.1
+2023-05-03,0.00,5.9,22.1

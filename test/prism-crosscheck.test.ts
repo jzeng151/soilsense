@@ -17,6 +17,7 @@ describe("weather consistency diagnostics",()=>{
  it("matching, disagreeing and dry intervals do not declare truth",()=>{
   const [a]=compareWeather(series(10),series(10),["2023-05-01"]);expect(a!.state).toBe("consistent");
   const [b]=compareWeather(series(10),series(20),["2023-05-01"]);expect(b!.absoluteDifference).toBe(10);expect(b!.relativeDifferencePct).toBeCloseTo(66.6666667);expect(b!.state).toBe("disagreeing");
+  expect(compareWeather(series(0),series(1.9),["2023-05-01"])[0]).toMatchObject({ state: "descriptive", disagreeing: null, relativeDifferencePct: null });
   expect(compareWeather(series(0),series(0),["2023-05-01"])[0]!.relativeDifferencePct).toBeNull();
   expect(compareWeather(series(10),series(20),["2023-05-01"],75)[0]!.state).toBe("consistent");
  });

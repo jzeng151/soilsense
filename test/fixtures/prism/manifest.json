@@ -1,0 +1,44 @@
+{
+  "accessDate": "2026-11-15",
+  "point": {
+    "lat": 38,
+    "lon": -101.25
+  },
+  "files": [
+    {
+      "file": "imerg-final-20230501-20230503.json",
+      "sha256": "17df1215b36bcd2d7e27d0826684278a70b73bde75bd0ad531581e83eea3005f",
+      "bytes": 2568
+    },
+    {
+      "file": "imerg-final-20230509-20230512.json",
+      "sha256": "90f903c5a92f7c0f18b531b654e49939be01b98ec241a7ac61817cb66324b27e",
+      "bytes": 3176
+    },
+    {
+      "file": "power-daily-utc-20230509-20230512.json",
+      "sha256": "cc72568fe6a54c82fecd526f897272d150e0f27a94c7dca98e5a0e0a9b07444b",
+      "bytes": 851
+    },
+    {
+      "file": "power-hourly-20230430-20230503.json",
+      "sha256": "fa5749ffdedcc98cd529611b945d8ecaa37cee1a0459dc88bfb6c6c92a8bb5d0",
+      "bytes": 3982
+    },
+    {
+      "file": "power-hourly-20230509-20230512.json",
+      "sha256": "ffeaccaeed7407361f05d1db38b5dec8e6a962eb29d320ca9e54474ee188f8a2",
+      "bytes": 6276
+    },
+    {
+      "file": "prism-20230501-20230503.csv",
+      "sha256": "e1889a5027fb2f24f50779d74e7e5a5c8955c963d63286fc36208c066a5acde3",
+      "bytes": 525
+    },
+    {
+      "file": "prism-20230510-20230512.csv",
+      "sha256": "97e3f07b0020551ba5c5621b971a799ec0cb21fc883e32a69dd18c4736209b03",
+      "bytes": 527
+    }
+  ]
+}

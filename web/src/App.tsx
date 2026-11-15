@@ -762,9 +762,9 @@ function MainFlow() {
                 </details>
 
                 {/* stretch: data evidence */}
-                <PrismCrosscheck key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
-                <CropTimingEvidence key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
-                <HistoricalScenarios key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
+                <PrismCrosscheck key={`prism:${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
+                <CropTimingEvidence key={`timing:${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
+                <HistoricalScenarios key={`historical:${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
                 {/* /stretch: data evidence */}
 
                 <form className="jr-card ask" onSubmit={ask}>

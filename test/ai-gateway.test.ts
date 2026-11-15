@@ -111,6 +111,18 @@ describe("AI Gateway public adapters", () => {
     expect(run).not.toHaveBeenCalled();
   });
 
+  it("computes p50 across fresh readers and excludes expired attempts", async () => {
+    const { db, sqlite } = database();
+    const now = Date.now();
+    for (const [i, latencyMs] of [80, 10, 50, 20].entries()) {
+      sqlite.prepare("INSERT INTO cache (key,value,expires_at,created_at) VALUES (?,?,?,?)").run(`ai-usage:fixture-${i}`, JSON.stringify({ feature: "scout", model: GENERATION.model, failed: i === 0, fallback: i === 1, latencyMs, correlationId: `fixture-${i}` }), now + 60000, now);
+    }
+    sqlite.prepare("INSERT INTO cache (key,value,expires_at,created_at) VALUES (?,?,?,?)").run("ai-usage:expired", JSON.stringify({ feature: "expired", latencyMs: 1 }), now - 1, now - 86400001);
+    expect(await aiUsage(db)).toMatchObject({ features: [{ feature: "scout", calls: 4, failures: 1, fallbacks: 1, p50LatencyMs: 20 }] });
+    expect((await aiUsage(db)).features).toHaveLength(1);
+    expect(await aiUsage()).toMatchObject({ available: false, features: [] });
+  });
+
   it("requires ADMIN_TOKEN and serves persistent counters without prompt data", async () => {
     const { db } = database();
     await runAI({ run: async () => ({ response: "private answer" }) }, GENERATION.model, { prompt: "private input" }, { feature: "test", db });

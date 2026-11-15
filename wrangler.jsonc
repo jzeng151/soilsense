@@ -64,7 +64,7 @@
   "vectorize": [{ "binding": "RESEARCH_INDEX", "index_name": "soilsense-research-v1" }],
 
   "vars": {
-    "AI_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "AI_MODEL": "@cf/google/gemma-4-26b-a4b-it",
     "TWILIO_VALIDATE": "true",
     "HISTORY_START_YEAR": "1991"
   }

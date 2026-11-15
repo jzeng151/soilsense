@@ -2,7 +2,7 @@ import type { LanguageModel, TextStreamPart, ToolSet } from "ai";
 import { createGoogle } from "@ai-sdk/google";
 import { createWorkersAI } from "workers-ai-provider";
 import type { Env } from "../env";
-import { GENERATION, RETIRED_MODELS } from "../research/config";
+import { EMBEDDING, GENERATION, RETIRED_MODELS } from "../research/config";
 
 export interface GatewayModel { provider: "workers-ai" | "gemini"; id: string; model: LanguageModel }
 
@@ -23,15 +23,16 @@ const RETENTION_MS = 86_400_000;
 interface CallRecord { feature: string; model: string; failed: boolean; fallback: boolean; latencyMs: number; correlationId: string }
 
 export function gatewayOptions(model: string, policy: CallPolicy): GatewayOptions {
+  const cache = policy.corpusEmbedding === true && model === EMBEDDING.model;
   return {
     id: policy.gatewayId ?? "default",
-    skipCache: !policy.corpusEmbedding,
-    ...(policy.corpusEmbedding ? { cacheTtl: 86_400 } : {}),
+    skipCache: !cache,
+    ...(cache ? { cacheTtl: 86_400 } : {}),
     // Bound gateway retries as well as the app's explicit fallback chain.
     retries: { maxAttempts: 1 },
     requestTimeoutMs: policy.timeoutMs ?? 25_000,
     collectLog: true,
-    metadata: { feature: policy.feature, model, cachePolicy: policy.corpusEmbedding ? "corpus-24h" : "no-cache", correlationId: policy.correlationId ?? crypto.randomUUID(), fallback: policy.fallback ?? false },
+    metadata: { feature: policy.feature, model, cachePolicy: cache ? "corpus-24h" : "no-cache", correlationId: policy.correlationId ?? crypto.randomUUID(), fallback: policy.fallback ?? false },
   };
 }
 

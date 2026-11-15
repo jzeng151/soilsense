@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "note": "Written only by scripts/snapshot-research.mjs from the deployed Worker (real Vectorize retrieval + Workers AI output). Empty until that script is run; never edit by hand.",
+  "entries": []
+}

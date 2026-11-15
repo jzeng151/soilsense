@@ -13,6 +13,7 @@ import { ALL_CROPS } from "../../engine/crops";
 import type { CropId, PlanResponse, Priority, WaterLevel } from "../../shared/types";
 import { lookupZip } from "../data/geo";
 import type { Env } from "../env";
+import { ChatResearch, appendResearchUrls, SEARCH_RESEARCH_DESCRIPTION, searchResearchSchema } from "../research/chat";
 import { maskPhone, sendSms, xmlEscape } from "../lib/twilio";
 import { isLiveDemoOn, publishLive } from "../live/publish";
 import { isInContiguousUS, logPlan, makePlan } from "../service";
@@ -204,7 +205,7 @@ interface RelayMessage {
   description?: string;
 }
 
-class CallSession {
+export class CallSession {
   private history: ModelMessage[] = [];
   private callSid = "";
   private caller = "";
@@ -212,6 +213,7 @@ class CallSession {
   private verified = false;
   private running: AbortController | null = null;
   private spoken = "";
+  private research: ChatResearch;
   private lastPlan: { plan: PlanResponse; place?: string } | null = null;
   /** Caller turn number, and the turn in which the agent was sent back to ask about the crop. */
   private turn = 0;
@@ -245,6 +247,7 @@ class CallSession {
     private ws: WebSocket,
     private env: Env,
   ) {
+    this.research = new ChatResearch({ ai: env.AI, index: env.RESEARCH_INDEX, db: env.DB, gatewayId: env.AI_GATEWAY_ID });
     this.ready = new Promise((r) => (this.markReady = r));
   }
 
@@ -389,6 +392,11 @@ class CallSession {
   private allTools() {
     const env = this.env;
     return {
+      search_research: tool({
+        description: SEARCH_RESEARCH_DESCRIPTION,
+        inputSchema: searchResearchSchema,
+        execute: this.timed("search_research", (input: z.infer<typeof searchResearchSchema>) => this.research.search(input)),
+      }),
       find_location: tool({
         description: "Look up a US 5-digit ZIP code: place name, state, latitude and longitude.",
         inputSchema: z.object({ zip: z.string().describe("5-digit US ZIP code, digits only") }),
@@ -484,7 +492,7 @@ class CallSession {
           const from = env.TWILIO_FROM_NUMBER || this.calledNumber;
           const ok =
             Boolean(this.caller && from && env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN) &&
-            (await sendSms({ accountSid: env.TWILIO_ACCOUNT_SID!, authToken: env.TWILIO_AUTH_TOKEN!, from, to: this.caller, body: this.lastPlan.plan.explanation.sms }));
+            (await sendSms({ accountSid: env.TWILIO_ACCOUNT_SID!, authToken: env.TWILIO_AUTH_TOKEN!, from, to: this.caller, body: appendResearchUrls(this.lastPlan.plan.explanation.sms, this.research.citedPassages()) }));
           this.smsSent = ok;
           this.live("sms", { ok, to: maskPhone(this.caller) });
           return { sent: ok };
@@ -521,6 +529,17 @@ class CallSession {
     if (this.history.length > MAX_HISTORY) this.history = this.history.slice(-MAX_HISTORY);
 
     const google = createGoogle({ apiKey: this.env.GEMINI_API_KEY });
+    // Buffer each text block so a citation split across stream tokens is validated before TTS.
+    let pendingText = "";
+    const flushSpeech = () => {
+      if (!pendingText) return;
+      const checked = this.research.forSpeech(pendingText);
+      pendingText = "";
+      if (checked.invalid.length) this.log("error", { name: "invalid_research_citation", detail: JSON.stringify({ ids: checked.invalid }), ok: false });
+      const text = speakable(checked.text);
+      this.spoken += text;
+      this.say(text, false);
+    };
     let filled = false;
     let fillerTimer: ReturnType<typeof setTimeout> | null = null;
     try {
@@ -542,11 +561,9 @@ class CallSession {
           this.spoken += " ";
           this.say(" ", false);
         } else if (part.type === "text-delta") {
-          const t = speakable(part.text);
-          if (t) {
-            this.spoken += t;
-            this.say(t, false);
-          }
+          pendingText += part.text;
+        } else if (part.type === "text-end") {
+          flushSpeech();
         } else if (part.type === "tool-call" && part.toolName === "build_rotation_plan" && !this.spoken.trim() && !filled) {
           // If the plan takes more than a moment (data not cached yet), tell the caller to wait
           // instead of leaving them in silence. A cached plan answers before this ever plays.
@@ -565,6 +582,7 @@ class CallSession {
         }
       }
       if (ctrl.signal.aborted) return;
+      flushSpeech();
       this.history.push(...((await result.responseMessages) as ModelMessage[]));
       this.say("", true);
       this.log("agent", { detail: this.spoken.trim(), durationMs: Date.now() - turnStart, ok: true, name: this.multi ? this.lang : undefined });

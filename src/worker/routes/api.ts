@@ -1,6 +1,6 @@
-import { Hono, type MiddlewareHandler } from "hono";
+import { Hono, type Handler, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
-import type { CropId, PlanRequest, Priority } from "../../shared/types";
+import { GOALS, type CropId, type Goal, type PlanRequest, type Priority } from "../../shared/types";
 import { currentUser } from "../lib/auth";
 import { UpstreamError } from "../lib/http";
 import { getSecondOpinion } from "../data/kstate";
@@ -8,10 +8,16 @@ import { getField, isInContiguousUS, logPlan, makePlan } from "../service";
 import { auth, type AppEnv } from "./auth";
 import { fieldWatch } from "./fieldwatch";
 import { scout } from "./scout";
+import { research } from "./research";
+import { docs } from "./docs";
 
 const PRIORITIES: Priority[] = ["profit", "soil", "risk", "balanced"];
 
+import { smap } from "./smap";
+
 export const api = new Hono<AppEnv>();
+
+import { cropTiming } from "./cropTiming";
 
 // ---- Simple per-isolate rate limit (use Cloudflare rate-limiting rules for hard limits). ----
 const hits = new Map<string, { count: number; reset: number }>();
@@ -39,6 +45,7 @@ api.use("*", async (c, next) => {
 
 // ---- Accounts: sign up / sign in / sign out, then require a signed-in user for the dashboard's data routes. ----
 api.route("/auth", auth);
+api.route("/docs", docs);
 
 function adminTokenMatches(header: string | undefined, token: string | undefined): boolean {
   if (!token || !header) return false;
@@ -84,11 +91,18 @@ export function validatePlanRequest(body: unknown): PlanRequest | string {
     for (const c of b.recentCrops) if (!ALL_CROPS.includes(c as CropId)) return `unknown crop: ${String(c)}`;
     recentCrops = b.recentCrops as CropId[];
   }
+  let goals: Goal[] | undefined;
+  if (b.goals !== undefined) {
+    if (!Array.isArray(b.goals) || b.goals.length > 2) return "goals must be an array of up to 2 distinct goals";
+    for (const g of b.goals) if (!GOALS.includes(g as Goal)) return `unknown goal: ${String(g)}`;
+    if (new Set(b.goals).size !== b.goals.length) return "goals must be distinct";
+    goals = b.goals as Goal[];
+  }
   const language = b.language === "es" ? "es" : "en";
   // Water beyond rain: "rain" | "limited" | "full". Older clients send only `irrigated`.
   if (b.water !== undefined && b.water !== "rain" && b.water !== "limited" && b.water !== "full") return 'water must be "rain", "limited" or "full"';
   const water = (b.water as "rain" | "limited" | "full" | undefined) ?? (b.irrigated === true ? "full" : "rain");
-  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language };
+  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language, ...(goals !== undefined ? { goals } : {}) };
 }
 
 function upstreamMessage(err: unknown): { status: 502 | 500; body: { error: string; detail?: string } } {
@@ -209,3 +223,42 @@ api.get("/logs", async (c) => {
 api.route("/scout", scout);
 // Field Watch: background field checks (Cron Trigger) and their saved results.
 api.route("/fieldwatch", fieldWatch);
+
+
+// Additive stretch evidence endpoint: never blocks plan construction.
+const vegetation: Handler<AppEnv> = async (c) => {
+  const coords = parseCoords(c.req.query("lat"), c.req.query("lon"));
+  const year = Number(c.req.query("year"));
+  if (typeof coords === "string") return c.json({ error: coords }, 400);
+  if (!Number.isInteger(year) || year < 2001 || year >= new Date().getUTCFullYear()) return c.json({ error: "year must be a completed year from 2001 onward" }, 400);
+  const { getModisNdvi } = await import("../data/modis");
+  return c.json(await getModisNdvi(c.env.DB, coords.lat, coords.lon, year));
+};
+api.get("/vegetation", vegetation);
+api.post("/vegetation/prefetch", async (c, next) => {
+  if (!adminTokenMatches(c.req.header("Authorization"), c.env.ADMIN_TOKEN)) return c.json({ error: "Admin token required" }, 401);
+  await next();
+}, vegetation);
+
+// Cited research retrieval (Vectorize) and grounded explanations (Workers AI): see docs/RESEARCH.md.
+api.route("/research", research);
+api.route("/crop-timing", cropTiming);
+// U.S. Drought Monitor weekly county context (issue #31): /api/usdm/category, /timeline, /replay.
+import { usdm } from "./usdm";
+api.route("/usdm", usdm);
+// Wind-erosion exposure screen (issues #40, #17): POST /api/wind-screen. Separate from /api/plan so plans never wait on it.
+import { windScreen } from "./windScreen";
+api.route("/wind-screen", windScreen);
+
+// Versioned static source audit; no live market quotation or effect on rankings.
+api.get("/economics-assumptions", async (c) => {
+  const { assumptionAudit } = await import("../../engine/economics");
+  const state = c.req.query("state");
+  if (state !== undefined && !/^[A-Z]{2}$/.test(state)) return c.json({ error: "state must be a two-letter uppercase code" }, 400);
+  return c.json(assumptionAudit(state));
+});
+import { historicalScenarios } from "./historicalScenarios";
+api.route("/historical-scenarios", historicalScenarios);
+api.route("/smap", smap);
+import { groundwater } from "./groundwater";
+api.route("/groundwater", groundwater);

@@ -53,7 +53,9 @@ function Rotation({ r, ours }: { r: KStateRotation; ours: boolean }) {
   );
 }
 
-export function SecondOpinion({ countyFips, plan, history, irrigated }: { countyFips: string | null; plan: RotationPlan; history: CropHistory; irrigated: boolean }) {
+type CardProps = { plan: RotationPlan; history: CropHistory; recentCrops?: CropId[]; irrigated: boolean };
+
+export function SecondOpinion({ countyFips, ...props }: CardProps & { countyFips: string | null }) {
   const [op, setOp] = useState<Opinion | null>(null);
   useEffect(() => {
     setOp(null);
@@ -64,17 +66,21 @@ export function SecondOpinion({ countyFips, plan, history, irrigated }: { county
       .catch(() => setOp(null)); // hidden when the file can't be reached
     return () => ctrl.abort();
   }, [countyFips]);
-  if (!op) return null;
+  return op ? <SecondOpinionCard op={op} {...props} /> : null;
+}
 
+/** Loaded card kept separate so rendering and provenance are testable without network or DOM mocks. */
+export function SecondOpinionCard({ op, plan, history, recentCrops, irrigated }: CardProps & { op: Opinion }) {
   const planCrops = plan.years.map((y) => y.crop);
-  const current = lastCropOf(history);
+  const farmerCrop = recentCrops?.at(-1);
+  const current = farmerCrop ? (THEIR_CROP[farmerCrop] ?? null) : lastCropOf(history);
   const forCurrent = current ? op.byCurrentCrop[current] : undefined;
   const countyRank = matchRank(planCrops, op.rotations);
   const currentRank = forCurrent ? matchRank(planCrops, forCurrent.rotations) : null;
   const agree = !irrigated && countyRank === 1;
   const onList = !irrigated && !agree && (countyRank !== null || currentRank !== null);
   const oursOn = (r: KStateRotation) => r.crops.length > 0 && sameCrops(planCrops, r.crops);
-  const pct = (x: number) => `${Math.round(x * 100)}%`;
+  const dryYearRanking = op.basis ? op.basis.startsWith("dry-year") : op.dryYearRanking;
   const top = op.rotations[0];
   const partial = !irrigated && countyRank === null && currentRank === null && top ? partialOverlap(planCrops, top) : null;
   const words = (cs: CropId[]) => cs.map((c) => SHORT[c].toLowerCase()).join(" and ");
@@ -124,16 +130,22 @@ export function SecondOpinion({ countyFips, plan, history, irrigated }: { county
               ? `, their first choice is ${forCurrent.rotations[0].crops.map((c) => SHORT[c]).join(" → ") || forCurrent.rotations[0].name} (${forCurrent.rotations[0].weightPct}%).`
               : "."}
           </p>
+          <p className="wi-note">{farmerCrop ? "Based on your current-crop answer." : "Based on satellite crop history."}</p>
           {forCurrent.message && <p className="so-msg">{forCurrent.message}</p>}
         </div>
       )}
 
+      {dryYearRanking && <p className="wi-note">Ranked for a drier-than-normal season.</p>}
       <p className="wi-note">
-        {op.alert === "normal"
-          ? `No drought alert in this district right now (${op.droughtChanceNow !== null ? `${pct(op.droughtChanceNow)} chance` : "low chance"} of drought in the next 4 weeks).`
-          : `Drought ${op.alert} in this district: ${op.droughtChanceNow !== null ? pct(op.droughtChanceNow) : "a raised"} chance of drought in the next 4 weeks, so these are ranked for a dry year.`}
-        {op.rootzonePctNow !== null && ` Root-zone soil is wetter than ${Math.round(op.rootzonePctNow)}% of past years at this time.`} Data through {op.dataThrough}. {op.disclaimer}
+        Based on NASA data through {op.dataThrough}. {op.savedCopy && `Using saved copy, data through ${op.dataThrough}. `}{op.disclaimer}
       </p>
+      <details className="wi-note">
+        <summary>Data credits</summary>
+        {/* Exact credit lines from kansas-crop-rotation/reports/REFERENCES.md. */}
+        <p>The data was obtained from National Aeronautics and Space Administration (NASA) Langley Research Center's Prediction Of Worldwide Energy Resources (POWER) project funded through the NASA Earth Science Division.</p>
+        <p>The data was obtained from the POWER Project's Daily API v2.10.3 on 2026/11/14.</p>
+        <p>The U.S. Drought Monitor is jointly produced by the National Drought Mitigation Center at the University of Nebraska-Lincoln, the United States Department of Agriculture, the National Oceanic and Atmospheric Administration and the National Aeronautics and Space Administration. Map courtesy of NDMC.</p>
+      </details>
     </div>
   );
 }

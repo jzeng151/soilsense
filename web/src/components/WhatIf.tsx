@@ -1,3 +1,4 @@
+import { useI18n } from "../i18n";
 // The three "what if" pieces of the results page:
 //   - BadYears: how often the current crops vs. the plan would be badly stressed (out of 10 years)
 //   - WaterOptions: best plan with rain only / limited irrigation / full irrigation ("what if the well runs low?")
@@ -5,6 +6,7 @@
 
 import { useState } from "react";
 import type { DroughtReplay as Replay, ReplayPlanOutcome, RotationPlan, WaterLevel, WaterOption } from "../../../src/shared/types";
+import { Definition } from "./Glossary";
 import { CROP_COLORS, money } from "./PlanCard";
 import "../evidence.css";
 
@@ -33,21 +35,23 @@ export function badYearsWords(n: number): string {
 
 /** Headline: bad years out of 10, current crops vs. the plan. */
 export function BadYears({ plan, current }: { plan: RotationPlan; current: RotationPlan | null }) {
+  const { t, language } = useI18n();
+  const words = (n: number) => language === "en" ? badYearsWords(n) : n >= 10 ? t("bad nearly every year") : n <= 0 ? t("almost never a bad year") : t("about {number} bad years in 10", { number: n });
   return (
-    <div className="wi-bad" aria-label="Bad years out of 10">
+    <div className="wi-bad" role="group" aria-label={t("Bad years out of 10")}>
       {current && (
         <div className="wi-bad-row">
-          <span className="wi-bad-label">What you grow now</span>
+          <span className="wi-bad-label">{t("What you grow now")}</span>
           <Dots bad={current.badYearsIn10} />
-          <b>{badYearsWords(current.badYearsIn10)}</b>
+          <b>{words(current.badYearsIn10)}</b>
         </div>
       )}
       <div className="wi-bad-row wi-bad-plan">
-        <span className="wi-bad-label">This plan</span>
+        <span className="wi-bad-label">{t("This plan")}</span>
         <Dots bad={plan.badYearsIn10} />
-        <b>{badYearsWords(plan.badYearsIn10)}</b>
+        <b>{words(plan.badYearsIn10)}</b>
       </div>
-      <p className="wi-note">A bad year means the crop was badly stressed by drought, heat, frost or a wet spring, in 35 years of NASA weather on this field.</p>
+      <p className="wi-note">{t("A bad year means the crop was badly stressed by drought, heat, frost or a wet spring, in 35 years of NASA weather on this field.")}</p>
     </div>
   );
 }
@@ -150,10 +154,10 @@ export function DroughtReplay({ replays }: { replays: Replay[] }) {
   const w = r.weather;
   return (
     <div className="wi-replay">
-      <p className="wi-lead">These were the worst years on this field since 1991. Pick one to replay it with that year's real weather:</p>
-      <div className="wi-years" role="tablist">
+      <p className="wi-lead"><Definition term="historical-replay" />: these are the lowest modeled-yield years for your current main crop (or the plan’s first crop when unknown), not a measured field ranking. Pick a year to replay its weather:</p>
+      <div className="wi-years" role="group" aria-label="Historical year">
         {replays.map((x, k) => (
-          <button key={x.year} type="button" role="tab" aria-selected={k === i} className={k === i ? "on" : ""} onClick={() => setI(k)}>
+          <button key={x.year} type="button" aria-pressed={k === i} className={k === i ? "on" : ""} onClick={() => setI(k)}>
             {x.year}
           </button>
         ))}
@@ -161,8 +165,9 @@ export function DroughtReplay({ replays }: { replays: Replay[] }) {
       <p className="wi-weather">
         <b>{r.year}:</b>{" "}
         {w.seasonRainIn !== null && w.typicalSeasonRainIn !== null ? `${w.seasonRainIn} in of rain May–Sep (usually ${w.typicalSeasonRainIn})` : "rainfall not available"}
-        {w.hotDays !== null && w.typicalHotDays !== null ? ` · ${w.hotDays} days at or above 95°F (usually ${w.typicalHotDays})` : ""}
+        {w.hotDays !== null && w.typicalHotDays !== null ? ` · ${w.hotDays} days at or above 95°F (usually ${w.typicalHotDays})` : " · heat observations unavailable"}
       </p>
+      <p className="wi-note">“Usually” is the mean of retained historical years for the same calendar window, including the selected year. Changing the year changes weather and replayed outcomes, not rotation rankings, crop reference yields, costs or water allowances.</p>
       <div className="wi-outcomes">
         {r.current && <Outcome title="What you grow now" o={r.current} muted />}
         <Outcome title="Our plan" o={r.plan} />

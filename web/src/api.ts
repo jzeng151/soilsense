@@ -9,6 +9,7 @@ export interface AdminDocument {
   status: DocStatus;
   title: string | null;
   updatedAt: string;
+  latestSha256?: string | null;
   chunkCounts?: Partial<Record<ChunkStatus, number>>;
 }
 export interface AdminDocDetail {
@@ -18,13 +19,13 @@ export interface AdminDocDetail {
 }
 // The pipeline currently returns D1 snake_case rows; also accept the documented camelCase contract.
 interface DocApiRow {
-  doc_id: string; r2_key: string; status: DocStatus; title: string | null; updated_at: string;
+  doc_id: string; r2_key: string; status: DocStatus; title: string | null; updated_at: string; latest_sha256?: string | null;
 }
 interface ChunkApiRow {
   chunk_id: string; start_offset: number; end_offset: number; text: string; status: ChunkStatus;
 }
 function adminDocument(doc: AdminDocument | DocApiRow): AdminDocument {
-  return "docId" in doc ? doc : { docId: doc.doc_id, r2Key: doc.r2_key, status: doc.status, title: doc.title, updatedAt: doc.updated_at };
+  return "docId" in doc ? doc : { docId: doc.doc_id, r2Key: doc.r2_key, status: doc.status, title: doc.title, updatedAt: doc.updated_at, latestSha256: doc.latest_sha256 };
 }
 export async function fetchDocs(token: string): Promise<{ docs: AdminDocument[] }> {
   const body = await handle<{ docs: (AdminDocument | DocApiRow)[] }>(await fetch("/api/docs", { headers: { Authorization: `Bearer ${token}` } }));

@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
-import { CHUNKING } from "../src/shared/ingest";
+import { CHUNKING, likelyGarbledChunk } from "../src/shared/ingest";
 import { prepareEmbeddingText } from "../src/worker/research/config";
 import { chunkText } from "../src/worker/ingest/chunk";
 import { extractText } from "../src/worker/ingest/extract";
@@ -21,6 +21,17 @@ function invariants(chunks: Awaited<ReturnType<typeof chunkText>>, text: string)
     expect(verifyChunk(chunk, text)).toBe(true);
   }
 }
+
+describe("review-only text quality warning", () => {
+  it("flags repeated long glued mixed-case tokens, without rewriting text", () => {
+    const text = "KansasAgricultural NewPrairie research with missing spaces.";
+    expect(likelyGarbledChunk(text)).toBe(true);
+    expect(text).toBe("KansasAgricultural NewPrairie research with missing spaces.");
+    expect(likelyGarbledChunk(fixture)).toBe(false);
+    expect(likelyGarbledChunk("Kansas Agricultural Experiment Station and New Prairie Press. NASA USDA PDFFormatVersion")).toBe(false);
+    expect(likelyGarbledChunk("Evapotranspiration measurements characterize infiltration and precipitation.")).toBe(false);
+  });
+});
 
 describe("document hash", () => {
   it("matches the standard SHA-256 vector and hashes only a view's bytes", async () => {
@@ -101,15 +112,67 @@ describe("text extraction", () => {
     expect(result.text).not.toMatch(/hidden|evil|<\/?[a-z]/);
   });
 
-  it("calls the documented array PDF API with an application/pdf Blob and normalizes only line endings", async () => {
-    const toMarkdown = vi.fn().mockResolvedValue([{ id: "1", name: "report.pdf", mimeType: "application/pdf", format: "markdown", tokens: 10, data: " # Soil\r\n\rroots " }]);
+  it("calls the documented array PDF API with an application/pdf Blob and converts to plain text", async () => {
+    const toMarkdown = vi.fn().mockResolvedValue([{ id: "1", name: "report.pdf", mimeType: "application/pdf", format: "markdown", tokens: 10, data: [" # Soil", "", "roots "].join(String.fromCharCode(13)) }]);
     const result = await extractText({ toMarkdown } as unknown as Ai, bytes("pdf bytes"), "report.pdf");
-    expect(result).toEqual({ text: " # Soil\n\nroots ", method: "workers-ai-tomarkdown" });
+    expect(result).toEqual({ text: "Soil\n\nroots ", method: "workers-ai-tomarkdown+plain", converterPreamble: { removed: false, chars: 0 }, plainTextConversion: { format: "markdown-to-plain-v1", inputChars: 15, outputChars: 12 } });
     const [files] = toMarkdown.mock.calls[0]!;
     expect(files).toHaveLength(1);
     expect(files[0].name).toBe("report.pdf");
     expect(files[0].blob.type).toBe("application/pdf");
     expect(await files[0].blob.text()).toBe("pdf bytes");
+  });
+
+  it("removes only the converter preamble and preserves exact post-removal offsets (constructed fixture)", async () => {
+    // Constructed from the live # <input name> / ## Metadata shape, not a captured PDF.
+    // Cloudflare documents PDF metadata inclusion, but not an exact Markdown serialization:
+    // https://developers.cloudflare.com/workers-ai/features/markdown-conversion/how-it-works/#pdfs
+    const preamble = "# docs/report.pdf\n\n## Metadata\n\n- PDFFormatVersion: 1.7\n- Language: en\n- IsLinearized: false\n- Custom.Appligent: Example\n\n";
+    const body = "## Page 1\n\n" + fixture + "\n## Metadata\nDocument-owned metadata stays.\nKansasAgricultural NewPrairie  ";
+    const toMarkdown = vi.fn().mockResolvedValue([{ format: "markdown", data: (preamble + body).replaceAll("\n", "\r\n") }]);
+    const result = await extractText({ toMarkdown } as unknown as Ai, bytes("pdf"), "docs/report.pdf");
+    const expected = "Page 1\n\n" + fixture + "\nMetadata\nDocument-owned metadata stays.\nKansasAgricultural NewPrairie  ";
+    expect(result.text).toBe(expected);
+    expect(result.converterPreamble).toEqual({ removed: true, chars: preamble.length });
+    invariants(await chunkText(result.text, "doc", "v"), expected);
+  });
+
+  it.each([
+    ["# Document title\n\n## Metadata\nPDFFormatVersion: 1.7\n\n## Page 1\nOriginal text", "Document title\n\nMetadata\nPDFFormatVersion: 1.7\n\nPage 1\nOriginal text"],
+    ["# report.pdf\n\n## Metadata\nAuthor's own notes\n\n## Results\nOriginal text", "report.pdf\n\nMetadata\nAuthor's own notes\n\nResults\nOriginal text"],
+    ["# report.pdf\n\n## Metadata\nPDFFormatVersion: 1.7\nNo safe section boundary", "report.pdf\n\nMetadata\nPDFFormatVersion: 1.7\nNo safe section boundary"],
+  ])("preserves ambiguous or document-owned metadata words: %s", async (text, expected) => {
+    const ai = { toMarkdown: vi.fn().mockResolvedValue([{ format: "markdown", data: text }]) } as unknown as Ai;
+    const result = await extractText(ai, bytes("pdf"), "report.pdf");
+    expect(result.text).toBe(expected);
+    expect(result.converterPreamble).toEqual({ removed: false, chars: 0 });
+  });
+
+  it("converts PDF Markdown to plain text before saving offsets (constructed Markdown fixture)", async () => {
+    const markdown = "# Limited irrigation\n\nA **bold** and _emphasized_ trial with `soil` and [source](https://example.org/paper).\n\n- First treatment\n- Second treatment\n\n| Crop | Treatment |\n| --- | --- |\n| Corn | **Limited** |\n| Sorghum | [Dryland](https://example.org) |\n\nKansasAgricultural NewPrairie remain unchanged.\n";
+    const expected = "Limited irrigation\n\nA bold and emphasized trial with soil and source.\n\nFirst treatment\nSecond treatment\n\nCrop · Treatment\nCorn · Limited\nSorghum · Dryland\n\nKansasAgricultural NewPrairie remain unchanged.\n";
+    const ai = { toMarkdown: vi.fn().mockResolvedValue([{ format: "markdown", data: markdown }]) } as unknown as Ai;
+    const result = await extractText(ai, bytes("pdf"), "report.pdf");
+    expect(result.text).toBe(expected);
+    expect(result.method).toBe("workers-ai-tomarkdown+plain");
+    expect(result.plainTextConversion).toEqual({ format: "markdown-to-plain-v1", inputChars: markdown.length, outputChars: expected.length });
+    const chunks = await chunkText(result.text, "doc", "version");
+    expect(chunks).toHaveLength(1);
+    expect(chunks[0]).toMatchObject({ start: 0, end: expected.length - 1, text: expected.slice(0, -1) });
+    invariants(chunks, result.text);
+  });
+
+  it.each([
+    ["**Strong _emphasis_** and ~~old~~ remain.", "Strong emphasis and old remain."],
+    ["# Soil\nRoots.\n\n## Water\nAvailability.", "Soil\nRoots.\n\nWater\nAvailability."],
+    ["- Parent\n  - Nested\n- Last\n", "Parent\nNested\nLast\n"],
+    ["[**K-State**](https://example.org/a_(b)) and [trial][ref].\n\n[ref]: https://example.org/report", "K-State and trial.\n\n"],
+    ["```text\nN_kg = 45; **literal**\n```\n", "N_kg = 45; **literal**\n"],
+    ["# Trial\n\npH 6.5, CO2, 30–45 kg/ha and 🌽.", "Trial\n\npH 6.5, CO2, 30–45 kg/ha and 🌽."],
+    ["\\*literal stars\\* and unmatched **marker", "*literal stars* and unmatched **marker"],
+  ])("keeps words and boundaries in plain conversion: %s", async (markdown, expected) => {
+    const ai = { toMarkdown: vi.fn().mockResolvedValue([{ format: "markdown", data: markdown }]) } as unknown as Ai;
+    expect((await extractText(ai, bytes("pdf"), "report.pdf")).text).toBe(expected);
   });
 
   it("rejects missing PDF AI, unsupported files, and empty plain text", async () => {

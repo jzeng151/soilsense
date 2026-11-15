@@ -12,6 +12,8 @@ import { research } from "./research";
 
 const PRIORITIES: Priority[] = ["profit", "soil", "risk", "balanced"];
 
+import { smap } from "./smap";
+
 export const api = new Hono<AppEnv>();
 
 // ---- Simple per-isolate rate limit (use Cloudflare rate-limiting rules for hard limits). ----
@@ -228,3 +230,4 @@ api.get("/economics-assumptions", async (c) => {
 });
 import { historicalScenarios } from "./historicalScenarios";
 api.route("/historical-scenarios", historicalScenarios);
+api.route("/smap", smap);

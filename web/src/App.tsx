@@ -175,7 +175,10 @@ export function App() {
 
   const go = useCallback((s: Step) => {
     setStep(s);
-    requestAnimationFrame(() => top.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+    requestAnimationFrame(() => {
+      top.current?.focus({ preventScroll: true });
+      top.current?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
+    });
   }, []);
 
   const pick = useCallback(async (lat: number, lon: number) => {
@@ -341,7 +344,7 @@ export function App() {
         <span className="topbar-tag">Teaching satellites to speak Farmer</span>
       </header>
 
-      <main className="jr-main" ref={top}>
+      <main className="jr-main" ref={top} tabIndex={-1} aria-label="Crop rotation planner">
         <Progress step={step} canGo={canGo} go={go} />
         <Glossary />
 
@@ -448,13 +451,13 @@ export function App() {
                 <span className="jr-qn">1</span> What did you grow in {THIS_SEASON}?
               </legend>
               {guessed && <p className="jr-note">We guessed from satellite maps. Change it if it's wrong.</p>}
-              <div className="jr-tiles jr-tiles-crops" role="radiogroup">
+              <div className="jr-tiles jr-tiles-crops" role="group" aria-label="Crop grown this season">
                 {CROP_OPTIONS.map((c) => (
                   <button
                     key={c.id}
                     type="button"
-                    role="radio"
-                    aria-checked={thisYear === c.id}
+                    role="button"
+                    aria-pressed={thisYear === c.id}
                     className={thisYear === c.id ? "on" : ""}
                     onClick={() => {
                       setThisYear(c.id);
@@ -473,9 +476,9 @@ export function App() {
                 <span className="jr-qn">2</span> How is it watered?
               </legend>
               <p className="jr-note">Check your <Definition term="irrigation-allocation" />; the model allowance is not measured pumping or a legal water right.</p>
-              <div className="jr-tiles jr-tiles-3" role="radiogroup">
+              <div className="jr-tiles jr-tiles-3" role="group" aria-label="Water supply">
                 {(["rain", "limited", "full"] as WaterLevel[]).map((v) => (
-                  <button key={v} type="button" role="radio" aria-checked={water === v} className={water === v ? "on" : ""} onClick={() => setWater(v)}>
+                  <button key={v} type="button" role="button" aria-pressed={water === v} className={water === v ? "on" : ""} onClick={() => setWater(v)}>
                     <b>
                       {v === "rain" ? "🌧️" : WATER_LABELS[v].icon} {WATER_LABELS[v].title}
                     </b>
@@ -489,9 +492,9 @@ export function App() {
               <legend>
                 <span className="jr-qn">3</span> What matters most to you?
               </legend>
-              <div className="jr-tiles jr-tiles-2" role="radiogroup">
+              <div className="jr-tiles jr-tiles-2" role="group" aria-label="Your priority">
                 {PRIORITIES.map((p) => (
-                  <button key={p.id} type="button" role="radio" aria-checked={priority === p.id} className={priority === p.id ? "on" : ""} onClick={() => setPriority(p.id)}>
+                  <button key={p.id} type="button" role="button" aria-pressed={priority === p.id} className={priority === p.id ? "on" : ""} onClick={() => setPriority(p.id)}>
                     <b>{p.label}</b>
                     <small>{p.hint}</small>
                   </button>

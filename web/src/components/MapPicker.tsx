@@ -76,6 +76,14 @@ export function MapPicker({ point, onPick, focus }: Props) {
       )
       .addTo(m);
     m.on("click", (e: L.LeafletMouseEvent) => pickRef.current(e.latlng.lat, e.latlng.lng));
+    // Leaflet already pans with arrow keys; Enter selects the center without a pointer.
+    m.on("keydown", (e: L.LeafletKeyboardEvent) => {
+      if (e.originalEvent.key === "Enter" && e.originalEvent.target === el.current) {
+        e.originalEvent.preventDefault();
+        const center = m.getCenter();
+        pickRef.current(center.lat, center.lng);
+      }
+    });
     // MODIS pixels are 250 m: past regional zoom, switch to high-resolution imagery so fields are visible.
     m.on("zoomend", () => {
       if (m.getZoom() >= 11 && m.hasLayer(nasa)) {
@@ -104,12 +112,15 @@ export function MapPicker({ point, onPick, focus }: Props) {
         fillOpacity: 1,
       }).addTo(m);
     } else marker.current.setLatLng([point.lat, point.lon]);
-    if (m.getZoom() < 11) m.flyTo([point.lat, point.lon], 13, { duration: 0.8 });
+    if (m.getZoom() < 11) m.flyTo([point.lat, point.lon], 13, { duration: 0.8, animate: !window.matchMedia("(prefers-reduced-motion: reduce)").matches });
   }, [point]);
 
   useEffect(() => {
-    if (focus && map.current) map.current.flyTo([focus.lat, focus.lon], focus.zoom, { duration: 0.8 });
+    if (focus && map.current) map.current.flyTo([focus.lat, focus.lon], focus.zoom, { duration: 0.8, animate: !window.matchMedia("(prefers-reduced-motion: reduce)").matches });
   }, [focus]);
 
-  return <div ref={el} className="map" role="application" aria-label="Map: tap your field" />;
+  return <>
+    <p id="map-keyboard-help" className="jr-note">Keyboard: focus the map, use arrow keys to move, + or − to zoom, and Enter to select the center. Or choose an example below.</p>
+    <div ref={el} className="map" role="region" aria-label="Choose your field on the map" aria-describedby="map-keyboard-help" />
+  </>;
 }

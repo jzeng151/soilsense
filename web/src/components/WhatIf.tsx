@@ -35,7 +35,7 @@ export function badYearsWords(n: number): string {
 /** Headline: bad years out of 10, current crops vs. the plan. */
 export function BadYears({ plan, current }: { plan: RotationPlan; current: RotationPlan | null }) {
   return (
-    <div className="wi-bad" aria-label="Bad years out of 10">
+    <div className="wi-bad" role="group" aria-label="Bad years out of 10">
       {current && (
         <div className="wi-bad-row">
           <span className="wi-bad-label">What you grow now</span>

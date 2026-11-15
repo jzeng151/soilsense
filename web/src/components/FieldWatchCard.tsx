@@ -103,7 +103,7 @@ export function FieldWatchCard() {
       <header className="fw-head">
         {data && data.runs.some((r) => r.status === "dry" || r.status === "watch") && <Sprout mood="weather-alert" width={52} className="fw-sprout" />}
         <div className="fw-title-row">
-          <h3 id="fw-title">Field Watch</h3>
+          <h2 id="fw-title">Field Watch</h2>
           <span className="fw-pill" title={data?.schedule.description ?? "Runs every hour on Cloudflare"}>
             <span className="fw-pulse" aria-hidden="true" />
             Runs hourly on Cloudflare

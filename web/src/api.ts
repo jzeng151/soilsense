@@ -87,7 +87,12 @@ export async function fetchSecondOpinion(countyFips: string, signal?: AbortSigna
 
 
 export async function fetchVegetation(lat: number, lon: number, year: number, signal?: AbortSignal): Promise<import("../../src/shared/types").ModisVegetation> {
-  return handle(await fetch(`/api/vegetation?lat=${lat}&lon=${lon}&year=${year}`, { signal }));
+  // ORNL may need several sequential requests. Do not leave the evidence card
+  // loading indefinitely: its caller renders an explicit unknown state on timeout.
+  const deadline = AbortSignal.timeout(90_000);
+  return handle(await fetch(`/api/vegetation?lat=${lat}&lon=${lon}&year=${year}`, {
+    signal: signal ? AbortSignal.any([signal, deadline]) : deadline,
+  }));
 }
 // ---- Grounded explanations (#7/#8): the latest plan response, so plan cards can ask for an explanation ----
 // of the exact comparison they show without App.tsx having to pass the request down.

@@ -21,6 +21,7 @@
   "dependencies": {
     "@ai-sdk/google": "^4.0.121",
     "@ai-sdk/react": "^4.0.177",
+    "agents": "^0.33.0",
     "ai": "^7.0.173",
     "hono": "^4.13.18",
     "leaflet": "^1.9.4",

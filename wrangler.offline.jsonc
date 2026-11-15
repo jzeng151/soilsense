@@ -30,8 +30,17 @@
   // so `npm run dev:offline` works without a Cloudflare login. "Ask" falls back to fact matching.
 
   // Live room: one SQLite-backed Durable Object (works on the Free plan). Field Watch and calls publish to it.
-  "durable_objects": { "bindings": [{ "name": "LIVE_ROOM", "class_name": "LiveRoom" }] },
-  "migrations": [{ "tag": "v1-live-room", "new_sqlite_classes": ["LiveRoom"] }],
+  "durable_objects": {
+    "bindings": [
+      { "name": "LIVE_ROOM", "class_name": "LiveRoom" },
+      // Field Watch agents (Agents SDK): one SQLite-backed instance per watched field; schedules and keeps its checks.
+      { "name": "FIELD_AGENT", "class_name": "FieldAgent" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1-live-room", "new_sqlite_classes": ["LiveRoom"] },
+    { "tag": "v2-field-agent", "new_sqlite_classes": ["FieldAgent"] }
+  ],
 
   // Field Watch: check every watched field each hour in the background (scheduled() in src/worker/index.ts).
   "triggers": { "crons": ["17 * * * *"] },

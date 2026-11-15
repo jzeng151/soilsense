@@ -4,6 +4,19 @@
 export type CropId = "corn" | "soybean" | "winter_wheat" | "oats" | "alfalfa" | "sorghum" | "fallow";
 export type CoverId = "none" | "cereal_rye" | "crimson_clover" | "hairy_vetch";
 export type Priority = "profit" | "soil" | "risk" | "balanced";
+/** Optional preferences, independent of the four unchanged priority weightings. */
+export const GOALS = ["water_conservation", "nitrogen_fixation", "erosion_control", "organic_matter", "forage_market"] as const;
+export type Goal = (typeof GOALS)[number];
+
+export interface GoalScore {
+  goal: Goal;
+  /** 0–1, relative to feasible candidate plans; equal metrics earn no bonus. */
+  normalized: number;
+  bonus: number;
+  /** Engine outputs or explicitly labeled rotation proxies, not measured field outcomes. */
+  metrics: { label: string; value: number; unit: string }[];
+  reason: string;
+}
 
 /**
  * How much water the field gets beyond rain: none; a limited allowance (about 10 in a year, as in K-State's
@@ -96,6 +109,11 @@ export interface ClimateSummary {
 }
 
 export interface ScoreBreakdown {
+  /** Additive preference bonus, at most 0.1 total; absent with no goals. */
+  goalsBonus?: number;
+  /** Unmodified priority subtotal before the optional bonus. */
+  priorityTotal?: number;
+  goals?: GoalScore[];
   climate: number;
   reliability: number;
   soil: number;
@@ -138,6 +156,8 @@ export interface RotationPlan {
   badYearsIn10: number;
   /** Average irrigation water pumped per calendar year over the plan, inches. */
   waterPumpedIn: number;
+  /** Simulated main-crop water use, inches/calendar year; supplied only with selected goals. */
+  waterUseIn?: number;
 }
 
 export interface ReasonFact {
@@ -153,6 +173,8 @@ export interface PlanRequest {
   lon: number;
   irrigated: boolean;
   priority: Priority;
+  /** Optional multi-select of at most two distinct goals. Empty preserves existing rankings. */
+  goals?: Goal[];
   /** Water beyond rain. When missing, irrigated=true means "full" and false means "rain". */
   water?: WaterLevel;
   /** Optional override when satellite crop history is unavailable. Most recent last. */

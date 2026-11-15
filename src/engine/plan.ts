@@ -176,6 +176,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       cropClimate,
       history,
       priority: request.priority,
+      goals: request.goals,
       planStartYear,
       baseYieldOverrides: yieldOverrides,
       firstYearWheatAllowed,
@@ -268,6 +269,10 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     countyName: county?.countyName ?? null,
   });
 
+  for (const goal of plans[0]?.scores.goals ?? []) {
+    facts.push({ id: `goal-${goal.goal}`, kind: "agronomy", source: "SoilSense engine: simulated water/N and rotation proxies (src/engine/goals.ts)", text: `${goal.reason} Adds +${goal.bonus.toFixed(4)} to the unchanged priority score.` });
+  }
+
   if (plans[0]) {
     const advice = planAdvice(plans[0], level);
     facts.push({ id: `advice-${advice.version}`, kind: "agronomy", source: "Versioned model-assumption checklist",
@@ -300,6 +305,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     explanation,
     assumptions: [
       ...ASSUMPTIONS,
+      ...(plans[0]?.scores.goals?.length ? ["Optional farmer goals add at most +0.1 total to the unchanged priority score, shared equally between the selected goals. Metrics are min–max normalized across feasible candidate plans before choosing covers; ties earn no bonus. Feasibility and crop-reliability gates still take precedence. Water uses simulated pumping (rain-only: main-crop water use); N uses lower fertilizer after credits (70%) and legume seasons (30%); erosion and organic matter use explicit rotation proxies, not measured outcomes. Forage-market bonus requires that goal; hay economics are unchanged."] : []),
       ...region.notes,
       `Water: ${WATER_WORDS[level]}.${level === "limited" ? " Limited irrigation covers the crop's shortfall first, up to about 10 inches a season, as in K-State's Tribune limited-irrigation trial; stored soil water covers the rest." : ""} Pumping costs about $8 per inch of water per acre.`,
       "Bad years out of 10: how often a crop would have been badly stressed when replayed through the 35 years of NASA weather (shifted to today's climate trends), averaged over the plan's crops.",

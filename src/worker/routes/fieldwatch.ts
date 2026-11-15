@@ -2,8 +2,14 @@
 //   GET  /api/fieldwatch/latest           → latest result per watched field + when the cron last ran
 //   GET  /api/fieldwatch/runs?field=&limit → run history (newest first)
 //   POST /api/fieldwatch/run              → "Run check now" (60 s cooldown; same access rules as the planner)
+//   GET  /api/fieldwatch/agent/options    → fields and replay windows the scheduled check accepts
+//   POST /api/fieldwatch/agent/:field/check { mode: "live" | "replay", replayId? } → schedule one check ~45 s ahead
+//   GET  /api/fieldwatch/agent/:field/runs → that field's scheduled checks and results (from its FieldAgent)
 
 import { Hono } from "hono";
+import { getAgentByName } from "agents";
+import { CHECK_DELAY_SECONDS, REPLAY_PRESETS, type AgentRun } from "../fieldwatch/agentCore";
+import type { FieldAgent } from "../fieldwatch/agent";
 import { RULE_TEXT, THRESHOLDS } from "../fieldwatch/rule";
 import { latestRuns, runFieldWatch, runHistory, WATCHED_FIELDS } from "../fieldwatch/run";
 import type { AppEnv } from "./auth";
@@ -70,4 +76,53 @@ fieldWatch.post("/run", async (c) => {
     if (hint) return c.json(hint, 503);
     throw err;
   }
+});
+
+// ---------- Scheduled checks by the field's own agent (Agents SDK Durable Object) ----------
+
+type AgentRpc = Pick<FieldAgent, "requestCheck" | "listRuns">;
+const noAgent = { error: "Scheduled checks need the FIELD_AGENT Durable Object binding. Deploy with the FieldAgent migration, then try again." };
+
+async function agentFor(env: { FIELD_AGENT?: DurableObjectNamespace }, fieldId: string): Promise<AgentRpc> {
+  return (await getAgentByName(env.FIELD_AGENT as never, fieldId)) as unknown as AgentRpc;
+}
+
+fieldWatch.get("/agent/options", (c) =>
+  c.json({
+    delaySeconds: CHECK_DELAY_SECONDS,
+    fields: WATCHED_FIELDS.map(({ id, name }) => ({ id, name })),
+    replays: REPLAY_PRESETS,
+    rule: RULE_TEXT,
+    available: Boolean(c.env.FIELD_AGENT),
+  }),
+);
+
+fieldWatch.post("/agent/:field/check", async (c) => {
+  const fieldId = c.req.param("field");
+  if (!WATCHED_FIELDS.some((f) => f.id === fieldId)) return c.json({ error: `Unknown field. Use one of: ${WATCHED_FIELDS.map((f) => f.id).join(", ")}` }, 400);
+  if (!c.env.FIELD_AGENT) return c.json(noAgent, 503);
+  const raw = await c.req.text();
+  if (raw.length > 500) return c.json({ error: "Request too large." }, 413);
+  let body: { mode?: unknown; replayId?: unknown };
+  try {
+    body = raw ? (JSON.parse(raw) as typeof body) : {};
+  } catch {
+    return c.json({ error: "Send JSON: { mode: \"live\" | \"replay\", replayId? }" }, 400);
+  }
+  if (body.mode !== "live" && body.mode !== "replay") return c.json({ error: 'mode must be "live" or "replay"' }, 400);
+  if (body.mode === "replay" && !REPLAY_PRESETS.some((p) => p.id === body.replayId)) {
+    return c.json({ error: `replayId must be one of: ${REPLAY_PRESETS.map((p) => p.id).join(", ")}` }, 400);
+  }
+  const agent = await agentFor(c.env, fieldId);
+  const { run, created } = await agent.requestCheck({ fieldId, mode: body.mode, replayId: body.replayId });
+  return c.json({ run, created, message: created ? `Check scheduled for ${new Date(run.dueAt).toISOString()}. You can close this page.` : "A check for this field is already waiting. Showing that one." }, created ? 202 : 200);
+});
+
+fieldWatch.get("/agent/:field/runs", async (c) => {
+  const fieldId = c.req.param("field");
+  if (!WATCHED_FIELDS.some((f) => f.id === fieldId)) return c.json({ error: `Unknown field. Use one of: ${WATCHED_FIELDS.map((f) => f.id).join(", ")}` }, 400);
+  if (!c.env.FIELD_AGENT) return c.json(noAgent, 503);
+  const limit = Math.min(50, Math.max(1, Number(c.req.query("limit") ?? 10) || 10));
+  const runs: AgentRun[] = await (await agentFor(c.env, fieldId)).listRuns(limit);
+  return c.json({ runs, now: Date.now() });
 });

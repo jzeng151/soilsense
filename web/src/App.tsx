@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CropId, FieldResponse, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
 import { askQuestion, fetchField, fetchPlan } from "./api";
+import { DataEvidence, DecisionNotice } from "./components/DataEvidence";
+import { PlanAssumptions } from "./components/PlanAssumptions";
 import { DEMO_FARMS, MapPicker } from "./components/MapPicker";
 import { HarvestCheck, SatelliteNote } from "./components/HarvestCheck";
 import { BadYears, DroughtReplay, WATER_LABELS, WaterOptions } from "./components/WhatIf";
@@ -237,6 +239,8 @@ export function App() {
     const w = waterOverride ?? water;
     if (waterOverride) setWater(waterOverride);
     setPlanLoading(true);
+    setPlan(null);
+    setAnswer(null);
     setLoadingStep(0);
     setError(null);
     go("plan");
@@ -533,6 +537,8 @@ export function App() {
               </div>
             )}
 
+            {plan && !planLoading && !best && <div className="jr-card" role="status"><h1 className="jr-title">No feasible rotation found</h1><DecisionNotice /><p>Review your crop history, water assumptions and priorities. Missing evidence is not a zero score.</p><button type="button" className="ghost" onClick={() => go("questions")}>Review inputs</button></div>}
+
             {plan && !planLoading && best && (
               <>
                 <div className="jr-card jr-answer">
@@ -545,7 +551,9 @@ export function App() {
                       <h1 className="jr-title">{planSentence(best)}</h1>
                     </div>
                   </div>
+                  <DecisionNotice />
                   <TopPlan plan={best} compareTo={plan.currentPractice} />
+                  <PlanAssumptions plan={best} water={plan.water ?? water} />
                   <BadYears plan={best} current={plan.currentPractice} />
                   {(plan.water ?? water) === "rain" && Math.max(...plan.plans.map((p) => p.avgNetReturnPerAcre)) < 15 && (
                     <p className="jr-tradeoff">
@@ -611,14 +619,22 @@ export function App() {
                   </div>
                 )}
 
+                <DataEvidence plan={plan} />
+
                 <details className="jr-more">
                   <summary>Compare with other options</summary>
                   <ul className="plan-list">
                     <PlanRow plan={best} title="Our pick" compareTo={plan.currentPractice} />
                     {others.map((p, i) => (
-                      <PlanRow key={p.id} plan={p} title={`Option ${i + 2}`} compareTo={plan.currentPractice} />
+                      <Fragment key={p.id}>
+                        <PlanRow plan={p} title={`Option ${i + 2}`} compareTo={plan.currentPractice} />
+                        <li><PlanAssumptions plan={p} water={plan.water ?? water} /></li>
+                      </Fragment>
                     ))}
-                    {plan.currentPractice && <PlanRow plan={plan.currentPractice} title="Keep doing what you do" muted />}
+                    {plan.currentPractice && <>
+                      <PlanRow plan={plan.currentPractice} title="Keep doing what you do" muted />
+                      <li><PlanAssumptions plan={plan.currentPractice} water={plan.water ?? water} /></li>
+                    </>}
                   </ul>
                 </details>
 
@@ -689,7 +705,7 @@ export function App() {
                 </form>
 
                 <details className="fine">
-                  <summary>About the data</summary>
+                  <summary>Source bibliography and model assumptions</summary>
                   <ul>
                     {plan.dataSources.map((d) => (
                       <li key={d.name}>

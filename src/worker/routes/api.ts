@@ -9,6 +9,7 @@ import { auth, type AppEnv } from "./auth";
 import { fieldWatch } from "./fieldwatch";
 import { scout } from "./scout";
 import { research } from "./research";
+import { docs } from "./docs";
 
 const PRIORITIES: Priority[] = ["profit", "soil", "risk", "balanced"];
 
@@ -44,6 +45,7 @@ api.use("*", async (c, next) => {
 
 // ---- Accounts: sign up / sign in / sign out, then require a signed-in user for the dashboard's data routes. ----
 api.route("/auth", auth);
+api.route("/docs", docs);
 
 function adminTokenMatches(header: string | undefined, token: string | undefined): boolean {
   if (!token || !header) return false;

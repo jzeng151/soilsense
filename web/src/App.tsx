@@ -11,6 +11,7 @@ import { SecondOpinion } from "./components/SecondOpinion";
 import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
+import { EconomicsCard } from "./components/EconomicsCard";
 import { FieldWatchCard } from "./components/FieldWatchCard";
 import { UsdmContext } from "./components/UsdmContext";
 import { WindScreenCard } from "./components/WindScreenCard";
@@ -590,6 +591,7 @@ export function App() {
                 {/* stretch: data evidence */}
                 <UsdmContext plan={plan} />
                 <WindScreenCard plan={plan} />
+                <EconomicsCard plan={plan} />
                 {/* /stretch: data evidence */}
 
                 <div className="jr-card">

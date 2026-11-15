@@ -218,3 +218,11 @@ api.route("/usdm", usdm);
 // Wind-erosion exposure screen (issues #40, #17): POST /api/wind-screen. Separate from /api/plan so plans never wait on it.
 import { windScreen } from "./windScreen";
 api.route("/wind-screen", windScreen);
+
+// Versioned static source audit; no live market quotation or effect on rankings.
+api.get("/economics-assumptions", async (c) => {
+  const { assumptionAudit } = await import("../../engine/economics");
+  const state = c.req.query("state");
+  if (state !== undefined && !/^[A-Z]{2}$/.test(state)) return c.json({ error: "state must be a two-letter uppercase code" }, 400);
+  return c.json(assumptionAudit(state));
+});

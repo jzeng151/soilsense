@@ -226,3 +226,5 @@ api.get("/economics-assumptions", async (c) => {
   if (state !== undefined && !/^[A-Z]{2}$/.test(state)) return c.json({ error: "state must be a two-letter uppercase code" }, 400);
   return c.json(assumptionAudit(state));
 });
+import { historicalScenarios } from "./historicalScenarios";
+api.route("/historical-scenarios", historicalScenarios);

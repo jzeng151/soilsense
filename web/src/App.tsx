@@ -12,6 +12,7 @@ import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
 import { EconomicsCard } from "./components/EconomicsCard";
+import { HistoricalScenarios } from "./components/HistoricalScenarios";
 import { FieldWatchCard } from "./components/FieldWatchCard";
 import { UsdmContext } from "./components/UsdmContext";
 import { WindScreenCard } from "./components/WindScreenCard";
@@ -693,6 +694,10 @@ export function App() {
                     ))}
                   </ul>
                 </details>
+
+                {/* stretch: data evidence */}
+                <HistoricalScenarios key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
+                {/* /stretch: data evidence */}
 
                 <form className="jr-card ask" onSubmit={ask}>
                   <h2 className="jr-h2">

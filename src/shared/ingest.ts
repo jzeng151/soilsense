@@ -6,10 +6,10 @@
 export const DOCS_LAYOUT = {
   /** Uploads: docs/<any name>.(pdf|html|htm|md|txt). The R2 event notification is filtered to this prefix. */
   uploadPrefix: "docs/",
-  /** Extracted text, exactly as chunk offsets refer to it: extracted/<docSha256>.md */
-  extracted: (docSha256: string) => `extracted/${docSha256}.md`,
-  /** Per-version manifest (source, hashes, extraction method, chunk list): manifests/<docSha256>.json */
-  manifest: (docSha256: string) => `manifests/${docSha256}.json`,
+  /** Exact post-removal text. Optional docId selects isolated ingest-v2 artifacts; omitted = legacy key. */
+  extracted: (docSha256: string, docId?: string) => docId ? `extracted/${INGEST_VERSION}/${docId}/${docSha256}.md` : `extracted/${docSha256}.md`,
+  /** Per-version manifest, isolated by document and extraction rules. Omitted docId = legacy key. */
+  manifest: (docSha256: string, docId?: string) => docId ? `manifests/${INGEST_VERSION}/${docId}/${docSha256}.json` : `manifests/${docSha256}.json`,
 } as const;
 
 export const ACCEPTED_EXTENSIONS = [".pdf", ".html", ".htm", ".md", ".txt"] as const;
@@ -18,7 +18,7 @@ export const ACCEPTED_EXTENSIONS = [".pdf", ".html", ".htm", ".md", ".txt"] as c
 export const DOCS_CORPUS = "docs-v1";
 
 /** Pipeline version; bump when extraction or chunking rules change (stored on every version row). */
-export const INGEST_VERSION = "ingest-v1";
+export const INGEST_VERSION = "ingest-v2";
 
 /** Chunking rules (track C). Chunks are exact slices of the extracted text; maxChars matches EMBEDDING.maxChars. */
 export const CHUNKING = { maxChars: 1500, minChars: 200, overlapChars: 0 } as const;
@@ -67,7 +67,7 @@ export function docVectorId(chunkIdValue: string, tag: string): string {
 }
 
 export type DocStatus = "received" | "extracted" | "pending_review" | "approved" | "rejected" | "indexed" | "error";
-export type ChunkStatus = "pending" | "indexed" | "retired";
+export type ChunkStatus = "pending" | "indexed" | "retired" | "excluded";
 
 /** A chunk produced by track C. text === extracted.slice(start, end), always. */
 export interface DocChunk {
@@ -97,6 +97,17 @@ export interface ReviewDecision {
   /** Research tags (RESEARCH_TAGS) the document covers; required for approve. */
   crops?: string[];
   note?: string;
+  /** Current-version chunk ids the reviewer omits from search on approval. Defaults to none. */
+  excludeChunkIds?: string[];
+}
+
+/** Review hint only: repeated long alphabetic tokens with lower→upper boundaries
+ * often indicate lost PDF spaces. False positives (names/code) are possible; never
+ * rewrite text or automatically exclude a chunk based on this heuristic.
+ */
+export function likelyGarbledChunk(text: string): boolean {
+  const tokens = text.match(/\b[A-Za-z]{10,}\b/g) ?? [];
+  return tokens.filter((token) => /[a-z]{2}[A-Z][a-z]{2}/.test(token)).length >= 2;
 }
 
 /** Vectorize metadata for pipeline vectors (all strings; `crop` and `corpus` are the indexed fields). */

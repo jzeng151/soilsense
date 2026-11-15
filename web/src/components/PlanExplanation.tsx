@@ -101,7 +101,7 @@ export function PlanExplanation({ rotation }: { rotation: RotationPlan }) {
                     return (
                       <li key={p.chunkId} id={`px-${p.chunkId}`}>
                         {data.citations.includes(p.chunkId) && <span className="px-cited">Cited above</span>}
-                        <blockquote className="px-quote">
+                        <blockquote className="px-quote" style={{ whiteSpace: "pre-line" }}>
                           {e.cut ? (
                             <details>
                               <summary>“{e.short}”</summary>“{p.text}”

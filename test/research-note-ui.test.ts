@@ -12,6 +12,7 @@ it("renders verbatim quotations with citation, year, applicability and score", a
   const passage = passageFor(CORPUS.chunks[0]!.id, 0.876)!;
   const html = renderToStaticMarkup(createElement(ResearchNote, { note: { ...note, status: "live", passages: [passage] } }));
   expect(html).toContain("<blockquote");
+  expect(html).toContain("white-space:pre-line");
   expect(html).toContain(passage.text);
   expect(html).toContain(`href="${passage.sourceUrl.replaceAll("&", "&amp;")}"`);
   expect(html).toContain(String(passage.year));

@@ -11,7 +11,9 @@
 .docs-admin .docs-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
 .docs-admin ul { padding-left: 1.2rem; }
 .docs-admin li { margin-block: 1rem; }
-.docs-admin pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; border-left: 3px solid #9dbdaf; padding: .8rem; }
+.docs-admin pre { white-space: pre-line; overflow-wrap: anywhere; font: inherit; border-left: 3px solid #9dbdaf; padding: .8rem; }
 .docs-admin h3 { font-size: 1rem; }
 .docs-admin details { margin-block: 1rem; }
 .docs-admin summary { cursor: pointer; padding-block: .7rem; }
+.docs-admin .docs-warning { color: #663e00; padding: .65rem; border: 1px solid #c18b30; background: #fff5dd; border-radius: .35rem; }
+.docs-admin .docs-warning strong { display: inline-block; font-size: .9rem; }

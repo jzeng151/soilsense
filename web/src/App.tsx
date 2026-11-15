@@ -14,6 +14,7 @@ import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
 import { CropTimingEvidence } from "./components/CropTimingEvidence";
 import { SmapCard } from "./components/SmapCard";
+import { GraceWellsCard } from "./components/GraceWellsCard";
 import { EconomicsCard } from "./components/EconomicsCard";
 import { HistoricalScenarios } from "./components/HistoricalScenarios";
 import { FieldWatchCard } from "./components/FieldWatchCard";
@@ -599,6 +600,7 @@ export function App() {
                 <WindScreenCard plan={plan} />
                 <EconomicsCard plan={plan} />
                 <SmapCard plan={plan} />
+                <GraceWellsCard plan={plan} />
                 {/* /stretch: data evidence */}
 
                 <div className="jr-card">

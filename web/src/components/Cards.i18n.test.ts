@@ -137,6 +137,9 @@ describe("Spanish plan and evidence cards", () => {
     for (const text of ["Trigo de invierno", "Sorgo de grano", "Barbecho", "Riego completo", "8 pulgadas de lluvia", "40 días a 95°F", "En 2 de 2 años", "Datos satelitales y del modelo", "Lluvia en la temporada", "Aumento de 1 pulgada cada 10 años"]) expect(container.textContent).toContain(text);
     expect(container.textContent).not.toContain("winter_wheat");
     expect(container.textContent).not.toContain("Grain sorghum");
+    expect(container.textContent).toContain("Mostrar estos valores en una tabla");
+    expect(container.textContent).toContain("Cosecha real del condado");
+    expect(container.querySelector('figure.trend svg')?.getAttribute("aria-label")).toContain("Mínimo de");
     expect(container.querySelector('[aria-label="Año histórico"]')).toBeTruthy();
     expect([...container.querySelectorAll('svg[role="img"]')].every(el => !el.getAttribute("aria-label")?.includes(" to "))).toBe(true);
   });

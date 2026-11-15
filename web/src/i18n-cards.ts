@@ -1,5 +1,20 @@
 /** Fixed UI copy. Source titles, quotations and identifiers keep their original wording. */
 export const cardMessages = {
+  "Estimated exposure is an illustrative +/-7-day silking window, not a sourced biological stress duration. Fixed reference is July-August; totals cover unequal durations; compare dates and per-day exposure, not raw totals as equivalent windows.": "La exposición estimada usa un período ilustrativo de ±7 días alrededor de la emisión de estigmas, no una duración biológica del estrés documentada. La referencia fija es julio–agosto; los totales abarcan duraciones distintas. Compara fechas y exposición diaria, no los totales como si fueran períodos equivalentes.",
+  "NASS survey: cumulative percentage of regional corn acreage at or beyond silking, not this field. GDD dates and ±7-day windows are estimates, not observations. No interpolation.": "Encuesta de NASS: porcentaje acumulado de la superficie regional de maíz en emisión de estigmas o posterior, no de esta parcela. Las fechas GDD y los períodos de ±7 días son estimaciones, no observaciones. No se interpolan datos.",
+  "NASS_API_KEY not configured": "NASS_API_KEY sin configurar",
+  "County lookup unavailable": "No se pudo identificar el condado",
+
+  "2012 Central US drought": "Sequía de 2012 en el centro de EE. UU.",
+  "2022 Plains drought": "Sequía de 2022 en las Grandes Llanuras",
+  "2023 Kansas wheat abandonment": "Superficie de trigo sin cosechar en Kansas en 2023",
+  "Central US / Corn Belt": "Centro de EE. UU. / cinturón del maíz",
+  "Southern Plains, including Kansas and Oklahoma": "Grandes Llanuras del sur, incluidos Kansas y Oklahoma",
+  "Kansas statewide winter-wheat crop year 2023": "Campaña 2023 de trigo de invierno en todo Kansas",
+  "Regional assessment of the rapidly intensifying 2012 drought across the Corn Belt. Not proof of loss or the worst year on this field.": "Evaluación regional de la sequía de 2012, que se intensificó rápidamente en el cinturón del maíz. No demuestra pérdidas ni que fuera el peor año de esta parcela.",
+  "December 9 regional drought-status report describes agricultural impacts in western Kansas and parts of Oklahoma. A dated historical report, not its then-outlook presented as a current forecast.": "El informe regional de sequía del 9 de diciembre describe impactos agrícolas en el oeste de Kansas y partes de Oklahoma. Es un informe histórico fechado; sus perspectivas de entonces no se presentan como un pronóstico actual.",
+  "Small Grains Summary briefing, 2023 Winter Wheat Acreage, Yield, and Production table, Kansas row: 8.100 million acres planted and 5.750 million harvested for grain. The planted-minus-grain-harvested share is approximately 29.0%; this includes acreage not harvested for grain, not necessarily complete crop loss or solely drought. Statewide context, not a measured field loss or generated yield prediction.": "Presentación Small Grains Summary, tabla 2023 Winter Wheat Acreage, Yield, and Production, fila de Kansas: 8.100 millones de acres sembrados y 5.750 millones cosechados para grano. La diferencia representa aproximadamente el 29.0% de la superficie sembrada; incluye superficie no cosechada para grano, no necesariamente pérdidas totales ni causadas solo por sequía. Es contexto estatal, no una pérdida medida en la parcela ni una predicción de rendimiento.",
+
   "Skip to main content": "Saltar al contenido principal",
   "Crop rotation planner": "Planificador de rotaciones de cultivos",
   "Your priority": "Tu prioridad",

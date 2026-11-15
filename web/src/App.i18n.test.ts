@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { FieldResponse, PlanResponse } from "../../src/shared/types";
 import { App } from "./App";
-import { LANGUAGE_STORAGE_KEY } from "./i18n";
+import { LanguageProvider, LANGUAGE_STORAGE_KEY } from "./i18n";
 import { fetchField, fetchPlan } from "./api";
 
 vi.mock("./components/MapPicker", () => ({
@@ -39,7 +39,7 @@ beforeEach(async () => {
   container = document.createElement("div");
   document.body.append(container);
   root = createRoot(container);
-  await act(async () => root.render(createElement(App)));
+  await act(async () => root.render(createElement(LanguageProvider, { children: createElement(App) })));
 });
 afterEach(async () => { await act(async () => root.unmount()); container.remove(); });
 
@@ -54,7 +54,7 @@ describe("main flow language", () => {
     expect(button("ES").getAttribute("aria-pressed")).toBe("true");
     await act(async () => root.unmount());
     root = createRoot(container);
-    await act(async () => root.render(createElement(App)));
+    await act(async () => root.render(createElement(LanguageProvider, { children: createElement(App) })));
     expect(container.querySelector("h1")?.textContent).toBe("¿Dónde está tu parcela?");
     await click("EN");
     expect(document.documentElement.lang).toBe("en");

@@ -7,6 +7,7 @@ import type { UIMessage } from "ai";
 import type { ChatCitationDisplay } from "../../../src/shared/chatResearch";
 import { detectLang } from "../lang";
 import { Markdown } from "./Markdown";
+import { sourceLink } from "./sourceLink";
 
 type Part = UIMessage["parts"][number];
 type ToolPart = Extract<Part, { toolCallId: string }>;
@@ -170,10 +171,13 @@ export function ScoutMessage({ message, streaming }: { message: UIMessage; strea
               <li key={s.sourceId}>
                 <span className="an-num">{i + 1}</span>
                 {s.type === "source-url" ? (
-                  <a href={s.url} target="_blank" rel="noreferrer">
-                    {s.title ?? new URL(s.url).hostname}
-                    <small>{new URL(s.url).hostname.replace(/^www\./, "")}</small>
-                  </a>
+                  (() => {
+                    const link = sourceLink(s.url, window.location.origin);
+                    return link ? <a href={link.href} target="_blank" rel="noreferrer">
+                      {s.title ?? link.label}
+                      <small>{link.label}</small>
+                    </a> : <span>{s.title ?? "Source link unavailable"}</span>;
+                  })()
                 ) : (
                   <span>{s.title}</span>
                 )}

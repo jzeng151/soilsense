@@ -34,4 +34,6 @@ export interface Env {
   LIVE_ROOM_NAME?: string;
   /** Field Watch agents (Agents SDK, class FieldAgent): one instance per watched field, named by field id. */
   FIELD_AGENT?: DurableObjectNamespace;
+  /** Vectorize index for cited research passages (#7): soilsense-research-v1, 768 dims, cosine. Optional. */
+  RESEARCH_INDEX?: Vectorize;
 }

@@ -8,6 +8,7 @@ import { getField, isInContiguousUS, logPlan, makePlan } from "../service";
 import { auth, type AppEnv } from "./auth";
 import { fieldWatch } from "./fieldwatch";
 import { scout } from "./scout";
+import { research } from "./research";
 
 const PRIORITIES: Priority[] = ["profit", "soil", "risk", "balanced"];
 
@@ -209,3 +210,5 @@ api.get("/logs", async (c) => {
 api.route("/scout", scout);
 // Field Watch: background field checks (Cron Trigger) and their saved results.
 api.route("/fieldwatch", fieldWatch);
+// Cited research retrieval (Vectorize) and grounded explanations (Workers AI): see docs/RESEARCH.md.
+api.route("/research", research);

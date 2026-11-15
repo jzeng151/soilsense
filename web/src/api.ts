@@ -1,4 +1,5 @@
 import type { FieldResponse, PlanRequest, PlanResponse, SecondOpinion } from "../../src/shared/types";
+import type { ExplainRequest, ExplanationResponse } from "../../src/shared/research";
 import { authFetch as fetch } from "./auth";
 
 async function handle<T>(res: Response): Promise<T> {
@@ -12,9 +13,11 @@ export async function fetchField(lat: number, lon: number, signal?: AbortSignal)
 }
 
 export async function fetchPlan(req: PlanRequest, signal?: AbortSignal): Promise<PlanResponse> {
-  return handle(
+  const plan = await handle<PlanResponse>(
     await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req), signal }),
   );
+  setLastPlan(plan);
+  return plan;
 }
 
 export async function askQuestion(body: { question: string; planLabel: string; summary: string; facts: string[] }): Promise<{ answer: string; source: string }> {
@@ -28,4 +31,24 @@ export async function scoutStatus(): Promise<{ configured: boolean; model: strin
 /** Kansas only: K-State's recommended rain-fed rotations for the county (our team's separate model). Throws on 404. */
 export async function fetchSecondOpinion(countyFips: string, signal?: AbortSignal): Promise<SecondOpinion> {
   return handle(await fetch(`/api/second-opinion?fips=${encodeURIComponent(countyFips)}`, { signal }));
+}
+
+// ---- Grounded explanations (#7/#8): the latest plan response, so plan cards can ask for an explanation ----
+// of the exact comparison they show without App.tsx having to pass the request down.
+let lastPlan: PlanResponse | null = null;
+const planListeners = new Set<() => void>();
+function setLastPlan(p: PlanResponse): void {
+  lastPlan = p;
+  for (const l of planListeners) l();
+}
+export function subscribeLastPlan(l: () => void): () => void {
+  planListeners.add(l);
+  return () => planListeners.delete(l);
+}
+export function getLastPlan(): PlanResponse | null {
+  return lastPlan;
+}
+
+export async function fetchExplanation(req: ExplainRequest, signal?: AbortSignal): Promise<ExplanationResponse> {
+  return handle(await fetch("/api/research/explain", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req), signal }));
 }

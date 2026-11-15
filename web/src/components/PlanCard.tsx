@@ -1,4 +1,5 @@
 import type { CropId, RotationPlan } from "../../../src/shared/types";
+import { PlanExplanation } from "./PlanExplanation";
 
 // Crop colors live in tokens.css (--crop-*); these are CSS values for style props.
 export const CROP_COLORS: Record<CropId, string> = {
@@ -70,6 +71,7 @@ export function TopPlan({ plan, compareTo }: { plan: RotationPlan; compareTo: Ro
           </dd>
         </div>
       </dl>
+      <PlanExplanation rotation={plan} />
     </article>
   );
 }

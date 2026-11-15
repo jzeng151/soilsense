@@ -6,6 +6,7 @@ import "./fieldwatch.css";
 import { Sprout } from "./Sprout";
 import type { DistrictOutlook as Outlook } from "../../../src/shared/districtOutlook";
 import { DistrictOutlook } from "./DistrictOutlook";
+import { ImergNote } from "./ImergNote";
 import { ScheduledCheck } from "./ScheduledCheck";
 
 type Status = "ok" | "watch" | "dry" | "insufficient" | "error";
@@ -147,6 +148,7 @@ export function FieldWatchCard() {
                       </li>
                     ))}
                   </ul>
+                  <ImergNote field={r.fieldId} end={r.dataThrough} />
                   <p className="fw-meta">
                     Run <code>{r.runId}</code> · {r.trigger === "cron" ? "automatic (Cron Trigger)" : "run by hand"} · checked {r.checkCount}× on this data
                   </p>

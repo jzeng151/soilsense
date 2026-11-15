@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { AIUsagePanel } from "../components/AIUsagePanel";
 import { notifySignedOut } from "../auth";
 
 // ---------- Types mirrored from src/worker/voiceSettings.ts ----------
@@ -233,6 +234,7 @@ export function SettingsPage({ onMenu }: { onMenu: () => void }) {
             {tab === "tools" && <ToolsTab config={config} draft={draft} setDraft={setDraft} />}
             {tab === "activity" && (
               <>
+                <AIUsagePanel />
                 <LiveDemoBlock token={token} onAuthError={logout} />
                 <ActivityTab token={token} onAuthError={logout} />
               </>

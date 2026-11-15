@@ -6,7 +6,9 @@
 // {type:"end"} to hang up or hand the call to the keypad menu.
 // Protocol: https://www.twilio.com/docs/voice/conversationrelay/websocket-messages
 
-import { createGoogle } from "@ai-sdk/google";
+import { firstWorking, googleModel, workersModel, GENERATION_FALLBACK } from "../lib/ai";
+import { GENERATION } from "../research/config";
+
 import { type ModelMessage, stepCountIs, streamText, tool } from "ai";
 import { z } from "zod";
 import { ALL_CROPS } from "../../engine/crops";
@@ -510,7 +512,7 @@ export class CallSession {
   }
 
   private async respond(userText: string) {
-    if (!this.env.GEMINI_API_KEY) {
+    if (!this.env.AI) {
       this.say("Sorry, the advisor isn't available right now. Let me move you to the keypad menu.");
       setTimeout(() => this.send({ type: "end", handoffData: JSON.stringify({ reason: "ivr" }) }), 4000);
       return;
@@ -528,7 +530,11 @@ export class CallSession {
     const turnStart = Date.now();
     if (this.history.length > MAX_HISTORY) this.history = this.history.slice(-MAX_HISTORY);
 
-    const google = createGoogle({ apiKey: this.env.GEMINI_API_KEY });
+    const candidates = [
+      ...(this.env.GEMINI_API_KEY ? [{ id: this.env.VOICE_MODEL || DEFAULT_MODEL, provider: "gemini" as const, model: googleModel(this.env, this.env.VOICE_MODEL || DEFAULT_MODEL, "phone-agent") }] : []),
+      { id: GENERATION.model, provider: "workers-ai" as const, model: workersModel(this.env, GENERATION.model, "phone-agent", Boolean(this.env.GEMINI_API_KEY)) },
+      { id: GENERATION_FALLBACK, provider: "workers-ai" as const, model: workersModel(this.env, GENERATION_FALLBACK, "phone-agent", true) },
+    ];
     // Buffer each text block so a citation split across stream tokens is validated before TTS.
     let pendingText = "";
     const flushSpeech = () => {
@@ -543,18 +549,25 @@ export class CallSession {
     let filled = false;
     let fillerTimer: ReturnType<typeof setTimeout> | null = null;
     try {
-      const result = streamText({
-        model: google(this.env.VOICE_MODEL || DEFAULT_MODEL),
+      const start = (candidate: { model: import("ai").LanguageModel; provider: string }, signal: AbortSignal) => streamText({
+        model: candidate.model,
+        maxRetries: 0,
+        maxOutputTokens: 1200,
         instructions: [this.settings?.instructions ?? "", LOCKED_RULES, this.multi && this.settings ? languageRules(this.settings.languages.enabled) : ""].filter(Boolean).join("\n\n"),
         messages: this.history,
         tools: this.tools(),
         stopWhen: stepCountIs(MAX_STEPS),
         temperature: 0.4,
-        abortSignal: ctrl.signal,
+        abortSignal: AbortSignal.any([ctrl.signal, signal]),
         // Phone callers notice every second of silence: keep model thinking minimal.
-        providerOptions: { google: { thinkingConfig: { thinkingLevel: "low" } } },
+        ...(candidate.provider === "gemini" ? { providerOptions: { google: { thinkingConfig: { thinkingLevel: "low" } } } } : {}),
       });
-      for await (const part of result.fullStream) {
+      let result: ReturnType<typeof start> | undefined;
+      const selected = await firstWorking(candidates, (candidate, signal) => {
+        result = start(candidate, signal);
+        return result.fullStream;
+      });
+      for await (const part of selected.stream) {
         if (ctrl.signal.aborted) return;
         if (part.type === "start-step" && this.spoken && !/\s$/.test(this.spoken)) {
           // Text from separate steps (before and after a tool call) needs a space between sentences.
@@ -583,7 +596,7 @@ export class CallSession {
       }
       if (ctrl.signal.aborted) return;
       flushSpeech();
-      this.history.push(...((await result.responseMessages) as ModelMessage[]));
+      this.history.push(...((await result!.responseMessages) as ModelMessage[]));
       this.say("", true);
       this.log("agent", { detail: this.spoken.trim(), durationMs: Date.now() - turnStart, ok: true, name: this.multi ? this.lang : undefined });
       this.live("call.say", { who: "agent", text: this.spoken.trim(), ms: Date.now() - turnStart, lang: this.lang });

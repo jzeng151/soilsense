@@ -1,6 +1,7 @@
 // Cited research retrieval (#7): Workers AI embeddings + Vectorize, filtered by crop / rotation metadata,
 // with an explicit empty result for unmatched requests and saved/unavailable fallbacks on failure.
 
+import { runAI } from "../lib/ai";
 import type { RotationPlan } from "../../shared/types";
 import type { EmbeddingInfo, ResearchPassage, ResearchResult } from "../../shared/research";
 import {
@@ -34,8 +35,8 @@ export interface VectorIndexLike {
 export const EMBEDDING_INFO: EmbeddingInfo = { id: EMBEDDING.id, model: EMBEDDING.model, dimensions: EMBEDDING.dimensions, pooling: EMBEDDING.pooling };
 
 /** Embed texts with the pinned model and pooling; rejects vectors of the wrong dimension. */
-export async function embed(ai: AiLike, texts: string[], gatewayId?: string): Promise<number[][]> {
-  const out = (await ai.run(EMBEDDING.model, embeddingInput(texts), gatewayId ? { gateway: { id: gatewayId } } : undefined)) as { data?: number[][] };
+export async function embed(ai: AiLike, texts: string[], gatewayId?: string, policy: { db?: D1Database; corpusEmbedding?: boolean; feature?: string; signal?: AbortSignal } = {}): Promise<number[][]> {
+  const out = (await runAI(ai, EMBEDDING.model, embeddingInput(texts), { ...policy, feature: policy.feature ?? "research-query", gatewayId })) as { data?: number[][] };
   const data = out?.data;
   if (!Array.isArray(data) || data.length !== texts.length) throw new Error("embedding: unexpected response shape");
   for (const v of data) if (!Array.isArray(v) || v.length !== EMBEDDING.dimensions) throw new Error(`embedding: expected ${EMBEDDING.dimensions} dimensions`);
@@ -87,13 +88,13 @@ function base(tags: string[], status: ResearchResult["status"], extra: Partial<R
  * Unsupported tags are dropped; with no supported tag the result is an explicit empty result.
  */
 export async function retrieveLive(
-  deps: { ai: AiLike; index: VectorIndexLike; db?: D1Database; now?: () => Date; gatewayId?: string },
+  deps: { ai: AiLike; index: VectorIndexLike; db?: D1Database; now?: () => Date; gatewayId?: string; signal?: AbortSignal; feature?: string },
   rawTags: string[],
   query: string,
 ): Promise<ResearchResult> {
   const tags = [...new Set(rawTags.filter(isResearchTag))];
   if (!tags.length) return base(rawTags, "empty", { reason: "unsupported crop or rotation" });
-  const [vector] = await embed(deps.ai, [query], deps.gatewayId);
+  const [vector] = await embed(deps.ai, [query], deps.gatewayId, { db: deps.db, signal: deps.signal, feature: deps.feature });
   if (!vector) throw new Error("embedding: empty");
   const res = await deps.index.query(vector, {
     topK: 10,
@@ -133,7 +134,7 @@ export async function retrieveLive(
  * exact same comparison key (labelled saved, with its original retrieval time); otherwise research-unavailable.
  */
 export async function researchFor(
-  deps: { ai?: AiLike; index?: VectorIndexLike; db?: D1Database; now?: () => Date; gatewayId?: string },
+  deps: { ai?: AiLike; index?: VectorIndexLike; db?: D1Database; now?: () => Date; gatewayId?: string; signal?: AbortSignal; feature?: string },
   tags: string[],
   query: string,
   saved: SavedEntry | null,
@@ -142,7 +143,7 @@ export async function researchFor(
   let failure = "research bindings not configured";
   if (deps.ai && deps.index) {
     try {
-      return await retrieveLive({ ai: deps.ai, index: deps.index, db: deps.db, now: deps.now, gatewayId: deps.gatewayId }, tags, query);
+      return await retrieveLive({ ai: deps.ai, index: deps.index, db: deps.db, now: deps.now, gatewayId: deps.gatewayId, signal: deps.signal, feature: deps.feature }, tags, query);
     } catch (err) {
       failure = `retrieval failed: ${String(err).slice(0, 160)}`;
       console.warn(JSON.stringify({ msg: "research retrieval failed", err: String(err) }));
@@ -163,9 +164,9 @@ export function savedResearch(saved: SavedEntry, reason?: string): ResearchResul
 }
 
 /** Vectors for ingestion: one per (chunk, tag), all embedded with the shared config. */
-export async function buildVectors(ai: AiLike, gatewayId?: string): Promise<{ id: string; values: number[]; metadata: Record<string, string> }[]> {
+export async function buildVectors(ai: AiLike, gatewayId?: string, db?: D1Database): Promise<{ id: string; values: number[]; metadata: Record<string, string> }[]> {
   const chunks = CORPUS.chunks;
-  const vectors = await embed(ai, chunks.map((c) => c.text), gatewayId);
+  const vectors = await embed(ai, chunks.map((c) => c.text), gatewayId, { db, corpusEmbedding: true, feature: "research-corpus" });
   return chunks.flatMap((c, i) =>
     c.crops.map((tag) => ({
       id: vectorId(c.id, tag),

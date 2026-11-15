@@ -24,16 +24,18 @@ export async function researchNoteFor(
   };
   if (!tags.length) return { ...base, status: "skipped", template: "No matching research.", reason: "No crop in watch settings or demo field configuration; retrieval skipped." };
   const query = `Research on ${tags.join(", ")} during dry spells, drought and limited soil water.`;
+  const ctrl = new AbortController();
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
     const research = await Promise.race([
-      researchFor({ ai: env.AI, index: env.RESEARCH_INDEX, gatewayId: env.AI_GATEWAY_ID }, tags, query, null),
+      researchFor({ ai: env.AI, index: env.RESEARCH_INDEX, gatewayId: env.AI_GATEWAY_ID, db: env.DB, signal: ctrl.signal, feature: "field-watch" }, tags, query, null),
       new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Research retrieval timed out.")), RESEARCH_TIMEOUT_MS); }),
     ]);
     return { ...base, ...research, query };
   } catch {
     return { ...base, query, reason: "Research retrieval failed or timed out; no matching research is available for this run." };
   } finally {
+    ctrl.abort();
     if (timer !== undefined) clearTimeout(timer);
   }
 }

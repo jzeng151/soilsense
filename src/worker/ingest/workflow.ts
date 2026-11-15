@@ -45,7 +45,7 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
       if (!object) throw new Error("Uploaded object missing");
       const bytes = await object.arrayBuffer();
       if (await sha256Hex(bytes) !== read.sha) throw new Error("Upload changed during extraction; await its new notification");
-      const result = await extractText(env.AI, bytes, params.key, read.contentType);
+      const result = await extractText(env.AI, bytes, params.key, read.contentType, { gatewayId: env.AI_GATEWAY_ID, db: env.DB });
       if (!result.text.trim()) throw new Error("Document has no extractable text");
       const key = DOCS_LAYOUT.extracted(read.sha, docId);
       await bucket.put(key, result.text, { httpMetadata: { contentType: "text/plain; charset=utf-8" } });
@@ -136,7 +136,7 @@ export async function runDocIngest(env: Env, step: DocStepRunner, params: DocIng
           }
           // Kept chunks retain embeddings, but refresh version metadata and reviewer-selected crop tags.
           const old = oldIds.length ? await index.getByIds(oldIds) : [];
-          const values = old[0]?.values ?? (await embed(ai, [chunk.text], env.AI_GATEWAY_ID))[0]!;
+          const values = old[0]?.values ?? (await embed(ai, [chunk.text], env.AI_GATEWAY_ID, { db: env.DB, corpusEmbedding: true, feature: "document-embedding" }))[0]!;
           const vectors = crops.map((crop) => {
             const metadata: DocVectorMetadata = { crop, corpus: DOCS_CORPUS, chunk_id: id, source_id: docId, doc_sha256: read.sha };
             return { id: docVectorId(id, crop), values: Array.from(values), metadata };

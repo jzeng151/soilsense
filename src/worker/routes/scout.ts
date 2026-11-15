@@ -5,11 +5,11 @@
 // The response is an AI SDK UI message stream: the client sees the model's reasoning, each tool
 // call as it starts and finishes (the "analysis"), the answer text, and the data sources used.
 
-import { createGoogle } from "@ai-sdk/google";
+import { firstWorking, googleModel, workersModel, GENERATION_FALLBACK } from "../lib/ai";
 import {
   type LanguageModel,
-  type TextStreamPart,
-  type ToolSet,
+
+
   convertToModelMessages,
   createUIMessageStream,
   createUIMessageStreamResponse,
@@ -21,7 +21,7 @@ import {
   type UIMessageStreamWriter,
 } from "ai";
 import { Hono } from "hono";
-import { createWorkersAI } from "workers-ai-provider";
+
 import { z } from "zod";
 import { ALL_CROPS, COVERS, CROPS } from "../../engine/crops";
 import { DATA_SOURCES } from "../../engine/plan";
@@ -311,14 +311,17 @@ scout.post("/chat", async (c) => {
       // Trust only tool results produced server-side this turn, never client-supplied tool history.
       const research = new ChatResearch({ ai: env.AI, index: env.RESEARCH_INDEX, db: env.DB, gatewayId: env.AI_GATEWAY_ID });
       const tools = makeTools(env, writer, research);
-      const { stream, model } = await firstWorking(candidates, (m) =>
+      const { stream, model } = await firstWorking(candidates, (m, signal) =>
         streamText({
           model: m.model,
+          abortSignal: signal,
           instructions: INSTRUCTIONS,
           messages: modelMessages,
           tools,
           stopWhen: stepCountIs(MAX_STEPS),
           temperature: 0.3,
+          maxRetries: 0,
+          maxOutputTokens: 1200,
           ...(m.provider === "gemini" ? { providerOptions: { google: { thinkingConfig: { includeThoughts: true } } } } : {}),
         }).stream,
       );
@@ -345,84 +348,12 @@ interface ScoutModel {
 
 /** Models to try in order: SCOUT_MODEL decides the first (a "@cf/..." Workers AI model, or a Gemini model); the other provider backs it up. */
 export function scoutModels(env: Env): ScoutModel[] {
-  const workers = env.AI ? createWorkersAI({ binding: env.AI, gateway: { id: env.AI_GATEWAY_ID ?? "default" } }) : null;
-  const google = env.GEMINI_API_KEY ? createGoogle({ apiKey: env.GEMINI_API_KEY }) : null;
   const wanted = env.SCOUT_MODEL || DEFAULT_WORKERS_MODEL;
-  const wa = (id: string): ScoutModel[] => (workers ? [{ provider: "workers-ai", id, model: workers(id as Parameters<typeof workers>[0]) }] : []);
-  const gm = (id: string): ScoutModel[] => (google ? [{ provider: "gemini", id, model: google(id) }] : []);
-  return wanted.startsWith("@cf/") ? [...wa(wanted), ...gm(env.GEMINI_MODEL || DEFAULT_MODEL)] : [...gm(wanted), ...wa(DEFAULT_WORKERS_MODEL)];
+  const wa = (id: string, fallback: boolean): ScoutModel[] => (env.AI ? [{ provider: "workers-ai", id, model: workersModel(env, id, "scout", fallback) }] : []);
+  const gm = (id: string, fallback: boolean): ScoutModel[] => (env.GEMINI_API_KEY && env.AI ? [{ provider: "gemini", id, model: googleModel(env, id, "scout", fallback) }] : []);
+  return wanted.startsWith("@cf/")
+    ? [...wa(wanted, false), ...(wanted === GENERATION_FALLBACK ? [] : wa(GENERATION_FALLBACK, true)), ...gm(env.GEMINI_MODEL || DEFAULT_MODEL, true)]
+    : [...gm(wanted, false), ...wa(DEFAULT_WORKERS_MODEL, true)];
 }
 
-/** Parts that mean the model has started answering (after these, an error is shown rather than retried). */
-const CONTENT_PARTS = new Set(["text-delta", "reasoning-delta", "tool-input-start", "tool-call", "tool-result"]);
-/** A model that says nothing for this long counts as failed, so the next one gets a turn (not for the last model). */
-const FIRST_CONTENT_TIMEOUT_MS = 25_000;
-
-/**
- * Start the first model whose stream gets going: if a model fails or stays silent before producing anything
- * (quota, outage, unsupported model, hang), try the next one. The parts read while checking are replayed.
- */
-export async function firstWorking<T extends ToolSet>(
-  models: ScoutModel[],
-  start: (m: ScoutModel) => ReadableStream<TextStreamPart<T>>,
-  timeoutMs = FIRST_CONTENT_TIMEOUT_MS,
-): Promise<{ stream: ReadableStream<TextStreamPart<T>>; model: ScoutModel }> {
-  for (let i = 0; i < models.length; i++) {
-    const m = models[i] as ScoutModel;
-    const last = i === models.length - 1;
-    const reader = start(m).getReader();
-    const buffered: TextStreamPart<T>[] = [];
-    let failed: unknown = null;
-    let done = false;
-    const deadline = Date.now() + timeoutMs;
-    try {
-      for (;;) {
-        let timer: ReturnType<typeof setTimeout> | undefined;
-        const timeout = new Promise<"timeout">((resolve) => {
-          timer = setTimeout(() => resolve("timeout"), Math.max(0, deadline - Date.now()));
-        });
-        const next = last ? await reader.read() : await Promise.race([reader.read(), timeout]);
-        if (timer !== undefined) clearTimeout(timer);
-        if (next === "timeout") {
-          failed = `no answer within ${Math.round(timeoutMs / 1000)} s`;
-          break;
-        }
-        if (next.done) {
-          done = true;
-          break;
-        }
-        if (next.value.type === "error") {
-          failed = (next.value as { error?: unknown }).error ?? "stream error";
-          break;
-        }
-        buffered.push(next.value);
-        if (CONTENT_PARTS.has(next.value.type)) break;
-      }
-    } catch (err) {
-      failed = err;
-    }
-    if (failed && !last) {
-      console.warn(JSON.stringify({ msg: "scout model failed, trying next", provider: m.provider, model: m.id, err: String(failed) }));
-      reader.cancel().catch(() => {});
-      continue;
-    }
-    console.log(JSON.stringify({ msg: "scout model", provider: m.provider, model: m.id }));
-    if (failed) buffered.push({ type: "error", error: failed } as TextStreamPart<T>);
-    const stream = new ReadableStream<TextStreamPart<T>>({
-      start(controller) {
-        for (const p of buffered) controller.enqueue(p);
-        if (done || failed) controller.close();
-      },
-      async pull(controller) {
-        const next = await reader.read();
-        if (next.done) controller.close();
-        else controller.enqueue(next.value);
-      },
-      cancel(reason) {
-        return reader.cancel(reason);
-      },
-    });
-    return { stream, model: m };
-  }
-  throw new Error("No Sprout model is configured.");
-}
+export { firstWorking } from "../lib/ai";

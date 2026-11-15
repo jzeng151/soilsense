@@ -106,6 +106,15 @@ function harness() {
 }
 
 describe("document pipeline public seams", () => {
+  it("requires the operator token before exposing document lists or review content", async () => {
+    const h = harness();
+    for (const path of ["", "/verification-nonexistent"]) {
+      expect((await h.request(path)).status).toBe(401);
+      expect((await h.request(path, { headers: { Authorization: "Bearer wrong-token" } })).status).toBe(401);
+    }
+    expect((await h.request("", { headers: h.auth })).status).toBe(200);
+    expect((await h.request("/verification-nonexistent", { headers: h.auth })).status).toBe(404);
+  });
   it("carries URL intake provenance through the queue and pending manifest without approving metadata", async () => {
     const h = harness();
     vi.stubGlobal("fetch", vi.fn(async (url: string) => url.startsWith("https://cloudflare-dns.com/")
@@ -119,7 +128,7 @@ describe("document pipeline public seams", () => {
       await app.queue({ messages: [{ body: { account: "test", bucket: "soilsense-docs", action: "PutObject", object: { key: uploaded.key, eTag: uploaded.eTag }, eventTime: "2026-11-15T12:00:00Z" }, ack, retry: vi.fn() }] } as unknown as MessageBatch, h.env);
       expect(ack).toHaveBeenCalledOnce();
       const { run } = await h.start();
-      const detail = await (await h.request(`/${uploaded.docId}`)).json() as { provenance: unknown; doc: { title: string | null; status: string } };
+      const detail = await (await h.request(`/${uploaded.docId}`, { headers: h.auth })).json() as { provenance: unknown; doc: { title: string | null; status: string } };
       expect(detail).toMatchObject({ provenance: { sourceUrl: "https://www.ksu.edu/research", intakeMethod: "html-fetch-fallback" }, doc: { title: null, status: "pending_review" } });
       const manifest = [...h.objects.entries()].find(([key]) => key.startsWith("manifests/"))!;
       expect(JSON.parse(manifest[1].text)).toMatchObject({ provenance: detail.provenance, source: null });
@@ -137,7 +146,7 @@ describe("document pipeline public seams", () => {
     expect(pending?.status).toBe("pending_review");
     expect(pending?.title).toBeNull();
     expect(h.vectors.size).toBe(0); expect(h.AI.run).not.toHaveBeenCalled();
-    const detail = await (await h.request(`/${uploaded.docId}`)).json() as { chunks: { text: string; start_offset: number; end_offset: number }[]; versions: unknown[] };
+    const detail = await (await h.request(`/${uploaded.docId}`, { headers: h.auth })).json() as { chunks: { text: string; start_offset: number; end_offset: number }[]; versions: unknown[] };
     expect(detail.versions).toHaveLength(1); expect(detail.chunks).toHaveLength(2);
     for (const c of detail.chunks) expect((firstParagraph + "\n\n" + secondParagraph).slice(c.start_offset,c.end_offset)).toBe(c.text);
     expect((await h.review(uploaded.docId, approval)).status).toBe(202);
@@ -151,7 +160,7 @@ describe("document pipeline public seams", () => {
     expect(h.AI.run).toHaveBeenCalledWith("@cf/baai/bge-base-en-v1.5", { text: [firstParagraph], pooling: "cls" }, expect.objectContaining({ gateway: expect.objectContaining({ id: "test-gateway", skipCache: false, cacheTtl: 86400 }) }));
     expect(await getDoc(h.DB, uploaded.docId)).toMatchObject({ status: "indexed", title: approval.source!.title, reviewer: approval.reviewer, crops_json: '["corn","cover"]' });
     expect(JSON.parse(h.objects.get(DOCS_LAYOUT.manifest(pending!.latest_sha256!, uploaded.docId))!.text)).toMatchObject({ status: "indexed", source: approval.source });
-    expect((await (await h.request("")).json() as { docs: unknown[] }).docs).toHaveLength(1);
+    expect((await (await h.request("", { headers: h.auth })).json() as { docs: unknown[] }).docs).toHaveLength(1);
 
     await h.upload(firstParagraph + "\n\n" + secondParagraph);
     expect(await runDocIngest(h.env, h.step(), h.params(), h.instanceId())).toMatchObject({ outcome: "unchanged" });
@@ -193,7 +202,7 @@ describe("document pipeline public seams", () => {
     const nextDoc = (await getDoc(h.DB, next.docId))!;
     const nextKey = DOCS_LAYOUT.manifest(nextDoc.latest_sha256!, next.docId);
     const nextManifest = h.objects.get(nextKey)!.text;
-    expect((await h.request(`/${old.docId}`)).status).toBe(200); // legacy read fallback
+    expect((await h.request(`/${old.docId}`, { headers: h.auth })).status).toBe(200); // legacy read fallback
     const nextChunks = await getChunks(h.DB, next.docId);
     expect((await h.review(old.docId, { ...approval, excludeChunkIds: [nextChunks[0]!.chunk_id] })).status).toBe(400);
     await h.review(old.docId, { decision: "reject", reviewer: "reviewer" });
@@ -252,7 +261,7 @@ describe("document pipeline public seams", () => {
     for (const excludeChunkIds of [["doc-foreign:chunk"], [removed.chunk_id], "not-an-array", [123], [kept.chunk_id, kept.chunk_id]]) {
       expect((await h.review(uploaded.docId, { ...approval, excludeChunkIds })).status).toBe(400);
     }
-    const detail = await (await h.request(`/${uploaded.docId}`)).json() as { chunks: { chunk_id: string; start_offset: number; text: string }[] };
+    const detail = await (await h.request(`/${uploaded.docId}`, { headers: h.auth })).json() as { chunks: { chunk_id: string; start_offset: number; text: string }[] };
     expect(detail.chunks).toHaveLength(2);
     expect(detail.chunks.find((c) => c.chunk_id === kept.chunk_id)?.start_offset).toBe(thirdParagraph.length + 2);
     expect(detail.chunks.some((c) => c.chunk_id === removed.chunk_id)).toBe(false);

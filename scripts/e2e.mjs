@@ -177,7 +177,7 @@ try {
     await until(async () => await page.getByRole('button', { name: 'Send', exact: true }).count() > 0, 'Sprout stream finishes', 120_000);
     assert.equal(await page.locator('.sc-err').count(), 0, 'Sprout returned an error instead of an answer');
     const reply = page.locator('.sc-bot').last();
-    const answer = (await reply.locator(':scope > div[lang] > .md').allTextContents()).join('\n');
+    const answer = (await reply.locator(':scope > div > .md').allTextContents()).join('\n');
     assert(answer.trim(), 'Empty assistant reply');
     result.answer = answer;
     const citations = [...new Set(answer.match(/\[R\d+\]/g) ?? [])];

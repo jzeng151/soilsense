@@ -15,7 +15,7 @@ try {
     await page.locator('.leaflet-container').waitFor();
     // WCAG 2.4.1: the skip link is the first Tab stop and moves focus to the main content.
     await page.keyboard.press('Tab');
-    assert.equal(await page.getByRole('link',{name:'Skip to main content'}).evaluate(e=>e===document.activeElement),true,'Skip link is the first Tab stop');
+    assert.equal(await page.getByRole('link',{name:language === 'es' ? 'Saltar al contenido principal' : 'Skip to main content'}).evaluate(e=>e===document.activeElement),true,'Skip link is the first Tab stop');
     await page.keyboard.press('Enter');
     assert.equal(await page.evaluate(()=>document.activeElement?.id),'content','Skip link focuses the main content');
     await page.goto(base);
@@ -24,13 +24,13 @@ try {
       await page.keyboard.press('Tab');
       await page.keyboard.press('Tab');
       await page.keyboard.press('Enter');
-      await page.getByRole('button',{name:'Close navigation'}).waitFor();
-      assert.equal(await page.getByRole('button',{name:'Close navigation'}).evaluate(e=>e===document.activeElement),true);
+      await page.getByRole('button',{name:language === 'es' ? 'Cerrar navegación' : 'Close navigation'}).waitFor();
+      assert.equal(await page.getByRole('button',{name:language === 'es' ? 'Cerrar navegación' : 'Close navigation'}).evaluate(e=>e===document.activeElement),true);
       await page.keyboard.press('Shift+Tab');
-      assert.equal(await page.getByRole('link',{name:'Team sign-in'}).evaluate(e=>e===document.activeElement),true,'Drawer contains reverse Tab');
+      assert.equal(await page.getByRole('link',{name:language === 'es' ? 'Acceso del equipo' : 'Team sign-in'}).evaluate(e=>e===document.activeElement),true,'Drawer contains reverse Tab');
       await page.keyboard.press('Tab');
       await page.keyboard.press('Escape');
-      assert.equal(await page.getByRole('button',{name:'Open sidebar'}).evaluate(e=>e===document.activeElement),true,'Escape restores focus');
+      assert.equal(await page.getByRole('button',{name:language === 'es' ? 'Abrir barra lateral' : 'Open sidebar'}).evaluate(e=>e===document.activeElement),true,'Escape restores focus');
       await page.goto(base);
       await page.locator('.leaflet-container').waitFor();
     }
@@ -41,7 +41,7 @@ try {
       order.push(await page.evaluate(()=>({tag:document.activeElement.tagName,text:(document.activeElement.textContent||document.activeElement.getAttribute('aria-label')||'').trim().slice(0,90)})));
       if(await page.getByRole('button',{name:'Kansas',exact:true}).evaluate(e=>e===document.activeElement)) break;
     }
-    if (width === 375) assert.equal(order[0].text,'Skip to main content','Skip link comes first'), assert.equal(order[1].text,'Open sidebar','Collapsed phone navigation must not receive focus');
+    if (width === 375) assert.equal(order[0].text,language === 'es' ? 'Saltar al contenido principal' : 'Skip to main content','Skip link comes first'), assert.equal(order[1].text,language === 'es' ? 'Abrir barra lateral' : 'Open sidebar','Collapsed phone navigation must not receive focus');
     assert.equal(await page.getByRole('button',{name:'Kansas',exact:true}).evaluate(e=>e===document.activeElement),true,'Kansas reachable by Tab');
     await page.keyboard.press('Enter');
     await page.getByRole('button',{name:confirm}).waitFor();

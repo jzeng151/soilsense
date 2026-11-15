@@ -1,0 +1,18 @@
+/* Short grounded explanation + cited research on the plan card (PlanExplanation.tsx). */
+.px { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-border, var(--line)); display: grid; gap: 0.5rem; }
+.px-head { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+.px-title { margin: 0; font-size: 1rem; font-weight: 700; }
+.px-badge { font-size: 0.75rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 999px; border: 1px solid var(--color-border, var(--line)); background: var(--color-subtle, #f4efe2); color: var(--color-text, inherit); }
+.px-live { background: var(--leaf-wash, #e6f2e0); }
+.px-saved { background: var(--harvest-gold, #f2b134); color: var(--soil-brown, #3b2616); }
+.px-template { background: var(--color-subtle, #f4efe2); }
+.px-loading { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.px-narrative { margin: 0; font-size: 1rem; line-height: 1.5; }
+.px-meta, .px-checks, .px-note, .px-applies, .px-research-status { margin: 0; font-size: 0.82rem; color: var(--color-text-2, var(--muted)); }
+.px-research { display: grid; gap: 0.4rem; }
+.px-passages { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+.px-passages li { display: grid; gap: 0.2rem; }
+.px-cited { justify-self: start; font-size: 0.72rem; font-weight: 700; color: var(--canopy, #1f5a3a); }
+.px-quote { margin: 0; padding: 0.5rem 0.75rem; border-left: 4px solid var(--orbit-blue, #1d4e89); background: var(--color-subtle, #f4efe2); font-size: 0.9rem; line-height: 1.45; }
+.px-quote summary { cursor: pointer; }
+.px-source { margin: 0; font-size: 0.8rem; }

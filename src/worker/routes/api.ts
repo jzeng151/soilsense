@@ -8,10 +8,16 @@ import { getField, isInContiguousUS, logPlan, makePlan } from "../service";
 import { auth, type AppEnv } from "./auth";
 import { fieldWatch } from "./fieldwatch";
 import { scout } from "./scout";
+import { research } from "./research";
+import { docs } from "./docs";
 
 const PRIORITIES: Priority[] = ["profit", "soil", "risk", "balanced"];
 
+import { smap } from "./smap";
+
 export const api = new Hono<AppEnv>();
+
+import { cropTiming } from "./cropTiming";
 
 // ---- Simple per-isolate rate limit (use Cloudflare rate-limiting rules for hard limits). ----
 const hits = new Map<string, { count: number; reset: number }>();
@@ -39,6 +45,7 @@ api.use("*", async (c, next) => {
 
 // ---- Accounts: sign up / sign in / sign out, then require a signed-in user for the dashboard's data routes. ----
 api.route("/auth", auth);
+api.route("/docs", docs);
 
 function adminTokenMatches(header: string | undefined, token: string | undefined): boolean {
   if (!token || !header) return false;
@@ -220,3 +227,26 @@ api.get("/vegetation", async (c) => {
   const { getModisNdvi } = await import("../data/modis");
   return c.json(await getModisNdvi(c.env.DB, coords.lat, coords.lon, year));
 });
+
+// Cited research retrieval (Vectorize) and grounded explanations (Workers AI): see docs/RESEARCH.md.
+api.route("/research", research);
+api.route("/crop-timing", cropTiming);
+// U.S. Drought Monitor weekly county context (issue #31): /api/usdm/category, /timeline, /replay.
+import { usdm } from "./usdm";
+api.route("/usdm", usdm);
+// Wind-erosion exposure screen (issues #40, #17): POST /api/wind-screen. Separate from /api/plan so plans never wait on it.
+import { windScreen } from "./windScreen";
+api.route("/wind-screen", windScreen);
+
+// Versioned static source audit; no live market quotation or effect on rankings.
+api.get("/economics-assumptions", async (c) => {
+  const { assumptionAudit } = await import("../../engine/economics");
+  const state = c.req.query("state");
+  if (state !== undefined && !/^[A-Z]{2}$/.test(state)) return c.json({ error: "state must be a two-letter uppercase code" }, 400);
+  return c.json(assumptionAudit(state));
+});
+import { historicalScenarios } from "./historicalScenarios";
+api.route("/historical-scenarios", historicalScenarios);
+api.route("/smap", smap);
+import { groundwater } from "./groundwater";
+api.route("/groundwater", groundwater);

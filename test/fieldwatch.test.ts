@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
 import { describe, expect, it } from "vitest";
 import app from "../src/worker/index";
-import { evaluateField, isoDate, percentileRank, type DayMap } from "../src/worker/fieldwatch/rule";
+import { decideStatus, evaluateField, isoDate, percentileRank, RULE_VERSION, type DayMap } from "../src/worker/fieldwatch/rule";
 import { runFieldWatch, type FieldWatchDeps, type WatchedField } from "../src/worker/fieldwatch/run";
 
 const ctx = { waitUntil: () => {}, passThroughOnException: () => {}, props: {} } as unknown as ExecutionContext;
@@ -71,17 +71,49 @@ describe("Field Watch rule", () => {
     expect(r.metrics.rainPercentile).toBe(100);
   });
 
-  it("raises a watch from the Kansas outlook even when local rain is fine", () => {
+  it("shows the Kansas outlook as context only: it never changes the status", () => {
     const h = history((y) => 1 + (y % 10) / 10);
     const r = evaluateField({
       ...base,
       recent: recent(3, { root: 0.8 }),
       history: h.map,
       historyYears: h,
-      kansas: { county: "Finney County", alert: "watch", droughtProbability: 0.3, rootzonePct: 40, dataThrough: "2026-11-09" },
+      kansas: { county: "Finney County", alert: "warning", droughtProbability: 0.9, rootzonePct: 5, dataThrough: "2026-11-09" },
     });
+    expect(r.status).toBe("ok");
+    expect(r.reasons.some((x) => x.id === "kansas" && /Finney County/.test(x.text) && /context only/.test(x.text))).toBe(true);
+  });
+
+  it("decides from two percentile ranks using the Drought Monitor bands (rule v2)", () => {
+    expect(RULE_VERSION).toBe(2);
+    expect(decideStatus(20, 20)).toBe("dry");
+    expect(decideStatus(20, 21)).toBe("watch"); // both low, but soil not in the D1 band
+    expect(decideStatus(50, 30)).toBe("watch"); // soil alone at the D0 edge
+    expect(decideStatus(30, 90)).toBe("watch"); // rain alone at the D0 edge
+    expect(decideStatus(31, 31)).toBe("ok");
+    expect(decideStatus(0, null)).toBe("watch"); // missing soil can never give "dry"
+    expect(decideStatus(80, null)).toBe("ok");
+  });
+
+  it("caps very low rain at Watch when root-zone wetness is missing", () => {
+    const h = history((y) => 1 + (y % 10) / 10, (y) => 0.4 + (y % 10) / 50);
+    const rec = recent(0, { root: 0.3 });
+    for (const v of rec.values()) v.gwetroot = null;
+    const r = evaluateField({ ...base, recent: rec, history: h.map, historyYears: h });
     expect(r.status).toBe("watch");
-    expect(r.reasons.some((x) => x.id === "kansas" && /Finney County/.test(x.text))).toBe(true);
+    expect(r.headline).toMatch(/soil unconfirmed/);
+    expect(r.reasons.some((x) => x.id === "rootzone-missing")).toBe(true);
+  });
+
+  it("still checks rain when temperature is missing, and leaves the water balance out", () => {
+    const h = history((y) => 1 + (y % 10) / 10, (y) => 0.4 + (y % 10) / 50);
+    const rec = recent(0, { root: 0.3 });
+    for (const v of rec.values()) v.tmax = null;
+    const r = evaluateField({ ...base, recent: rec, history: h.map, historyYears: h });
+    expect(r.status).toBe("dry");
+    expect(r.metrics.balance14Mm).toBeNull();
+    expect(r.metrics.et014Mm).toBeNull();
+    expect(r.reasons.some((x) => x.id === "balance-missing")).toBe(true);
   });
 
   it("never treats missing rain as zero: a gap moves the window back to complete days", () => {

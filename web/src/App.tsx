@@ -1,6 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CropId, FieldResponse, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
+import { Glossary, Definition } from "./components/Glossary";
 import { askQuestion, fetchField, fetchPlan } from "./api";
+import { DataEvidence, DecisionNotice } from "./components/DataEvidence";
+import { PlanAssumptions } from "./components/PlanAssumptions";
 import { DEMO_FARMS, MapPicker } from "./components/MapPicker";
 import { HarvestCheck, SatelliteNote } from "./components/HarvestCheck";
 import { BadYears, DroughtReplay, WATER_LABELS, WaterOptions } from "./components/WhatIf";
@@ -9,8 +12,18 @@ import { SecondOpinion } from "./components/SecondOpinion";
 import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
+
 import { VegetationCard } from "./components/VegetationCard";
+
+import { CropTimingEvidence } from "./components/CropTimingEvidence";
+import { SmapCard } from "./components/SmapCard";
+import { GraceWellsCard } from "./components/GraceWellsCard";
+import { EconomicsCard } from "./components/EconomicsCard";
+import { HistoricalScenarios } from "./components/HistoricalScenarios";
+
 import { FieldWatchCard } from "./components/FieldWatchCard";
+import { UsdmContext } from "./components/UsdmContext";
+import { WindScreenCard } from "./components/WindScreenCard";
 import { TrendChart, trendText, trendTone } from "./components/TrendChart";
 
 // A simple three-step journey: 1) find your field, 2) three quick questions, 3) your plan.
@@ -238,6 +251,8 @@ export function App() {
     const w = waterOverride ?? water;
     if (waterOverride) setWater(waterOverride);
     setPlanLoading(true);
+    setPlan(null);
+    setAnswer(null);
     setLoadingStep(0);
     setError(null);
     go("plan");
@@ -330,6 +345,7 @@ export function App() {
 
       <main className="jr-main" ref={top}>
         <Progress step={step} canGo={canGo} go={go} />
+        <Glossary />
 
         {/* ---------- Step 1: find the field ---------- */}
         {step === "field" && (
@@ -458,6 +474,7 @@ export function App() {
               <legend>
                 <span className="jr-qn">2</span> How is it watered?
               </legend>
+              <p className="jr-note">Check your <Definition term="irrigation-allocation" />; the model allowance is not measured pumping or a legal water right.</p>
               <div className="jr-tiles jr-tiles-3" role="radiogroup">
                 {(["rain", "limited", "full"] as WaterLevel[]).map((v) => (
                   <button key={v} type="button" role="radio" aria-checked={water === v} className={water === v ? "on" : ""} onClick={() => setWater(v)}>
@@ -534,6 +551,8 @@ export function App() {
               </div>
             )}
 
+            {plan && !planLoading && !best && <div className="jr-card" role="status"><h1 className="jr-title">No feasible rotation found</h1><DecisionNotice /><p>Review your crop history, water assumptions and priorities. Missing evidence is not a zero score.</p><button type="button" className="ghost" onClick={() => go("questions")}>Review inputs</button></div>}
+
             {plan && !planLoading && best && (
               <>
                 <div className="jr-card jr-answer">
@@ -546,7 +565,9 @@ export function App() {
                       <h1 className="jr-title">{planSentence(best)}</h1>
                     </div>
                   </div>
+                  <DecisionNotice />
                   <TopPlan plan={best} compareTo={plan.currentPractice} />
+                  <PlanAssumptions plan={best} water={plan.water ?? water} />
                   <BadYears plan={best} current={plan.currentPractice} />
                   {(plan.water ?? water) === "rain" && Math.max(...plan.plans.map((p) => p.avgNetReturnPerAcre)) < 15 && (
                     <p className="jr-tradeoff">
@@ -577,6 +598,15 @@ export function App() {
                     <DroughtReplay key={`${plan.generatedAt}-${plan.water}`} replays={plan.droughtReplays} />
                   </div>
                 )}
+
+                {/* stretch: data evidence */}
+                <UsdmContext plan={plan} />
+                <WindScreenCard plan={plan} />
+                <EconomicsCard plan={plan} />
+                <VegetationCard plan={plan} />
+                <SmapCard plan={plan} />
+                <GraceWellsCard plan={plan} />
+                {/* /stretch: data evidence */}
 
                 <div className="jr-card">
                   <h2 className="jr-h2">Why we suggest this</h2>
@@ -612,25 +642,32 @@ export function App() {
                   </div>
                 )}
 
-                {/* stretch: data evidence */}
-                <VegetationCard plan={plan} />
-                {/* /stretch: data evidence */}
+
+
+
+                <DataEvidence plan={plan} />
 
                 <details className="jr-more">
                   <summary>Compare with other options</summary>
                   <ul className="plan-list">
                     <PlanRow plan={best} title="Our pick" compareTo={plan.currentPractice} />
                     {others.map((p, i) => (
-                      <PlanRow key={p.id} plan={p} title={`Option ${i + 2}`} compareTo={plan.currentPractice} />
+                      <Fragment key={p.id}>
+                        <PlanRow plan={p} title={`Option ${i + 2}`} compareTo={plan.currentPractice} />
+                        <li><PlanAssumptions plan={p} water={plan.water ?? water} /></li>
+                      </Fragment>
                     ))}
-                    {plan.currentPractice && <PlanRow plan={plan.currentPractice} title="Keep doing what you do" muted />}
+                    {plan.currentPractice && <>
+                      <PlanRow plan={plan.currentPractice} title="Keep doing what you do" muted />
+                      <li><PlanAssumptions plan={plan.currentPractice} water={plan.water ?? water} /></li>
+                    </>}
                   </ul>
                 </details>
 
                 <details className="jr-more">
                   <summary>How the weather on your field has changed</summary>
                   <p className="hint">
-                    {plan.climate.firstYear}–{plan.climate.lastYear}, from NASA data for your field.
+                    {plan.climate.firstYear}–{plan.climate.lastYear}, from NASA data: a <Definition term="regional-grid" />, not an individual field station.
                   </p>
                   {changes.length > 0 ? (
                     <ul className="changes">
@@ -674,6 +711,11 @@ export function App() {
                   </ul>
                 </details>
 
+                {/* stretch: data evidence */}
+                <CropTimingEvidence key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
+                <HistoricalScenarios key={`${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
+                {/* /stretch: data evidence */}
+
                 <form className="jr-card ask" onSubmit={ask}>
                   <h2 className="jr-h2">
                     <label htmlFor="q">Have a question about this plan?</label>
@@ -694,7 +736,7 @@ export function App() {
                 </form>
 
                 <details className="fine">
-                  <summary>About the data</summary>
+                  <summary>Source bibliography and model assumptions</summary>
                   <ul>
                     {plan.dataSources.map((d) => (
                       <li key={d.name}>

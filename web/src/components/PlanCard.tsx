@@ -1,4 +1,6 @@
+import { Definition } from "./Glossary";
 import type { CropId, RotationPlan } from "../../../src/shared/types";
+import { PlanExplanation } from "./PlanExplanation";
 
 // Crop colors live in tokens.css (--crop-*); these are CSS values for style props.
 export const CROP_COLORS: Record<CropId, string> = {
@@ -42,7 +44,7 @@ export function TopPlan({ plan, compareTo }: { plan: RotationPlan; compareTo: Ro
       </ol>
       <dl className="top-stats">
         <div>
-          <dt>Estimated profit</dt>
+          <dt><Definition term="margin" /></dt>
           <dd>
             <span className={Math.abs(plan.avgNetReturnPerAcre) < 15 || plan.avgNetReturnPerAcre < 0 ? "stat-words" : undefined}>{profitWords(plan.avgNetReturnPerAcre)}</span>
             {Math.abs(plan.avgNetReturnPerAcre) >= 15 && <small>/acre/year</small>}
@@ -70,6 +72,7 @@ export function TopPlan({ plan, compareTo }: { plan: RotationPlan; compareTo: Ro
           </dd>
         </div>
       </dl>
+      <PlanExplanation rotation={plan} />
     </article>
   );
 }

@@ -2,6 +2,7 @@
 // run_id = "<field>:<data day>"), and publishes run events to the live room when that binding exists.
 // Called by the Cloudflare Cron Trigger (scheduled handler) and by POST /api/fieldwatch/run.
 
+import type { CropId } from "../../shared/types";
 import type { Env } from "../env";
 import { getDailyClimate } from "../data/power";
 import { yearsFor } from "../service";
@@ -16,14 +17,16 @@ export interface WatchedField {
   /** 5-digit county FIPS (used for the Kansas outlook). */
   fips: string;
   state: string;
+  /** Demo planner crop tags (not a confirmed current-season crop). */
+  crops?: CropId[];
 }
 
 /** The demo farms (same points as the planner's examples and scripts/prefetch-demo.mjs). */
 export const WATCHED_FIELDS: WatchedField[] = [
-  { id: "story-ia", name: "Story County, IA", lat: 42.0563, lon: -93.495, fips: "19169", state: "IA" },
-  { id: "champaign-il", name: "Champaign County, IL", lat: 40.048, lon: -88.33, fips: "17019", state: "IL" },
-  { id: "finney-ks", name: "Finney County, KS", lat: 38.1095, lon: -100.706, fips: "20055", state: "KS" },
-  { id: "lancaster-ne", name: "Lancaster County, NE", lat: 40.73, lon: -96.55, fips: "31109", state: "NE" },
+  { id: "story-ia", name: "Story County, IA", lat: 42.0563, lon: -93.495, fips: "19169", state: "IA", crops: ["corn"] },
+  { id: "champaign-il", name: "Champaign County, IL", lat: 40.048, lon: -88.33, fips: "17019", state: "IL", crops: ["soybean", "corn"] },
+  { id: "finney-ks", name: "Finney County, KS", lat: 38.1095, lon: -100.706, fips: "20055", state: "KS", crops: ["corn"] },
+  { id: "lancaster-ne", name: "Lancaster County, NE", lat: 40.73, lon: -96.55, fips: "31109", state: "NE", crops: ["corn", "soybean"] },
 ];
 
 export type Trigger = "cron" | "manual";
@@ -52,7 +55,7 @@ export interface FieldWatchDeps {
   kansas: (db: D1Database | undefined, fips: string) => Promise<KansasSignal | null>;
 }
 
-const defaultDeps: FieldWatchDeps = {
+export const defaultDeps: FieldWatchDeps = {
   recent: (db, f, today) => getRecentDays(db, f.lat, f.lon, today),
   history: async (env, f, today) => {
     const y = yearsFor(env, today);
@@ -61,7 +64,7 @@ const defaultDeps: FieldWatchDeps = {
   kansas: (db, fips) => getKansasSignal(db, fips),
 };
 
-function sourcesFor(f: WatchedField, kansas: KansasSignal | null) {
+export function sourcesFor(f: WatchedField, kansas: KansasSignal | null) {
   const s = [
     { name: "NASA POWER daily", url: "https://power.larc.nasa.gov/", detail: "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year" },
     { name: "FAO-56 Hargreaves ET0", url: "https://www.fao.org/4/x0490e/x0490e00.htm", detail: "Crop water demand from daily temperature and latitude" },

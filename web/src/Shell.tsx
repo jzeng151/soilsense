@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { App } from "./App";
+import { DocsAdmin } from "./components/DocsAdmin";
 import type { UIMessage } from "ai";
 import { firstUserText, GUEST_ID, loadChats, newChatId, saveChats, titleFrom, type ScoutChat } from "./chats";
 import { Sidebar, type Route } from "./components/Sidebar";
@@ -10,8 +11,10 @@ import { LivePage } from "./pages/LivePage";
 import { AuthPage } from "./pages/AuthPage";
 import { getMe, SIGNED_OUT_EVENT, signOut, type User } from "./auth";
 
-const routeFromHash = (): Route => {
+type WorkspaceRoute = Route | "admin/docs";
+const routeFromHash = (): WorkspaceRoute => {
   const h = window.location.hash;
+  if (h === "#/admin/docs") return "admin/docs";
   if (h.startsWith("#/scout")) return "scout";
   if (h.startsWith("#/sources")) return "sources";
   if (h.startsWith("#/live")) return "live";
@@ -55,7 +58,7 @@ export function Shell() {
 }
 
 function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSignedIn: (u: User) => void; onSignOut: () => void }) {
-  const [route, setRoute] = useState<Route>(routeFromHash);
+  const [route, setRoute] = useState<WorkspaceRoute>(routeFromHash);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const ownerId = user?.id ?? GUEST_ID;
   const [chats, setChats] = useState<ScoutChat[]>(() => loadChats(ownerId));
@@ -91,7 +94,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
   return (
     <div className={`shell route-${route}`}>
       <Sidebar
-        route={route}
+        route={route === "admin/docs" ? "planner" : route}
         user={user}
         onSignOut={onSignOut}
         open={sidebarOpen}
@@ -113,7 +116,9 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
         }}
       />
       <div className="shell-main">
-        {route === "scout" ? (
+        {route === "admin/docs" ? (
+          <DocsAdmin />
+        ) : route === "scout" ? (
           <ScoutPage key={activeId} chatId={activeId} initialMessages={active?.messages ?? []} onMessages={saveMessages} onMenu={() => setSidebarOpen(true)} />
         ) : route === "live" ? (
           <LivePage onMenu={() => setSidebarOpen(true)} />

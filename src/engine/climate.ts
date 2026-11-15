@@ -1,6 +1,6 @@
 // Turns NASA POWER daily data into per-year climate features and trend-tested indicators.
 
-import type { ClimateIndicator, ClimateSummary, LatLon } from "../shared/types";
+import type { ClimateIndicator, ClimateSummary, LatLon, PowerEvidence } from "../shared/types";
 import { cToF, gddCToF, mmToIn, round } from "../shared/units";
 import { mannKendall, mean } from "./stats";
 
@@ -28,6 +28,7 @@ export interface DailyClimate {
   lastYear: number;
   /** Human-readable source of the daily weather (set when another dataset replaced part of NASA POWER). */
   weatherSource?: string;
+  powerEvidence?: PowerEvidence;
 }
 
 export interface DaymetDay {
@@ -76,7 +77,7 @@ export function mergeDaymet(climate: DailyClimate, days: DaymetDay[]): { climate
 
 export interface PowerResponse {
   geometry?: { coordinates?: number[] };
-  header?: { fill_value?: number };
+  header?: { fill_value?: number; api?: { version?: string } };
   properties: { parameter: Record<string, Record<string, number>> };
 }
 
@@ -92,8 +93,8 @@ function dayOfYear(year: number, month: number, day: number): number {
 }
 
 /**
- * Parse a NASA POWER daily point response. Years with more than 10 missing days
- * (or that are incomplete, e.g. the current year) are dropped.
+ * Parse a NASA POWER daily point response. Incomplete years are excluded, not
+ * treated as dry/unstressed days. Rain, max and min temperature must cover every day.
  */
 export function parsePower(json: PowerResponse): DailyClimate {
   const fill = json.header?.fill_value ?? FILL;
@@ -127,8 +128,8 @@ export function parsePower(json: PowerResponse): DailyClimate {
   const years: YearSeries[] = [];
   for (const [year, days] of [...byYear.entries()].sort((a, b) => a[0] - b[0])) {
     const expected = dayOfYear(year, 12, 31);
-    const missing = expected - days.filter((d) => d.tmax !== null && d.prcp !== null).length;
-    if (missing <= 10) years.push({ year, days });
+    const missing = expected - days.filter((d) => d.tmax !== null && d.tmin !== null && d.prcp !== null).length;
+    if (missing === 0) years.push({ year, days });
   }
 
   const coords = json.geometry?.coordinates ?? [];

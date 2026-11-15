@@ -1,0 +1,2066 @@
+{
+  "schema": "hls-demo-window-v1",
+  "retrievedAt": "2026-11-15T13:25:59.004884+00:00",
+  "method": "Offline GDAL/rasterio 1.4.3 COG HTTP range reads, 3x3 native 30m pixels; not a Worker decoder",
+  "guide": "https://lpdaac.usgs.gov/documents/1698/HLS_User_Guide_V2.pdf",
+  "scale": 0.0001,
+  "offset": 0,
+  "fill": -9999,
+  "qaVersion": "hls-v2-strict-v1",
+  "period": [
+    "2025-07-01",
+    "2025-07-31"
+  ],
+  "selection": "One lowest tile-cloud-cover candidate per sensor per demo point from July 2025; not a complete time series or field-boundary coverage",
+  "fields": [
+    {
+      "id": "finney-ks",
+      "lat": 38.1095,
+      "lon": -100.706,
+      "observations": [
+        {
+          "id": "HLS.L30.T14SLH.2025209T171902.v2.0",
+          "collection": "HLSL30.v2.0",
+          "datetime": "2025-07-28T17:19:02.066Z",
+          "tileCloudPercent": 0,
+          "bands": [
+            "B04",
+            "B05",
+            "B06",
+            "B07",
+            "Fmask"
+          ],
+          "assets": {
+            "B04": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14SLH.2025209T171902.v2.0/HLS.L30.T14SLH.2025209T171902.v2.0.B04.tif",
+            "B05": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14SLH.2025209T171902.v2.0/HLS.L30.T14SLH.2025209T171902.v2.0.B05.tif",
+            "B06": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14SLH.2025209T171902.v2.0/HLS.L30.T14SLH.2025209T171902.v2.0.B06.tif",
+            "B07": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14SLH.2025209T171902.v2.0/HLS.L30.T14SLH.2025209T171902.v2.0.B07.tif",
+            "Fmask": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14SLH.2025209T171902.v2.0/HLS.L30.T14SLH.2025209T171902.v2.0.Fmask.tif"
+          },
+          "metadata": [
+            "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/collections/HLSL30_2.0/items/HLS.L30.T14SLH.2025209T171902.v2.0"
+          ],
+          "status": "observed",
+          "pixels": [
+            {
+              "fmask": 64,
+              "raw": [
+                1558,
+                2711,
+                3813,
+                2446
+              ],
+              "reflectance": [
+                0.1558,
+                0.2711,
+                0.38130000000000003,
+                0.2446
+              ],
+              "ndvi": 0.27008667135160463,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                1640,
+                2798,
+                3905,
+                2559
+              ],
+              "reflectance": [
+                0.164,
+                0.2798,
+                0.3905,
+                0.2559
+              ],
+              "ndvi": 0.2609283461018477,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                1751,
+                2942,
+                4041,
+                2654
+              ],
+              "reflectance": [
+                0.1751,
+                0.2942,
+                0.4041,
+                0.2654
+              ],
+              "ndvi": 0.25378222885148094,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                1624,
+                2779,
+                3912,
+                2554
+              ],
+              "reflectance": [
+                0.16240000000000002,
+                0.27790000000000004,
+                0.3912,
+                0.2554
+              ],
+              "ndvi": 0.2623211446740859,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                1660,
+                2793,
+                3938,
+                2596
+              ],
+              "reflectance": [
+                0.166,
+                0.2793,
+                0.39380000000000004,
+                0.2596
+              ],
+              "ndvi": 0.25443521221648324,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                1725,
+                2884,
+                4046,
+                2628
+              ],
+              "reflectance": [
+                0.17250000000000001,
+                0.2884,
+                0.4046,
+                0.26280000000000003
+              ],
+              "ndvi": 0.25146452592753304,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                1657,
+                2789,
+                3956,
+                2588
+              ],
+              "reflectance": [
+                0.16570000000000001,
+                0.27890000000000004,
+                0.3956,
+                0.25880000000000003
+              ],
+              "ndvi": 0.2546108861898336,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                1642,
+                2776,
+                3943,
+                2580
+              ],
+              "reflectance": [
+                0.1642,
+                0.2776,
+                0.39430000000000004,
+                0.258
+              ],
+              "ndvi": 0.2566772295156179,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                1648,
+                2793,
+                3982,
+                2560
+              ],
+              "reflectance": [
+                0.1648,
+                0.2793,
+                0.3982,
+                0.256
+              ],
+              "ndvi": 0.25782481423102904,
+              "excluded": []
+            }
+          ],
+          "clearPixelCount": 9,
+          "clearShare": 1.0,
+          "meanNdvi": 0.258014562117724,
+          "httpRangeProbes": {
+            "B04": {
+              "status": 206,
+              "contentRange": "bytes 0-15/24838086",
+              "etag": "\"55004045ed036a559e58f40ab3155054-1\""
+            },
+            "B05": {
+              "status": 206,
+              "contentRange": "bytes 0-15/26182045",
+              "etag": "\"1416bdb76b106f4a9f5da1c79fa7981a-1\""
+            },
+            "B06": {
+              "status": 206,
+              "contentRange": "bytes 0-15/26173573",
+              "etag": "\"1d0a03c50391d79dff4c814292c41bcb-1\""
+            },
+            "B07": {
+              "status": 206,
+              "contentRange": "bytes 0-15/26144888",
+              "etag": "\"aff86f263c17b0f1cecaf51938428a93-1\""
+            },
+            "Fmask": {
+              "status": 206,
+              "contentRange": "bytes 0-15/896448",
+              "etag": "\"1b37775506468f8efc8baf373b1564a4-1\""
+            }
+          },
+          "grid": {
+            "crs": "EPSG:32614",
+            "window": [
+              1680,
+              2688,
+              3,
+              3
+            ],
+            "transform": [
+              30.0,
+              0.0,
+              350400.0,
+              0.0,
+              -30.0,
+              4219380.0
+            ],
+            "bounds": [
+              350400.0,
+              4219290.0,
+              350490.0,
+              4219380.0
+            ]
+          },
+          "subsetSha256": "5368baac6a36b5cece2833ce936d8f44226db46da27ad89a44a4445f1b505110"
+        },
+        {
+          "id": "HLS.S30.T14SLH.2025189T172859.v2.0",
+          "collection": "HLSS30.v2.0",
+          "datetime": "2025-07-08T17:43:20.176Z",
+          "tileCloudPercent": 0,
+          "bands": [
+            "B04",
+            "B8A",
+            "B11",
+            "B12",
+            "Fmask"
+          ],
+          "assets": {
+            "B04": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T14SLH.2025189T172859.v2.0/HLS.S30.T14SLH.2025189T172859.v2.0.B04.tif",
+            "B8A": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T14SLH.2025189T172859.v2.0/HLS.S30.T14SLH.2025189T172859.v2.0.B8A.tif",
+            "B11": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T14SLH.2025189T172859.v2.0/HLS.S30.T14SLH.2025189T172859.v2.0.B11.tif",
+            "B12": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T14SLH.2025189T172859.v2.0/HLS.S30.T14SLH.2025189T172859.v2.0.B12.tif",
+            "Fmask": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T14SLH.2025189T172859.v2.0/HLS.S30.T14SLH.2025189T172859.v2.0.Fmask.tif"
+          },
+          "metadata": [
+            "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/collections/HLSS30_2.0/items/HLS.S30.T14SLH.2025189T172859.v2.0"
+          ],
+          "status": "observed",
+          "pixels": [
+            {
+              "fmask": 128,
+              "raw": [
+                1459,
+                2767,
+                3280,
+                1921
+              ],
+              "reflectance": [
+                0.1459,
+                0.2767,
+                0.328,
+                0.19210000000000002
+              ],
+              "ndvi": 0.3095125414103171,
+              "excluded": []
+            },
+            {
+              "fmask": 128,
+              "raw": [
+                1489,
+                2708,
+                3197,
+                1875
+              ],
+              "reflectance": [
+                0.1489,
+                0.27080000000000004,
+                0.31970000000000004,
+                0.1875
+              ],
+              "ndvi": 0.2904455563497737,
+              "excluded": []
+            },
+            {
+              "fmask": 128,
+              "raw": [
+                1854,
+                3318,
+                3773,
+                2239
+              ],
+              "reflectance": [
+                0.1854,
+                0.33180000000000004,
+                0.3773,
+                0.22390000000000002
+              ],
+              "ndvi": 0.28306264501160094,
+              "excluded": []
+            },
+            {
+              "fmask": 128,
+              "raw": [
+                1605,
+                2872,
+                3413,
+                1993
+              ],
+              "reflectance": [
+                0.1605,
+                0.2872,
+                0.3413,
+                0.1993
+              ],
+              "ndvi": 0.2830020102747376,
+              "excluded": []
+            },
+            {
+              "fmask": 128,
+              "raw": [
+                1635,
+                2932,
+                3494,
+                2070
+              ],
+              "reflectance": [
+                0.1635,
+                0.2932,
+                0.34940000000000004,
+                0.20700000000000002
+              ],
+              "ndvi": 0.28399386906065255,
+              "excluded": []
+            },
+            {
+              "fmask": 128,
+              "raw": [
+                1806,
+                3296,
+                3837,
+                2265
+              ],
+              "reflectance": [
+                0.1806,
+                0.3296,
+                0.38370000000000004,
+                0.2265
+              ],
+              "ndvi": 0.2920423363386907,
+              "excluded": []
+            },
+            {
+              "fmask": 128,
+              "raw": [
+                1748,
+                3204,
+                3768,
+                2235
+              ],
+              "reflectance": [
+                0.1748,
+                0.3204,
+                0.3768,
+                0.2235
+              ],
+              "ndvi": 0.2940226171243942,
+              "excluded": []
+            },
+            {
+              "fmask": 128,
+              "raw": [
+                1714,
+                3146,
+                3736,
+                2232
+              ],
+              "reflectance": [
+                0.1714,
+                0.3146,
+                0.37360000000000004,
+                0.2232
+              ],
+              "ndvi": 0.29465020576131684,
+              "excluded": []
+            },
+            {
+              "fmask": 128,
+              "raw": [
+                1691,
+                3193,
+                3754,
+                2200
+              ],
+              "reflectance": [
+                0.1691,
+                0.31930000000000003,
+                0.3754,
+                0.22
+              ],
+              "ndvi": 0.30753480753480755,
+              "excluded": []
+            }
+          ],
+          "clearPixelCount": 9,
+          "clearShare": 1.0,
+          "meanNdvi": 0.2931407320962546,
+          "httpRangeProbes": {
+            "B04": {
+              "status": 206,
+              "contentRange": "bytes 0-15/25969724",
+              "etag": "\"65e44d7272c38a0c2011070c9cfb9998-1\""
+            },
+            "B8A": {
+              "status": 206,
+              "contentRange": "bytes 0-15/26344166",
+              "etag": "\"22e269f10770c8beb52d98e417ae5e70-1\""
+            },
+            "B11": {
+              "status": 206,
+              "contentRange": "bytes 0-15/26585387",
+              "etag": "\"b4c9759c3faee38040b893bad3fc10e8-1\""
+            },
+            "B12": {
+              "status": 206,
+              "contentRange": "bytes 0-15/26517341",
+              "etag": "\"225d1c9967f2b6988f52a1b949dd8b73-1\""
+            },
+            "Fmask": {
+              "status": 206,
+              "contentRange": "bytes 0-15/1632726",
+              "etag": "\"bcb10f123dd31aafb63dcb04666bea59-1\""
+            }
+          },
+          "grid": {
+            "crs": "EPSG:32614",
+            "window": [
+              1680,
+              2688,
+              3,
+              3
+            ],
+            "transform": [
+              30.0,
+              0.0,
+              350400.0,
+              0.0,
+              -30.0,
+              4219380.0
+            ],
+            "bounds": [
+              350400.0,
+              4219290.0,
+              350490.0,
+              4219380.0
+            ]
+          },
+          "subsetSha256": "00d2c5db735952a40a584cfb8e7200727271c8efb2c81413551583d805b6b39d"
+        }
+      ],
+      "searches": [
+        {
+          "url": "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/search?collections=HLSL30.v2.0&bbox=-100.7061%2C38.109399999999994%2C-100.7059%2C38.1096&datetime=2025-07-01T00%3A00%3A00Z%2F2025-07-31T23%3A59%3A59Z&limit=100",
+          "matched": 3,
+          "candidateIds": [
+            "HLS.L30.T14SLH.2025185T171919.v2.0",
+            "HLS.L30.T14SLH.2025201T171901.v2.0",
+            "HLS.L30.T14SLH.2025209T171902.v2.0"
+          ]
+        },
+        {
+          "url": "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/search?collections=HLSS30.v2.0&bbox=-100.7061%2C38.109399999999994%2C-100.7059%2C38.1096&datetime=2025-07-01T00%3A00%3A00Z%2F2025-07-31T23%3A59%3A59Z&limit=100",
+          "matched": 15,
+          "candidateIds": [
+            "HLS.S30.T14SLH.2025183T172721.v2.0",
+            "HLS.S30.T14SLH.2025184T172921.v2.0",
+            "HLS.S30.T14SLH.2025186T171859.v2.0",
+            "HLS.S30.T14SLH.2025189T172859.v2.0",
+            "HLS.S30.T14SLH.2025191T171921.v2.0",
+            "HLS.S30.T14SLH.2025194T172921.v2.0",
+            "HLS.S30.T14SLH.2025196T171859.v2.0",
+            "HLS.S30.T14SLH.2025196T173731.v2.0",
+            "HLS.S30.T14SLH.2025199T172859.v2.0",
+            "HLS.S30.T14SLH.2025201T171921.v2.0",
+            "HLS.S30.T14SLH.2025203T172731.v2.0",
+            "HLS.S30.T14SLH.2025204T172921.v2.0",
+            "HLS.S30.T14SLH.2025206T171859.v2.0",
+            "HLS.S30.T14SLH.2025209T172859.v2.0",
+            "HLS.S30.T14SLH.2025211T171921.v2.0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "story-ia",
+      "lat": 42.0563,
+      "lon": -93.495,
+      "observations": [
+        {
+          "id": "HLS.L30.T15TVG.2025204T165916.v2.0",
+          "collection": "HLSL30.v2.0",
+          "datetime": "2025-07-23T16:59:16.797Z",
+          "tileCloudPercent": 0,
+          "bands": [
+            "B04",
+            "B05",
+            "B06",
+            "B07",
+            "Fmask"
+          ],
+          "assets": {
+            "B04": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T15TVG.2025204T165916.v2.0/HLS.L30.T15TVG.2025204T165916.v2.0.B04.tif",
+            "B05": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T15TVG.2025204T165916.v2.0/HLS.L30.T15TVG.2025204T165916.v2.0.B05.tif",
+            "B06": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T15TVG.2025204T165916.v2.0/HLS.L30.T15TVG.2025204T165916.v2.0.B06.tif",
+            "B07": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T15TVG.2025204T165916.v2.0/HLS.L30.T15TVG.2025204T165916.v2.0.B07.tif",
+            "Fmask": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T15TVG.2025204T165916.v2.0/HLS.L30.T15TVG.2025204T165916.v2.0.Fmask.tif"
+          },
+          "metadata": [
+            "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/collections/HLSL30_2.0/items/HLS.L30.T15TVG.2025204T165916.v2.0"
+          ],
+          "status": "observed",
+          "pixels": [
+            {
+              "fmask": 64,
+              "raw": [
+                250,
+                4167,
+                1606,
+                657
+              ],
+              "reflectance": [
+                0.025,
+                0.4167,
+                0.16060000000000002,
+                0.06570000000000001
+              ],
+              "ndvi": 0.8868009961512338,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                249,
+                4483,
+                1648,
+                662
+              ],
+              "reflectance": [
+                0.024900000000000002,
+                0.44830000000000003,
+                0.1648,
+                0.06620000000000001
+              ],
+              "ndvi": 0.8947590870667794,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                232,
+                4861,
+                1688,
+                656
+              ],
+              "reflectance": [
+                0.023200000000000002,
+                0.48610000000000003,
+                0.1688,
+                0.0656
+              ],
+              "ndvi": 0.9088945611623797,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                266,
+                3859,
+                1795,
+                795
+              ],
+              "reflectance": [
+                0.026600000000000002,
+                0.3859,
+                0.17950000000000002,
+                0.0795
+              ],
+              "ndvi": 0.8710303030303029,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                235,
+                4689,
+                1865,
+                787
+              ],
+              "reflectance": [
+                0.0235,
+                0.46890000000000004,
+                0.1865,
+                0.0787
+              ],
+              "ndvi": 0.9045491470349308,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                208,
+                5724,
+                2016,
+                807
+              ],
+              "reflectance": [
+                0.020800000000000003,
+                0.5724,
+                0.2016,
+                0.08070000000000001
+              ],
+              "ndvi": 0.9298718813216452,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                274,
+                4211,
+                1926,
+                846
+              ],
+              "reflectance": [
+                0.0274,
+                0.42110000000000003,
+                0.19260000000000002,
+                0.08460000000000001
+              ],
+              "ndvi": 0.877814938684504,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                229,
+                5068,
+                2014,
+                833
+              ],
+              "reflectance": [
+                0.0229,
+                0.5068,
+                0.20140000000000002,
+                0.0833
+              ],
+              "ndvi": 0.9135359637530678,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                203,
+                6011,
+                2122,
+                856
+              ],
+              "reflectance": [
+                0.020300000000000002,
+                0.6011000000000001,
+                0.2122,
+                0.08560000000000001
+              ],
+              "ndvi": 0.9346636626971355,
+              "excluded": []
+            }
+          ],
+          "clearPixelCount": 9,
+          "clearShare": 1.0,
+          "meanNdvi": 0.9024356156557753,
+          "httpRangeProbes": {
+            "B04": {
+              "status": 206,
+              "contentRange": "bytes 0-15/16282641",
+              "etag": "\"74e5f5ec0bc13f53653c16c3cb30338d-1\""
+            },
+            "B05": {
+              "status": 206,
+              "contentRange": "bytes 0-15/20223930",
+              "etag": "\"922b937b866424f019a5436ae7aff75c-1\""
+            },
+            "B06": {
+              "status": 206,
+              "contentRange": "bytes 0-15/18699747",
+              "etag": "\"32b35cc4ec137c14e00be1ca89ecc387-1\""
+            },
+            "B07": {
+              "status": 206,
+              "contentRange": "bytes 0-15/17686782",
+              "etag": "\"cfe687a9ef2c3fd0c8761623f2987850-1\""
+            },
+            "Fmask": {
+              "status": 206,
+              "contentRange": "bytes 0-15/764007",
+              "etag": "\"c3a3943e70cd5e3c624b773144e265f7-1\""
+            }
+          },
+          "grid": {
+            "crs": "EPSG:32615",
+            "window": [
+              1968,
+              1462,
+              3,
+              3
+            ],
+            "transform": [
+              30.0,
+              0.0,
+              459000.0,
+              0.0,
+              -30.0,
+              4656180.0
+            ],
+            "bounds": [
+              459000.0,
+              4656090.0,
+              459090.0,
+              4656180.0
+            ]
+          },
+          "subsetSha256": "ecd79eb2d4f60edc0f1fa38c03a4830237900c1c977e66bee541fe03c96bb611"
+        },
+        {
+          "id": "HLS.S30.T15TVG.2025195T165921.v2.0",
+          "collection": "HLSS30.v2.0",
+          "datetime": "2025-07-14T17:12:30.639Z",
+          "tileCloudPercent": 3,
+          "bands": [
+            "B04",
+            "B8A",
+            "B11",
+            "B12",
+            "Fmask"
+          ],
+          "assets": {
+            "B04": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T15TVG.2025195T165921.v2.0/HLS.S30.T15TVG.2025195T165921.v2.0.B04.tif",
+            "B8A": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T15TVG.2025195T165921.v2.0/HLS.S30.T15TVG.2025195T165921.v2.0.B8A.tif",
+            "B11": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T15TVG.2025195T165921.v2.0/HLS.S30.T15TVG.2025195T165921.v2.0.B11.tif",
+            "B12": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T15TVG.2025195T165921.v2.0/HLS.S30.T15TVG.2025195T165921.v2.0.B12.tif",
+            "Fmask": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T15TVG.2025195T165921.v2.0/HLS.S30.T15TVG.2025195T165921.v2.0.Fmask.tif"
+          },
+          "metadata": [
+            "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/collections/HLSS30_2.0/items/HLS.S30.T15TVG.2025195T165921.v2.0"
+          ],
+          "status": "observed",
+          "pixels": [
+            {
+              "fmask": 64,
+              "raw": [
+                304,
+                3791,
+                1774,
+                774
+              ],
+              "reflectance": [
+                0.0304,
+                0.3791,
+                0.1774,
+                0.07740000000000001
+              ],
+              "ndvi": 0.8515262515262516,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                280,
+                4171,
+                1795,
+                752
+              ],
+              "reflectance": [
+                0.028,
+                0.4171,
+                0.17950000000000002,
+                0.0752
+              ],
+              "ndvi": 0.8741855762749943,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                264,
+                4704,
+                1777,
+                687
+              ],
+              "reflectance": [
+                0.0264,
+                0.47040000000000004,
+                0.1777,
+                0.0687
+              ],
+              "ndvi": 0.8937198067632851,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                396,
+                3305,
+                2026,
+                1001
+              ],
+              "reflectance": [
+                0.0396,
+                0.3305,
+                0.2026,
+                0.10010000000000001
+              ],
+              "ndvi": 0.7860037827614157,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                349,
+                3964,
+                2010,
+                920
+              ],
+              "reflectance": [
+                0.0349,
+                0.39640000000000003,
+                0.201,
+                0.092
+              ],
+              "ndvi": 0.8381636911662417,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                265,
+                5048,
+                1992,
+                790
+              ],
+              "reflectance": [
+                0.026500000000000003,
+                0.5048,
+                0.19920000000000002,
+                0.079
+              ],
+              "ndvi": 0.9002446828533786,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                493,
+                3699,
+                2231,
+                1126
+              ],
+              "reflectance": [
+                0.049300000000000004,
+                0.3699,
+                0.22310000000000002,
+                0.1126
+              ],
+              "ndvi": 0.7647900763358778,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                320,
+                4473,
+                2081,
+                925
+              ],
+              "reflectance": [
+                0.032,
+                0.44730000000000003,
+                0.2081,
+                0.0925
+              ],
+              "ndvi": 0.8664719382432713,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                269,
+                5237,
+                2047,
+                813
+              ],
+              "reflectance": [
+                0.0269,
+                0.5237,
+                0.20470000000000002,
+                0.0813
+              ],
+              "ndvi": 0.9022884126407555,
+              "excluded": []
+            }
+          ],
+          "clearPixelCount": 9,
+          "clearShare": 1.0,
+          "meanNdvi": 0.8530438020628301,
+          "httpRangeProbes": {
+            "B04": {
+              "status": 206,
+              "contentRange": "bytes 0-15/23245964",
+              "etag": "\"fbc87177c2cc43d82d4ff5652f6deb90-1\""
+            },
+            "B8A": {
+              "status": 206,
+              "contentRange": "bytes 0-15/28067180",
+              "etag": "\"706ba861281c59fb0a48ba602aa75cd7-1\""
+            },
+            "B11": {
+              "status": 206,
+              "contentRange": "bytes 0-15/25869401",
+              "etag": "\"b538f5826d674214c6f220dbf26f5be7-1\""
+            },
+            "B12": {
+              "status": 206,
+              "contentRange": "bytes 0-15/24843527",
+              "etag": "\"e1c0ed21f38db97704880a0d3dfaa71b-1\""
+            },
+            "Fmask": {
+              "status": 206,
+              "contentRange": "bytes 0-15/1929252",
+              "etag": "\"1d61568bb080beea1bf2b5ae8a56d76e-1\""
+            }
+          },
+          "grid": {
+            "crs": "EPSG:32615",
+            "window": [
+              1968,
+              1462,
+              3,
+              3
+            ],
+            "transform": [
+              30.0,
+              0.0,
+              459000.0,
+              0.0,
+              -30.0,
+              4656180.0
+            ],
+            "bounds": [
+              459000.0,
+              4656090.0,
+              459090.0,
+              4656180.0
+            ]
+          },
+          "subsetSha256": "4390115b7f3d1faa6bcb242200936cfc3021e4dd8795c9bbeb3664a17e82584a"
+        }
+      ],
+      "searches": [
+        {
+          "url": "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/search?collections=HLSL30.v2.0&bbox=-93.49510000000001%2C42.0562%2C-93.4949%2C42.056400000000004&datetime=2025-07-01T00%3A00%3A00Z%2F2025-07-31T23%3A59%3A59Z&limit=100",
+          "matched": 6,
+          "candidateIds": [
+            "HLS.L30.T15TVG.2025188T165908.v2.0",
+            "HLS.L30.T15TVG.2025189T165324.v2.0",
+            "HLS.L30.T15TVG.2025196T165914.v2.0",
+            "HLS.L30.T15TVG.2025197T165326.v2.0",
+            "HLS.L30.T15TVG.2025204T165916.v2.0",
+            "HLS.L30.T15TVG.2025212T165919.v2.0"
+          ]
+        },
+        {
+          "url": "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/search?collections=HLSS30.v2.0&bbox=-93.49510000000001%2C42.0562%2C-93.4949%2C42.056400000000004&datetime=2025-07-01T00%3A00%3A00Z%2F2025-07-31T23%3A59%3A59Z&limit=100",
+          "matched": 13,
+          "candidateIds": [
+            "HLS.S30.T15TVG.2025183T170849.v2.0",
+            "HLS.S30.T15TVG.2025185T165911.v2.0",
+            "HLS.S30.T15TVG.2025188T170911.v2.0",
+            "HLS.S30.T15TVG.2025190T170209.v2.0",
+            "HLS.S30.T15TVG.2025193T170849.v2.0",
+            "HLS.S30.T15TVG.2025195T165921.v2.0",
+            "HLS.S30.T15TVG.2025197T170721.v2.0",
+            "HLS.S30.T15TVG.2025198T170911.v2.0",
+            "HLS.S30.T15TVG.2025200T165849.v2.0",
+            "HLS.S30.T15TVG.2025200T171721.v2.0",
+            "HLS.S30.T15TVG.2025203T170849.v2.0",
+            "HLS.S30.T15TVG.2025208T170911.v2.0",
+            "HLS.S30.T15TVG.2025210T165849.v2.0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "champaign-il",
+      "lat": 40.048,
+      "lon": -88.33,
+      "observations": [
+        {
+          "id": "HLS.L30.T16TCK.2025184T163515.v2.0",
+          "collection": "HLSL30.v2.0",
+          "datetime": "2025-07-03T16:35:15.548Z",
+          "tileCloudPercent": 25,
+          "bands": [
+            "B04",
+            "B05",
+            "B06",
+            "B07",
+            "Fmask"
+          ],
+          "assets": {
+            "B04": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T16TCK.2025184T163515.v2.0/HLS.L30.T16TCK.2025184T163515.v2.0.B04.tif",
+            "B05": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T16TCK.2025184T163515.v2.0/HLS.L30.T16TCK.2025184T163515.v2.0.B05.tif",
+            "B06": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T16TCK.2025184T163515.v2.0/HLS.L30.T16TCK.2025184T163515.v2.0.B06.tif",
+            "B07": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T16TCK.2025184T163515.v2.0/HLS.L30.T16TCK.2025184T163515.v2.0.B07.tif",
+            "Fmask": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T16TCK.2025184T163515.v2.0/HLS.L30.T16TCK.2025184T163515.v2.0.Fmask.tif"
+          },
+          "metadata": [
+            "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/collections/HLSL30_2.0/items/HLS.L30.T16TCK.2025184T163515.v2.0"
+          ],
+          "status": "observed",
+          "pixels": [
+            {
+              "fmask": 68,
+              "raw": [
+                268,
+                4535,
+                1749,
+                793
+              ],
+              "reflectance": [
+                0.0268,
+                0.4535,
+                0.1749,
+                0.07930000000000001
+              ],
+              "ndvi": null,
+              "excluded": [
+                "adjacent_cloud_shadow"
+              ]
+            },
+            {
+              "fmask": 68,
+              "raw": [
+                268,
+                4606,
+                1772,
+                795
+              ],
+              "reflectance": [
+                0.0268,
+                0.4606,
+                0.1772,
+                0.0795
+              ],
+              "ndvi": null,
+              "excluded": [
+                "adjacent_cloud_shadow"
+              ]
+            },
+            {
+              "fmask": 68,
+              "raw": [
+                279,
+                4640,
+                1830,
+                834
+              ],
+              "reflectance": [
+                0.0279,
+                0.464,
+                0.183,
+                0.0834
+              ],
+              "ndvi": null,
+              "excluded": [
+                "adjacent_cloud_shadow"
+              ]
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                291,
+                4478,
+                1847,
+                889
+              ],
+              "reflectance": [
+                0.0291,
+                0.44780000000000003,
+                0.1847,
+                0.0889
+              ],
+              "ndvi": 0.8779618368630739,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                285,
+                4581,
+                1861,
+                893
+              ],
+              "reflectance": [
+                0.0285,
+                0.4581,
+                0.18610000000000002,
+                0.0893
+              ],
+              "ndvi": 0.8828606658446362,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                305,
+                4581,
+                1896,
+                914
+              ],
+              "reflectance": [
+                0.030500000000000003,
+                0.4581,
+                0.18960000000000002,
+                0.09140000000000001
+              ],
+              "ndvi": 0.8751534997953335,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                384,
+                4389,
+                2112,
+                1084
+              ],
+              "reflectance": [
+                0.038400000000000004,
+                0.4389,
+                0.2112,
+                0.10840000000000001
+              ],
+              "ndvi": 0.8390949088623507,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                391,
+                4403,
+                2140,
+                1108
+              ],
+              "reflectance": [
+                0.0391,
+                0.4403,
+                0.21400000000000002,
+                0.11080000000000001
+              ],
+              "ndvi": 0.8368794326241134,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                385,
+                4455,
+                2120,
+                1088
+              ],
+              "reflectance": [
+                0.0385,
+                0.4455,
+                0.21200000000000002,
+                0.10880000000000001
+              ],
+              "ndvi": 0.8409090909090909,
+              "excluded": []
+            }
+          ],
+          "clearPixelCount": 6,
+          "clearShare": 0.6666666666666666,
+          "meanNdvi": 0.858809905816433,
+          "httpRangeProbes": {
+            "B04": {
+              "status": 206,
+              "contentRange": "bytes 0-15/25434907",
+              "etag": "\"520d20dbec42f14e5623018e0ab78fec-1\""
+            },
+            "B05": {
+              "status": 206,
+              "contentRange": "bytes 0-15/28298803",
+              "etag": "\"fa3560c2989b0b5e4059c12b7385d574-1\""
+            },
+            "B06": {
+              "status": 206,
+              "contentRange": "bytes 0-15/27322662",
+              "etag": "\"ec4146f94637cd9042390ef50aaf0774-1\""
+            },
+            "B07": {
+              "status": 206,
+              "contentRange": "bytes 0-15/26839401",
+              "etag": "\"08cac7f71878524c430b6926758023d2-1\""
+            },
+            "Fmask": {
+              "status": 206,
+              "contentRange": "bytes 0-15/2375859",
+              "etag": "\"ec90aaa763d5a94c07a13364e55eda5e-1\""
+            }
+          },
+          "grid": {
+            "crs": "EPSG:32616",
+            "window": [
+              2883,
+              2201,
+              3,
+              3
+            ],
+            "transform": [
+              30.0,
+              0.0,
+              386490.0,
+              0.0,
+              -30.0,
+              4433970.0
+            ],
+            "bounds": [
+              386490.0,
+              4433880.0,
+              386580.0,
+              4433970.0
+            ]
+          },
+          "subsetSha256": "041ec2c79c3bb387a983199a73e321770a06ca2992e7f46138c23f9b6a157641"
+        },
+        {
+          "id": "HLS.S30.T16TCK.2025184T163839.v2.0",
+          "collection": "HLSS30.v2.0",
+          "datetime": "2025-07-03T16:52:32.050Z",
+          "tileCloudPercent": 21,
+          "bands": [
+            "B04",
+            "B8A",
+            "B11",
+            "B12",
+            "Fmask"
+          ],
+          "assets": {
+            "B04": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T16TCK.2025184T163839.v2.0/HLS.S30.T16TCK.2025184T163839.v2.0.B04.tif",
+            "B8A": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T16TCK.2025184T163839.v2.0/HLS.S30.T16TCK.2025184T163839.v2.0.B8A.tif",
+            "B11": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T16TCK.2025184T163839.v2.0/HLS.S30.T16TCK.2025184T163839.v2.0.B11.tif",
+            "B12": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T16TCK.2025184T163839.v2.0/HLS.S30.T16TCK.2025184T163839.v2.0.B12.tif",
+            "Fmask": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T16TCK.2025184T163839.v2.0/HLS.S30.T16TCK.2025184T163839.v2.0.Fmask.tif"
+          },
+          "metadata": [
+            "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/collections/HLSS30_2.0/items/HLS.S30.T16TCK.2025184T163839.v2.0"
+          ],
+          "status": "observed",
+          "pixels": [
+            {
+              "fmask": 64,
+              "raw": [
+                337,
+                4630,
+                2061,
+                1037
+              ],
+              "reflectance": [
+                0.0337,
+                0.463,
+                0.2061,
+                0.1037
+              ],
+              "ndvi": 0.8643044091000603,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                345,
+                4692,
+                2086,
+                1048
+              ],
+              "reflectance": [
+                0.0345,
+                0.4692,
+                0.2086,
+                0.1048
+              ],
+              "ndvi": 0.8630136986301369,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                378,
+                4735,
+                2155,
+                1091
+              ],
+              "reflectance": [
+                0.0378,
+                0.47350000000000003,
+                0.2155,
+                0.1091
+              ],
+              "ndvi": 0.852141599843536,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                376,
+                4556,
+                2128,
+                1117
+              ],
+              "reflectance": [
+                0.0376,
+                0.4556,
+                0.21280000000000002,
+                0.11170000000000001
+              ],
+              "ndvi": 0.8475263584752635,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                374,
+                4659,
+                2151,
+                1115
+              ],
+              "reflectance": [
+                0.0374,
+                0.46590000000000004,
+                0.2151,
+                0.1115
+              ],
+              "ndvi": 0.8513808861514007,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                382,
+                4707,
+                2180,
+                1127
+              ],
+              "reflectance": [
+                0.038200000000000005,
+                0.4707,
+                0.218,
+                0.11270000000000001
+              ],
+              "ndvi": 0.8498722735311456,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                396,
+                4417,
+                2242,
+                1189
+              ],
+              "reflectance": [
+                0.0396,
+                0.44170000000000004,
+                0.2242,
+                0.1189
+              ],
+              "ndvi": 0.8354456679825472,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                392,
+                4547,
+                2229,
+                1189
+              ],
+              "reflectance": [
+                0.0392,
+                0.45470000000000005,
+                0.22290000000000001,
+                0.1189
+              ],
+              "ndvi": 0.8412634136464872,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                399,
+                4524,
+                2256,
+                1200
+              ],
+              "reflectance": [
+                0.039900000000000005,
+                0.4524,
+                0.22560000000000002,
+                0.12000000000000001
+              ],
+              "ndvi": 0.837903717245582,
+              "excluded": []
+            }
+          ],
+          "clearPixelCount": 9,
+          "clearShare": 1.0,
+          "meanNdvi": 0.8492057805117955,
+          "httpRangeProbes": {
+            "B04": {
+              "status": 206,
+              "contentRange": "bytes 0-15/25312363",
+              "etag": "\"cb753b755a64e17faae86e6a24c33a64-1\""
+            },
+            "B8A": {
+              "status": 206,
+              "contentRange": "bytes 0-15/28028377",
+              "etag": "\"26c09e4c7882a3bed2049cf75eadf873-1\""
+            },
+            "B11": {
+              "status": 206,
+              "contentRange": "bytes 0-15/26935820",
+              "etag": "\"b51c8db10e52b3ffd05d4d342e7d87ff-1\""
+            },
+            "B12": {
+              "status": 206,
+              "contentRange": "bytes 0-15/26557880",
+              "etag": "\"c35f0dc652bc57eedc5f160c5a6ebc7b-1\""
+            },
+            "Fmask": {
+              "status": 206,
+              "contentRange": "bytes 0-15/2310484",
+              "etag": "\"1b88bee4613f4643701e3289c6a3bbc5-1\""
+            }
+          },
+          "grid": {
+            "crs": "EPSG:32616",
+            "window": [
+              2883,
+              2201,
+              3,
+              3
+            ],
+            "transform": [
+              30.0,
+              0.0,
+              386490.0,
+              0.0,
+              -30.0,
+              4433970.0
+            ],
+            "bounds": [
+              386490.0,
+              4433880.0,
+              386580.0,
+              4433970.0
+            ]
+          },
+          "subsetSha256": "60b2495b608b229c8336b5c06ea60ba85cd613d21d03d893dea536631338cc0c"
+        }
+      ],
+      "searches": [
+        {
+          "url": "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/search?collections=HLSL30.v2.0&bbox=-88.3301%2C40.0479%2C-88.3299%2C40.048100000000005&datetime=2025-07-01T00%3A00%3A00Z%2F2025-07-31T23%3A59%3A59Z&limit=100",
+          "matched": 6,
+          "candidateIds": [
+            "HLS.L30.T16TCK.2025184T163515.v2.0",
+            "HLS.L30.T16TCK.2025185T162902.v2.0",
+            "HLS.L30.T16TCK.2025192T163513.v2.0",
+            "HLS.L30.T16TCK.2025193T162906.v2.0",
+            "HLS.L30.T16TCK.2025208T163522.v2.0",
+            "HLS.L30.T16TCK.2025209T162912.v2.0"
+          ]
+        },
+        {
+          "url": "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/search?collections=HLSS30.v2.0&bbox=-88.3301%2C40.0479%2C-88.3299%2C40.048100000000005&datetime=2025-07-01T00%3A00%3A00Z%2F2025-07-31T23%3A59%3A59Z&limit=100",
+          "matched": 5,
+          "candidateIds": [
+            "HLS.S30.T16TCK.2025184T163839.v2.0",
+            "HLS.S30.T16TCK.2025189T163921.v2.0",
+            "HLS.S30.T16TCK.2025199T163921.v2.0",
+            "HLS.S30.T16TCK.2025204T163839.v2.0",
+            "HLS.S30.T16TCK.2025209T163921.v2.0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lancaster-ne",
+      "lat": 40.73,
+      "lon": -96.55,
+      "observations": [
+        {
+          "id": "HLS.L30.T14TPL.2025195T170546.v2.0",
+          "collection": "HLSL30.v2.0",
+          "datetime": "2025-07-14T17:05:46.326Z",
+          "tileCloudPercent": 0,
+          "bands": [
+            "B04",
+            "B05",
+            "B06",
+            "B07",
+            "Fmask"
+          ],
+          "assets": {
+            "B04": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14TPL.2025195T170546.v2.0/HLS.L30.T14TPL.2025195T170546.v2.0.B04.tif",
+            "B05": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14TPL.2025195T170546.v2.0/HLS.L30.T14TPL.2025195T170546.v2.0.B05.tif",
+            "B06": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14TPL.2025195T170546.v2.0/HLS.L30.T14TPL.2025195T170546.v2.0.B06.tif",
+            "B07": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14TPL.2025195T170546.v2.0/HLS.L30.T14TPL.2025195T170546.v2.0.B07.tif",
+            "Fmask": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14TPL.2025195T170546.v2.0/HLS.L30.T14TPL.2025195T170546.v2.0.Fmask.tif"
+          },
+          "metadata": [
+            "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/collections/HLSL30_2.0/items/HLS.L30.T14TPL.2025195T170546.v2.0"
+          ],
+          "status": "observed",
+          "pixels": [
+            {
+              "fmask": 64,
+              "raw": [
+                238,
+                4212,
+                1389,
+                542
+              ],
+              "reflectance": [
+                0.0238,
+                0.4212,
+                0.1389,
+                0.054200000000000005
+              ],
+              "ndvi": 0.8930337078651686,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                271,
+                3505,
+                1389,
+                556
+              ],
+              "reflectance": [
+                0.027100000000000003,
+                0.35050000000000003,
+                0.1389,
+                0.055600000000000004
+              ],
+              "ndvi": 0.8564618644067796,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                308,
+                3962,
+                1745,
+                744
+              ],
+              "reflectance": [
+                0.0308,
+                0.3962,
+                0.17450000000000002,
+                0.07440000000000001
+              ],
+              "ndvi": 0.8557377049180328,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                284,
+                4023,
+                1595,
+                706
+              ],
+              "reflectance": [
+                0.0284,
+                0.40230000000000005,
+                0.1595,
+                0.07060000000000001
+              ],
+              "ndvi": 0.8681216624100303,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                341,
+                3739,
+                1737,
+                804
+              ],
+              "reflectance": [
+                0.0341,
+                0.3739,
+                0.17370000000000002,
+                0.0804
+              ],
+              "ndvi": 0.8328431372549019,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                340,
+                3772,
+                1703,
+                753
+              ],
+              "reflectance": [
+                0.034,
+                0.37720000000000004,
+                0.1703,
+                0.0753
+              ],
+              "ndvi": 0.8346303501945527,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                336,
+                3837,
+                1826,
+                844
+              ],
+              "reflectance": [
+                0.033600000000000005,
+                0.38370000000000004,
+                0.1826,
+                0.0844
+              ],
+              "ndvi": 0.8389647735442127,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                350,
+                3873,
+                1854,
+                885
+              ],
+              "reflectance": [
+                0.035,
+                0.38730000000000003,
+                0.1854,
+                0.08850000000000001
+              ],
+              "ndvi": 0.8342410608572106,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                356,
+                3573,
+                1708,
+                768
+              ],
+              "reflectance": [
+                0.0356,
+                0.3573,
+                0.1708,
+                0.07680000000000001
+              ],
+              "ndvi": 0.8187834054466785,
+              "excluded": []
+            }
+          ],
+          "clearPixelCount": 9,
+          "clearShare": 1.0,
+          "meanNdvi": 0.8480908518775075,
+          "httpRangeProbes": {
+            "B04": {
+              "status": 206,
+              "contentRange": "bytes 0-15/17013199",
+              "etag": "\"a7b2cdfba4a89f540538a635abb604a0-1\""
+            },
+            "B05": {
+              "status": 206,
+              "contentRange": "bytes 0-15/19673912",
+              "etag": "\"8a63698aa3bb0cc982fbaba0638f00cc-1\""
+            },
+            "B06": {
+              "status": 206,
+              "contentRange": "bytes 0-15/18721953",
+              "etag": "\"67b512c267e82f33421d8be238b4e6e7-1\""
+            },
+            "B07": {
+              "status": 206,
+              "contentRange": "bytes 0-15/18247105",
+              "etag": "\"374f564760c88cdab874269e7048d892-1\""
+            },
+            "Fmask": {
+              "status": 206,
+              "contentRange": "bytes 0-15/858203",
+              "etag": "\"e559bb5d35f215aa655b0e7db90c3088-1\""
+            }
+          },
+          "grid": {
+            "crs": "EPSG:32614",
+            "window": [
+              3562,
+              2943,
+              3,
+              3
+            ],
+            "transform": [
+              30.0,
+              0.0,
+              706860.0,
+              0.0,
+              -30.0,
+              4511730.0
+            ],
+            "bounds": [
+              706860.0,
+              4511640.0,
+              706950.0,
+              4511730.0
+            ]
+          },
+          "subsetSha256": "e40bac3c610ec73b2abf32e2d02195d83ff7f3d7168c4a6c78a7bd48bf3f2d29"
+        },
+        {
+          "id": "HLS.S30.T14TPL.2025208T170911.v2.0",
+          "collection": "HLSS30.v2.0",
+          "datetime": "2025-07-27T17:22:51.651Z",
+          "tileCloudPercent": 1,
+          "bands": [
+            "B04",
+            "B8A",
+            "B11",
+            "B12",
+            "Fmask"
+          ],
+          "assets": {
+            "B04": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T14TPL.2025208T170911.v2.0/HLS.S30.T14TPL.2025208T170911.v2.0.B04.tif",
+            "B8A": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T14TPL.2025208T170911.v2.0/HLS.S30.T14TPL.2025208T170911.v2.0.B8A.tif",
+            "B11": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T14TPL.2025208T170911.v2.0/HLS.S30.T14TPL.2025208T170911.v2.0.B11.tif",
+            "B12": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T14TPL.2025208T170911.v2.0/HLS.S30.T14TPL.2025208T170911.v2.0.B12.tif",
+            "Fmask": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSS30.020/HLS.S30.T14TPL.2025208T170911.v2.0/HLS.S30.T14TPL.2025208T170911.v2.0.Fmask.tif"
+          },
+          "metadata": [
+            "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/collections/HLSS30_2.0/items/HLS.S30.T14TPL.2025208T170911.v2.0"
+          ],
+          "status": "observed",
+          "pixels": [
+            {
+              "fmask": 64,
+              "raw": [
+                229,
+                4020,
+                1465,
+                543
+              ],
+              "reflectance": [
+                0.0229,
+                0.402,
+                0.14650000000000002,
+                0.0543
+              ],
+              "ndvi": 0.8922099317486468,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                250,
+                3618,
+                1505,
+                569
+              ],
+              "reflectance": [
+                0.025,
+                0.3618,
+                0.1505,
+                0.056900000000000006
+              ],
+              "ndvi": 0.8707342295760082,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                290,
+                4040,
+                1781,
+                699
+              ],
+              "reflectance": [
+                0.029,
+                0.404,
+                0.1781,
+                0.0699
+              ],
+              "ndvi": 0.8660508083140877,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                266,
+                3900,
+                1572,
+                615
+              ],
+              "reflectance": [
+                0.026600000000000002,
+                0.39,
+                0.1572,
+                0.061500000000000006
+              ],
+              "ndvi": 0.8722995679308689,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                295,
+                3877,
+                1684,
+                669
+              ],
+              "reflectance": [
+                0.029500000000000002,
+                0.38770000000000004,
+                0.16840000000000002,
+                0.0669
+              ],
+              "ndvi": 0.858581016299137,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                301,
+                3786,
+                1733,
+                703
+              ],
+              "reflectance": [
+                0.030100000000000002,
+                0.3786,
+                0.1733,
+                0.0703
+              ],
+              "ndvi": 0.8527036946415463,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                319,
+                3795,
+                1718,
+                695
+              ],
+              "reflectance": [
+                0.031900000000000005,
+                0.3795,
+                0.1718,
+                0.0695
+              ],
+              "ndvi": 0.8449197860962567,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                282,
+                3905,
+                1723,
+                683
+              ],
+              "reflectance": [
+                0.028200000000000003,
+                0.3905,
+                0.1723,
+                0.0683
+              ],
+              "ndvi": 0.8652973489371866,
+              "excluded": []
+            },
+            {
+              "fmask": 64,
+              "raw": [
+                286,
+                3711,
+                1735,
+                706
+              ],
+              "reflectance": [
+                0.0286,
+                0.37110000000000004,
+                0.17350000000000002,
+                0.07060000000000001
+              ],
+              "ndvi": 0.8568926695021265,
+              "excluded": []
+            }
+          ],
+          "clearPixelCount": 9,
+          "clearShare": 1.0,
+          "meanNdvi": 0.8644098947828739,
+          "httpRangeProbes": {
+            "B04": {
+              "status": 206,
+              "contentRange": "bytes 0-15/15725170",
+              "etag": "\"94cd60b9d663338184a046abbcaae22c-1\""
+            },
+            "B8A": {
+              "status": 206,
+              "contentRange": "bytes 0-15/19292948",
+              "etag": "\"0acdc26f2e6ce73f50ce46d450c748a5-1\""
+            },
+            "B11": {
+              "status": 206,
+              "contentRange": "bytes 0-15/17806063",
+              "etag": "\"aee72ddeab8ce811b06dd1d98b9dccf2-1\""
+            },
+            "B12": {
+              "status": 206,
+              "contentRange": "bytes 0-15/17038741",
+              "etag": "\"9eb30b5f5c4188307ea6dbf35d942dd2-1\""
+            },
+            "Fmask": {
+              "status": 206,
+              "contentRange": "bytes 0-15/1006086",
+              "etag": "\"aa50070a9f61eb6379641cae844cdc6d-1\""
+            }
+          },
+          "grid": {
+            "crs": "EPSG:32614",
+            "window": [
+              3562,
+              2943,
+              3,
+              3
+            ],
+            "transform": [
+              30.0,
+              0.0,
+              706860.0,
+              0.0,
+              -30.0,
+              4511730.0
+            ],
+            "bounds": [
+              706860.0,
+              4511640.0,
+              706950.0,
+              4511730.0
+            ]
+          },
+          "subsetSha256": "d9d725ff500504dcb9edc4e52acc9763704165caec8099140520f6ce26b915b7"
+        }
+      ],
+      "searches": [
+        {
+          "url": "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/search?collections=HLSL30.v2.0&bbox=-96.5501%2C40.729899999999994%2C-96.5499%2C40.7301&datetime=2025-07-01T00%3A00%3A00Z%2F2025-07-31T23%3A59%3A59Z&limit=100",
+          "matched": 9,
+          "candidateIds": [
+            "HLS.L30.T14TPL.2025187T170545.v2.0",
+            "HLS.L30.T15TTF.2025187T170545.v2.0",
+            "HLS.L30.T14TQL.2025187T170545.v2.0",
+            "HLS.L30.T14TQL.2025195T170546.v2.0",
+            "HLS.L30.T15TTF.2025195T170546.v2.0",
+            "HLS.L30.T14TPL.2025195T170546.v2.0",
+            "HLS.L30.T14TPL.2025203T170552.v2.0",
+            "HLS.L30.T15TTF.2025203T170552.v2.0",
+            "HLS.L30.T14TQL.2025203T170552.v2.0"
+          ]
+        },
+        {
+          "url": "https://cmr.earthdata.nasa.gov/stac/LPCLOUD/search?collections=HLSS30.v2.0&bbox=-96.5501%2C40.729899999999994%2C-96.5499%2C40.7301&datetime=2025-07-01T00%3A00%3A00Z%2F2025-07-31T23%3A59%3A59Z&limit=100",
+          "matched": 38,
+          "candidateIds": [
+            "HLS.S30.T15TTF.2025183T170849.v2.0",
+            "HLS.S30.T14TQL.2025183T170849.v2.0",
+            "HLS.S30.T14TPL.2025183T170849.v2.0",
+            "HLS.S30.T15TTF.2025183T172721.v2.0",
+            "HLS.S30.T14TQL.2025183T172721.v2.0",
+            "HLS.S30.T14TPL.2025183T172721.v2.0",
+            "HLS.S30.T15TTF.2025186T171859.v2.0",
+            "HLS.S30.T14TQL.2025186T171859.v2.0",
+            "HLS.S30.T14TPL.2025186T171859.v2.0",
+            "HLS.S30.T15TTF.2025188T170911.v2.0",
+            "HLS.S30.T14TQL.2025188T170911.v2.0",
+            "HLS.S30.T14TPL.2025188T170911.v2.0",
+            "HLS.S30.T14TPL.2025191T171921.v2.0",
+            "HLS.S30.T15TTF.2025193T170849.v2.0",
+            "HLS.S30.T14TQL.2025193T170849.v2.0",
+            "HLS.S30.T14TPL.2025193T170849.v2.0",
+            "HLS.S30.T15TTF.2025196T171859.v2.0",
+            "HLS.S30.T14TQL.2025196T171859.v2.0",
+            "HLS.S30.T14TPL.2025196T171859.v2.0",
+            "HLS.S30.T15TTF.2025198T170911.v2.0",
+            "HLS.S30.T14TQL.2025198T170911.v2.0",
+            "HLS.S30.T14TPL.2025198T170911.v2.0",
+            "HLS.S30.T15TTF.2025200T171721.v2.0",
+            "HLS.S30.T14TQL.2025200T171721.v2.0",
+            "HLS.S30.T14TPL.2025200T171721.v2.0",
+            "HLS.S30.T15TTF.2025201T171921.v2.0",
+            "HLS.S30.T14TQL.2025201T171921.v2.0",
+            "HLS.S30.T14TPL.2025201T171921.v2.0",
+            "HLS.S30.T15TTF.2025203T170849.v2.0",
+            "HLS.S30.T14TQL.2025203T170849.v2.0",
+            "HLS.S30.T14TPL.2025203T170849.v2.0",
+            "HLS.S30.T14TPL.2025203T172731.v2.0",
+            "HLS.S30.T15TTF.2025206T171859.v2.0",
+            "HLS.S30.T14TQL.2025206T171859.v2.0",
+            "HLS.S30.T15TTF.2025208T170911.v2.0",
+            "HLS.S30.T14TQL.2025208T170911.v2.0",
+            "HLS.S30.T14TPL.2025208T170911.v2.0",
+            "HLS.S30.T14TPL.2025211T171921.v2.0"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -11,6 +11,7 @@ import { IndicatorGuide, SoilBuild } from "./components/SoilBuild";
 import { SecondOpinion } from "./components/SecondOpinion";
 import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
+import { HlsEvidenceCard } from "./components/HlsEvidenceCard";
 import { Sprout } from "./components/Sprout";
 import { VegetationCard } from "./components/VegetationCard";
 import { EconomicsCard } from "./components/EconomicsCard";
@@ -635,6 +636,7 @@ export function App() {
 
                 {/* stretch: data evidence */}
                 <VegetationCard plan={plan} />
+                <HlsEvidenceCard key={`hls:${plan.request.lat}:${plan.request.lon}`} lat={plan.request.lat} lon={plan.request.lon} />
                 {/* /stretch: data evidence */}
                 <DataEvidence plan={plan} />
 

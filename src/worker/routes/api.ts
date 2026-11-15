@@ -222,6 +222,13 @@ api.get("/vegetation", async (c) => {
   return c.json(await getModisNdvi(c.env.DB, coords.lat, coords.lon, year));
 });
 // Cited research retrieval (Vectorize) and grounded explanations (Workers AI): see docs/RESEARCH.md.
+// Offline HLS snapshots: no secret or expensive COG decode is needed at request time.
+api.get("/hls", async c => {
+  const lat = Number(c.req.query("lat")), lon = Number(c.req.query("lon"));
+  if (!c.req.query("lat") || !c.req.query("lon") || !Number.isFinite(lat) || !Number.isFinite(lon) || lat < 24 || lat > 50 || lon < -125 || lon > -66) return c.json({ error: "Valid contiguous-US coordinates required" },400);
+  const { getHlsEvidence } = await import("../data/hls");
+  return c.json(await getHlsEvidence(lat,lon,async () => c.env.ASSETS ? c.env.ASSETS.fetch(new Request("https://assets.local/data/hls-demo.json")) : new Response(null,{status:404})));
+});
 api.route("/research", research);
 // U.S. Drought Monitor weekly county context (issue #31): /api/usdm/category, /timeline, /replay.
 import { usdm } from "./usdm";

@@ -13,6 +13,7 @@ export interface Env {
   TWILIO_AUTH_TOKEN?: string;
   TWILIO_FROM_NUMBER?: string;
   TWILIO_VALIDATE?: string;
+  EARTHDATA_TOKEN?: string;
   NASS_API_KEY?: string;
   /** OpenET API key (https://etdata.org): measured field water use, used to check the water model. Optional. */
   OPENET_API_KEY?: string;

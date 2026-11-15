@@ -1,16 +1,12 @@
-// The SoilSense furrow mark (brand guide v1.0). Colors come from tokens.css:
-// tile = --color-brand-tile, furrow = --color-accent. Use this everywhere instead of copying the SVG.
+// The Soil Sense mark: Sprout on a Sprout Green disc (the brand kit's SMS avatar).
+// Use this everywhere the product is named; the wordmark beside it is "Soil Sense" in Space Grotesk.
+import avatar from "../assets/sprout/avatar.svg";
 
-export function LogoMark({ size = 28, className = "" }: { size?: number; className?: string }) {
-  return (
-    <svg className={`logo-mark ${className}`} width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-      <rect className="logo-tile" width="32" height="32" rx="7" />
-      <path className="logo-furrow" d="M6 22c6-1 9-5 10-12 1 7 4 11 10 12" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-    </svg>
-  );
+export function LogoMark({ size = 32, className = "" }: { size?: number; className?: string }) {
+  return <img className={`logo-mark ${className}`} src={avatar} width={size} height={size} alt="" aria-hidden="true" />;
 }
 
-/** Decorative furrow arcs for brand panels. */
+/** Decorative furrow arcs (kept for any panel that still uses them). */
 export function FurrowArcs({ className = "" }: { className?: string }) {
   return (
     <svg className={`furrow-arcs ${className}`} viewBox="0 0 32 32" aria-hidden="true">

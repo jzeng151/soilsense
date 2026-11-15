@@ -121,3 +121,4 @@
 .so-current { margin-top: 0.8rem; font-size: 0.93rem; }
 .so-current p { margin: 0; }
 .so-current .so-msg { margin-top: 0.2rem; color: var(--color-text-2); }
+.jr-warn { color: var(--color-warning); font-weight: 600; }

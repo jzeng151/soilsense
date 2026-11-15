@@ -8,6 +8,7 @@ import { IndicatorGuide, SoilBuild } from "./components/SoilBuild";
 import { SecondOpinion } from "./components/SecondOpinion";
 import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
+import { Sprout } from "./components/Sprout";
 import { FieldWatchCard } from "./components/FieldWatchCard";
 import { TrendChart, trendText, trendTone } from "./components/TrendChart";
 
@@ -308,6 +309,9 @@ export function App() {
   const soil = field?.soil;
   const place = field?.county ? `${field.county.countyName}, ${field.county.stateCode}` : null;
   const recentHistory = (field?.cropHistory.years ?? []).filter((y) => y.crop).slice(-4);
+  // USDA's crop map calls this spot town, roads or buildings in its most recent years: probably not the field.
+  const lastSeen = (field?.cropHistory.years ?? []).slice(-3);
+  const looksDeveloped = lastSeen.length > 0 && !lastSeen.some((y) => y.crop) && lastSeen.every((y) => y.cdlCode >= 121 && y.cdlCode <= 124);
   const changes = plan?.climate.indicators.filter((i) => trendTone(i) !== "flat") ?? [];
   const best = plan?.plans[0];
   const others = plan?.plans.slice(1) ?? [];
@@ -318,9 +322,9 @@ export function App() {
       <header className="topbar">
         <div className="brand">
           <LogoMark size={32} />
-          <strong>SoilSense</strong>
+          <strong>Soil Sense</strong>
         </div>
-        <span className="topbar-tag">Crop plans for a changing climate</span>
+        <span className="topbar-tag">Teaching satellites to speak Farmer</span>
       </header>
 
       <main className="jr-main" ref={top}>
@@ -329,8 +333,14 @@ export function App() {
         {/* ---------- Step 1: find the field ---------- */}
         {step === "field" && (
           <section className="jr-card" aria-labelledby="s1">
-            <h1 id="s1" className="jr-title">Where is your field?</h1>
-            <p className="jr-lead">We'll look at 35 years of weather and the soil under that exact spot, then suggest what to grow for the next 3 years.</p>
+            <div className="jr-hero">
+              <Sprout mood="hello" width={96} />
+              <div>
+                <p className="eyebrow">Hi, I'm Sprout</p>
+                <h1 id="s1" className="jr-title">Where is your field?</h1>
+                <p className="jr-lead">We'll look at 35 years of weather and the soil under that exact spot, then suggest what to grow for the next 3 years.</p>
+              </div>
+            </div>
 
             <div className="jr-find">
               <form className="jr-zip" onSubmit={findZip}>
@@ -390,6 +400,11 @@ export function App() {
                             ))}
                           </span>
                         </div>
+                      )}
+                      {looksDeveloped && (
+                        <p className="jr-found-line jr-warn" role="note">
+                          ⚠️ Satellite crop maps show town or buildings here, not farmland. Tap the middle of your field on the map for a better plan.
+                        </p>
                       )}
                     </div>
                     <button type="button" className="primary" onClick={() => go("questions")}>
@@ -484,7 +499,13 @@ export function App() {
           <section aria-live="polite">
             {planLoading && (
               <div className="jr-card jr-loading">
-                <h1 className="jr-title">Building your plan…</h1>
+                <div className="jr-hero">
+                  <Sprout mood="checking" width={84} />
+                  <div>
+                    <h1 className="jr-title">Building your plan…</h1>
+                    <p className="jr-lead">Sprout is checking the NASA data for your field.</p>
+                  </div>
+                </div>
                 <ul className="jr-loading-steps">
                   {LOADING_STEPS.map((s, i) => (
                     <li key={s} className={i < loadingStep ? "done" : i === loadingStep ? "now" : ""}>
@@ -515,10 +536,15 @@ export function App() {
             {plan && !planLoading && best && (
               <>
                 <div className="jr-card jr-answer">
-                  <p className="eyebrow">
-                    Our advice for {plan.location.county ? `${plan.location.county.countyName}, ${plan.location.county.stateCode}` : "your field"}
-                  </p>
-                  <h1 className="jr-title">{planSentence(best)}</h1>
+                  <div className="jr-hero">
+                    <Sprout mood="crop-match" width={84} />
+                    <div>
+                      <p className="eyebrow">
+                        Our advice for {plan.location.county ? `${plan.location.county.countyName}, ${plan.location.county.stateCode}` : "your field"}
+                      </p>
+                      <h1 className="jr-title">{planSentence(best)}</h1>
+                    </div>
+                  </div>
                   <TopPlan plan={best} compareTo={plan.currentPractice} />
                   <BadYears plan={best} current={plan.currentPractice} />
                   {(plan.water ?? water) === "rain" && Math.max(...plan.plans.map((p) => p.avgNetReturnPerAcre)) < 15 && (
@@ -691,7 +717,7 @@ export function App() {
           </section>
         )}
       </main>
-      <footer className="foot">SoilSense · Data from NASA and USDA</footer>
+      <footer className="foot">Soil Sense · A crop consultant in every farmer's pocket · Data from NASA and USDA</footer>
     </div>
   );
 }

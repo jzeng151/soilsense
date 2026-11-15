@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import "./fieldwatch.css";
+import { Sprout } from "./Sprout";
 
 type Status = "ok" | "watch" | "dry" | "insufficient" | "error";
 interface Reason {
@@ -99,6 +100,7 @@ export function FieldWatchCard() {
   return (
     <section className="fw" aria-labelledby="fw-title">
       <header className="fw-head">
+        {data && data.runs.some((r) => r.status === "dry" || r.status === "watch") && <Sprout mood="weather-alert" width={52} className="fw-sprout" />}
         <div className="fw-title-row">
           <h3 id="fw-title">Field Watch</h3>
           <span className="fw-pill" title={data?.schedule.description ?? "Runs every hour on Cloudflare"}>
@@ -107,7 +109,7 @@ export function FieldWatchCard() {
           </span>
         </div>
         <p className="fw-sub">
-          SoilSense checks the demo farms in the background every hour, even when nobody has this page open.
+          Soil Sense checks the demo farms in the background every hour, even when nobody has this page open.
           {data && <> Last automatic check: <b>{ago(data.lastCronAt, now)}</b>.</>}
         </p>
       </header>

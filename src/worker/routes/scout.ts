@@ -38,13 +38,13 @@ const DEFAULT_WORKERS_MODEL = "@cf/google/gemma-4-26b-a4b-it";
 const MAX_STEPS = 8;
 const MAX_HISTORY = 40;
 
-const INSTRUCTIONS = `You are Scout, the AI field scout inside SoilSense, a climate-aware crop rotation advisor for US farms.
-You can call tools that reach every SoilSense data source:
+const INSTRUCTIONS = `You are Sprout, the friendly AI field scout inside Soil Sense, a climate-aware crop rotation advisor for US farms.
+You can call tools that reach every Soil Sense data source:
 - find_location: turn a 5-digit US ZIP code into coordinates.
 - get_field_data: USDA SSURGO soil and USDA Cropland Data Layer crop history for a point.
 - build_rotation_plan: 35 years of NASA POWER daily climate, Mann-Kendall trend tests, and the rotation engine that scores every feasible 3-year rotation.
 - get_crop_catalog: the crop and cover-crop assumptions (yields, prices, costs, nitrogen).
-- get_usage_analytics: aggregate stats over plans SoilSense has generated (web and phone).
+- get_usage_analytics: aggregate stats over plans Soil Sense has generated (web and phone).
 
 Rules:
 - Use tools whenever a question depends on data. Never invent numbers; quote what the tools return and name the source (NASA POWER, USDA SSURGO, USDA CDL, USDA NASS).
@@ -52,7 +52,8 @@ Rules:
 - If the user does not say whether a field is irrigated, assume rain-fed and say so. Default priority is "balanced".
 - A climate trend is "real" only if the tool marks it significant (Mann-Kendall p < 0.05).
 - Be concise and practical: short paragraphs, bullet lists, and markdown tables when comparing options. Use US units.
-- This is decision support, not a guarantee: for big decisions, suggest confirming with the county extension agent.`;
+- If someone asks your name, you are Sprout.
+- This is decision support, not a guarantee: remind the user to check the numbers in their plan before acting on them.`;
 
 const PRIORITIES = ["balanced", "profit", "soil", "risk"] as const satisfies readonly Priority[];
 
@@ -273,7 +274,7 @@ scout.post("/chat", async (c) => {
     return c.json({ error: "You're sending messages quickly. Please wait a minute and try again." }, 429);
   }
   if (scoutModels(c.env).length === 0) {
-    return c.json({ error: "Scout is not connected yet: add the Workers AI binding or set GEMINI_API_KEY." }, 503);
+    return c.json({ error: "Sprout is not connected yet: add the Workers AI binding or set GEMINI_API_KEY." }, 503);
   }
   let body: { messages?: UIMessage[] };
   try {
@@ -291,7 +292,7 @@ scout.post("/chat", async (c) => {
     originalMessages: messages,
     onError: (err) => {
       console.warn(JSON.stringify({ msg: "scout chat failed", err: String(err) }));
-      return err instanceof Error ? err.message : "Scout ran into a problem.";
+      return err instanceof Error ? err.message : "Sprout ran into a problem.";
     },
     execute: async ({ writer }) => {
       const modelMessages = await convertToModelMessages(messages);
@@ -409,5 +410,5 @@ export async function firstWorking<T extends ToolSet>(
     });
     return { stream, model: m };
   }
-  throw new Error("No Scout model is configured.");
+  throw new Error("No Sprout model is configured.");
 }

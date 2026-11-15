@@ -46,3 +46,8 @@
   .fw-detail { padding-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .fw-pulse { animation: none; } }
+
+/* Brand kit: Sprout's "Weather alert" mood when any farm is dry or on watch */
+.fw-head { position: relative; }
+.fw-head:has(.fw-sprout) { padding-right: 64px; }
+.fw-sprout { position: absolute; right: 0; top: -4px; }

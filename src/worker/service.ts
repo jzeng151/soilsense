@@ -61,6 +61,9 @@ export interface PlanOpts {
   onEvent?: (e: PlanSourceEvent) => void;
 }
 
+/** Bump whenever the engine's output changes, so cached plans from older code are never served. */
+export const PLAN_ENGINE_VERSION = "e3";
+
 export async function makePlan(
   env: Env,
   request: PlanRequest,
@@ -69,7 +72,7 @@ export async function makePlan(
   if (opts.now) return makePlanFresh(env, request, opts); // tests pin the date: always compute
   const water = request.water ?? (request.irrigated ? "full" : "rain");
   const key = [
-    "plan:v2",
+    `plan:${PLAN_ENGINE_VERSION}`,
     request.lat.toFixed(4),
     request.lon.toFixed(4),
     water,
@@ -81,15 +84,38 @@ export async function makePlan(
     new Date().toISOString().slice(0, 10),
   ].join(":");
   const t0 = Date.now();
-  const { value, cache } = await cached(env.DB, key, 6 * 3600, () => makePlanFresh(env, request, opts));
-  if (cache !== "miss") opts.onEvent?.({ source: "saved", ms: Date.now() - t0, ok: true });
-  return value;
+  try {
+    const { value, cache } = await cached(env.DB, key, 6 * 3600, async () => {
+      const meta: FreshMeta = { complete: true };
+      const plan = await makePlanFresh(env, request, opts, meta);
+      // A plan built while a key source was down (county, USDA) is shown but never saved, so the next
+      // request gets a full plan instead of repeating the gap for hours.
+      if (!meta.complete) throw new Uncached(plan);
+      return plan;
+    });
+    if (cache !== "miss") opts.onEvent?.({ source: "saved", ms: Date.now() - t0, ok: true });
+    return value;
+  } catch (err) {
+    if (err instanceof Uncached) return err.plan;
+    throw err;
+  }
+}
+
+interface FreshMeta {
+  complete: boolean;
+}
+
+class Uncached extends Error {
+  constructor(public readonly plan: PlanResponse) {
+    super("incomplete plan: not cached");
+  }
 }
 
 async function makePlanFresh(
   env: Env,
   request: PlanRequest,
   opts: PlanOpts = {},
+  meta?: FreshMeta,
 ): Promise<PlanResponse> {
   const now = opts.now ?? new Date();
   const years = yearsFor(env, now);
@@ -128,6 +154,7 @@ async function makePlanFresh(
     // OpenET only helps where we know what grew; skip it for phone calls without crop history.
     cropHistory.years.length ? timed("openet", getOpenEt(env.DB, env.OPENET_API_KEY, request.lat, request.lon, years.historyEnd)) : Promise.resolve(null),
   ]);
+  if (meta) meta.complete = county !== null && (!env.NASS_API_KEY || nass !== null);
   const tEngine = Date.now();
   const plan = buildPlan({
     request,

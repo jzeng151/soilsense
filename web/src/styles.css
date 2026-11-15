@@ -34,7 +34,7 @@ a { color: var(--green); }
 .topbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.9rem 1.5rem; background: var(--card); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
 .brand { display: flex; align-items: center; gap: 0.6rem; }
 .brand svg { width: 32px; height: 32px; }
-.brand strong { font-size: 1.2rem; letter-spacing: -0.01em; color: var(--green); }
+.brand strong { font-family: var(--font-display); font-size: 1.3rem; letter-spacing: -0.01em; color: var(--color-heading); }
 .topbar-tag { font-size: 0.9rem; color: var(--muted); }
 
 .hint { color: var(--muted); font-size: 0.92rem; margin: 0 0 0.6rem; }
@@ -56,10 +56,10 @@ a { color: var(--green); }
 /* ---------- Form ---------- */
 select, .ask input { padding: 0.7rem 0.8rem; border: 1px solid var(--line); border-radius: 10px; background: var(--color-surface); font-size: 1rem; }
 
-.primary { width: 100%; border: 0; border-radius: var(--radius-md); background: var(--accent); color: var(--color-on-cta); padding: 0.9rem 1rem; font-weight: 700; font-size: 1.05rem; transition: filter 0.15s; }
+.primary { width: 100%; border: 0; border-radius: var(--radius-full); background: var(--accent); color: var(--color-on-cta); padding: 0.85rem 1.5rem; font-weight: 600; font-size: 1.05rem; transition: filter 0.15s; }
 .primary:hover:not(:disabled) { filter: brightness(1.06); }
 .primary:disabled { opacity: 0.55; cursor: not-allowed; }
-.primary.small { width: auto; padding: 0.7rem 1.2rem; font-size: 0.95rem; }
+.primary.small { width: auto; padding: 0.65rem 1.4rem; font-size: 0.95rem; }
 .link-btn { border: 0; background: none; color: var(--green); font-weight: 600; padding: 0.4rem 0; }
 .error { background: var(--color-danger-soft); color: var(--color-text); border: 1px solid color-mix(in srgb, var(--color-danger) 35%, transparent); border-radius: 12px; padding: 0.8rem 1rem; margin: 0; }
 
@@ -67,7 +67,7 @@ select, .ask input { padding: 0.7rem 0.8rem; border: 1px solid var(--line); bord
 .intro-lead { font-size: 1.1rem; color: var(--color-text-2); margin: 0 0 1.75rem; max-width: 40rem; }
 
 /* ---------- Result ---------- */
-.eyebrow { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.78rem; font-weight: 700; color: var(--accent); margin: 0 0 0.3rem; }
+.eyebrow { text-transform: uppercase; letter-spacing: var(--tracking-label); font-size: 0.8rem; font-weight: 600; color: var(--color-eyebrow); margin: 0 0 0.35rem; }
 
 .top-plan { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem; }
 .years { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
@@ -152,8 +152,8 @@ select, .ask input { padding: 0.7rem 0.8rem; border: 1px solid var(--line); bord
 
 /* ---------- Planner: one step at a time ---------- */
 .jr-main { max-width: 860px; margin: 0 auto; padding: 1.5rem 1.25rem 2rem; display: grid; gap: 1rem; scroll-margin-top: 1rem; }
-.jr-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.6rem; }
-.jr-title { font-size: clamp(1.5rem, 3.2vw, 2.1rem); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 0.5rem; color: var(--green); }
+.jr-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-xl); box-shadow: var(--shadow); padding: 1.75rem; }
+.jr-title { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 3.4vw, 2.4rem); line-height: 1.08; letter-spacing: -0.01em; margin: 0 0 0.5rem; color: var(--color-heading); text-wrap: balance; }
 .jr-lead { font-size: 1.05rem; color: var(--color-text-2); margin: 0 0 1.25rem; max-width: 40rem; }
 .jr-h2 { font-size: 1.15rem; margin: 0 0 0.8rem; letter-spacing: -0.01em; }
 .jr-note { margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--muted); }
@@ -231,14 +231,14 @@ a.sb-foot { display: block; text-decoration: none; }
 a.sb-foot:hover { color: var(--color-text); text-decoration: underline; }
 .src-wrap { max-width: 1100px; margin: 0 auto; padding: 2.25rem 1.75rem 3rem; }
 .src-head { margin-bottom: 1rem; }
-.src-head h1 { font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 0.6rem; color: var(--green); }
+.src-head h1 { font-family: var(--font-display); font-size: clamp(1.9rem, 3.4vw, 3rem); line-height: 1.05; letter-spacing: -0.01em; margin: 0 0 0.6rem; color: var(--color-heading); }
 .src-group { margin-top: 2rem; }
 .src-group > h2 { font-size: 1.25rem; margin: 0 0 0.25rem; letter-spacing: -0.01em; }
 .src-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
 .src-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem; display: flex; flex-direction: column; }
 .src-card p { margin: 0 0 0.4rem; color: var(--color-text-2); font-size: 0.95rem; }
 .src-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.6rem; }
-.src-card h3 { margin: 0; font-size: 1.1rem; color: var(--green); }
+.src-card h3 { margin: 0; font-size: 1.2rem; color: var(--color-heading); }
 .src-card .src-org { margin: 0.1rem 0 0; font-size: 0.82rem; color: var(--muted); }
 .src-card h4 { margin: 0.8rem 0 0.35rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
 .src-chip { background: var(--green-soft); color: var(--green); font-weight: 500; white-space: normal; }
@@ -262,7 +262,7 @@ a.sb-foot:hover { color: var(--color-text); text-decoration: underline; }
 .switch input:checked + .switch-track::after { transform: translateX(18px); }
 .switch input:focus-visible + .switch-track { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 .switch-label { font-size: 0.85rem; font-weight: 600; min-width: 1.8rem; }
-.ghost { border: 1px solid var(--line); background: var(--color-surface); color: var(--ink); border-radius: 10px; padding: 0.6rem 1rem; font-weight: 600; font-size: 0.9rem; }
+.ghost { border: 2px solid var(--color-cta); background: var(--color-surface); color: var(--color-heading); border-radius: var(--radius-full); padding: 0.55rem 1.3rem; font-weight: 600; font-size: 0.9rem; }
 .ghost:hover:not(:disabled) { border-color: var(--green); color: var(--green); }
 .ghost:disabled { opacity: 0.5; cursor: not-allowed; }
 .danger { border: 0; background: var(--color-danger); color: var(--color-on-cta); border-radius: 10px; padding: 0.6rem 1rem; font-weight: 700; font-size: 0.9rem; }
@@ -270,7 +270,7 @@ a.sb-foot:hover { color: var(--color-text); text-decoration: underline; }
 /* Settings: simple layout */
 .st-wrap { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
 .st-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1.25rem; }
-.st-head h1 { margin: 0; font-size: 1.6rem; letter-spacing: -0.02em; color: var(--green); }
+.st-head h1 { margin: 0; font-family: var(--font-display); font-size: 2rem; letter-spacing: -0.01em; color: var(--color-heading); }
 .st-live { display: flex; align-items: center; gap: 0.45rem; margin: 0.3rem 0 0; font-size: 0.9rem; color: var(--muted); }
 .st-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-faint); }
 .st-live.ok .st-dot { background: var(--color-success); box-shadow: 0 0 0 3px var(--color-success-soft); }
@@ -346,3 +346,10 @@ a.sb-foot:hover { color: var(--color-text); text-decoration: underline; }
 .st-lang-chip.on { background: var(--green-soft); color: var(--green); border-color: var(--green); }
 .st-lang-chip:disabled { cursor: default; opacity: 0.85; }
 .st-lang-tag { margin-left: 0.4rem; border-radius: 6px; padding: 0 0.3rem; background: var(--line); color: var(--ink); font-size: 0.68rem; letter-spacing: 0.04em; }
+
+/* ---------- Brand kit: Sprout beside a heading ---------- */
+.jr-hero { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 0.25rem; }
+.jr-hero > div { min-width: 0; }
+.jr-hero .sprout { flex: none; }
+.jr-answer .jr-hero { margin-bottom: 0.75rem; }
+@media (max-width: 560px) { .jr-hero { flex-direction: column; align-items: flex-start; gap: 0.5rem; } }

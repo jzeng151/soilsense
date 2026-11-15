@@ -568,7 +568,7 @@ function ActivityTab({ token, onAuthError }: { token: string; onAuthError: (msg?
   if (calls.length === 0)
     return (
       <div className="st-card st-empty">
-        <p>No calls yet. Call your SoilSense number, then come back here.</p>
+        <p>No calls yet. Call your Soil Sense number, then come back here.</p>
         <button type="button" className="ghost" onClick={() => void refresh()} disabled={loading}>
           Refresh
         </button>

@@ -1,48 +1,30 @@
 /* =====================================================================================
-   SoilSense design tokens — brand guide v1.0
+   Soil Sense design tokens — from the "Soil Sense — Brand Kit" (NASA Space Apps NYC 2026)
    THE single source of truth for color, type, radius and elevation.
    Rules:
      • Components use the semantic tokens (--color-*, --font-*, --radius-*, --shadow-*), never raw hex.
-     • Raw brand values (--canopy-*, --soil-*, --night-*, --gold-*, --clay-*) are only referenced here.
-     • Light is the default. Dark applies when the OS asks for it (unless data-theme="light"),
-       when <html data-theme="dark">, and always inside .theme-dark (the sidebar and Scout).
+     • Raw brand values (--sprout-green, --canopy, …) are only referenced here.
+     • Light theme only, as in the brand kit. Panels in Canopy green use the .theme-canopy class.
+     • Harvest Gold is a FILL only: never set gold text on cream or white (1.8:1). Brown text on gold.
+     • Pair every color with a label or icon.
+   Accessible pairings (WCAG AA, from the kit): Brown on Cream 13.2 · Cream on Canopy 7.5 ·
+   White on Sprout Green 5.3 · White on Orbit Blue 8.4 · Brown on Harvest Gold 7.5 · Light Gold on Canopy 5.3.
    ===================================================================================== */
 
 :root {
-  /* ---------- Brand palette (raw values) ---------- */
-  --canopy-50: #f1f6f1;
-  --canopy-100: #e1ece2;
-  --canopy-200: #c3d9c6;
-  --canopy-300: #86bb90;
-  --canopy-400: #6f9a77;
-  --canopy-500: #4a7c54;
-  --canopy-600: #2f5d3a; /* primary */
-  --canopy-700: #244a2e;
-  --canopy-800: #1f3324;
-  --canopy-900: #142a1a;
-  --gold-500: #e9c46a; /* harvest gold: logo, focus ring */
-  --clay-400: #e8775a; /* CTA on dark */
-  --clay-600: #c2502c; /* CTA on light (4.7:1 with white) */
-
-  --soil-0: #ffffff;
-  --soil-25: #fafbf9;
-  --soil-50: #f4f5f2;
-  --soil-100: #e8eae5;
-  --soil-200: #d5d9d2;
-  --soil-400: #9aa297;
-  --soil-500: #646b65;
-  --soil-700: #3d4640;
-  --soil-900: #1a211c;
-
-  --night-950: #0e1410;
-  --night-900: #151d17;
-  --night-850: #1c261f;
-  --night-800: #26322a;
-  --night-700: #334037;
-  --night-500: #6f7c6c;
-  --night-400: #93a08f;
-  --night-200: #c5cfc3;
-  --night-100: #e8eee6;
+  /* ---------- Brand palette (raw values, from the kit) ---------- */
+  --sprout-green: #2f7a3e; /* buttons, growth */
+  --canopy: #1f5a3a;       /* headers, trust */
+  --topsoil: #6b4226;      /* earth, grounding */
+  --harvest-gold: #f2b134; /* fills only, brown text on it */
+  --light-gold: #ffc857;   /* text accent on Canopy only */
+  --orbit-blue: #1d4e89;   /* NASA data, satellites */
+  --field-cream: #fbf6ea;  /* backgrounds */
+  --soil-brown: #3b2616;   /* body text */
+  --bark: #5b4632;         /* secondary text */
+  --husk: #d8cdb4;         /* hairlines, card borders */
+  --leaf-wash: #e6f2e0;    /* soft green (Sprout's SMS bubble) */
+  --canopy-mist: #d9e8d6;  /* secondary text on Canopy */
 
   /* ---------- Crop colors (data fills only; text on them is always --color-on-crop) ---------- */
   --crop-corn: #f2cf6b;
@@ -52,177 +34,127 @@
   --crop-alfalfa: #6fb08a;
   --crop-sorghum: #d18a4a;
   --crop-fallow: #d9d4c7;
-  --color-on-crop: #1a211c;
-  --crop-tint: 28%; /* how much crop color tints a card (lower on dark) */
+  --color-on-crop: var(--soil-brown);
+  --crop-tint: 30%;
 
-  /* ---------- Type ---------- */
+  /* ---------- Type: Space Grotesk headlines, Inter for everything else ---------- */
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --text-xs: 0.75rem;   /* 12px labels */
-  --text-sm: 0.8125rem; /* 13px captions */
-  --text-md: 0.9375rem; /* 15px dense UI */
-  --text-base: 1rem;    /* 16px body */
-  --text-lg: 1.125rem;  /* 18px H3 */
-  --text-xl: 1.5rem;    /* 24px H2 */
-  --text-2xl: 2rem;     /* 32px H1 */
-  --tracking-tight: -0.02em;
-  --tracking-label: 0.06em;
+  /* The kit has no monospace face: data uses Inter with tabular figures. */
+  --font-mono: var(--font-sans);
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;   /* card titles (kit: 20px) */
+  --text-xl: 1.75rem;   /* section titles (kit: 28px) */
+  --text-2xl: 3rem;     /* page titles (kit: 48px) */
+  --tracking-tight: -0.01em;
+  --tracking-label: 2px; /* kit eyebrows: 14px, 2px tracking, uppercase */
 
-  /* ---------- Shape ---------- */
-  --radius-sm: 6px;   /* tags, chips */
-  --radius-md: 10px;  /* buttons, inputs */
-  --radius-lg: 12px;  /* cards */
-  --radius-xl: 16px;  /* hero panels */
+  /* ---------- Shape (kit: 12px swatches, 16px cards, 20px feature cards, pill buttons) ---------- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
   --radius-full: 999px;
 
-  /* ---------- Semantic colors: LIGHT ---------- */
-  --color-bg: var(--soil-25);
-  --color-surface: var(--soil-0);
-  --color-subtle: var(--soil-50);
-  --color-border: var(--soil-100);
-  --color-border-strong: var(--soil-200);
-  --color-text: var(--soil-900);
-  --color-text-2: var(--soil-700);
-  --color-muted: var(--soil-500);
-  --color-faint: var(--soil-400);
+  /* ---------- Semantic colors ---------- */
+  --color-bg: var(--field-cream);
+  --color-surface: #ffffff;
+  --color-subtle: #f4ecda;
+  --color-border: var(--husk);
+  --color-border-strong: #c4b593;
+  --color-text: var(--soil-brown);
+  --color-text-2: var(--bark);
+  --color-muted: #6e5944;          /* 5.9:1 on cream */
+  --color-faint: #a89880;
+  --color-heading: var(--canopy);  /* headlines on cream */
+  --color-eyebrow: var(--topsoil); /* uppercase eyebrows on cream */
 
-  --color-primary: var(--canopy-600);
-  --color-primary-soft: var(--canopy-100);
-  --color-primary-border: var(--canopy-200);
-  --color-on-primary: #ffffff;
-  --color-cta: var(--clay-600);
+  --color-primary: var(--sprout-green);  /* links, selected states (4.9:1 on cream) */
+  --color-primary-soft: var(--leaf-wash);
+  --color-primary-border: #b9d9ab;
+  --color-on-primary: #ffffff;           /* white on Sprout Green 5.3 */
+  --color-cta: var(--sprout-green);      /* main buttons */
   --color-on-cta: #ffffff;
-  --color-accent: var(--gold-500);
-  --color-on-accent: var(--soil-900);
-  --color-focus: var(--gold-500);
-  --color-brand-tile: var(--canopy-600); /* logo tile, same in both themes */
-  /* Brand panel (sign-in hero): always deep canopy, same in both themes */
-  --color-brand-panel: var(--canopy-900);
-  --color-brand-panel-text: var(--night-100);
-  --color-brand-panel-muted: var(--night-200);
-  --color-brand-panel-faint: var(--night-400);
-  --color-brand-highlight: var(--gold-500);
-  --color-brand-arc-2: var(--canopy-500);
-  --color-brand-arc-3: var(--canopy-600);
+  --color-accent: var(--harvest-gold);   /* highlight FILLS only */
+  --color-on-accent: var(--soil-brown);  /* brown on gold 7.5 */
+  --color-focus: var(--canopy);
+  --color-brand-tile: var(--sprout-green);
+  --color-data: var(--orbit-blue);       /* NASA / satellite data */
+  --color-on-data: #ffffff;              /* white on Orbit Blue 8.4 */
 
-  --color-success: #2f7d4a;
-  --color-success-soft: #e3f1e7;
-  --color-warning: #9a6412;
-  --color-warning-soft: #fbf0d9;
-  --color-danger: #b4492a;
-  --color-danger-soft: #fbe7df;
-  --color-info: #2d5f93;
-  --color-info-soft: #e2ecf7;
+  --color-success: var(--sprout-green);
+  --color-success-soft: var(--leaf-wash);
+  --color-warning: var(--topsoil);       /* text; the chip itself is gold-tinted */
+  --color-warning-soft: #fde9bd;
+  --color-danger: #a8402a;
+  --color-danger-soft: #f8e1d8;
+  --color-info: var(--orbit-blue);
+  --color-info-soft: #e1eaf5;
 
   --color-trend-up: var(--color-danger);    /* warming / rising */
   --color-trend-up-soft: var(--color-danger-soft);
-  --color-trend-down: var(--color-info);    /* cooling / falling */
+  --color-trend-down: var(--orbit-blue);    /* cooling / falling */
   --color-trend-down-soft: var(--color-info-soft);
-  --color-chart-grid: var(--soil-100);
-  --color-chart-series: #b7beb3;
-  --color-chart-dot: #7d8a78;
+  --color-chart-grid: #ece3cf;
+  --color-chart-series: #b8ab90;
+  --color-chart-dot: #8a775d;
 
-  --color-inverse-bg: var(--soil-900);
-  --color-inverse-text: #ffffff;
-  --color-scrim: rgba(14, 20, 16, 0.5);
+  --color-inverse-bg: var(--canopy);
+  --color-inverse-text: var(--field-cream);
+  --color-scrim: rgba(59, 38, 22, 0.45);
 
-  --shadow-sm: 0 1px 2px rgba(20, 42, 26, 0.06);
-  --shadow-md: 0 1px 2px rgba(20, 42, 26, 0.05), 0 8px 24px rgba(20, 42, 26, 0.07);
-  --shadow-lg: 0 10px 30px rgba(20, 42, 26, 0.16);
+  /* Brand panel (sign-in, side panels): Canopy with cream text, as in the kit */
+  --color-brand-panel: var(--canopy);
+  --color-brand-panel-text: var(--field-cream);
+  --color-brand-panel-muted: var(--canopy-mist);
+  --color-brand-panel-faint: #a9c6a6;
+  --color-brand-highlight: var(--light-gold);
+  --color-brand-arc-2: #4fa84a;
+  --color-brand-arc-3: var(--sprout-green);
+
+  --shadow-sm: 0 1px 2px rgba(59, 38, 22, 0.06);
+  --shadow-md: 0 1px 2px rgba(59, 38, 22, 0.05), 0 8px 24px rgba(59, 38, 22, 0.08);
+  --shadow-lg: 0 12px 32px rgba(59, 38, 22, 0.18);
 
   color-scheme: light;
 }
 
-/* ---------- Semantic colors: DARK (OS preference) ---------- */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --color-bg: var(--night-950);
-    --color-surface: var(--night-900);
-    --color-subtle: var(--night-850);
-    --color-border: var(--night-800);
-    --color-border-strong: var(--night-700);
-    --color-text: var(--night-100);
-    --color-text-2: var(--night-200);
-    --color-muted: var(--night-400);
-    --color-faint: var(--night-500);
-    --color-primary: var(--canopy-300);
-    --color-primary-soft: var(--canopy-800);
-    --color-primary-border: #2b4a33;
-    --color-on-primary: var(--night-950);
-    --color-cta: var(--clay-400);
-    --color-on-cta: var(--soil-900);
-    --color-success: #6cc08a;
-    --color-success-soft: #173322;
-    --color-warning: #e3b45c;
-    --color-warning-soft: #33280f;
-    --color-danger: #f08a6e;
-    --color-danger-soft: #3a1d14;
-    --color-info: #7ab0e6;
-    --color-info-soft: #152a40;
-    --crop-tint: 18%;
-  --color-chart-grid: var(--night-800);
-    --color-chart-series: #4d5a4f;
-    --color-chart-dot: #8a978a;
-    --color-inverse-bg: var(--night-100);
-    --color-inverse-text: var(--night-950);
-    --color-scrim: rgba(0, 0, 0, 0.55);
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
-    color-scheme: dark;
-  }
-}
-
-/* ---------- Semantic colors: DARK (explicit choice, and always-dark areas) ---------- */
-:root[data-theme="dark"],
-.theme-dark {
-  --color-bg: var(--night-950);
-  --color-surface: var(--night-900);
-  --color-subtle: var(--night-850);
-  --color-border: var(--night-800);
-  --color-border-strong: var(--night-700);
-  --color-text: var(--night-100);
-  --color-text-2: var(--night-200);
-  --color-muted: var(--night-400);
-  --color-faint: var(--night-500);
-  --color-primary: var(--canopy-300);
-  --color-primary-soft: var(--canopy-800);
-  --color-primary-border: #2b4a33;
-  --color-on-primary: var(--night-950);
-  --color-cta: var(--clay-400);
-  --color-on-cta: var(--soil-900);
-  --color-success: #6cc08a;
-  --color-success-soft: #173322;
-  --color-warning: #e3b45c;
-  --color-warning-soft: #33280f;
-  --color-danger: #f08a6e;
-  --color-danger-soft: #3a1d14;
-  --color-info: #7ab0e6;
-  --color-info-soft: #152a40;
-  --crop-tint: 18%;
-  --color-chart-grid: var(--night-800);
-  --color-chart-series: #4d5a4f;
-  --color-chart-dot: #8a978a;
-  --color-inverse-bg: var(--night-100);
-  --color-inverse-text: var(--night-950);
-  --color-scrim: rgba(0, 0, 0, 0.55);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+/* ---------- Canopy panels (the sidebar): cream text on Canopy green, as in the kit ---------- */
+.theme-canopy {
+  --color-bg: var(--canopy);
+  --color-surface: var(--canopy);
+  --color-subtle: #2a6b47;
+  --color-border: #3a7a55;
+  --color-border-strong: #4c8a66;
+  --color-text: var(--field-cream);     /* cream on Canopy 7.5 */
+  --color-text-2: var(--canopy-mist);
+  --color-muted: #b9d3b6;
+  --color-faint: #8fb48d;
+  --color-heading: var(--field-cream);
+  --color-primary: var(--light-gold);   /* light gold on Canopy 5.3 */
+  --color-primary-soft: #2e7350;
+  --color-primary-border: #4c8a66;
+  --color-on-primary: var(--soil-brown);
+  --color-danger: #ffb59e;
   color-scheme: dark;
 }
 
 /* ---------- Base ---------- */
 html, body { background: var(--color-bg); color: var(--color-text); }
 body { font-family: var(--font-sans); }
-.mono, code, kbd, samp { font-family: var(--font-mono); }
+h1, h2, h3, h4 { font-family: var(--font-display); color: var(--color-heading); letter-spacing: var(--tracking-tight); }
+.mono, code, kbd, samp { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 :focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
-::selection { background: color-mix(in srgb, var(--color-accent) 45%, transparent); }
+.theme-canopy :focus-visible { outline-color: var(--light-gold); }
+::selection { background: color-mix(in srgb, var(--harvest-gold) 45%, transparent); color: var(--soil-brown); }
 
-/* Logo (components/Logo.tsx) */
-.logo-mark { flex-shrink: 0; }
-.logo-tile { fill: var(--color-brand-tile); }
-.logo-furrow { stroke: var(--color-brand-highlight); }
+/* Logo / Sprout (components/Logo.tsx, components/Sprout.tsx) */
+.logo-mark { flex-shrink: 0; display: block; }
+.sprout { display: block; height: auto; flex-shrink: 0; }
 .furrow-arcs .arc-1 { stroke: var(--color-brand-highlight); }
 .furrow-arcs .arc-2 { stroke: var(--color-brand-arc-2); }
 .furrow-arcs .arc-3 { stroke: var(--color-brand-arc-3); }
+.eyebrow-kit { font-size: 0.875rem; letter-spacing: var(--tracking-label); text-transform: uppercase; font-weight: 600; color: var(--color-eyebrow); }

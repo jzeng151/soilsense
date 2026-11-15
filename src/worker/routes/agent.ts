@@ -158,8 +158,8 @@ function livePlan(p: PlanResponse, place: string | undefined) {
 
 /** Said while the plan is being built, in the caller's language. */
 const WAIT_LINES: Record<string, string> = {
-  en: "Give me a few seconds to check the NASA weather data for your field.",
-  es: "Deme unos segundos para revisar los datos del clima de la NASA para su campo.",
+  en: "Sprout is checking the NASA data for your field. Give me a few seconds.",
+  es: "Sprout está revisando los datos de la NASA para su campo. Deme unos segundos.",
   fr: "Donnez-moi quelques secondes pour consulter les données météo de la NASA pour votre champ.",
   de: "Einen Moment bitte, ich prüfe die NASA-Wetterdaten für Ihr Feld.",
   hi: "कुछ सेकंड दीजिए, मैं आपके खेत के लिए नासा का मौसम डेटा देख रहा हूँ।",
@@ -396,7 +396,7 @@ class CallSession {
           const clean = zip.replace(/\D/g, "");
           const place = clean.length === 5 ? await lookupZip(env.DB, clean) : null;
           if (!place) return { error: `ZIP code ${zip} was not found. Ask the caller to repeat it.` };
-          if (!isInContiguousUS(place.lat, place.lon)) return { error: "That ZIP is outside the lower 48 states, which SoilSense covers." };
+          if (!isInContiguousUS(place.lat, place.lon)) return { error: "That ZIP is outside the lower 48 states, which Soil Sense covers." };
           // Warm every data source now, while the caller answers the next question, so the
           // real plan is served from cache instead of fetching NASA/USDA data cold (~20 s).
           this.prefetch(place.lat, place.lon);

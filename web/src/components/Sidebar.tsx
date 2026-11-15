@@ -23,10 +23,13 @@ export function Sidebar({ route, user, onSignOut, open, onClose, chats, activeCh
   return (
     <>
       <div className={`sb-scrim ${open ? "show" : ""}`} onClick={onClose} aria-hidden="true" />
-      <aside className={`sidebar theme-dark ${open ? "open" : ""}`} aria-label="Main navigation">
+      <aside className={`sidebar theme-canopy ${open ? "open" : ""}`} aria-label="Main navigation">
         <a className="sb-brand" href="#/" onClick={() => onNavigate("planner")}>
-          <LogoMark />
-          <span>SoilSense</span>
+          <LogoMark size={36} />
+          <span className="sb-wordmark">
+            Soil Sense
+            <small>Teaching satellites to speak Farmer</small>
+          </span>
         </a>
 
         <button type="button" className="sb-new" onClick={onNewChat}>
@@ -49,7 +52,7 @@ export function Sidebar({ route, user, onSignOut, open, onClose, chats, activeCh
               <path d="M4 5h16v11H9l-5 4z" />
               <path d="M8 10h.01M12 10h.01M16 10h.01" />
             </svg>
-            Scout
+            Sprout
             <span className="sb-tag">AI</span>
           </a>
           <a href="#/live" className={route === "live" ? "on" : ""} onClick={() => onNavigate("live")}>
@@ -77,7 +80,7 @@ export function Sidebar({ route, user, onSignOut, open, onClose, chats, activeCh
 
         <div className="sb-section">
           <p className="sb-label">Recent chats</p>
-          {chats.length === 0 && <p className="sb-empty">No chats yet. Ask Scout anything about a field.</p>}
+          {chats.length === 0 && <p className="sb-empty">No chats yet. Ask Sprout anything about a field.</p>}
           <ul className="sb-chats">
             {chats.map((c) => (
               <li key={c.id} className={route === "scout" && c.id === activeChatId ? "on" : ""}>

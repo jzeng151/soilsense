@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { scoutStatus } from "../api";
 import { authFetch } from "../auth";
 import { ScoutMessage } from "../components/ScoutMessage";
+import { LogoMark } from "../components/Logo";
+import { Sprout } from "../components/Sprout";
 
 const SUGGESTIONS: { icon: "grid" | "cal" | "chart" | "soil"; text: string }[] = [
   { icon: "grid", text: "What should I plant next year on my rain-fed field near ZIP 50010?" },
@@ -61,7 +63,7 @@ function errorText(err: Error): string {
   } catch {
     /* not JSON */
   }
-  return err.message || "Scout ran into a problem.";
+  return err.message || "Sprout ran into a problem.";
 }
 
 type SpeechRec = {
@@ -222,8 +224,8 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
         ref={inputRef}
         rows={1}
         value={input}
-        placeholder="Ask Scout"
-        aria-label="Message Scout"
+        placeholder="Ask Sprout about your field"
+        aria-label="Message Sprout"
         maxLength={4000}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
@@ -234,7 +236,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
         }}
       />
       <span className="sc-model" title={model?.fallback ? `Backup: ${model.fallback}` : "AI model"}>
-        {model?.model ? (model.provider === "workers-ai" ? `Cloudflare Workers AI · ${model.model.replace(/^@cf\/[^/]+\//, "")}` : model.model) : "Scout"}
+        {model?.model ? (model.provider === "workers-ai" ? `Cloudflare Workers AI · ${model.model.replace(/^@cf\/[^/]+\//, "")}` : model.model) : "Sprout"}
       </span>
       {micSupported && (
         <button type="button" className={`sc-icon-btn ${listening ? "rec" : ""}`} aria-label={listening ? "Stop dictation" : "Dictate"} onClick={toggleMic}>
@@ -269,20 +271,25 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
   const last = messages[messages.length - 1];
 
   return (
-    <div className="scout theme-dark">
+    <div className="scout">
       <header className="sc-top">
         <button type="button" className="sc-icon-btn sc-menu-btn" aria-label="Open sidebar" onClick={onMenu}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 7h16M4 12h16M4 17h16" />
           </svg>
         </button>
-        <span className="sc-title">Scout</span>
+        <span className="sc-title">
+          <LogoMark size={28} />
+          Sprout
+        </span>
         {model && !model.configured && <span className="sc-warn">AI model not set up</span>}
       </header>
 
       {empty ? (
         <div className="sc-hero">
-          <h1>Where should we begin?</h1>
+          <Sprout mood="hello" width={128} />
+          <h1>Hi, I'm Sprout. What's growing on your field?</h1>
+          <p className="sc-lead">Ask about any US field. I read 35 years of NASA data so you don't have to.</p>
           {composer}
           <ul className="sc-suggest">
             {SUGGESTIONS.map((s) => (
@@ -296,7 +303,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
           </ul>
           {model && !model.configured && (
             <p className="sc-note">
-              Scout needs the Workers AI binding or a Gemini API key (<code>GEMINI_API_KEY</code> in <code>.dev.vars</code>). Restart the dev server after adding it.
+              Sprout needs the Workers AI binding or a Gemini API key (<code>GEMINI_API_KEY</code> in <code>.dev.vars</code>). Restart the dev server after adding it.
             </p>
           )}
         </div>
@@ -315,10 +322,11 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
             )}
             {status === "submitted" && (
               <div className="sc-msg sc-bot sc-thinking">
+                <Sprout mood="checking" width={40} decorative />
                 <span className="dot" />
                 <span className="dot" />
                 <span className="dot" />
-                <span className="sc-thinking-text">Scout is planning the analysis…</span>
+                <span className="sc-thinking-text">Sprout is checking the NASA data…</span>
               </div>
             )}
             {error && (
@@ -340,7 +348,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
               </button>
             )}
             {composer}
-            <p className="sc-disclaimer">Scout can make mistakes. Confirm big decisions with your county extension agent.</p>
+            <p className="sc-disclaimer">Sprout can make mistakes. Check the numbers in your plan before acting on them.</p>
           </div>
         </>
       )}

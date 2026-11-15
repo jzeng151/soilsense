@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Sprout } from "../components/Sprout";
 import "./live.css";
 
-// Live screen (#/live): watch a phone call to the SoilSense agent as it happens, for demos.
+// Live screen (#/live): watch a phone call to Sprout, the Soil Sense agent as it happens, for demos.
 // Events come from the live-room Durable Object over a WebSocket; if that fails we poll every second.
 
 interface LiveEvent {
@@ -21,8 +22,8 @@ const SOURCES: Record<string, { label: string; org: string }> = {
   nass: { label: "County harvests and prices", org: "USDA NASS" },
   rma: { label: "Why crop insurance paid out", org: "USDA RMA" },
   openet: { label: "Water use measured by satellite", org: "OpenET (Landsat)" },
-  engine: { label: "Replay every year on this soil", org: "SoilSense engine" },
-  saved: { label: "Reused today's saved plan", org: "SoilSense cache" },
+  engine: { label: "Replay every year on this soil", org: "Soil Sense engine" },
+  saved: { label: "Reused today's saved plan", org: "Soil Sense cache" },
 };
 const SOURCE_ORDER = ["county", "power", "daymet", "soil", "cdl", "nass", "rma", "openet", "engine", "saved"];
 
@@ -338,7 +339,7 @@ function FieldWatchPanel({ events }: { events: LiveEvent[] }) {
       <p className="eyebrow">Field Watch</p>
       <h2>Background checks</h2>
       {runs.length === 0 ? (
-        <p className="lv-muted">SoilSense checks watched fields on its own every hour, with no browser open. New checks appear here.</p>
+        <p className="lv-muted">Soil Sense checks watched fields on its own every hour, with no browser open. New checks appear here.</p>
       ) : (
         <ul>
           {runs.map((r) => (
@@ -403,11 +404,14 @@ export function LivePage({ onMenu }: { onMenu: () => void }) {
               ) : null}
             </p>
           </div>
+          <div className="lv-head-side">
+          <Sprout mood={call && !call.ended && conn !== "off" ? "on-call" : "resting"} width={72} decorative />
           <span className={`lv-status ${call && !call.ended && conn !== "off" ? "lv-status-on" : ""}`}>
             <span className="lv-dot" aria-hidden="true" />
             {status}
             {conn === "polling" && <small> (updating every second)</small>}
           </span>
+          </div>
         </header>
 
         <div className="lv-grid">
@@ -439,7 +443,7 @@ export function LivePage({ onMenu }: { onMenu: () => void }) {
                 ) : s.kind === "say" ? (
                   <div key={s.seq} className={`lv-say lv-say-${s.who}`}>
                     <span className="lv-who">
-                      {s.who === "caller" ? "Farmer" : "SoilSense"}
+                      {s.who === "caller" ? "Farmer" : "Sprout"}
                       {s.who === "caller" && s.lang ? <em>{s.lang.toUpperCase()}</em> : null}
                     </span>
                     <p>

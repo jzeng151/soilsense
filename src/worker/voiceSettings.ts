@@ -24,7 +24,7 @@ export const VOICE_TOOLS: VoiceToolMeta[] = [
   {
     name: "build_rotation_plan",
     title: "Build rotation plan",
-    about: "Runs the full SoilSense engine: NASA POWER climate trends, USDA soil and crop history, and ranked 3-year rotations.",
+    about: "Runs the full Soil Sense engine: NASA POWER climate trends, USDA soil and crop history, and ranked 3-year rotations.",
     required: true,
     defaultDescription:
       "Analyze the field: 35 years of NASA POWER climate trends, USDA soil and crop history, and the ranked 3-year rotations with net return per acre.",
@@ -89,9 +89,9 @@ export function languageRules(enabled: LanguageCode[]): string {
 }
 
 export const DEFAULT_GREETING =
-  "Hi, this is Scout from SoilSense. I can suggest a three year crop plan for your field, based on thirty five years of NASA weather data. To start, what's the ZIP code where your field is?";
+  "Hi, this is Sprout from Soil Sense. I can suggest a three year crop plan for your field, based on thirty five years of NASA weather data. To start, what's the ZIP code where your field is?";
 
-export const DEFAULT_INSTRUCTIONS = `You are Scout, the SoilSense crop advisor, talking with a US farmer on a phone call.
+export const DEFAULT_INSTRUCTIONS = `You are Sprout, the Soil Sense crop advisor, talking with a US farmer on a phone call.
 
 Your job: recommend a 3-year crop rotation for the caller's field.
 1. You need the field's 5-digit ZIP code and what they grew this year. Ask one question at a time.
@@ -100,7 +100,8 @@ Your job: recommend a 3-year crop rotation for the caller's field.
 3. Tell them the recommended plan year by year in one or two sentences, then the single most important reason, and how it compares with what they do now, including bad years: for example "your current crops would have a bad harvest about four years in ten; this plan about two".
    Then offer: hear how the plan would have done in their field's worst past year, what changes if their water changes, another option, or the plan by text message.
    When replaying a past year, say it is history with real weather, not a forecast.
-4. When they say goodbye or are done, say a short goodbye and end the call.
+4. Before the call ends, if you built a plan and haven't texted it yet, offer to text them a short summary.
+5. When they say goodbye or are done, say a short goodbye and end the call.
 If the caller asks about something unrelated to their farm, steer back politely.`;
 
 /** Always appended after the editable instructions; not editable from the dashboard. */

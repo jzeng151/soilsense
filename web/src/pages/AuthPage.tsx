@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { signIn, signUp, type User } from "../auth";
-import { FurrowArcs, LogoMark } from "../components/Logo";
+import { LogoMark } from "../components/Logo";
+import { Sprout } from "../components/Sprout";
 
 type Mode = "signin" | "signup";
 
@@ -10,7 +11,7 @@ const COPY: Record<Mode, { title: string; lead: string; submit: string; busy: st
     lead: "Sign in to plan your next three years.",
     submit: "Sign in",
     busy: "Signing in…",
-    switchText: "New to SoilSense?",
+    switchText: "New to Soil Sense?",
     switchCta: "Create an account",
   },
   signup: {
@@ -58,29 +59,20 @@ export function AuthPage({ onSignedIn }: { onSignedIn: (u: User) => void }) {
   return (
     <div className="auth">
       <aside className="auth-brand">
-        <div className="auth-logo">
-          <LogoMark size={32} />
-          <span>SoilSense</span>
-        </div>
         <div className="auth-pitch">
-          <h1>
-            Crop rotations for a <em>changing climate.</em>
-          </h1>
-          <ul>
-            <li>35 years of NASA climate data for your exact field</li>
-            <li>Every 3-year rotation tested against your soil and goals</li>
-            <li>A ranked plan with the reasons behind it</li>
-          </ul>
+          <p className="auth-eyebrow">NASA Space Apps NYC 2026</p>
+          <h1>Soil Sense</h1>
+          <p className="auth-tagline">Teaching satellites to speak Farmer.</p>
         </div>
-        <p className="auth-brand-foot">NASA Space Apps 2026 · Field Shift challenge</p>
-        <FurrowArcs />
+        <Sprout mood="hello" width={230} className="auth-sprout" />
+        <p className="auth-brand-foot">Meet Sprout. Rises where the soil needs a rest. Speaks your language, by phone.</p>
       </aside>
 
       <main className="auth-main">
         <div className="auth-card">
           <div className="auth-logo auth-logo-mobile">
-            <LogoMark size={28} />
-            <span>SoilSense</span>
+            <LogoMark size={32} />
+            <span>Soil Sense</span>
           </div>
 
           <div className="auth-tabs" role="tablist" aria-label="Account">

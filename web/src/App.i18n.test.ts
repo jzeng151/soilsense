@@ -44,6 +44,13 @@ beforeEach(async () => {
 afterEach(async () => { await act(async () => root.unmount()); container.remove(); });
 
 describe("main flow language", () => {
+  it("sends browser-stored measurements for this field with the plan", async () => {
+    localStorage.setItem("soilsense:measurements:v1:38.1095,-100.706", JSON.stringify({ ph: "5.8", organicMatterPct: "", awc: "", texture: "", rows: [{ crop: "corn", year: "2025", value: "70" }] }));
+    await click("Kansas");
+    await click("Yes, this is my field →");
+    await click("Show my plan →");
+    expect(fetchPlan).toHaveBeenCalledWith(expect.objectContaining({ soilTest: { ph: 5.8 }, yieldRecords: [{ crop: "corn", year: 2025, value: 70, unit: "bu/acre" }] }), expect.any(AbortSignal));
+  });
   it("switches visible text, document language and persisted preference both ways", async () => {
     expect(container.querySelector("h1")?.textContent).toBe("Where is your field?");
     expect(document.documentElement.lang).toBe("en");
@@ -68,6 +75,8 @@ describe("main flow language", () => {
     expect(button("Sí, esta es mi parcela →")).toBeTruthy();
     await click("Sí, esta es mi parcela →");
     expect(container.querySelector("h1")?.textContent).toBe("Tres preguntas rápidas");
+    expect(container.querySelector(".measurements summary")?.textContent).toBe("Añade tus propias mediciones");
+    expect(container.querySelector(".soil-comparison")?.textContent).toContain("Mapa de suelos USDA");
     expect(container.textContent).toContain("¿Cómo se abastece de agua?");
     expect(container.textContent).toContain("¿Qué es lo más importante para ti?");
     await click("Trigo de invierno");

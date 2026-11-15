@@ -14,6 +14,8 @@ const PRIORITIES: Priority[] = ["profit", "soil", "risk", "balanced"];
 
 export const api = new Hono<AppEnv>();
 
+import { cropTiming } from "./cropTiming";
+
 // ---- Simple per-isolate rate limit (use Cloudflare rate-limiting rules for hard limits). ----
 const hits = new Map<string, { count: number; reset: number }>();
 function rateLimited(ip: string, limit = 40, windowMs = 60_000): boolean {
@@ -212,3 +214,4 @@ api.route("/scout", scout);
 api.route("/fieldwatch", fieldWatch);
 // Cited research retrieval (Vectorize) and grounded explanations (Workers AI): see docs/RESEARCH.md.
 api.route("/research", research);
+api.route("/crop-timing", cropTiming);

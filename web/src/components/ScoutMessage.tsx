@@ -4,6 +4,7 @@
 
 import type { UIMessage } from "ai";
 import type { ChatCitationDisplay } from "../../../src/shared/chatResearch";
+import { detectLang } from "../lang";
 import { Markdown } from "./Markdown";
 
 type Part = UIMessage["parts"][number];
@@ -142,7 +143,10 @@ export function ScoutMessage({ message, streaming }: { message: UIMessage; strea
       )}
 
       {texts.map((t, i) => (
-        <Markdown key={i} text={t.text} />
+        // WCAG 3.1.2: Sprout answers in the farmer's language; tag the passage when it isn't English.
+        <div key={i} lang={streaming ? undefined : detectLang(t.text)}>
+          <Markdown text={t.text} />
+        </div>
       ))}
       {streaming && !toolsRunning && tools.length > 0 && !hasText && <p className="an-writing">Writing the answer…</p>}
 

@@ -324,7 +324,7 @@ export class CallSession {
     this.log("agent", { detail: this.settings.greeting });
     this.liveOn = await isLiveDemoOn(this.env.DB);
     this.live("call.start", { caller: maskPhone(this.caller), languages: this.multi ? this.settings.languages.enabled.map(languageName) : ["English"] });
-    this.live("call.say", { who: "agent", text: this.settings.greeting });
+    this.live("call.say", { who: "agent", text: this.settings.greeting, lang: "en" });
     this.markReady();
   }
 
@@ -335,8 +335,8 @@ export class CallSession {
     // Keep what the caller actually heard, so the model knows it was cut off.
     if (this.spoken.trim()) {
       this.history.push({ role: "assistant", content: `${this.spoken.trim()} [interrupted by caller]` });
-      this.log("agent", { detail: `${this.spoken.trim()} [interrupted]` });
-      this.live("call.say", { who: "agent", text: this.spoken.trim(), interrupted: true });
+      this.log("agent", { detail: `${this.spoken.trim()} [interrupted]`, name: this.multi ? this.lang : undefined });
+      this.live("call.say", { who: "agent", text: this.spoken.trim(), interrupted: true, lang: this.lang });
     }
     this.spoken = "";
   }
@@ -585,8 +585,8 @@ export class CallSession {
       flushSpeech();
       this.history.push(...((await result.responseMessages) as ModelMessage[]));
       this.say("", true);
-      this.log("agent", { detail: this.spoken.trim(), durationMs: Date.now() - turnStart, ok: true });
-      this.live("call.say", { who: "agent", text: this.spoken.trim(), ms: Date.now() - turnStart });
+      this.log("agent", { detail: this.spoken.trim(), durationMs: Date.now() - turnStart, ok: true, name: this.multi ? this.lang : undefined });
+      this.live("call.say", { who: "agent", text: this.spoken.trim(), ms: Date.now() - turnStart, lang: this.lang });
     } catch (err) {
       if (ctrl.signal.aborted) return;
       console.error(JSON.stringify({ msg: "voice agent turn failed", callSid: this.callSid, err: String(err) }));

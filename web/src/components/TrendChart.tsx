@@ -19,6 +19,17 @@ export function trendText(ind: ClimateIndicator): string {
   return `${tone === "up" ? "Up" : "Down"} ${n} ${ind.unit} every 10 years`;
 }
 
+/** WCAG 1.1.1: what the chart shows, in words (trend plus the lowest and highest years). */
+function describe(ind: ClimateIndicator): string {
+  const ys = ind.values;
+  const xs = ind.years;
+  if (!ys.length) return ind.label;
+  const iMin = ys.indexOf(Math.min(...ys));
+  const iMax = ys.indexOf(Math.max(...ys));
+  const f = (n: number) => (Math.abs(n) >= 100 ? Math.round(n) : Math.round(n * 10) / 10);
+  return `${ind.label}, ${xs[0]} to ${xs[xs.length - 1]}. ${trendText(ind)}. Lowest ${f(ys[iMin]!)} ${ind.unit} in ${xs[iMin]}, highest ${f(ys[iMax]!)} ${ind.unit} in ${xs[iMax]}.`;
+}
+
 export function TrendChart({ ind }: { ind: ClimateIndicator }) {
   const xs = ind.years;
   const ys = ind.values;
@@ -43,7 +54,7 @@ export function TrendChart({ ind }: { ind: ClimateIndicator }) {
         <span className="trend-title">{ind.label}</span>
         <span className={`badge badge-${tone}`}>{trendText(ind)}</span>
       </figcaption>
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${ind.label}, ${x0} to ${x1}. ${trendText(ind)}.`}>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={describe(ind)}>
         {[lo, hi].map((tk) => (
           <g key={tk}>
             <line x1={PAD.l} x2={W - PAD.r} y1={Y(tk)} y2={Y(tk)} className="grid" />

@@ -3,6 +3,8 @@
 // Reopening the page shows the saved result without running anything again.
 
 import { useCallback, useEffect, useState } from "react";
+import type { FieldResearchNote } from "../../../src/shared/fieldResearch";
+import { ResearchNote } from "./ResearchNote";
 
 type Status = "pending" | "ok" | "watch" | "dry" | "insufficient" | "inactive" | "error";
 interface Reason {
@@ -23,6 +25,7 @@ interface AgentRun {
   completedAt: number | null;
   headline: string | null;
   reasons: Reason[];
+  researchNote?: FieldResearchNote;
   metrics: { rainPercentile: number | null; rootzonePercentile: number | null; rain14Mm: number | null; normalPeriod: string | null } | null;
   snapshot: { label: string; source: string; comparisonYears: string; windowStart: string | null; windowEnd: string | null; inputSha256: string | null } | null;
 }
@@ -233,6 +236,7 @@ export function ScheduledCheck() {
                       </span>
                     </summary>
                     <div className="fw-detail">
+                      <ResearchNote note={r.researchNote} />
                       {r.reasons.length > 0 && (
                         <ul className="fw-reasons">
                           {r.reasons.map((x) => (

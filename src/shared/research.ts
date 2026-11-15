@@ -4,6 +4,8 @@
 import type { PlanRequest } from "./types";
 
 export interface ResearchPassage {
+  origin?: "curated" | "docs";
+  publisher?: string;
   chunkId: string;
   sourceId: string;
   sourceTitle: string;

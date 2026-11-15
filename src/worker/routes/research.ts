@@ -28,6 +28,7 @@ function adminOk(header: string | undefined, token: string | undefined): boolean
 }
 
 const deps = (env: Env) => ({
+  db: env.DB,
   ai: env.AI as unknown as AiLike | undefined,
   index: env.RESEARCH_INDEX as unknown as VectorIndexLike | undefined,
   gatewayId: env.AI_GATEWAY_ID ?? "default",

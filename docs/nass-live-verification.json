@@ -1,0 +1,2709 @@
+{
+  "retrievedAt": "2026-11-15T13:13:18.332Z",
+  "interpretation": "Live getNassData path used by service.ts. Plan sensitivity holds existing Kansas fixture weather/soil and explicit corn/corn history fixed; not a deployed full-source field plan. No defaults or ranking logic modified.",
+  "nass": {
+    "county": {
+      "corn": {
+        "all": [
+          {
+            "year": 1991,
+            "value": 171.8
+          },
+          {
+            "year": 1992,
+            "value": 179.9
+          },
+          {
+            "year": 1993,
+            "value": 136.7
+          },
+          {
+            "year": 1994,
+            "value": 183
+          },
+          {
+            "year": 1995,
+            "value": 152
+          },
+          {
+            "year": 1996,
+            "value": 163
+          },
+          {
+            "year": 1997,
+            "value": 175
+          },
+          {
+            "year": 1998,
+            "value": 176
+          },
+          {
+            "year": 1999,
+            "value": 184
+          },
+          {
+            "year": 2000,
+            "value": 174
+          },
+          {
+            "year": 2001,
+            "value": 157
+          },
+          {
+            "year": 2002,
+            "value": 176
+          },
+          {
+            "year": 2003,
+            "value": 177
+          },
+          {
+            "year": 2004,
+            "value": 202
+          },
+          {
+            "year": 2005,
+            "value": 191
+          },
+          {
+            "year": 2006,
+            "value": 164
+          },
+          {
+            "year": 2007,
+            "value": 185
+          },
+          {
+            "year": 2008,
+            "value": 163
+          },
+          {
+            "year": 2009,
+            "value": 202
+          },
+          {
+            "year": 2010,
+            "value": 173
+          },
+          {
+            "year": 2011,
+            "value": 145
+          },
+          {
+            "year": 2012,
+            "value": 133.5
+          },
+          {
+            "year": 2014,
+            "value": 166.6
+          },
+          {
+            "year": 2019,
+            "value": 155.9
+          },
+          {
+            "year": 2020,
+            "value": 156.3
+          },
+          {
+            "year": 2022,
+            "value": 147.6
+          }
+        ],
+        "irrigated": [
+          {
+            "year": 1991,
+            "value": 171.8
+          },
+          {
+            "year": 1992,
+            "value": 179.9
+          },
+          {
+            "year": 1993,
+            "value": 137.5
+          },
+          {
+            "year": 1994,
+            "value": 184
+          },
+          {
+            "year": 1995,
+            "value": 153
+          },
+          {
+            "year": 1997,
+            "value": 179
+          },
+          {
+            "year": 1998,
+            "value": 184
+          },
+          {
+            "year": 1999,
+            "value": 188
+          },
+          {
+            "year": 2000,
+            "value": 180
+          },
+          {
+            "year": 2001,
+            "value": 167
+          },
+          {
+            "year": 2002,
+            "value": 181
+          },
+          {
+            "year": 2005,
+            "value": 196
+          },
+          {
+            "year": 2006,
+            "value": 172
+          },
+          {
+            "year": 2007,
+            "value": 200
+          },
+          {
+            "year": 2009,
+            "value": 212
+          },
+          {
+            "year": 2010,
+            "value": 198.9
+          }
+        ],
+        "nonIrrigated": [
+          {
+            "year": 1993,
+            "value": 34
+          },
+          {
+            "year": 1994,
+            "value": 38
+          },
+          {
+            "year": 1995,
+            "value": 50
+          },
+          {
+            "year": 1997,
+            "value": 93
+          },
+          {
+            "year": 1998,
+            "value": 56
+          },
+          {
+            "year": 1999,
+            "value": 78
+          },
+          {
+            "year": 2000,
+            "value": 62
+          },
+          {
+            "year": 2001,
+            "value": 39
+          },
+          {
+            "year": 2002,
+            "value": 16
+          },
+          {
+            "year": 2005,
+            "value": 65
+          },
+          {
+            "year": 2006,
+            "value": 29
+          },
+          {
+            "year": 2007,
+            "value": 69
+          },
+          {
+            "year": 2009,
+            "value": 94
+          },
+          {
+            "year": 2010,
+            "value": 50.1
+          }
+        ]
+      },
+      "soybean": {
+        "all": [
+          {
+            "year": 1991,
+            "value": 49
+          },
+          {
+            "year": 1992,
+            "value": 47
+          },
+          {
+            "year": 1993,
+            "value": 32
+          },
+          {
+            "year": 1994,
+            "value": 50
+          },
+          {
+            "year": 1995,
+            "value": 40
+          },
+          {
+            "year": 1996,
+            "value": 38
+          },
+          {
+            "year": 1997,
+            "value": 47
+          },
+          {
+            "year": 1998,
+            "value": 58
+          },
+          {
+            "year": 1999,
+            "value": 38
+          },
+          {
+            "year": 2000,
+            "value": 47
+          },
+          {
+            "year": 2001,
+            "value": 50
+          },
+          {
+            "year": 2002,
+            "value": 54
+          },
+          {
+            "year": 2003,
+            "value": 57
+          },
+          {
+            "year": 2004,
+            "value": 55
+          },
+          {
+            "year": 2005,
+            "value": 53
+          },
+          {
+            "year": 2006,
+            "value": 47
+          },
+          {
+            "year": 2007,
+            "value": 55
+          },
+          {
+            "year": 2012,
+            "value": 42.1
+          },
+          {
+            "year": 2016,
+            "value": 68.2
+          },
+          {
+            "year": 2019,
+            "value": 56.2
+          }
+        ],
+        "irrigated": [
+          {
+            "year": 1991,
+            "value": 50
+          },
+          {
+            "year": 1992,
+            "value": 47
+          },
+          {
+            "year": 1993,
+            "value": 32
+          },
+          {
+            "year": 1994,
+            "value": 52
+          },
+          {
+            "year": 1995,
+            "value": 40
+          },
+          {
+            "year": 1996,
+            "value": 38
+          },
+          {
+            "year": 1997,
+            "value": 47
+          },
+          {
+            "year": 1998,
+            "value": 58
+          },
+          {
+            "year": 2001,
+            "value": 58
+          },
+          {
+            "year": 2003,
+            "value": 59
+          }
+        ],
+        "nonIrrigated": [
+          {
+            "year": 1991,
+            "value": 18
+          },
+          {
+            "year": 1992,
+            "value": 28
+          },
+          {
+            "year": 1993,
+            "value": 30
+          },
+          {
+            "year": 1994,
+            "value": 29
+          },
+          {
+            "year": 1995,
+            "value": 28
+          },
+          {
+            "year": 2001,
+            "value": 12
+          },
+          {
+            "year": 2003,
+            "value": 8
+          }
+        ]
+      },
+      "winter_wheat": {
+        "all": [
+          {
+            "year": 1991,
+            "value": 39.2
+          },
+          {
+            "year": 1992,
+            "value": 43.5
+          },
+          {
+            "year": 1993,
+            "value": 43
+          },
+          {
+            "year": 1994,
+            "value": 43.1
+          },
+          {
+            "year": 1995,
+            "value": 24
+          },
+          {
+            "year": 1996,
+            "value": 30
+          },
+          {
+            "year": 1997,
+            "value": 43
+          },
+          {
+            "year": 1998,
+            "value": 54
+          },
+          {
+            "year": 1999,
+            "value": 58
+          },
+          {
+            "year": 2000,
+            "value": 38
+          },
+          {
+            "year": 2001,
+            "value": 41
+          },
+          {
+            "year": 2002,
+            "value": 33
+          },
+          {
+            "year": 2003,
+            "value": 40
+          },
+          {
+            "year": 2004,
+            "value": 33
+          },
+          {
+            "year": 2005,
+            "value": 46
+          },
+          {
+            "year": 2006,
+            "value": 26
+          },
+          {
+            "year": 2007,
+            "value": 50
+          },
+          {
+            "year": 2008,
+            "value": 43.5
+          },
+          {
+            "year": 2009,
+            "value": 51
+          },
+          {
+            "year": 2010,
+            "value": 55.9
+          },
+          {
+            "year": 2011,
+            "value": 27.3
+          },
+          {
+            "year": 2012,
+            "value": 29.1
+          },
+          {
+            "year": 2013,
+            "value": 23.9
+          },
+          {
+            "year": 2014,
+            "value": 25.5
+          },
+          {
+            "year": 2015,
+            "value": 41
+          },
+          {
+            "year": 2020,
+            "value": 40.7
+          },
+          {
+            "year": 2021,
+            "value": 66.5
+          },
+          {
+            "year": 2022,
+            "value": 30.6
+          }
+        ],
+        "irrigated": [
+          {
+            "year": 1991,
+            "value": 53.1
+          },
+          {
+            "year": 1992,
+            "value": 60.1
+          },
+          {
+            "year": 1993,
+            "value": 51.4
+          },
+          {
+            "year": 1994,
+            "value": 53.3
+          },
+          {
+            "year": 1995,
+            "value": 30
+          },
+          {
+            "year": 1996,
+            "value": 38
+          },
+          {
+            "year": 1997,
+            "value": 56
+          },
+          {
+            "year": 1998,
+            "value": 66
+          },
+          {
+            "year": 1999,
+            "value": 58
+          },
+          {
+            "year": 2000,
+            "value": 43
+          },
+          {
+            "year": 2001,
+            "value": 58
+          },
+          {
+            "year": 2002,
+            "value": 45
+          },
+          {
+            "year": 2003,
+            "value": 52
+          },
+          {
+            "year": 2004,
+            "value": 44
+          },
+          {
+            "year": 2005,
+            "value": 62
+          },
+          {
+            "year": 2006,
+            "value": 30
+          },
+          {
+            "year": 2007,
+            "value": 57
+          },
+          {
+            "year": 2008,
+            "value": 50.5
+          },
+          {
+            "year": 2009,
+            "value": 57
+          },
+          {
+            "year": 2012,
+            "value": 55.4
+          },
+          {
+            "year": 2013,
+            "value": 37.4
+          }
+        ],
+        "nonIrrigated": [
+          {
+            "year": 1991,
+            "value": 31.2
+          },
+          {
+            "year": 1992,
+            "value": 35.2
+          },
+          {
+            "year": 1993,
+            "value": 39
+          },
+          {
+            "year": 1994,
+            "value": 38
+          },
+          {
+            "year": 1995,
+            "value": 22
+          },
+          {
+            "year": 1996,
+            "value": 24
+          },
+          {
+            "year": 1997,
+            "value": 38
+          },
+          {
+            "year": 1998,
+            "value": 49
+          },
+          {
+            "year": 1999,
+            "value": 59
+          },
+          {
+            "year": 2000,
+            "value": 36
+          },
+          {
+            "year": 2001,
+            "value": 34
+          },
+          {
+            "year": 2002,
+            "value": 27
+          },
+          {
+            "year": 2003,
+            "value": 36
+          },
+          {
+            "year": 2004,
+            "value": 27
+          },
+          {
+            "year": 2005,
+            "value": 38
+          },
+          {
+            "year": 2006,
+            "value": 23
+          },
+          {
+            "year": 2007,
+            "value": 47
+          },
+          {
+            "year": 2008,
+            "value": 38.5
+          },
+          {
+            "year": 2009,
+            "value": 48
+          },
+          {
+            "year": 2012,
+            "value": 18.4
+          },
+          {
+            "year": 2013,
+            "value": 17.8
+          }
+        ]
+      },
+      "sorghum": {
+        "all": [
+          {
+            "year": 1991,
+            "value": 90
+          },
+          {
+            "year": 1992,
+            "value": 95
+          },
+          {
+            "year": 1993,
+            "value": 69
+          },
+          {
+            "year": 1994,
+            "value": 85
+          },
+          {
+            "year": 1995,
+            "value": 57
+          },
+          {
+            "year": 1996,
+            "value": 76
+          },
+          {
+            "year": 1997,
+            "value": 79
+          },
+          {
+            "year": 1998,
+            "value": 75
+          },
+          {
+            "year": 1999,
+            "value": 84
+          },
+          {
+            "year": 2000,
+            "value": 62
+          },
+          {
+            "year": 2001,
+            "value": 67
+          },
+          {
+            "year": 2002,
+            "value": 39
+          },
+          {
+            "year": 2003,
+            "value": 38
+          },
+          {
+            "year": 2004,
+            "value": 69
+          },
+          {
+            "year": 2005,
+            "value": 89
+          },
+          {
+            "year": 2006,
+            "value": 64
+          },
+          {
+            "year": 2007,
+            "value": 82
+          },
+          {
+            "year": 2008,
+            "value": 51
+          },
+          {
+            "year": 2009,
+            "value": 96
+          },
+          {
+            "year": 2010,
+            "value": 75
+          },
+          {
+            "year": 2012,
+            "value": 28.2
+          },
+          {
+            "year": 2013,
+            "value": 37.5
+          },
+          {
+            "year": 2014,
+            "value": 74.5
+          },
+          {
+            "year": 2016,
+            "value": 107.5
+          },
+          {
+            "year": 2020,
+            "value": 79.1
+          }
+        ],
+        "irrigated": [
+          {
+            "year": 1991,
+            "value": 118
+          },
+          {
+            "year": 1992,
+            "value": 106
+          },
+          {
+            "year": 1993,
+            "value": 80
+          },
+          {
+            "year": 1994,
+            "value": 116
+          },
+          {
+            "year": 1995,
+            "value": 87
+          },
+          {
+            "year": 1996,
+            "value": 102
+          },
+          {
+            "year": 1997,
+            "value": 107
+          },
+          {
+            "year": 1998,
+            "value": 101
+          },
+          {
+            "year": 1999,
+            "value": 130
+          },
+          {
+            "year": 2000,
+            "value": 100
+          },
+          {
+            "year": 2001,
+            "value": 94
+          },
+          {
+            "year": 2002,
+            "value": 96
+          },
+          {
+            "year": 2003,
+            "value": 92
+          },
+          {
+            "year": 2004,
+            "value": 136
+          },
+          {
+            "year": 2005,
+            "value": 126
+          },
+          {
+            "year": 2006,
+            "value": 90
+          },
+          {
+            "year": 2007,
+            "value": 111
+          }
+        ],
+        "nonIrrigated": [
+          {
+            "year": 1991,
+            "value": 56
+          },
+          {
+            "year": 1992,
+            "value": 70
+          },
+          {
+            "year": 1993,
+            "value": 60
+          },
+          {
+            "year": 1994,
+            "value": 63
+          },
+          {
+            "year": 1995,
+            "value": 39
+          },
+          {
+            "year": 1996,
+            "value": 70
+          },
+          {
+            "year": 1997,
+            "value": 70
+          },
+          {
+            "year": 1998,
+            "value": 71
+          },
+          {
+            "year": 1999,
+            "value": 78
+          },
+          {
+            "year": 2000,
+            "value": 59
+          },
+          {
+            "year": 2001,
+            "value": 64
+          },
+          {
+            "year": 2002,
+            "value": 27
+          },
+          {
+            "year": 2003,
+            "value": 23
+          },
+          {
+            "year": 2004,
+            "value": 56
+          },
+          {
+            "year": 2005,
+            "value": 83
+          },
+          {
+            "year": 2006,
+            "value": 59
+          },
+          {
+            "year": 2007,
+            "value": 79
+          }
+        ]
+      }
+    },
+    "district": {
+      "corn": {
+        "all": [
+          {
+            "year": 1991,
+            "value": 170.5
+          },
+          {
+            "year": 1992,
+            "value": 180.7
+          },
+          {
+            "year": 1993,
+            "value": 153.4
+          },
+          {
+            "year": 1994,
+            "value": 179
+          },
+          {
+            "year": 1995,
+            "value": 157
+          },
+          {
+            "year": 1996,
+            "value": 180
+          },
+          {
+            "year": 1997,
+            "value": 181
+          },
+          {
+            "year": 1998,
+            "value": 176
+          },
+          {
+            "year": 1999,
+            "value": 181
+          },
+          {
+            "year": 2000,
+            "value": 176
+          },
+          {
+            "year": 2001,
+            "value": 164
+          },
+          {
+            "year": 2002,
+            "value": 170
+          },
+          {
+            "year": 2003,
+            "value": 174
+          },
+          {
+            "year": 2004,
+            "value": 196
+          },
+          {
+            "year": 2005,
+            "value": 185
+          },
+          {
+            "year": 2006,
+            "value": 163
+          },
+          {
+            "year": 2007,
+            "value": 185
+          },
+          {
+            "year": 2008,
+            "value": 178
+          },
+          {
+            "year": 2009,
+            "value": 200
+          },
+          {
+            "year": 2010,
+            "value": 170.7
+          },
+          {
+            "year": 2011,
+            "value": 149.5
+          },
+          {
+            "year": 2012,
+            "value": 170.2
+          },
+          {
+            "year": 2013,
+            "value": 191.2
+          },
+          {
+            "year": 2014,
+            "value": 192
+          },
+          {
+            "year": 2015,
+            "value": 201.2
+          },
+          {
+            "year": 2016,
+            "value": 179.6
+          },
+          {
+            "year": 2017,
+            "value": 163.9
+          },
+          {
+            "year": 2018,
+            "value": 169.7
+          },
+          {
+            "year": 2019,
+            "value": 158
+          }
+        ],
+        "irrigated": [
+          {
+            "year": 1991,
+            "value": 170.8
+          },
+          {
+            "year": 1992,
+            "value": 182.6
+          },
+          {
+            "year": 1993,
+            "value": 155.7
+          },
+          {
+            "year": 1994,
+            "value": 181
+          },
+          {
+            "year": 1995,
+            "value": 158
+          },
+          {
+            "year": 1996,
+            "value": 182
+          },
+          {
+            "year": 1997,
+            "value": 189
+          },
+          {
+            "year": 1998,
+            "value": 188
+          },
+          {
+            "year": 1999,
+            "value": 192
+          },
+          {
+            "year": 2000,
+            "value": 186
+          },
+          {
+            "year": 2001,
+            "value": 177
+          },
+          {
+            "year": 2002,
+            "value": 173
+          },
+          {
+            "year": 2003,
+            "value": 177
+          },
+          {
+            "year": 2004,
+            "value": 200
+          },
+          {
+            "year": 2005,
+            "value": 194
+          },
+          {
+            "year": 2006,
+            "value": 174
+          },
+          {
+            "year": 2007,
+            "value": 206
+          },
+          {
+            "year": 2008,
+            "value": 192
+          },
+          {
+            "year": 2009,
+            "value": 215
+          },
+          {
+            "year": 2010,
+            "value": 195.2
+          },
+          {
+            "year": 2011,
+            "value": 156
+          },
+          {
+            "year": 2012,
+            "value": 181.8
+          },
+          {
+            "year": 2013,
+            "value": 200.7
+          },
+          {
+            "year": 2014,
+            "value": 199.2
+          },
+          {
+            "year": 2015,
+            "value": 213.4
+          },
+          {
+            "year": 2016,
+            "value": 199.3
+          },
+          {
+            "year": 2017,
+            "value": 206.2
+          },
+          {
+            "year": 2018,
+            "value": 198
+          }
+        ],
+        "nonIrrigated": [
+          {
+            "year": 1991,
+            "value": 30
+          },
+          {
+            "year": 1992,
+            "value": 39
+          },
+          {
+            "year": 1993,
+            "value": 44.6
+          },
+          {
+            "year": 1994,
+            "value": 40
+          },
+          {
+            "year": 1995,
+            "value": 43
+          },
+          {
+            "year": 1996,
+            "value": 50
+          },
+          {
+            "year": 1997,
+            "value": 89
+          },
+          {
+            "year": 1998,
+            "value": 64
+          },
+          {
+            "year": 1999,
+            "value": 59
+          },
+          {
+            "year": 2000,
+            "value": 43
+          },
+          {
+            "year": 2001,
+            "value": 51
+          },
+          {
+            "year": 2002,
+            "value": 19
+          },
+          {
+            "year": 2003,
+            "value": 23
+          },
+          {
+            "year": 2004,
+            "value": 74
+          },
+          {
+            "year": 2005,
+            "value": 56
+          },
+          {
+            "year": 2006,
+            "value": 31
+          },
+          {
+            "year": 2007,
+            "value": 54
+          },
+          {
+            "year": 2008,
+            "value": 30
+          },
+          {
+            "year": 2009,
+            "value": 71
+          },
+          {
+            "year": 2010,
+            "value": 51.1
+          },
+          {
+            "year": 2011,
+            "value": 28
+          },
+          {
+            "year": 2012,
+            "value": 17.2
+          },
+          {
+            "year": 2013,
+            "value": 23.9
+          },
+          {
+            "year": 2014,
+            "value": 63.1
+          },
+          {
+            "year": 2015,
+            "value": 79.7
+          },
+          {
+            "year": 2016,
+            "value": 91.5
+          },
+          {
+            "year": 2017,
+            "value": 85.2
+          },
+          {
+            "year": 2018,
+            "value": 85.7
+          }
+        ]
+      },
+      "soybean": {
+        "all": [
+          {
+            "year": 1991,
+            "value": 50
+          },
+          {
+            "year": 1992,
+            "value": 45
+          },
+          {
+            "year": 1993,
+            "value": 41
+          },
+          {
+            "year": 1994,
+            "value": 49
+          },
+          {
+            "year": 1995,
+            "value": 38
+          },
+          {
+            "year": 1996,
+            "value": 43
+          },
+          {
+            "year": 1997,
+            "value": 48
+          },
+          {
+            "year": 1998,
+            "value": 50
+          },
+          {
+            "year": 1999,
+            "value": 50
+          },
+          {
+            "year": 2000,
+            "value": 45
+          },
+          {
+            "year": 2001,
+            "value": 46
+          },
+          {
+            "year": 2002,
+            "value": 45
+          },
+          {
+            "year": 2003,
+            "value": 52
+          },
+          {
+            "year": 2004,
+            "value": 52
+          },
+          {
+            "year": 2005,
+            "value": 55
+          },
+          {
+            "year": 2006,
+            "value": 55
+          },
+          {
+            "year": 2007,
+            "value": 48
+          },
+          {
+            "year": 2008,
+            "value": 44
+          },
+          {
+            "year": 2009,
+            "value": 61.5
+          },
+          {
+            "year": 2010,
+            "value": 50.5
+          },
+          {
+            "year": 2011,
+            "value": 43.5
+          },
+          {
+            "year": 2012,
+            "value": 45.4
+          },
+          {
+            "year": 2013,
+            "value": 55.2
+          },
+          {
+            "year": 2014,
+            "value": 55.6
+          },
+          {
+            "year": 2015,
+            "value": 64
+          },
+          {
+            "year": 2016,
+            "value": 65.7
+          },
+          {
+            "year": 2017,
+            "value": 63.1
+          },
+          {
+            "year": 2018,
+            "value": 61.9
+          },
+          {
+            "year": 2019,
+            "value": 58.5
+          }
+        ],
+        "irrigated": [
+          {
+            "year": 1991,
+            "value": 51
+          },
+          {
+            "year": 1992,
+            "value": 46
+          },
+          {
+            "year": 1993,
+            "value": 42
+          },
+          {
+            "year": 1994,
+            "value": 49
+          },
+          {
+            "year": 1995,
+            "value": 38
+          },
+          {
+            "year": 1996,
+            "value": 43
+          },
+          {
+            "year": 1997,
+            "value": 48
+          },
+          {
+            "year": 1998,
+            "value": 50
+          },
+          {
+            "year": 1999,
+            "value": 52
+          },
+          {
+            "year": 2000,
+            "value": 46
+          },
+          {
+            "year": 2001,
+            "value": 53
+          },
+          {
+            "year": 2002,
+            "value": 45
+          },
+          {
+            "year": 2003,
+            "value": 53
+          },
+          {
+            "year": 2004,
+            "value": 53
+          },
+          {
+            "year": 2005,
+            "value": 56
+          },
+          {
+            "year": 2006,
+            "value": 57
+          },
+          {
+            "year": 2007,
+            "value": 50
+          },
+          {
+            "year": 2016,
+            "value": 67.2
+          }
+        ],
+        "nonIrrigated": [
+          {
+            "year": 1991,
+            "value": 18
+          },
+          {
+            "year": 1992,
+            "value": 30
+          },
+          {
+            "year": 1993,
+            "value": 31
+          },
+          {
+            "year": 1994,
+            "value": 28
+          },
+          {
+            "year": 1995,
+            "value": 25
+          },
+          {
+            "year": 1999,
+            "value": 20
+          },
+          {
+            "year": 2000,
+            "value": 31
+          },
+          {
+            "year": 2001,
+            "value": 13
+          },
+          {
+            "year": 2002,
+            "value": 18
+          },
+          {
+            "year": 2003,
+            "value": 8
+          },
+          {
+            "year": 2004,
+            "value": 10
+          },
+          {
+            "year": 2005,
+            "value": 17
+          },
+          {
+            "year": 2006,
+            "value": 18
+          },
+          {
+            "year": 2007,
+            "value": 19
+          },
+          {
+            "year": 2016,
+            "value": 33.2
+          }
+        ]
+      },
+      "winter_wheat": {
+        "all": [
+          {
+            "year": 1991,
+            "value": 37.2
+          },
+          {
+            "year": 1992,
+            "value": 36.4
+          },
+          {
+            "year": 1993,
+            "value": 42.7
+          },
+          {
+            "year": 1994,
+            "value": 37.4
+          },
+          {
+            "year": 1995,
+            "value": 22
+          },
+          {
+            "year": 1996,
+            "value": 26
+          },
+          {
+            "year": 1997,
+            "value": 37
+          },
+          {
+            "year": 1998,
+            "value": 51
+          },
+          {
+            "year": 1999,
+            "value": 54
+          },
+          {
+            "year": 2000,
+            "value": 36
+          },
+          {
+            "year": 2001,
+            "value": 41
+          },
+          {
+            "year": 2002,
+            "value": 27
+          },
+          {
+            "year": 2003,
+            "value": 38
+          },
+          {
+            "year": 2004,
+            "value": 31
+          },
+          {
+            "year": 2005,
+            "value": 44
+          },
+          {
+            "year": 2006,
+            "value": 25
+          },
+          {
+            "year": 2007,
+            "value": 47
+          },
+          {
+            "year": 2008,
+            "value": 36
+          },
+          {
+            "year": 2009,
+            "value": 39
+          },
+          {
+            "year": 2010,
+            "value": 48.6
+          },
+          {
+            "year": 2011,
+            "value": 27
+          },
+          {
+            "year": 2012,
+            "value": 32.5
+          },
+          {
+            "year": 2013,
+            "value": 22.4
+          },
+          {
+            "year": 2014,
+            "value": 24.6
+          },
+          {
+            "year": 2015,
+            "value": 35.8
+          },
+          {
+            "year": 2016,
+            "value": 62
+          },
+          {
+            "year": 2017,
+            "value": 45.4
+          },
+          {
+            "year": 2018,
+            "value": 38.6
+          },
+          {
+            "year": 2019,
+            "value": 57.9
+          }
+        ],
+        "irrigated": [
+          {
+            "year": 1991,
+            "value": 53
+          },
+          {
+            "year": 1992,
+            "value": 56
+          },
+          {
+            "year": 1993,
+            "value": 54
+          },
+          {
+            "year": 1994,
+            "value": 47.6
+          },
+          {
+            "year": 1995,
+            "value": 30
+          },
+          {
+            "year": 1996,
+            "value": 37
+          },
+          {
+            "year": 1997,
+            "value": 47
+          },
+          {
+            "year": 1998,
+            "value": 60
+          },
+          {
+            "year": 1999,
+            "value": 63
+          },
+          {
+            "year": 2000,
+            "value": 45
+          },
+          {
+            "year": 2001,
+            "value": 53
+          },
+          {
+            "year": 2002,
+            "value": 41
+          },
+          {
+            "year": 2003,
+            "value": 54
+          },
+          {
+            "year": 2004,
+            "value": 46
+          },
+          {
+            "year": 2005,
+            "value": 55
+          },
+          {
+            "year": 2006,
+            "value": 33
+          },
+          {
+            "year": 2007,
+            "value": 60
+          },
+          {
+            "year": 2008,
+            "value": 48
+          },
+          {
+            "year": 2009,
+            "value": 50
+          },
+          {
+            "year": 2010,
+            "value": 58.2
+          },
+          {
+            "year": 2011,
+            "value": 43.2
+          },
+          {
+            "year": 2012,
+            "value": 56.7
+          },
+          {
+            "year": 2013,
+            "value": 36.6
+          },
+          {
+            "year": 2014,
+            "value": 52.9
+          },
+          {
+            "year": 2015,
+            "value": 62
+          },
+          {
+            "year": 2016,
+            "value": 77.7
+          },
+          {
+            "year": 2017,
+            "value": 58.4
+          },
+          {
+            "year": 2018,
+            "value": 56.8
+          },
+          {
+            "year": 2019,
+            "value": 66.8
+          }
+        ],
+        "nonIrrigated": [
+          {
+            "year": 1991,
+            "value": 30.9
+          },
+          {
+            "year": 1992,
+            "value": 28.6
+          },
+          {
+            "year": 1993,
+            "value": 38.7
+          },
+          {
+            "year": 1994,
+            "value": 33.6
+          },
+          {
+            "year": 1995,
+            "value": 19
+          },
+          {
+            "year": 1996,
+            "value": 21
+          },
+          {
+            "year": 1997,
+            "value": 34
+          },
+          {
+            "year": 1998,
+            "value": 48
+          },
+          {
+            "year": 1999,
+            "value": 51
+          },
+          {
+            "year": 2000,
+            "value": 33
+          },
+          {
+            "year": 2001,
+            "value": 37
+          },
+          {
+            "year": 2002,
+            "value": 21
+          },
+          {
+            "year": 2003,
+            "value": 35
+          },
+          {
+            "year": 2004,
+            "value": 27
+          },
+          {
+            "year": 2005,
+            "value": 41
+          },
+          {
+            "year": 2006,
+            "value": 22
+          },
+          {
+            "year": 2007,
+            "value": 43
+          },
+          {
+            "year": 2008,
+            "value": 30.5
+          },
+          {
+            "year": 2009,
+            "value": 36
+          },
+          {
+            "year": 2010,
+            "value": 45.9
+          },
+          {
+            "year": 2011,
+            "value": 21
+          },
+          {
+            "year": 2012,
+            "value": 25.8
+          },
+          {
+            "year": 2013,
+            "value": 17.4
+          },
+          {
+            "year": 2014,
+            "value": 16.9
+          },
+          {
+            "year": 2015,
+            "value": 28.4
+          },
+          {
+            "year": 2016,
+            "value": 58.3
+          },
+          {
+            "year": 2017,
+            "value": 42.3
+          },
+          {
+            "year": 2018,
+            "value": 34.6
+          },
+          {
+            "year": 2019,
+            "value": 56.3
+          }
+        ]
+      },
+      "oats": {
+        "all": [
+          {
+            "year": 1991,
+            "value": 38
+          },
+          {
+            "year": 1992,
+            "value": 44
+          },
+          {
+            "year": 1993,
+            "value": 47
+          },
+          {
+            "year": 1994,
+            "value": 34
+          },
+          {
+            "year": 2003,
+            "value": 24
+          },
+          {
+            "year": 2004,
+            "value": 23
+          },
+          {
+            "year": 2005,
+            "value": 66
+          },
+          {
+            "year": 2013,
+            "value": 27.4
+          },
+          {
+            "year": 2015,
+            "value": 98
+          }
+        ],
+        "irrigated": [],
+        "nonIrrigated": []
+      },
+      "sorghum": {
+        "all": [
+          {
+            "year": 1991,
+            "value": 72
+          },
+          {
+            "year": 1992,
+            "value": 74
+          },
+          {
+            "year": 1993,
+            "value": 64
+          },
+          {
+            "year": 1994,
+            "value": 66
+          },
+          {
+            "year": 1995,
+            "value": 48
+          },
+          {
+            "year": 1996,
+            "value": 68
+          },
+          {
+            "year": 1997,
+            "value": 63
+          },
+          {
+            "year": 1998,
+            "value": 70
+          },
+          {
+            "year": 1999,
+            "value": 67
+          },
+          {
+            "year": 2000,
+            "value": 51
+          },
+          {
+            "year": 2001,
+            "value": 54
+          },
+          {
+            "year": 2002,
+            "value": 36
+          },
+          {
+            "year": 2003,
+            "value": 47
+          },
+          {
+            "year": 2004,
+            "value": 61
+          },
+          {
+            "year": 2005,
+            "value": 75
+          },
+          {
+            "year": 2006,
+            "value": 51
+          },
+          {
+            "year": 2007,
+            "value": 67
+          },
+          {
+            "year": 2008,
+            "value": 53
+          },
+          {
+            "year": 2009,
+            "value": 83
+          },
+          {
+            "year": 2010,
+            "value": 71
+          },
+          {
+            "year": 2011,
+            "value": 22.9
+          },
+          {
+            "year": 2012,
+            "value": 35.3
+          },
+          {
+            "year": 2013,
+            "value": 45.9
+          },
+          {
+            "year": 2014,
+            "value": 66.3
+          },
+          {
+            "year": 2015,
+            "value": 92.6
+          },
+          {
+            "year": 2016,
+            "value": 93.5
+          },
+          {
+            "year": 2017,
+            "value": 86.1
+          },
+          {
+            "year": 2018,
+            "value": 86.1
+          },
+          {
+            "year": 2019,
+            "value": 80.8
+          }
+        ],
+        "irrigated": [
+          {
+            "year": 1991,
+            "value": 105
+          },
+          {
+            "year": 1992,
+            "value": 108
+          },
+          {
+            "year": 1993,
+            "value": 94
+          },
+          {
+            "year": 1994,
+            "value": 107
+          },
+          {
+            "year": 1995,
+            "value": 81
+          },
+          {
+            "year": 1996,
+            "value": 102
+          },
+          {
+            "year": 1997,
+            "value": 99
+          },
+          {
+            "year": 1998,
+            "value": 95
+          },
+          {
+            "year": 1999,
+            "value": 100
+          },
+          {
+            "year": 2000,
+            "value": 93
+          },
+          {
+            "year": 2001,
+            "value": 92
+          },
+          {
+            "year": 2002,
+            "value": 79
+          },
+          {
+            "year": 2003,
+            "value": 91
+          },
+          {
+            "year": 2004,
+            "value": 108
+          },
+          {
+            "year": 2005,
+            "value": 99
+          },
+          {
+            "year": 2006,
+            "value": 89
+          },
+          {
+            "year": 2007,
+            "value": 101
+          },
+          {
+            "year": 2009,
+            "value": 105
+          }
+        ],
+        "nonIrrigated": [
+          {
+            "year": 1991,
+            "value": 45
+          },
+          {
+            "year": 1992,
+            "value": 46
+          },
+          {
+            "year": 1993,
+            "value": 51
+          },
+          {
+            "year": 1994,
+            "value": 47
+          },
+          {
+            "year": 1995,
+            "value": 34
+          },
+          {
+            "year": 1996,
+            "value": 62
+          },
+          {
+            "year": 1997,
+            "value": 54
+          },
+          {
+            "year": 1998,
+            "value": 66
+          },
+          {
+            "year": 1999,
+            "value": 61
+          },
+          {
+            "year": 2000,
+            "value": 46
+          },
+          {
+            "year": 2001,
+            "value": 50
+          },
+          {
+            "year": 2002,
+            "value": 26
+          },
+          {
+            "year": 2003,
+            "value": 32
+          },
+          {
+            "year": 2004,
+            "value": 51
+          },
+          {
+            "year": 2005,
+            "value": 70
+          },
+          {
+            "year": 2006,
+            "value": 43
+          },
+          {
+            "year": 2007,
+            "value": 62
+          },
+          {
+            "year": 2009,
+            "value": 79
+          }
+        ]
+      }
+    },
+    "districtName": "Southwest",
+    "prices": {
+      "corn": {
+        "price": 4.19,
+        "unit": "$/bu",
+        "months": 12,
+        "through": "Sep 2026",
+        "level": "state"
+      },
+      "soybean": {
+        "price": 10.88,
+        "unit": "$/bu",
+        "months": 12,
+        "through": "Sep 2026",
+        "level": "state"
+      },
+      "winter_wheat": {
+        "price": 5.38,
+        "unit": "$/bu",
+        "months": 12,
+        "through": "Sep 2026",
+        "level": "state"
+      },
+      "oats": {
+        "price": 3.14,
+        "unit": "$/bu",
+        "months": 12,
+        "through": "Sep 2026",
+        "level": "national"
+      },
+      "alfalfa": {
+        "price": 123.83,
+        "unit": "$/ton",
+        "months": 12,
+        "through": "Sep 2026",
+        "level": "state"
+      },
+      "sorghum": {
+        "price": 3.62,
+        "unit": "$/bu",
+        "months": 12,
+        "through": "Sep 2026",
+        "level": "state"
+      }
+    },
+    "errors": []
+  },
+  "estimates": [
+    {
+      "year": 2023,
+      "silking": "2023-07-13",
+      "weatherSnapshot": "e0a850aa98180e742831b96f67c2feff922361ac89af6a34f396ac2b5d2cebe3"
+    },
+    {
+      "year": 2024,
+      "silking": "2024-07-07",
+      "weatherSnapshot": "5bd4629cb482f93d7378b5b08192f496252d984f95d87a62f8bb769a2e4919f7"
+    },
+    {
+      "year": 2025,
+      "silking": "2025-07-12",
+      "weatherSnapshot": "f8ce8565d005ecbf8696bde658cdb4047750143989f2249d5cce6efed936495c"
+    }
+  ],
+  "comparison": {
+    "status": "available",
+    "reason": "Weekly regional 50% benchmark intervals; no exact crossing day inferred",
+    "interpretation": "NASS survey: cumulative percentage of regional corn acreage at or beyond silking, not this field. GDD dates and ±7-day windows are estimates, not observations. No interpolation.",
+    "county": {
+      "countyFips": "20055",
+      "countyName": "Finney County",
+      "stateCode": "KS",
+      "stateName": "Kansas"
+    },
+    "mapping": {
+      "asdCode": "30",
+      "districtName": "SOUTHWEST",
+      "method": "ASD association from NASS county corn yield rows since 2010; ambiguous associations remain unknown"
+    },
+    "source": {
+      "urls": [
+        "https://quickstats.nass.usda.gov/api/api_GET/?source_desc=SURVEY&format=JSON&agg_level_desc=COUNTY&state_fips_code=20&county_ansi=055&statisticcat_desc=YIELD&commodity_desc=CORN&year__GE=2010",
+        "https://quickstats.nass.usda.gov/api/api_GET/?source_desc=SURVEY&format=JSON&short_desc=CORN+-+PROGRESS%2C+MEASURED+IN+PCT+SILKING&freq_desc=WEEKLY&state_fips_code=20&year__GE=2023&year__LE=2025&agg_level_desc=AGRICULTURAL+DISTRICT&asd_code=30",
+        "https://quickstats.nass.usda.gov/api/api_GET/?source_desc=SURVEY&format=JSON&short_desc=CORN+-+PROGRESS%2C+MEASURED+IN+PCT+SILKING&freq_desc=WEEKLY&state_fips_code=20&year__GE=2023&year__LE=2025&agg_level_desc=STATE"
+      ],
+      "retrievedAt": "2026-11-15T13:13:17.897Z",
+      "product": "CORN - PROGRESS, MEASURED IN PCT SILKING",
+      "parser": "nass:silking:v1"
+    },
+    "seasons": [
+      {
+        "year": 2023,
+        "reports": [
+          {
+            "date": "2023-06-25",
+            "percent": 6
+          },
+          {
+            "date": "2023-07-02",
+            "percent": 19
+          },
+          {
+            "date": "2023-07-09",
+            "percent": 36
+          },
+          {
+            "date": "2023-07-16",
+            "percent": 55
+          },
+          {
+            "date": "2023-07-23",
+            "percent": 68
+          },
+          {
+            "date": "2023-07-30",
+            "percent": 82
+          },
+          {
+            "date": "2023-08-06",
+            "percent": 91
+          },
+          {
+            "date": "2023-08-13",
+            "percent": 94
+          },
+          {
+            "date": "2023-08-20",
+            "percent": 97
+          }
+        ],
+        "lower": {
+          "date": "2023-07-09",
+          "percent": 36
+        },
+        "upper": {
+          "date": "2023-07-16",
+          "percent": 55
+        },
+        "status": "bracketed",
+        "gapDays": 7,
+        "estimatedSilking": "2023-07-13",
+        "estimatedWindow": {
+          "start": "2023-07-06",
+          "end": "2023-07-20"
+        },
+        "modelMinusSurveyDays": [
+          -3,
+          4
+        ],
+        "discrepancy": "Regional plausibility only; planting/hybrid and observed field stages are not matched.",
+        "geography": "STATE",
+        "geographyName": "Kansas",
+        "fallbackReason": "District weekly benchmark unavailable, unbracketed, inconsistent or request failed; state fallback (not field validation)"
+      },
+      {
+        "year": 2024,
+        "reports": [
+          {
+            "date": "2024-06-16",
+            "percent": 1
+          },
+          {
+            "date": "2024-06-23",
+            "percent": 11
+          },
+          {
+            "date": "2024-06-30",
+            "percent": 30
+          },
+          {
+            "date": "2024-07-07",
+            "percent": 47
+          },
+          {
+            "date": "2024-07-14",
+            "percent": 59
+          },
+          {
+            "date": "2024-07-21",
+            "percent": 76
+          },
+          {
+            "date": "2024-07-28",
+            "percent": 84
+          },
+          {
+            "date": "2024-08-04",
+            "percent": 92
+          },
+          {
+            "date": "2024-08-11",
+            "percent": 95
+          },
+          {
+            "date": "2024-08-18",
+            "percent": 100
+          }
+        ],
+        "lower": {
+          "date": "2024-07-07",
+          "percent": 47
+        },
+        "upper": {
+          "date": "2024-07-14",
+          "percent": 59
+        },
+        "status": "bracketed",
+        "gapDays": 7,
+        "estimatedSilking": "2024-07-07",
+        "estimatedWindow": {
+          "start": "2024-06-30",
+          "end": "2024-07-14"
+        },
+        "modelMinusSurveyDays": [
+          -7,
+          0
+        ],
+        "discrepancy": "Regional plausibility only; planting/hybrid and observed field stages are not matched.",
+        "geography": "STATE",
+        "geographyName": "Kansas",
+        "fallbackReason": "District weekly benchmark unavailable, unbracketed, inconsistent or request failed; state fallback (not field validation)"
+      },
+      {
+        "year": 2025,
+        "reports": [
+          {
+            "date": "2025-06-15",
+            "percent": 1
+          },
+          {
+            "date": "2025-06-22",
+            "percent": 5
+          },
+          {
+            "date": "2025-06-29",
+            "percent": 22
+          },
+          {
+            "date": "2025-07-06",
+            "percent": 39
+          },
+          {
+            "date": "2025-07-13",
+            "percent": 51
+          },
+          {
+            "date": "2025-07-20",
+            "percent": 61
+          },
+          {
+            "date": "2025-07-27",
+            "percent": 77
+          },
+          {
+            "date": "2025-08-03",
+            "percent": 85
+          },
+          {
+            "date": "2025-08-10",
+            "percent": 90
+          },
+          {
+            "date": "2025-08-17",
+            "percent": 95
+          }
+        ],
+        "lower": {
+          "date": "2025-07-06",
+          "percent": 39
+        },
+        "upper": {
+          "date": "2025-07-13",
+          "percent": 51
+        },
+        "status": "bracketed",
+        "gapDays": 7,
+        "estimatedSilking": "2025-07-12",
+        "estimatedWindow": {
+          "start": "2025-07-05",
+          "end": "2025-07-19"
+        },
+        "modelMinusSurveyDays": [
+          -1,
+          6
+        ],
+        "discrepancy": "Regional plausibility only; planting/hybrid and observed field stages are not matched.",
+        "geography": "STATE",
+        "geographyName": "Kansas",
+        "fallbackReason": "District weekly benchmark unavailable, unbracketed, inconsistent or request failed; state fallback (not field validation)"
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "irrigated": false,
+      "defaults": [
+        {
+          "label": "Fallow (no crop) → Winter wheat → Grain sorghum",
+          "net": 5,
+          "scores": {
+            "climate": 0.609,
+            "reliability": 0.522,
+            "soil": 0.36,
+            "profit": 0.59,
+            "total": 0.524
+          }
+        },
+        {
+          "label": "Grain sorghum → Fallow (no crop) → Grain sorghum",
+          "net": 19,
+          "scores": {
+            "climate": 0.64,
+            "reliability": 0.578,
+            "soil": 0.18,
+            "profit": 0.657,
+            "total": 0.518
+          }
+        },
+        {
+          "label": "Fallow (no crop) → Grain sorghum → Fallow (no crop)",
+          "net": -7,
+          "scores": {
+            "climate": 0.725,
+            "reliability": 0.756,
+            "soil": 0.06,
+            "profit": 0.528,
+            "total": 0.506
+          }
+        }
+      ],
+      "nassPricesOnly": [
+        {
+          "label": "Fallow (no crop) → Winter wheat → Grain sorghum",
+          "net": -8,
+          "scores": {
+            "climate": 0.609,
+            "reliability": 0.522,
+            "soil": 0.36,
+            "profit": 0.533,
+            "total": 0.507
+          }
+        },
+        {
+          "label": "Fallow (no crop) → Grain sorghum → Fallow (no crop)",
+          "net": -19,
+          "scores": {
+            "climate": 0.725,
+            "reliability": 0.756,
+            "soil": 0.06,
+            "profit": 0.477,
+            "total": 0.49
+          }
+        },
+        {
+          "label": "Grain sorghum → Fallow (no crop) → Grain sorghum",
+          "net": -3,
+          "scores": {
+            "climate": 0.64,
+            "reliability": 0.578,
+            "soil": 0.18,
+            "profit": 0.558,
+            "total": 0.488
+          }
+        }
+      ],
+      "nassYieldsAndPrices": [
+        {
+          "label": "Fallow (no crop) → Winter wheat → Grain sorghum",
+          "net": -6,
+          "scores": {
+            "climate": 0.609,
+            "reliability": 0.522,
+            "soil": 0.36,
+            "profit": 0.575,
+            "total": 0.519
+          }
+        },
+        {
+          "label": "Fallow (no crop) → Grain sorghum → Fallow (no crop)",
+          "net": -21,
+          "scores": {
+            "climate": 0.725,
+            "reliability": 0.756,
+            "soil": 0.06,
+            "profit": 0.5,
+            "total": 0.497
+          }
+        },
+        {
+          "label": "Grain sorghum → Fallow (no crop) → Grain sorghum",
+          "net": -6,
+          "scores": {
+            "climate": 0.64,
+            "reliability": 0.578,
+            "soil": 0.18,
+            "profit": 0.573,
+            "total": 0.493
+          }
+        }
+      ]
+    },
+    {
+      "irrigated": true,
+      "defaults": [
+        {
+          "label": "Alfalfa (hay) → Alfalfa (hay) → Alfalfa (hay)",
+          "net": 281,
+          "scores": {
+            "climate": 0.987,
+            "reliability": 1,
+            "soil": 0.45,
+            "profit": 1,
+            "total": 0.859
+          }
+        },
+        {
+          "label": "Soybean → Alfalfa (hay) → Alfalfa (hay)",
+          "net": 194,
+          "scores": {
+            "climate": 0.936,
+            "reliability": 1,
+            "soil": 0.63,
+            "profit": 0.562,
+            "total": 0.76
+          }
+        },
+        {
+          "label": "Alfalfa (hay) → Alfalfa (hay) → Corn",
+          "net": 199,
+          "scores": {
+            "climate": 0.917,
+            "reliability": 0.993,
+            "soil": 0.53,
+            "profit": 0.588,
+            "total": 0.737
+          }
+        }
+      ],
+      "nassPricesOnly": [
+        {
+          "label": "Soybean → Corn → Soybean",
+          "net": 158,
+          "scores": {
+            "climate": 0.815,
+            "reliability": 0.993,
+            "soil": 0.59,
+            "profit": 0.963,
+            "total": 0.839
+          }
+        },
+        {
+          "label": "Soybean → Winter wheat → Soybean",
+          "net": 128,
+          "scores": {
+            "climate": 0.877,
+            "reliability": 1,
+            "soil": 0.58,
+            "profit": 0.813,
+            "total": 0.808
+          }
+        },
+        {
+          "label": "Soybean → Grain sorghum → Soybean",
+          "net": 131,
+          "scores": {
+            "climate": 0.876,
+            "reliability": 1,
+            "soil": 0.48,
+            "profit": 0.827,
+            "total": 0.787
+          }
+        }
+      ],
+      "nassYieldsAndPrices": [
+        {
+          "label": "Soybean → Corn → Soybean",
+          "net": 194,
+          "scores": {
+            "climate": 0.815,
+            "reliability": 0.993,
+            "soil": 0.59,
+            "profit": 0.965,
+            "total": 0.839
+          }
+        },
+        {
+          "label": "Soybean → Winter wheat → Soybean",
+          "net": 164,
+          "scores": {
+            "climate": 0.877,
+            "reliability": 1,
+            "soil": 0.58,
+            "profit": 0.813,
+            "total": 0.808
+          }
+        },
+        {
+          "label": "Soybean → Grain sorghum → Soybean",
+          "net": 175,
+          "scores": {
+            "climate": 0.876,
+            "reliability": 1,
+            "soil": 0.48,
+            "profit": 0.867,
+            "total": 0.799
+          }
+        }
+      ]
+    }
+  ]
+}

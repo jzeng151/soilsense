@@ -17,6 +17,8 @@ import {
   type ResearchTag,
 } from "./config";
 import type { SavedEntry } from "./saved";
+import { DOCS_CORPUS } from "../../shared/ingest";
+import { docsPassageFor } from "./docsLookup";
 
 /** The part of the Workers AI binding we use (kept loose so tests can pass a plain mock). */
 export interface AiLike {
@@ -85,7 +87,7 @@ function base(tags: string[], status: ResearchResult["status"], extra: Partial<R
  * Unsupported tags are dropped; with no supported tag the result is an explicit empty result.
  */
 export async function retrieveLive(
-  deps: { ai: AiLike; index: VectorIndexLike; now?: () => Date; gatewayId?: string },
+  deps: { ai: AiLike; index: VectorIndexLike; db?: D1Database; now?: () => Date; gatewayId?: string },
   rawTags: string[],
   query: string,
 ): Promise<ResearchResult> {
@@ -96,7 +98,7 @@ export async function retrieveLive(
   const res = await deps.index.query(vector, {
     topK: 10,
     returnMetadata: "indexed",
-    filter: { corpus: { $eq: CORPUS_VERSION }, crop: tags.length === 1 ? { $eq: tags[0]! } : { $in: tags } },
+    filter: { corpus: { $in: [CORPUS_VERSION, DOCS_CORPUS] }, crop: tags.length === 1 ? { $eq: tags[0]! } : { $in: tags } },
   });
   const seen = new Set<string>();
   const passages: ResearchPassage[] = [];
@@ -104,6 +106,14 @@ export async function retrieveLive(
     if (m.score < MIN_SCORE) continue;
     const chunkId = String(m.metadata?.chunk_id ?? m.id.split("#")[0]);
     if (seen.has(chunkId)) continue;
+    if (m.metadata?.corpus === DOCS_CORPUS) {
+      const p = await docsPassageFor(deps.db, chunkId, tags, m.score);
+      if (!p) continue;
+      seen.add(chunkId);
+      passages.push(p);
+      if (passages.length >= MAX_PASSAGES) break;
+      continue;
+    }
     // Defensive: never return text outside the curated corpus, from another corpus version, or for another crop.
     const chunk = CHUNKS_BY_ID.get(chunkId);
     if (!chunk || (m.metadata?.corpus !== undefined && m.metadata.corpus !== CORPUS_VERSION)) continue;
@@ -123,7 +133,7 @@ export async function retrieveLive(
  * exact same comparison key (labelled saved, with its original retrieval time); otherwise research-unavailable.
  */
 export async function researchFor(
-  deps: { ai?: AiLike; index?: VectorIndexLike; now?: () => Date; gatewayId?: string },
+  deps: { ai?: AiLike; index?: VectorIndexLike; db?: D1Database; now?: () => Date; gatewayId?: string },
   tags: string[],
   query: string,
   saved: SavedEntry | null,
@@ -132,7 +142,7 @@ export async function researchFor(
   let failure = "research bindings not configured";
   if (deps.ai && deps.index) {
     try {
-      return await retrieveLive({ ai: deps.ai, index: deps.index, now: deps.now, gatewayId: deps.gatewayId }, tags, query);
+      return await retrieveLive({ ai: deps.ai, index: deps.index, db: deps.db, now: deps.now, gatewayId: deps.gatewayId }, tags, query);
     } catch (err) {
       failure = `retrieval failed: ${String(err).slice(0, 160)}`;
       console.warn(JSON.stringify({ msg: "research retrieval failed", err: String(err) }));

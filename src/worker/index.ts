@@ -19,6 +19,8 @@ export { LiveRoom } from "./live/room";
 export { FieldAgent } from "./fieldwatch/agent";
 // Workflow classes too (wrangler "workflows" binding POWER_REFRESH).
 export { PowerRefreshWorkflow } from "./refresh/workflow";
+export { DocIngestWorkflow } from "./ingest/workflow";
+import { queue } from "./ingest/queue";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -65,4 +67,4 @@ async function scheduled(controller: ScheduledController, env: Env, ctx: Executi
 }
 
 // The Hono app stays the default export (tests call app.request); Workers also reads its scheduled handler.
-export default Object.assign(app, { scheduled });
+export default Object.assign(app, { scheduled, queue });

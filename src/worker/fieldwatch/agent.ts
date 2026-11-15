@@ -66,7 +66,7 @@ export class FieldAgent extends Agent<Env> {
 
   /** Called by the SDK scheduler. Safe to call twice: a finished run is never re-evaluated. */
   async runScheduledCheck(payload: { runId: string; fieldId: string }): Promise<void> {
-    const run = await executeRun(this.store(), payload.runId, this.env, this.field(payload.fieldId), new Date());
+    const run = await executeRun(this.store(), payload.runId, this.env, this.field(payload.fieldId), new Date(), undefined, this.settings().crop);
     if (run && run.status !== "pending") await this.publish(run);
   }
 

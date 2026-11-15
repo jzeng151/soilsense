@@ -50,10 +50,15 @@
   "triggers": { "crons": ["17 * * * *", "43 5 * * *"] },
 
   // NASA POWER snapshot refresh: daily at 05:43 UTC (second cron above) and POST /api/refresh/run (ADMIN_TOKEN).
-  "workflows": [{ "name": "soilsense-power-refresh", "binding": "POWER_REFRESH", "class_name": "PowerRefreshWorkflow" }, { "name": "soilsense-imerg-refresh", "binding": "IMERG_REFRESH", "class_name": "ImergRefreshWorkflow" }],
+  "workflows": [{ "name": "soilsense-power-refresh", "binding": "POWER_REFRESH", "class_name": "PowerRefreshWorkflow" }, { "name": "soilsense-imerg-refresh", "binding": "IMERG_REFRESH", "class_name": "ImergRefreshWorkflow" }, { "name": "soilsense-doc-ingest", "binding": "DOC_INGEST", "class_name": "DocIngestWorkflow" }],
 
   // Immutable, content-addressed evidence bundles. Create with: npx wrangler r2 bucket create soilsense-evidence
-  "r2_buckets": [{ "binding": "EVIDENCE", "bucket_name": "soilsense-evidence" }],
+  "r2_buckets": [{ "binding": "EVIDENCE", "bucket_name": "soilsense-evidence" }, { "binding": "DOCS", "bucket_name": "soilsense-docs" }],
+
+  "queues": {
+    "consumers": [{ "queue": "soilsense-docs", "max_batch_size": 10, "max_batch_timeout": 5, "max_retries": 3 }],
+    "producers": [{ "binding": "DOC_QUEUE", "queue": "soilsense-docs" }]
+  },
 
   // Cited research passages (#7). Create the index + metadata indexes BEFORE ingesting: see docs/RESEARCH.md.
   "vectorize": [{ "binding": "RESEARCH_INDEX", "index_name": "soilsense-research-v1" }],

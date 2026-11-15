@@ -229,5 +229,12 @@
 .auth-tagline { margin: 0.6rem 0 0; font-size: 1.35rem; line-height: 1.4; color: var(--color-brand-panel-text); }
 .auth-sprout { align-self: center; max-width: 60%; height: auto; }
 
+/* Research evidence: native details/summary stays keyboard accessible at narrow widths. */
+.sc-research-state { margin: 0.6rem 1rem; padding: 0.65rem; border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-2); font-size: 0.85rem; overflow-wrap: anywhere; }
+.sc-research-quote { max-width: 100%; min-width: 0; margin: 0.7rem 0; padding: 0.8rem; border: 1px solid var(--color-border); border-radius: 10px; overflow-wrap: anywhere; }
+.sc-research-quote summary { cursor: pointer; min-height: 44px; }
+.sc-research-quote summary:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.sc-research-quote blockquote { margin: 0.7rem 0; padding-left: 0.8rem; border-left: 3px solid var(--color-border); white-space: pre-wrap; }
+
 /* Mobile: leave room for the menu button above the planner's progress steps */
 @media (max-width: 860px) { .route-planner .jr-main { padding-top: 3.8rem; } }

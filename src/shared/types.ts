@@ -387,8 +387,12 @@ export interface SecondOpinion {
   droughtChanceNow: number | null;
   /** Root-zone soil wetness now, as a percentile of past years at this time of year (0–100). */
   rootzonePctNow: number | null;
-  /** True when the district is on drought watch/warning, so the ranking uses dry-year scores. */
+  /** Ranking basis from the Kansas file; preferred over the legacy alert flag. */
+  basis?: string | null;
+  /** True when the ranking uses dry-year scores. */
   dryYearRanking: boolean;
+  /** True when R2 was unavailable and the bundled offline file was used. */
+  savedCopy?: boolean;
   rotations: KStateRotation[];
   /** Rankings limited to rotations that include the crop the farmer grows now. */
   byCurrentCrop: Partial<Record<"corn" | "sorghum" | "soybean" | "wheat", { message: string | null; rotations: KStateRotation[] }>>;

@@ -621,6 +621,7 @@ export function App() {
                   countyFips={plan.location.county?.countyFips ?? null}
                   plan={best}
                   history={plan.cropHistory}
+                  recentCrops={plan.request.recentCrops}
                   irrigated={(plan.water ?? water) !== "rain"}
                 />
 

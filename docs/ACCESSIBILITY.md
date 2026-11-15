@@ -13,7 +13,7 @@ Do not turn zero automated violations into a claim of WCAG 2.1 AA conformance. I
 - Selected tags: `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`; no excluded rules. WCAG 2.2 target-size rules are outside these tags.
 - **EN + ES × 1280 × 900 and 375 × 900 CSS pixels × eight states = 32 scans** per capture. Reduced motion is enabled. The keyboard script additionally checks a default plan at **320 CSS pixels**.
 - Before UI: `147d7563023656a60a3a13687cf2496a5ece5f61`, the integrated `origin/next` at task start (includes Spanish #85, goals #83, document fixes #84, MODIS #61 and K-State #82, plus #86).
-- After UI: `515e5a0` (full source revision in the JSON). The baseline was rebuilt by temporarily restoring only the baseline's `web/src`, using the same expanded-state scanner, Worker and warmed local data, and restoring committed current sources before rebuilding the after UI. The expected failing baseline exited 1; the after audit exited 0.
+- After UI: `8290061` (full source revision in the JSON). The baseline was rebuilt by temporarily restoring only the baseline's `web/src`, using the same expanded-state scanner, Worker and warmed local data, and restoring committed current sources before rebuilding the after UI. The expected failing baseline exited 1; the after audit exited 0.
 - Real Kansas example: Finney County, 38.1095, -100.706, inferred current crop, full irrigation and balanced priority. Scan questions with no optional goals, then select **Water conservation + Organic matter**. Assert two selected / three disabled checkboxes; the resulting plan must include goal-score disclosures.
 - Plan coverage: activate **Compare timing** and **Load field history**, wait for loading text to clear, then repeatedly expand all rendered/nested `details`. **51 disclosures, including five goal-score disclosures, were open** in each final plan scan. Inventories include headings, goals, vegetation text, harvest-table count, disclosure state, page language and overflow.
 - MODIS returned real complete 2025 point/composite data: **23/23 strict-QA composites** in both captures. Expanded coverage includes its chart, exact-date/QA table and source links, SMAP, regional water/well records, K-State margin assumptions, wind/cover, historical timing/scenarios, alternate plans and evidence methods. Conditional county harvest tables did **not** render (recorded count zero); their availability is not fabricated.
@@ -28,14 +28,14 @@ A rule instance is one failing rule in one scan; nodes are affected DOM elements
 | State (four scans each) | Before rules / nodes | After rules / nodes | Before / after incomplete rules |
 |---|---:|---:|---:|
 | Landing | 4 / 8 | 0 / 0 | 12 / 12 |
-| Field confirmation | 4 / 8 | 0 / 0 | 10 / 10 |
+| Field confirmation | 4 / 8 | 0 / 0 | 10 / 8 |
 | Three questions, no optional goals | 4 / 8 | 0 / 0 | 4 / 4 |
 | Two goals selected; remaining options disabled | 4 / 8 | 0 / 0 | 4 / 4 |
 | Kansas plan, every rendered disclosure expanded | 4 / 8 | 0 / 0 | 4 / 4 |
 | Field Watch, four farm rows expanded | 0 / 0 | 0 / 0 | 0 / 0 |
 | Admin docs entry | 0 / 0 | 0 / 0 | 0 / 0 |
 | Admin docs review, synthetic fixture | 0 / 0 | 0 / 0 | 0 / 0 |
-| **32 scan-instance totals** | **20 / 40** | **0 / 0** | **34 / 34** |
+| **32 scan-instance totals** | **20 / 40** | **0 / 0** | **34 / 32** |
 
 The only newly failing rule type was **`label-content-name-mismatch` (WCAG 2.5.3)**. Both language buttons visibly said `EN` / `ES`, but their accessible names were `English` / `Español`, which did not contain the complete visible labels. The final names are **`EN English` / `ES Español`**, matching Tunk's concurrent fix exactly. This repaired 40 repeated affected-node instances, not 40 distinct bugs. No page-level horizontal overflow was recorded in any of the 32 before or after scans.
 
@@ -57,7 +57,7 @@ Initial `git diff origin/next...origin/main` identified `cec685f` (17 files). In
 | `package-lock.json` | Regenerate from the combined manifest, retaining both axe/Playwright and main's `franc-min` dependencies; no dependency is discarded to resolve the conflict. |
 | Keyboard runner and screen-reader utility follow-ups | Retain Tunk's skip-link-first assertions and `0d60689`'s `.sr-only` positioned-ancestor scroll repair. Extend keyboard checks to ES without removing any of those assertions. |
 
-During this task, Tunk integrated main into next (`e56b4ba`), fixed the same language names (`e734df7`), updated keyboard assertions (`bdc462b`), merged next to main (#88), and added `0d60689`. We matched those compatible follow-ups instead of leaving redundant alternative implementations.
+During this task, Tunk integrated main into next (`e56b4ba`), fixed the same language names (`e734df7`), updated keyboard assertions (`bdc462b`), merged next to main (#88), and added `0d60689`. We matched those compatible follow-ups instead of leaving redundant alternative implementations. The PR branch was then rebased onto the updated `origin/next` at `bdc462b`, dropping the now-redundant initial reconciliation commit; its final tree was unchanged. The published delta adds the expanded audit, evidence/docs and main-only screen-reader scroll follow-up, not a duplicate merge of main into next.
 
 **Actual scratch-branch test:** on `scratch/a11y-main-merge`, `git merge --no-commit --no-ff origin/main` at **`0d60689`** completed **conflict-free**, then was aborted; work returned to `fix/a11y-rescan`. No merge commit was pushed. This is a point-in-time result; later remote changes need a fresh check.
 
@@ -65,7 +65,7 @@ During this task, Tunk integrated main into next (`e56b4ba`), fixed the same lan
 
 The rerunnable browser smoke checks passed for **EN/ES at both widths**: skip link is first and focuses `#content`; closed mobile navigation is not a hidden Tab stop; opening, reverse Tab, Escape and focus restoration work; Kansas and confirmation are reachable by Tab; Space selects a crop; Enter builds a plan and opens native disclosures; ArrowRight + Enter selects the map center. Enabled landing/confirmation buttons meet the team's 44 × 44 rule, and the default plan reflows at 320px. This is not exhaustive keyboard or screen-reader user testing.
 
-- **34 incomplete rule instances remain** in after results, mainly contrast/interpretation over SVG, map and symbolic content. They remain available for manual review and are not suppressed or called passes.
+- **32 incomplete rule instances remain** in after results, mainly contrast/interpretation over SVG, map and symbolic content. They remain available for manual review and are not suppressed or called passes.
 - No NVDA, JAWS, VoiceOver, TalkBack or assistive-technology user testing. Reading order, announcement quality and language pronunciation still require manual assessment, including English evidence/operator content under the Spanish document setting.
 - No full-WCAG review of all non-text contrast, chart equivalents, zoom/text spacing, cognitive usability, error/conditional states or every route.
 - No real authenticated admin upload/review audit. Synthetic operator UI coverage is not a substitute. No county-harvest chart/table state rendered for this field.

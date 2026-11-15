@@ -81,6 +81,10 @@ export async function fetchSecondOpinion(countyFips: string, signal?: AbortSigna
   return handle(await fetch(`/api/second-opinion?fips=${encodeURIComponent(countyFips)}`, { signal }));
 }
 
+
+export async function fetchVegetation(lat: number, lon: number, year: number, signal?: AbortSignal): Promise<import("../../src/shared/types").ModisVegetation> {
+  return handle(await fetch(`/api/vegetation?lat=${lat}&lon=${lon}&year=${year}`, { signal }));
+}
 // ---- Grounded explanations (#7/#8): the latest plan response, so plan cards can ask for an explanation ----
 // of the exact comparison they show without App.tsx having to pass the request down.
 let lastPlan: PlanResponse | null = null;
@@ -112,4 +116,5 @@ export async function fetchWindScreen(
   signal?: AbortSignal,
 ): Promise<import("../../src/shared/types").WindScreen> {
   return handle(await fetch("/api/wind-screen", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal }));
+
 }

@@ -420,6 +420,19 @@ export interface SecondOpinion {
   byCurrentCrop: Partial<Record<"corn" | "sorghum" | "soybean" | "wheat", { message: string | null; rotations: KStateRotation[] }>>;
 }
 
+
+// MODIS historical coarse-pixel vegetation evidence (#19).
+export interface ModisObservation {
+  modisDate: string; compositeStart: string; compositeEnd: string; observationDate: string | null;
+  ndvi: number | null; reliability: number | null; quality: number | null; version: string | null;
+  processingDate: string | null; tile: string | null; reason: string;
+}
+export interface ModisVegetation {
+  status: "complete" | "partial" | "unavailable"; product: string; version: string;
+  lat: number; lon: number; year: number; resolution: string; interval: string; units: string; scale: number;
+  expectedCount: number; validCount: number; observations: ModisObservation[];
+  requestUrls: string[]; retrievedAt: string | null; docsUrl: string; attribution: string; note: string;
+}
 // ---- U.S. Drought Monitor context (GitHub issue #31) ----
 
 /** USDM categories: none (no drought), D0 abnormally dry, D1–D4 drought. */
@@ -598,4 +611,5 @@ export interface WindScreen {
   rotations: WindRotationScreen[];
   limitations: string[];
   status: "ok" | "partial" | "unavailable";
+
 }

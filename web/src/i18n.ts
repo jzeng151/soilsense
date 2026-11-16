@@ -6,11 +6,13 @@ import { cardMessages } from "./i18n-cards";
 import { korean } from "./i18n-ko";
 import { LANGUAGES, parseLanguage, type Language } from "../../src/shared/language";
 export type { Language } from "../../src/shared/language";
+import { myFieldsMessages } from "./i18n-myfields";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
   ...fieldMessages,
   ...cardMessages,
+  ...myFieldsMessages,
   "District outlook (next ~4 weeks, team's Kansas model)": "Perspectiva del distrito (próximas ~4 semanas, modelo de Kansas del equipo)",
   "drought likely to continue.": "es probable que la sequía continúe.",
   "possible drought onset (low confidence).": "posible inicio de sequía (baja confianza).",

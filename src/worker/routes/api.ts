@@ -2,11 +2,12 @@ import { generateAI, type AiRunner } from "../lib/ai";
 import { Hono, type Handler, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
 import { hasMeasurements, validateMeasurements } from "../../shared/measurements";
-import { GOALS, type CropId, type Goal, type PlanRequest, type Priority } from "../../shared/types";
+import { GOALS, type CropId, type Goal, type PlanRequest, type PlanResponse, type Priority } from "../../shared/types";
 import { currentUser } from "../lib/auth";
 import { UpstreamError } from "../lib/http";
 import { getSecondOpinion } from "../data/kstate";
-import { getField, isInContiguousUS, logPlan, makePlan } from "../service";
+import { getField, isInContiguousUS, logPlan, makePlan, planCacheKey, PLAN_ENGINE_VERSION, PlanNotReady } from "../service";
+import { putCached } from "../lib/cache";
 import { auth, type AppEnv } from "./auth";
 import { fieldWatch } from "./fieldwatch";
 import { scout } from "./scout";
@@ -42,7 +43,9 @@ api.use("*", async (c, next) => {
   c.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   if (c.req.method === "OPTIONS") return c.body(null, 204);
   const ip = c.req.header("CF-Connecting-IP") ?? "local";
-  if (c.req.method === "POST" && rateLimited(ip)) return c.json({ error: "Too many requests. Try again in a minute." }, 429);
+  // Authenticated prewarming is sequential but spans every water/priority/language
+  // combination; apply the visitor limit only to untrusted requests.
+  if (c.req.method === "POST" && !adminTokenMatches(c.req.header("Authorization"), c.env.ADMIN_TOKEN) && rateLimited(ip)) return c.json({ error: "Too many requests. Try again in a minute." }, 429);
   await next();
 });
 
@@ -154,6 +157,47 @@ api.get("/field-memory/:field/:vector", async (c) => {
   }
 });
 
+// CPU-safe deployments serve precomputed responses; compute them locally or on a paid Worker.
+api.get("/plan/runtime", (c) => c.json({ engineVersion: PLAN_ENGINE_VERSION, computeMode: c.env.PLAN_COMPUTE_MODE === "cache-only" ? "cache-only" : "inline" }));
+
+// The admin supplies a complete result, never a client-chosen D1 key. This route
+// deliberately does not fetch sources or call the engine on the Free-plan Worker.
+api.post("/plan/cache", async (c) => {
+  c.header("Cache-Control", "no-store");
+  if (!adminTokenMatches(c.req.header("Authorization"), c.env.ADMIN_TOKEN)) return c.json({ error: "Admin token required" }, 401);
+  if (!c.env.DB) return c.json({ error: "Durable plan cache unavailable" }, 503);
+  const text = await c.req.text();
+  if (text.length > 256_000) return c.json({ error: "Plan import exceeds 256 KB" }, 413);
+  let payload: { engineVersion?: string; plan?: PlanResponse; options?: { placeName?: string; skipCropHistory?: boolean } };
+  try { payload = JSON.parse(text); } catch { return c.json({ error: "Invalid JSON" }, 400); }
+  const plan = payload?.plan;
+  const req = validatePlanRequest(plan?.request);
+  const now = new Date();
+  const generated = Date.parse(plan?.generatedAt ?? "");
+  const age = now.getTime() - generated;
+  if (payload?.engineVersion !== PLAN_ENGINE_VERSION || typeof req === "string" || !plan ||
+    hasMeasurements(req) || !Number.isFinite(generated) || age < -300_000 || age >= 6 * 3600_000 ||
+    plan.generatedAt.slice(0, 10) !== now.toISOString().slice(0, 10) ||
+    !Array.isArray(plan.plans) || !plan.plans.length || plan.plans.length > 3 ||
+    !plan.plans.every((p) => p && typeof p.label === "string" && Array.isArray(p.years) && p.years.length === 3 &&
+      p.years.every((y) => y && ALL_CROPS.includes(y.crop) && Number.isFinite(y.expectedYield)) && Number.isFinite(p.scores?.total)) ||
+    !Array.isArray(plan.facts) || !Array.isArray(plan.assumptions) || !Array.isArray(plan.waterOptions) ||
+    !plan.climate || !plan.soil || !plan.cropHistory || !plan.explanation) {
+    return c.json({ error: "Import must be a complete, current-version public plan generated today within the last 6 hours; farmer measurements cannot be imported." }, 400);
+  }
+  const options = payload.options;
+  if (options && (typeof options !== "object" ||
+    (options.placeName !== undefined && (typeof options.placeName !== "string" || options.placeName.length > 200)) ||
+    (options.skipCropHistory !== undefined && typeof options.skipCropHistory !== "boolean"))) return c.json({ error: "Invalid cache options" }, 400);
+  const key = planCacheKey(req, options, now);
+  try {
+    await putCached(c.env.DB, key, Math.min(6 * 3600, Math.floor((6 * 3600_000 - age) / 1000)), plan);
+    return c.json({ stored: true, key });
+  } catch {
+    return c.json({ error: "Durable plan cache write failed" }, 503);
+  }
+});
+
 api.post("/plan", async (c) => {
   let body: unknown;
   try {
@@ -163,6 +207,8 @@ api.post("/plan", async (c) => {
   }
   const req = validatePlanRequest(body);
   if (typeof req === "string") return c.json({ error: req }, 400);
+  // Include private/no-store on errors as well as successes for personalized requests.
+  if (hasMeasurements(req)) c.header("Cache-Control", "private, no-store");
   try {
     const started = Date.now();
     const plan = await makePlan(c.env, req);
@@ -171,6 +217,11 @@ api.post("/plan", async (c) => {
     if (hasMeasurements(req)) c.header("Cache-Control", "private, no-store");
     return c.json(plan);
   } catch (err) {
+    if (err instanceof PlanNotReady) {
+      c.header("Retry-After", "60");
+      c.header("Cache-Control", hasMeasurements(req) ? "private, no-store" : "no-store");
+      return c.json({ error: err.message, code: "PLAN_NOT_READY" }, 503);
+    }
     const e = upstreamMessage(err);
     return c.json(e.body, e.status);
   }

@@ -14,7 +14,7 @@ const request: PlanRequest = { lat: 38.1095, lon: -100.706, irrigated: false, pr
 beforeEach(() => vi.clearAllMocks());
 it.each([{ soilTest: { ph: 5.8 } }, { yieldRecords: [{ crop: "corn" as const, year: 2025, value: 70, unit: "bu/acre" as const }] }])("never caches or logs personalized plans %j", async (measurements) => {
   const prepare = vi.fn();
-  await expect(makePlan({ DB: { prepare } } as never, { ...request, ...measurements })).rejects.toThrow("fresh-source-boundary");
+  await expect(makePlan({ PLAN_COMPUTE_MODE: "inline", DB: { prepare } } as never, { ...request, ...measurements })).rejects.toThrow("fresh-source-boundary");
   expect(cached).not.toHaveBeenCalled();
   await logPlan({ DB: { prepare } } as never, { channel: "web", plan: { request: { ...request, ...measurements } } as PlanResponse });
   expect(prepare).not.toHaveBeenCalled();

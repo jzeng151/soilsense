@@ -19,6 +19,8 @@ export interface Env {
   /** OpenET API key (https://etdata.org): measured field water use, used to check the water model. Optional. */
   OPENET_API_KEY?: string;
   PUBLIC_BASE_URL?: string;
+  /** Inline planning needs a paid CPU budget (or local Wrangler). Default: serve only prewarmed plans. */
+  PLAN_COMPUTE_MODE?: "inline" | "cache-only";
   PLAN_START_YEAR?: string;
   HISTORY_START_YEAR?: string;
   ADMIN_TOKEN?: string;

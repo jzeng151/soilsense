@@ -64,17 +64,18 @@ export interface PlanOpts {
 }
 
 /** Bump whenever the engine's output changes, so cached plans from older code are never served. */
-export const PLAN_ENGINE_VERSION = "e6-farmer-measurements";
+export const PLAN_ENGINE_VERSION = "e7-diverse-cpu-safe";
 
-export async function makePlan(
-  env: Env,
-  request: PlanRequest,
-  opts: PlanOpts = {},
-): Promise<PlanResponse> {
-  // Source datasets may still be cached, but never persist a response containing farmer measurements.
-  if (opts.now || hasMeasurements(request)) return makePlanFresh(env, request, opts);
+/** Cloudflare terminates an isolate on 1102; a try/catch cannot recover from it. */
+export class PlanNotReady extends Error {
+  constructor() {
+    super("This plan is not precomputed yet. Please try again shortly or ask the operator to warm this field. Fresh planning requires a larger Worker CPU budget.");
+  }
+}
+
+export function planCacheKey(request: PlanRequest, opts: PlanOpts = {}, now = new Date()): string {
   const water = request.water ?? (request.irrigated ? "full" : "rain");
-  const key = [
+  return [
     `plan:${PLAN_ENGINE_VERSION}`,
     request.lat.toFixed(4),
     request.lon.toFixed(4),
@@ -85,11 +86,28 @@ export async function makePlan(
     request.language ?? "en",
     opts.skipCropHistory ? "nocdl" : "cdl",
     opts.placeName ?? "",
-    new Date().toISOString().slice(0, 10),
+    now.toISOString().slice(0, 10),
   ].join(":");
+}
+
+export async function makePlan(
+  env: Env,
+  request: PlanRequest,
+  opts: PlanOpts = {},
+): Promise<PlanResponse> {
+  // Default is inline (fresh computation). Set PLAN_COMPUTE_MODE=cache-only on a Workers Free account, where an
+  // uncached plan exceeds the 10 ms CPU budget, and prewarm with scripts/prefetch-demo.mjs.
+  const inline = env.PLAN_COMPUTE_MODE !== "cache-only";
+  // Personal data never reaches shared caches, even on the low-budget fallback path.
+  if (opts.now || hasMeasurements(request)) {
+    if (!inline) throw new PlanNotReady();
+    return makePlanFresh(env, request, opts);
+  }
+  const key = planCacheKey(request, opts);
   const t0 = Date.now();
   try {
     const { value, cache } = await cached(env.DB, key, 6 * 3600, async () => {
+      if (!inline) throw new PlanNotReady();
       const meta: FreshMeta = { complete: true };
       const plan = await makePlanFresh(env, request, opts, meta);
       // A plan built while a key source was down (county, USDA) is shown but never saved, so the next

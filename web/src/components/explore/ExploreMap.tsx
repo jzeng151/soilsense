@@ -1,4 +1,5 @@
-import maplibregl, { type GeoJSONSource, type Map as GLMap } from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
+import type { GeoJSONSource, Map as GLMap } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef } from "react";
 import type { FieldBoundary } from "../../../../src/shared/fields";
@@ -180,7 +181,6 @@ export function ExploreMap(props: Props) {
     m.on("mousedown", stop);
     m.on("touchstart", stop);
     m.on("wheel", stop);
-    m.on("keydown", stop);
     let longitude = -95;
     const spin = window.setInterval(() => {
       if (

@@ -1,0 +1,1261 @@
+{
+ "timestamp": "2026-11-16T03:20:50.207Z",
+ "revision": "eb13af5512f9ffbbe883bb24182f38a203dafcdd",
+ "label": "after: feat/ui-a11y-polish eb13af5 web build",
+ "base": "http://127.0.0.1:8819",
+ "browser": "159.0.8154.6",
+ "checks": {
+  "chatLive-1440": [
+   {
+    "tag": "div",
+    "role": "status",
+    "live": null,
+    "cls": "fa-status"
+   },
+   {
+    "tag": "div",
+    "role": "log",
+    "live": "polite",
+    "cls": "fa-thread"
+   }
+  ],
+  "keyboard-explore-1440": {
+   "log": [
+    {
+     "tab": 0,
+     "focus": {
+      "tag": "a",
+      "name": "Soil Sense",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 46,
+      "h": 83
+     }
+    },
+    {
+     "tab": 1,
+     "focus": {
+      "tag": "a",
+      "name": "Explore",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 46,
+      "h": 46
+     }
+    },
+    {
+     "tab": 2,
+     "focus": {
+      "tag": "a",
+      "name": "Rotation planner",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 46,
+      "h": 46
+     }
+    },
+    {
+     "tab": 3,
+     "focus": {
+      "tag": "a",
+      "name": "Demo farms",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 46,
+      "h": 46
+     }
+    },
+    {
+     "tab": 4,
+     "focus": {
+      "tag": "button",
+      "name": "Layers",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 46,
+      "h": 46
+     }
+    },
+    {
+     "tab": 5,
+     "focus": {
+      "tag": "a",
+      "name": "Sources",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 46,
+      "h": 46
+     }
+    },
+    {
+     "tab": 6,
+     "focus": {
+      "tag": "a",
+      "name": "Settings",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 46,
+      "h": 46
+     }
+    },
+    {
+     "tab": 7,
+     "focus": {
+      "tag": "button",
+      "name": "Language: EN → Español",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 46,
+      "h": 46
+     }
+    },
+    {
+     "tab": 8,
+     "focus": {
+      "tag": "a",
+      "name": "Sign in",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 46,
+      "h": 46
+     }
+    },
+    {
+     "tab": 9,
+     "focus": {
+      "tag": "canvas",
+      "name": "Map",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 1352,
+      "h": 900
+     }
+    },
+    {
+     "tab": 10,
+     "focus": {
+      "tag": "summary",
+      "name": "Toggle attribution",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(0, 150, 255) 0px 0px 2px 2px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 2,
+      "w": 24,
+      "h": 24
+     }
+    },
+    {
+     "tab": 11,
+     "focus": {
+      "tag": "input",
+      "name": "50010",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 304,
+      "h": 60
+     }
+    },
+    {
+     "label": "ZIP input reached by Tab",
+     "ok": true,
+     "focus": {
+      "tag": "input",
+      "name": "50010",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 304,
+      "h": 60
+     }
+    },
+    {
+     "label": "ZIP submitted with Enter → map + location chip",
+     "ok": true,
+     "focus": {
+      "tag": "body"
+     }
+    },
+    {
+     "tab": 0,
+     "focus": {
+      "tag": "button",
+      "name": "⌖ Garden City, KS · 67846 ⌄",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 1,
+      "w": 240,
+      "h": 50
+     }
+    },
+    {
+     "tab": 1,
+     "focus": {
+      "tag": "button",
+      "name": "Zoom in",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 44,
+      "h": 44
+     }
+    },
+    {
+     "tab": 2,
+     "focus": {
+      "tag": "button",
+      "name": "Zoom out",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 44,
+      "h": 44
+     }
+    },
+    {
+     "tab": 3,
+     "focus": {
+      "tag": "button",
+      "name": "Use my location",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 2,
+      "w": 44,
+      "h": 44
+     }
+    },
+    {
+     "tab": 4,
+     "focus": {
+      "tag": "button",
+      "name": "▱ Layers ⌃",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 109,
+      "h": 44
+     }
+    },
+    {
+     "label": "Layers menu toggled with Enter",
+     "ok": true,
+     "focus": {
+      "tag": "button",
+      "name": "▱ Layers ⌄",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 250,
+      "h": 44
+     }
+    },
+    {
+     "label": "Tab moves into layer options",
+     "ok": true,
+     "focus": {
+      "tag": "input",
+      "name": "",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 18,
+      "h": 18
+     }
+    },
+    {
+     "label": "Escape closes layers menu (recorded, not required)",
+     "ok": false,
+     "focus": {
+      "tag": "input",
+      "name": "",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 18,
+      "h": 18
+     }
+    },
+    {
+     "label": "Assistant toggle focusable",
+     "ok": true,
+     "focus": {
+      "tag": "button",
+      "name": "Open Sprout",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 1,
+      "w": 124,
+      "h": 47
+     }
+    },
+    {
+     "label": "Assistant opened with Enter",
+     "ok": true,
+     "focus": {
+      "tag": "button",
+      "name": "Close Sprout",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 1,
+      "w": 126,
+      "h": 47
+     }
+    },
+    {
+     "label": "composer state (disabled when the Worker has no AI model; not a keyboard trap)",
+     "ok": true,
+     "composerState": {
+      "disabled": true,
+      "notice": "AI is unavailable. Your rotation and plan facts are still available below."
+     }
+    },
+    {
+     "label": "Composer reached by Tab",
+     "ok": false,
+     "focus": {
+      "tag": "button",
+      "name": "Close Sprout",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 1,
+      "w": 126,
+      "h": 47
+     }
+    },
+    {
+     "label": "Assistant closed with keyboard",
+     "ok": true,
+     "focus": {
+      "tag": "body"
+     }
+    },
+    {
+     "label": "focus after close",
+     "focus": {
+      "tag": "body"
+     },
+     "headerButtons": [
+      "Close assistant"
+     ],
+     "closeBtnCount": 0
+    }
+   ],
+   "rail": [
+    {
+     "tag": "a",
+     "name": "Soil Sense",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 46,
+     "h": 83
+    },
+    {
+     "tag": "a",
+     "name": "Explore",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 46,
+     "h": 46
+    },
+    {
+     "tag": "a",
+     "name": "Rotation planner",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 46,
+     "h": 46
+    },
+    {
+     "tag": "a",
+     "name": "Demo farms",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 46,
+     "h": 46
+    },
+    {
+     "tag": "button",
+     "name": "Layers",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 46,
+     "h": 46
+    },
+    {
+     "tag": "a",
+     "name": "Sources",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 46,
+     "h": 46
+    },
+    {
+     "tag": "a",
+     "name": "Settings",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 46,
+     "h": 46
+    },
+    {
+     "tag": "button",
+     "name": "Language: EN → Español",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 46,
+     "h": 46
+    },
+    {
+     "tag": "a",
+     "name": "Sign in",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 46,
+     "h": 46
+    }
+   ],
+   "focusWithoutIndicator": [],
+   "obscured": []
+  },
+  "chatLive-390": [
+   {
+    "tag": "div",
+    "role": "status",
+    "live": null,
+    "cls": "fa-status"
+   },
+   {
+    "tag": "div",
+    "role": "log",
+    "live": "polite",
+    "cls": "fa-thread"
+   }
+  ],
+  "keyboard-explore-390": {
+   "log": [
+    {
+     "tab": 0,
+     "focus": {
+      "tag": "a",
+      "name": "Soil Sense",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 40,
+      "h": 64
+     }
+    },
+    {
+     "tab": 1,
+     "focus": {
+      "tag": "a",
+      "name": "Explore",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 40,
+      "h": 40
+     }
+    },
+    {
+     "tab": 2,
+     "focus": {
+      "tag": "a",
+      "name": "Rotation planner",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 40,
+      "h": 40
+     }
+    },
+    {
+     "tab": 3,
+     "focus": {
+      "tag": "a",
+      "name": "Demo farms",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 40,
+      "h": 40
+     }
+    },
+    {
+     "tab": 4,
+     "focus": {
+      "tag": "button",
+      "name": "Layers",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 44,
+      "h": 40
+     }
+    },
+    {
+     "tab": 5,
+     "focus": {
+      "tag": "a",
+      "name": "Sources",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 40,
+      "h": 40
+     }
+    },
+    {
+     "tab": 6,
+     "focus": {
+      "tag": "a",
+      "name": "Settings",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 40,
+      "h": 40
+     }
+    },
+    {
+     "tab": 7,
+     "focus": {
+      "tag": "button",
+      "name": "Language: EN → Español",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 44,
+      "h": 40
+     }
+    },
+    {
+     "tab": 8,
+     "focus": {
+      "tag": "a",
+      "name": "Sign in",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 40,
+      "h": 40
+     }
+    },
+    {
+     "tab": 9,
+     "focus": {
+      "tag": "canvas",
+      "name": "Map",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 2,
+      "w": 334,
+      "h": 844
+     }
+    },
+    {
+     "tab": 10,
+     "focus": {
+      "tag": "summary",
+      "name": "Toggle attribution",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(0, 150, 255) 0px 0px 2px 2px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 1,
+      "w": 24,
+      "h": 24
+     }
+    },
+    {
+     "tab": 11,
+     "focus": {
+      "tag": "input",
+      "name": "50010",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 198,
+      "h": 60
+     }
+    },
+    {
+     "label": "ZIP input reached by Tab",
+     "ok": true,
+     "focus": {
+      "tag": "input",
+      "name": "50010",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 198,
+      "h": 60
+     }
+    },
+    {
+     "label": "ZIP submitted with Enter → map + location chip",
+     "ok": true,
+     "focus": {
+      "tag": "body"
+     }
+    },
+    {
+     "tab": 0,
+     "focus": {
+      "tag": "button",
+      "name": "⌖ Garden City, KS · 67846 ⌄",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 1,
+      "w": 204,
+      "h": 44
+     }
+    },
+    {
+     "tab": 1,
+     "focus": {
+      "tag": "button",
+      "name": "Zoom in",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 44,
+      "h": 44
+     }
+    },
+    {
+     "tab": 2,
+     "focus": {
+      "tag": "button",
+      "name": "Zoom out",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 44,
+      "h": 44
+     }
+    },
+    {
+     "tab": 3,
+     "focus": {
+      "tag": "button",
+      "name": "Use my location",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 2,
+      "w": 44,
+      "h": 44
+     }
+    },
+    {
+     "tab": 4,
+     "focus": {
+      "tag": "button",
+      "name": "▱ Layers ⌃",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 92,
+      "h": 44
+     }
+    },
+    {
+     "label": "Layers menu toggled with Enter",
+     "ok": true,
+     "focus": {
+      "tag": "button",
+      "name": "▱ Layers ⌄",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 3,
+      "w": 238,
+      "h": 44
+     }
+    },
+    {
+     "label": "Tab moves into layer options",
+     "ok": true,
+     "focus": {
+      "tag": "input",
+      "name": "",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 2,
+      "w": 18,
+      "h": 18
+     }
+    },
+    {
+     "label": "Escape closes layers menu (recorded, not required)",
+     "ok": false,
+     "focus": {
+      "tag": "input",
+      "name": "",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 2,
+      "w": 18,
+      "h": 18
+     }
+    },
+    {
+     "label": "Assistant toggle focusable",
+     "ok": true,
+     "focus": {
+      "tag": "button",
+      "name": "Open Sprout",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 1,
+      "w": 96,
+      "h": 44
+     }
+    },
+    {
+     "label": "Assistant opened with Enter",
+     "ok": true,
+     "focus": {
+      "tag": "button",
+      "name": "Close Sprout",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 1,
+      "w": 98,
+      "h": 44
+     }
+    },
+    {
+     "label": "composer state (disabled when the Worker has no AI model; not a keyboard trap)",
+     "ok": true,
+     "composerState": {
+      "disabled": true,
+      "notice": "AI is unavailable. Your rotation and plan facts are still available below."
+     }
+    },
+    {
+     "label": "Composer reached by Tab",
+     "ok": false,
+     "focus": {
+      "tag": "button",
+      "name": "Close Sprout",
+      "outline": "solid 3px rgb(255, 255, 255)",
+      "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+      "indicator": true,
+      "inViewport": true,
+      "unobscuredPoints": 1,
+      "w": 98,
+      "h": 44
+     }
+    },
+    {
+     "label": "Assistant closed with keyboard",
+     "ok": true,
+     "focus": {
+      "tag": "body"
+     }
+    },
+    {
+     "label": "focus after close",
+     "focus": {
+      "tag": "body"
+     },
+     "headerButtons": [
+      "Close assistant"
+     ],
+     "closeBtnCount": 0
+    }
+   ],
+   "rail": [
+    {
+     "tag": "a",
+     "name": "Soil Sense",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 40,
+     "h": 64
+    },
+    {
+     "tag": "a",
+     "name": "Explore",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 40,
+     "h": 40
+    },
+    {
+     "tag": "a",
+     "name": "Rotation planner",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 40,
+     "h": 40
+    },
+    {
+     "tag": "a",
+     "name": "Demo farms",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 40,
+     "h": 40
+    },
+    {
+     "tag": "button",
+     "name": "Layers",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 44,
+     "h": 40
+    },
+    {
+     "tag": "a",
+     "name": "Sources",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 40,
+     "h": 40
+    },
+    {
+     "tag": "a",
+     "name": "Settings",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 40,
+     "h": 40
+    },
+    {
+     "tag": "button",
+     "name": "Language: EN → Español",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 44,
+     "h": 40
+    },
+    {
+     "tag": "a",
+     "name": "Sign in",
+     "outline": "solid 3px rgb(255, 255, 255)",
+     "boxShadow": "rgb(29, 78, 137) 0px 0px 0px 6px",
+     "indicator": true,
+     "inViewport": true,
+     "unobscuredPoints": 3,
+     "w": 40,
+     "h": 40
+    }
+   ],
+   "focusWithoutIndicator": [],
+   "obscured": []
+  },
+  "targets-explore-1440": {
+   "interactive": 27,
+   "under24": [],
+   "attribution": {
+    "w": 856,
+    "h": 24,
+    "expanded": true
+   },
+   "attributionOverlapsToggle": false,
+   "attributionOverlapsAssistant": false,
+   "infoIcons": {
+    "h": 24,
+    "repeat": "no-repeat",
+    "iconsRendered": 1
+   }
+  },
+  "nonTextContrast-explore-1440": [
+   {
+    "selector": ".explore-location-chip",
+    "border": "rgb(179, 208, 175)",
+    "borderWidth": "2px",
+    "fill": "rgb(31, 90, 58)",
+    "shadow": "rgba(10, 30, 18, 0.9) 0px 0px 0px 1px, rgba(59, 38, 22, 0.05) 0px 1px 2px 0px, r",
+    "ringSamples": 1803,
+    "borderVsImageryP05": 1.67,
+    "borderVsImageryMedian": 4.6
+   },
+   {
+    "selector": ".explore-map-controls",
+    "border": "rgb(179, 208, 175)",
+    "borderWidth": "2px",
+    "fill": "rgb(31, 90, 58)",
+    "shadow": "rgba(10, 30, 18, 0.9) 0px 0px 0px 1px, rgba(59, 38, 22, 0.05) 0px 1px 2px 0px, r",
+    "ringSamples": 1224,
+    "borderVsImageryP05": 1.56,
+    "borderVsImageryMedian": 3.89
+   },
+   {
+    "selector": ".explore-layers > button",
+    "border": "rgb(251, 246, 234)",
+    "borderWidth": "0px",
+    "fill": "rgba(0, 0, 0, 0)",
+    "shadow": "none",
+    "ringSamples": 987,
+    "borderVsImageryP05": 2.28,
+    "borderVsImageryMedian": 4.71
+   },
+   {
+    "selector": ".explore-assistant-toggle",
+    "border": "rgb(179, 208, 175)",
+    "borderWidth": "2px",
+    "fill": "rgb(31, 90, 58)",
+    "shadow": "rgba(10, 30, 18, 0.9) 0px 0px 0px 1px, rgba(59, 38, 22, 0.05) 0px 1px 2px 0px, r",
+    "ringSamples": 1104,
+    "borderVsImageryP05": 1.76,
+    "borderVsImageryMedian": 4.26
+   }
+  ],
+  "targets-explore-390": {
+   "interactive": 27,
+   "under24": [],
+   "attribution": {
+    "w": 24,
+    "h": 24,
+    "expanded": false
+   },
+   "attributionOverlapsToggle": false,
+   "attributionOverlapsAssistant": false,
+   "infoIcons": {
+    "h": 24,
+    "repeat": "no-repeat",
+    "iconsRendered": 1
+   }
+  },
+  "nonTextContrast-explore-390": [
+   {
+    "selector": ".explore-location-chip",
+    "border": "rgb(179, 208, 175)",
+    "borderWidth": "2px",
+    "fill": "rgb(31, 90, 58)",
+    "shadow": "rgba(10, 30, 18, 0.9) 0px 0px 0px 1px, rgba(59, 38, 22, 0.05) 0px 1px 2px 0px, r",
+    "ringSamples": 1551,
+    "borderVsImageryP05": 1.44,
+    "borderVsImageryMedian": 2.83
+   },
+   {
+    "selector": ".explore-map-controls",
+    "border": "rgb(179, 208, 175)",
+    "borderWidth": "2px",
+    "fill": "rgb(31, 90, 58)",
+    "shadow": "rgba(10, 30, 18, 0.9) 0px 0px 0px 1px, rgba(59, 38, 22, 0.05) 0px 1px 2px 0px, r",
+    "ringSamples": 1224,
+    "borderVsImageryP05": 1.17,
+    "borderVsImageryMedian": 2.09
+   },
+   {
+    "selector": ".explore-layers > button",
+    "border": "rgb(251, 246, 234)",
+    "borderWidth": "0px",
+    "fill": "rgba(0, 0, 0, 0)",
+    "shadow": "none",
+    "ringSamples": 879,
+    "borderVsImageryP05": 1.7,
+    "borderVsImageryMedian": 2.73
+   },
+   {
+    "selector": ".explore-assistant-toggle",
+    "border": "rgb(179, 208, 175)",
+    "borderWidth": "2px",
+    "fill": "rgb(31, 90, 58)",
+    "shadow": "rgba(10, 30, 18, 0.9) 0px 0px 0px 1px, rgba(59, 38, 22, 0.05) 0px 1px 2px 0px, r",
+    "ringSamples": 915,
+    "borderVsImageryP05": 1.16,
+    "borderVsImageryMedian": 1.97
+   }
+  ],
+  "reflow320": [
+   {
+    "route": "#/explore",
+    "docOverflow": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "wideElements": []
+   },
+   {
+    "route": "#/demo",
+    "docOverflow": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "wideElements": []
+   },
+   {
+    "route": "#/",
+    "docOverflow": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "wideElements": []
+   },
+   {
+    "route": "#/how-it-works",
+    "docOverflow": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "wideElements": []
+   },
+   {
+    "route": "#/sources",
+    "docOverflow": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "wideElements": []
+   },
+   {
+    "route": "#/live",
+    "docOverflow": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "wideElements": []
+   },
+   {
+    "route": "#/scout",
+    "docOverflow": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "wideElements": []
+   },
+   {
+    "route": "#/signin",
+    "docOverflow": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "wideElements": []
+   }
+  ],
+  "textSpacing": [
+   {
+    "route": "#/explore",
+    "width": 320,
+    "docOverflow": false,
+    "clipped": []
+   },
+   {
+    "route": "#/demo",
+    "width": 320,
+    "docOverflow": false,
+    "clipped": []
+   },
+   {
+    "route": "#/",
+    "width": 320,
+    "docOverflow": false,
+    "clipped": []
+   },
+   {
+    "route": "#/how-it-works",
+    "width": 320,
+    "docOverflow": false,
+    "clipped": []
+   },
+   {
+    "route": "#/sources",
+    "width": 320,
+    "docOverflow": false,
+    "clipped": []
+   },
+   {
+    "route": "#/live",
+    "width": 320,
+    "docOverflow": false,
+    "clipped": []
+   },
+   {
+    "route": "#/scout",
+    "width": 320,
+    "docOverflow": false,
+    "clipped": []
+   },
+   {
+    "route": "#/signin",
+    "width": 320,
+    "docOverflow": false,
+    "clipped": []
+   }
+  ],
+  "motion": [
+   {
+    "reducedMotion": "reduce",
+    "changedPixelPct6s": 0,
+    "pauseControl": "Stop globe rotation"
+   },
+   {
+    "reducedMotion": "no-preference",
+    "changedPixelPct6s": 17.5,
+    "pauseControl": "Stop globe rotation",
+    "changedPixelPctAfterPause6s": 0
+   }
+  ],
+  "mapAlternative": {
+   "canvasRole": "region",
+   "canvasLabel": "Map",
+   "canvasTabindex": "0",
+   "containerLabel": "Map",
+   "zipForm": true,
+   "notes": null
+  },
+  "exploreLangCycle": [
+   "en",
+   "es",
+   "ko",
+   "en"
+  ],
+  "formError": {
+   "ariaInvalid": null,
+   "describedBy": null,
+   "describedText": null,
+   "statusText": [],
+   "validity": "Please match the requested format.",
+   "required": true,
+   "pattern": "[0-9]{5}"
+  }
+ }
+}

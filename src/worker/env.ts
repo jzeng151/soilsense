@@ -1,6 +1,8 @@
 export interface Env {
   /** Experimental southwest Kansas crop portfolio; absent/off preserves the original engine. */
   EXTRA_CROPS?: "on" | "off";
+  /** Optional public CSB fields and capability agents. Off unless explicitly "on". */
+  FIELDS_ENABLED?: string;
   /** Earthdata bearer token: server-side only, never exposed in evidence URLs. */
   EARTHDATA_TOKEN?: string;
   ASSETS?: Fetcher;

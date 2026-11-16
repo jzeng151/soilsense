@@ -1,6 +1,6 @@
-# Field Assistant evidence
+# Sprout (formerly "Field Assistant") evidence
 
-These screenshots show the isolated Field Assistant component using a **temporary local preview mount**, not the final Explore globe/map route. U1 owns the route and final integration captures. The preview mount is not committed.
+These screenshots show the isolated Sprout assistant component (titled "Field Assistant" in these older captures; renamed in PR #120) using a **temporary local preview mount**, not the final Explore globe/map route. U1 owns the route and final integration captures. The preview mount is not committed.
 
 - `field-assistant-desktop.png`: 1440 × 960, real `/api/plan` response for Ames, Iowa (42.03, -93.62); local AI correctly reports unconfigured.
 - `field-assistant-mobile.png`: 375 × 812, same real plan; preview wrapper anchors the component to the bottom.

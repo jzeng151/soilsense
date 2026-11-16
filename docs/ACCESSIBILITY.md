@@ -1,4 +1,160 @@
-# Accessibility audit — integrated SoilSense build
+# Accessibility — SoilSense web app
+
+## WCAG 2.2 AA audit (15 November 2026, PR #120)
+
+**What this audit claims:** SoilSense was *tested against WCAG 2.2 Level AA* with automated axe-core checks plus scripted manual checks: keyboard, focus, target size, reflow, text spacing, motion and non-text contrast. This is **not** a certification or a full conformance audit. Screen-reader testing with real assistive-technology users is still outstanding.
+
+**ADA / Section 508:** the ADA sets no technical standard of its own for private websites. DOJ's 2024 Title II rule uses WCAG 2.1 AA, and Section 508 (federal ICT) incorporates WCAG 2.0 AA. WCAG 2.2 AA includes those success criteria (except the removed 4.1.1). Even so, these test results do not establish legal compliance.
+
+### Scope and method
+- **Server.** Built Vite assets served by the local Worker (`wrangler dev -c wrangler.offline.jsonc --var FIELDS_ENABLED:on`, 127.0.0.1:8819). Nothing was written to any deployed site.
+- **Automated scan.** `scripts/a11y-wcag22.mjs` runs axe-core 4.14.0 in Chromium 159.0.8154.6, using SwiftShader WebGL so MapLibre renders. Tags: `wcag2a wcag2aa wcag21a wcag21aa wcag22aa`. Reduced motion is on.
+- **States scanned:**
+  - Explore: globe; map after ZIP 67846; assistant open; layers menu open.
+  - `#/demo`.
+  - Planner questions with the constraints panel expanded.
+  - The Finney (Kansas example) plan with **every** `details` open, including the fertilizer guide.
+  - how-it-works, sources, live, scout, sign-in, and settings (signed out).
+- **Viewports and languages.** 1440 and 390 px, in EN and ES. KO is spot-checked at 1440 px (globe, map, assistant, demo, how-it-works). 57 scans per capture.
+- **Resolving axe "incomplete" contrast.** These color-contrast nodes stay recorded as incomplete **and** are resolved separately:
+  - The element's text is made transparent and its content box is screenshotted.
+  - The text color is compared with every third background pixel.
+  - The verdict uses the 5th-percentile background: worst case, with no credit for text-shadow.
+  - Up to 40 nodes per scan are resolved. Results are under `contrastResolved` in the JSON.
+- **Manual-style checks.** `scripts/a11y-wcag22-manual.mjs` covers: the keyboard-only Explore flow; focus-indicator and focus-obscured sampling; 24×24 targets and overlap; 320 px reflow (equivalent to 400% zoom at 1280 px); WCAG 1.4.12 text spacing; a globe-motion pixel diff with and without reduced motion; the pause control; the map text alternative; `lang` switching; and the ZIP form error.
+- **Before and after builds.** Before = `origin/next` 62ba35c web build. After = this branch at eb13af5. Both runs use the same scanner, Worker and data.
+- **Evidence files:** [`screenshots/a11y/before.json`](screenshots/a11y/before.json), [`after.json`](screenshots/a11y/after.json), [`manual-before.json`](screenshots/a11y/manual-before.json), [`manual-after.json`](screenshots/a11y/manual-after.json). JPEG screenshots are in `screenshots/a11y/before/` and `screenshots/a11y/after/`.
+
+> **Explore caveat.** PR #126 (feat/explore-chrome) redesigns the Explore nav rail, overlays and assistant panel, starting from d74a79f. The Explore rows below measure *this* branch's Explore UI. Re-run both scripts once #126 merges.
+
+### axe results per state
+
+Each cell reads: rules/nodes · axe contrast-incomplete nodes · resolved contrast fails/nodes resolved · visible h1 count.
+
+| State | Width | Lang | Before: rules/nodes · contrast-incomplete · resolved fails · h1 | After: rules/nodes · contrast-incomplete · resolved fails · h1 |
+|---|---:|---|---|---|
+| explore-globe | 1440 | EN | 0/0 · 11 · 0/11 · 1 | 0/0 · 11 · 0/11 · 1 |
+| explore-globe | 1440 | ES | 0/0 · 11 · 0/11 · 1 | 0/0 · 11 · 0/11 · 1 |
+| explore-globe | 1440 | KO | 0/0 · 11 · 0/11 · 1 | 0/0 · 11 · 0/11 · 1 |
+| explore-globe | 390 | EN | 0/0 · 13 · 2/13 · 1 | 0/0 · 11 · 0/11 · 1 |
+| explore-globe | 390 | ES | 0/0 · 13 · 2/13 · 1 | 0/0 · 11 · 0/11 · 1 |
+| explore-map | 1440 | EN | 0/0 · 3 · 0/3 · 0 | 0/0 · 3 · 0/3 · 1 |
+| explore-map | 1440 | ES | 0/0 · 3 · 0/3 · 0 | 0/0 · 3 · 0/3 · 1 |
+| explore-map | 1440 | KO | 0/0 · 3 · 0/3 · 0 | 0/0 · 3 · 0/3 · 1 |
+| explore-map | 390 | EN | 0/0 · 5 · 2/5 · 0 | 0/0 · 3 · 0/3 · 1 |
+| explore-map | 390 | ES | 0/0 · 5 · 2/5 · 0 | 0/0 · 3 · 0/3 · 1 |
+| explore-assistant | 1440 | EN | 0/0 · 3 · 0/3 · 0 | 0/0 · 3 · 0/3 · 1 |
+| explore-assistant | 1440 | ES | 0/0 · 3 · 0/3 · 0 | 0/0 · 3 · 0/3 · 1 |
+| explore-assistant | 1440 | KO | 0/0 · 3 · 0/3 · 0 | 0/0 · 3 · 0/3 · 1 |
+| explore-assistant | 390 | EN | 0/0 · 5 · 2/5 · 0 | 0/0 · 3 · 0/3 · 1 |
+| explore-assistant | 390 | ES | 0/0 · 5 · 2/5 · 0 | 0/0 · 3 · 0/3 · 1 |
+| explore-layers | 1440 | EN | 0/0 · 3 · 0/3 · 0 | 0/0 · 3 · 0/3 · 1 |
+| explore-layers | 1440 | ES | 0/0 · 3 · 0/3 · 0 | 0/0 · 3 · 0/3 · 1 |
+| explore-layers | 390 | EN | 0/0 · 5 · 3/5 · 0 | 1/1 · 3 · 1/3 · 1 |
+| explore-layers | 390 | ES | 0/0 · 5 · 4/5 · 0 | 1/1 · 3 · 2/3 · 1 |
+| demo | 1440 | EN | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| demo | 1440 | ES | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| demo | 1440 | KO | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| demo | 390 | EN | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| demo | 390 | ES | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| planner-questions | 1440 | EN | 0/0 · 2 · 1/2 · 1 | 0/0 · 2 · 1/2 · 1 |
+| planner-questions | 1440 | ES | 0/0 · 1 · 1/1 · 1 | 0/0 · 1 · 1/1 · 1 |
+| planner-questions | 390 | EN | 0/0 · 2 · 1/2 · 1 | 0/0 · 2 · 1/2 · 1 |
+| planner-questions | 390 | ES | 0/0 · 1 · 1/1 · 1 | 0/0 · 1 · 1/1 · 1 |
+| planner-plan | 1440 | EN | 0/0 · 71 · 2/40 · 1 | 0/0 · 76 · 2/40 · 1 |
+| planner-plan | 1440 | ES | 0/0 · 75 · 2/40 · 1 | 0/0 · 75 · 2/40 · 1 |
+| planner-plan | 390 | EN | 0/0 · 168 · 2/40 · 1 | 0/0 · 180 · 2/40 · 1 |
+| planner-plan | 390 | ES | 0/0 · 165 · 2/40 · 1 | 0/0 · 172 · 2/40 · 1 |
+| how-it-works | 1440 | EN | 0/0 · 25 · 0/25 · 1 | 0/0 · 25 · 0/25 · 1 |
+| how-it-works | 1440 | ES | 0/0 · 25 · 0/25 · 1 | 0/0 · 25 · 0/25 · 1 |
+| how-it-works | 1440 | KO | 0/0 · 25 · 0/25 · 1 | 0/0 · 25 · 0/25 · 1 |
+| how-it-works | 390 | EN | 0/0 · 25 · 0/25 · 1 | 0/0 · 25 · 0/25 · 1 |
+| how-it-works | 390 | ES | 0/0 · 25 · 0/25 · 1 | 0/0 · 25 · 0/25 · 1 |
+| sources | 1440 | EN | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| sources | 1440 | ES | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| sources | 390 | EN | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| sources | 390 | ES | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| live | 1440 | EN | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| live | 1440 | ES | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| live | 390 | EN | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| live | 390 | ES | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| scout | 1440 | EN | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| scout | 1440 | ES | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| scout | 390 | EN | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| scout | 390 | ES | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| signin | 1440 | EN | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| signin | 1440 | ES | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| signin | 390 | EN | 0/0 · 0 · 0/0 · 0 | 0/0 · 0 · 0/0 · 1 |
+| signin | 390 | ES | 0/0 · 0 · 0/0 · 0 | 0/0 · 0 · 0/0 · 1 |
+| settings | 1440 | EN | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| settings | 1440 | ES | 0/0 · 0 · 0/0 · 1 | 0/0 · 0 · 0/0 · 1 |
+| settings | 390 | EN | 0/0 · 0 · 0/0 · 0 | 0/0 · 0 · 0/0 · 1 |
+| settings | 390 | ES | 0/0 · 0 · 0/0 · 0 | 0/0 · 0 · 0/0 · 1 |
+| **Totals (57 / 57 scans)** | | | **0/0 · 723 · 31** | **2/2 · 731 · 15** |
+
+**Reading the totals:**
+- **New violation.** Only one selected-tag axe violation appears in either capture: a new `target-size` (2.5.8) instance at 390 px with the layers menu open (EN and ES). The 18×18 imagery radio sits too close to the zoom buttons because the open menu overlaps the right-hand map controls. That file is now owned by PR #126. A suggested fix (move layers to the bottom-left on phones, plus Escape-to-close) was handed over.
+- **Resolved contrast failures fell from 31 to 15.**
+- **Fixed:**
+  - Cream intro heading over white cloud tops at 390 px (p05 1.07:1).
+  - Map scale bar (1.47–2.48:1) and attribution (2.58:1), which were partly covered by the floating assistant button at 390 px.
+- **Remaining, explained:**
+  - 14 are planner step dots (`.jr-dot ✓`). The pixel sampler picks up the page color in the corners of the round badge. The real pair is white on `--green`, computed at **5.28:1 before and 5.87:1 after**.
+  - The 15th is the layers-menu overlap described above.
+
+### "The green blends in": token changes (computed WCAG ratios)
+
+| Pair | Before | After | Need |
+|---|---:|---:|---:|
+| Green links/selected text `--color-primary` on cream `#fbf6ea` | `#2f7a3e` 4.9 | `#2c723a` 5.45 | 4.5 |
+| `--color-primary` on white surface | `#2f7a3e` 5.28 | `#2c723a` 5.87 | 4.5 |
+| `--color-primary` on subtle `#f4ecda` | `#2f7a3e` 4.49 ❌ | `#2c723a` 4.99 | 4.5 |
+| `--color-primary`/`--color-success` on leaf-wash `#e6f2e0` (AI badge, status chips) | `#2f7a3e` 4.56 | `#2c723a` 5.07 | 4.5 |
+| Canopy panel muted text on Canopy `#1f5a3a` | `#b9d3b6` 5.06 | `#dae8d9` 6.4 | 4.5 |
+| Canopy muted text / placeholder on subtle `#2a6b47` (composer, buttons) | `#b9d3b6` 3.97 ❌ | `#dae8d9` 5.02 | 4.5 |
+| Canopy faint text on subtle `#2a6b47` | `#b3d0af` 3.81 ❌ | `#d4e4d2` 4.81 | 4.5 |
+| Canopy gold links `--color-primary` on Canopy | `#ffc857` 5.29 | `#ffd47a` 5.79 | 4.5 |
+| Canopy gold links on subtle `#2a6b47` | `#ffc857` 4.15 ❌ | `#ffd47a` 4.54 | 4.5 |
+| Canopy panel/card edge `--color-border-strong` vs Canopy (1.4.11) | `#4c8a66` 1.99 ❌ | `#7bb794` 3.5 | 3.0 |
+
+**Other green and imagery changes:**
+- **Floating Explore controls over imagery** now have a 2 px light border (`#b3d0af`) inside a 1 px dark ring (`rgba(10,30,18,.9)`). The light border is 7.9–10:1 against the ring, so the control outline stays visible on any imagery. Sampled border-vs-imagery p05, 4–6 px outside the box:
+  - Before: location-chip 1.44, map-controls 1.17, layers > button 1, assistant-toggle 1.19, location-chip 1.66, map-controls 1.54, layers > button 2.28, assistant-toggle 1.81.
+  - After: location-chip 1.44, map-controls 1.17, layers > button 1.7, assistant-toggle 1.16, location-chip 1.67, map-controls 1.56, layers > button 2.28, assistant-toggle 1.76.
+  - Those sampled numbers barely move because the sample band falls in the drop shadow. Treat 1.4.11 over imagery as *mitigated, needs human review*. The PR #126 redesign supersedes this styling.
+- **Explore intro** gets an 85% Canopy scrim: cream text on it is 5.1:1 even over pure white.
+- **Map pin** gets a white and dark halo.
+- **Unchanged and already passing:** white on the Sprout CTA (5.28), cream on Canopy (7.54), and the light-gold/white focus rings.
+- **Logo:** `--color-brand-arc-2` (#4fa84a) is used only in the logo arcs, which are exempt as a logotype.
+
+### Manual checks (after)
+| Check | Result |
+|---|---|
+| Keyboard flow (1440 + 390): Tab to ZIP, Enter submits, Enter opens layers menu, Tab into options, assistant toggle opens, close by keyboard | Pass |
+| Escape closes the layers menu | No. Suggested fix handed to #126 |
+| Assistant send by keyboard | **Not exercised.** The local Worker has no AI model, so the composer is correctly disabled with a visible notice. Needs a check on an AI-enabled environment. |
+| 2.4.7 / 2.4.11 focus visible and not obscured | Every recorded focus stop had an outline of at least 2 px or a ring. None was fully covered (see `keyboard-explore-*`). |
+| 2.5.8 targets | No interactive element under 24 px in the Explore map + assistant state. Attribution toggle: before, it was 44 px tall with the info icon tiled twice; after, one 24×24 icon. At 390 px the attribution overlapped the assistant button before and no longer does, because it starts collapsed. |
+| 1.4.10 reflow at 320 px | No page-level horizontal scroll on 8 routes, before or after |
+| 1.4.12 text spacing | Before: `#/sources` overflowed at 320 px (badge). After: no overflow on any of the 8 routes. |
+| 2.2.2 / 2.3.3 motion | With reduced motion: 0% of pixels changed over 6 s. Without: 17.5% changed, and 0% after "Stop globe rotation" is pressed. |
+| Map text alternative | The canvas is a labelled region. The ZIP form, Sprout and plan facts provide equivalent non-visual access, so the imagery is treated as decorative-with-equivalent. |
+| Headings / landmarks | One h1 on every scanned state after this PR. Before: none on the Explore map/assistant states (now a visually hidden h1); none on sign-in/settings at 390 px, where the brand h1 was hidden (the form title is now the h1); and Scout had no `main` landmark (added). |
+| `lang` switching | Planner header offers EN/ES/KO, and the sidebar copy is hidden there so each view has one switcher. The Explore rail cycles en→es→ko; before, it was en↔es only and Korean was unreachable. |
+| Chat live region | The assistant thread is `role=log` with `aria-live=polite`, and status is `role=status`. |
+| Form errors (ZIP "123") | Only the browser's native pattern bubble appears ("Please match the requested format."), with no `aria-invalid` and no persistent text error. **Open issue** (Explore, PR #126 scope). |
+
+### Known gaps and work needing a human
+- Screen-reader passes (NVDA + Firefox, VoiceOver on iOS, TalkBack) over Explore, the assistant's streamed answers, and the planner plan.
+- Keyboard send/stop in the assistant on an AI-enabled environment.
+- ZIP form error identification (3.3.1/3.3.3) and Escape on the layers menu.
+- Re-run both scripts after PR #126. Translucent panels will produce axe `incomplete` results, which need the pixel resolution in this script.
+- axe `label-content-name-mismatch` incompletes remain on symbol-only buttons (+, −, ⌖, Ⅱ). Their names ("Zoom in" etc.) are reasonable, but voice-control users should spot-check them.
+- Field imagery itself (crops, boundaries) is described only through plan facts.
+
+---
+
+## Earlier audit — integrated SoilSense build (WCAG 2.0/2.1)
 
 ## Status and public wording
 

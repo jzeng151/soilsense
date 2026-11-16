@@ -1,0 +1,223 @@
+{
+  "wheatCosts": {
+    "expectedYield": 65.28607679343483,
+    "price": 5.38,
+    "baseCost": 260,
+    "costScale": 0.909336716738725,
+    "scaledBase": 236.42754635206848,
+    "n": 78.34329215212179,
+    "nitrogenCost": 50.923139898879164,
+    "irrigationCost": 85.39984320477636,
+    "pumpedIn": 10.674980400597045,
+    "establishment": 0,
+    "coverCost": 0,
+    "cost": 372.750529455724,
+    "revenue": 351.2390931486794,
+    "net": -21.51143630704462
+  },
+  "default": {
+    "label": "Soybean → Corn → Soybean",
+    "net": 194,
+    "years": [
+      {
+        "year": 2027,
+        "crop": "soybean",
+        "cropName": "Soybean",
+        "cover": "hairy_vetch",
+        "coverName": "Hairy vetch",
+        "climateScore": 0.867,
+        "reliability": 1,
+        "mainStress": null,
+        "expectedYield": 66,
+        "yieldUnit": "bu/acre",
+        "nitrogenLbPerAcre": 0,
+        "netReturnPerAcre": 198,
+        "waterPumpedIn": 13.2
+      },
+      {
+        "year": 2028,
+        "crop": "corn",
+        "cropName": "Corn",
+        "cover": "none",
+        "coverName": "No cover crop",
+        "climateScore": 0.818,
+        "reliability": 1,
+        "mainStress": null,
+        "expectedYield": 202,
+        "yieldUnit": "bu/acre",
+        "nitrogenLbPerAcre": 81,
+        "netReturnPerAcre": 140,
+        "waterPumpedIn": 16.2
+      },
+      {
+        "year": 2029,
+        "crop": "soybean",
+        "cropName": "Soybean",
+        "cover": "none",
+        "coverName": "No cover crop",
+        "climateScore": 0.867,
+        "reliability": 1,
+        "mainStress": null,
+        "expectedYield": 64,
+        "yieldUnit": "bu/acre",
+        "nitrogenLbPerAcre": 0,
+        "netReturnPerAcre": 244,
+        "waterPumpedIn": 13.2
+      }
+    ],
+    "sensitivity": {
+      "kind": "sensitivity-not-forecast",
+      "scenarioCount": 10,
+      "source": "USDA NASS Quick Stats; Kansas marketing-year prices received, 2016–2025; snapshot ks-2016-2025-v1 (docs/PRICES.md)",
+      "scenarioYears": [
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "varyingCrops": [
+        "corn",
+        "sorghum",
+        "soybean",
+        "winter_wheat"
+      ],
+      "fixedPriceCrops": [],
+      "plans": [
+        {
+          "planId": "plan-1",
+          "bestCount": 4,
+          "minNetPerAcre": 26,
+          "maxNetPerAcre": 533
+        },
+        {
+          "planId": "plan-2",
+          "bestCount": 4,
+          "minNetPerAcre": 23,
+          "maxNetPerAcre": 484
+        },
+        {
+          "planId": "plan-3",
+          "bestCount": 2,
+          "minNetPerAcre": -27,
+          "maxNetPerAcre": 604
+        },
+        {
+          "planId": "current",
+          "bestCount": 0,
+          "minNetPerAcre": -122,
+          "maxNetPerAcre": 530
+        }
+      ]
+    },
+    "currentNet": 63
+  },
+  "farmerPrices": {
+    "label": "Corn → Oats → Corn",
+    "net": 559,
+    "years": [
+      {
+        "year": 2027,
+        "crop": "corn",
+        "cropName": "Corn",
+        "cover": "none",
+        "coverName": "No cover crop",
+        "climateScore": 0.818,
+        "reliability": 1,
+        "mainStress": null,
+        "expectedYield": 208,
+        "yieldUnit": "bu/acre",
+        "nitrogenLbPerAcre": 156,
+        "netReturnPerAcre": 896,
+        "waterPumpedIn": 16.2
+      },
+      {
+        "year": 2028,
+        "crop": "oats",
+        "cropName": "Oats",
+        "cover": "crimson_clover",
+        "coverName": "Crimson clover",
+        "climateScore": 0.904,
+        "reliability": 1,
+        "mainStress": null,
+        "expectedYield": 67,
+        "yieldUnit": "bu/acre",
+        "nitrogenLbPerAcre": 53,
+        "netReturnPerAcre": -141,
+        "waterPumpedIn": 9.6
+      },
+      {
+        "year": 2029,
+        "crop": "corn",
+        "cropName": "Corn",
+        "cover": "none",
+        "coverName": "No cover crop",
+        "climateScore": 0.818,
+        "reliability": 1,
+        "mainStress": null,
+        "expectedYield": 208,
+        "yieldUnit": "bu/acre",
+        "nitrogenLbPerAcre": 114,
+        "netReturnPerAcre": 923,
+        "waterPumpedIn": 16.2
+      }
+    ],
+    "sensitivity": {
+      "kind": "sensitivity-not-forecast",
+      "scenarioCount": 10,
+      "source": "USDA NASS Quick Stats; Kansas marketing-year prices received, 2016–2025; snapshot ks-2016-2025-v1 (docs/PRICES.md)",
+      "scenarioYears": [
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "varyingCrops": [
+        "corn",
+        "oats",
+        "sorghum",
+        "soybean",
+        "winter_wheat"
+      ],
+      "fixedPriceCrops": [],
+      "plans": [
+        {
+          "planId": "plan-1",
+          "bestCount": 0,
+          "minNetPerAcre": -136,
+          "maxNetPerAcre": 468
+        },
+        {
+          "planId": "plan-2",
+          "bestCount": 10,
+          "minNetPerAcre": -27,
+          "maxNetPerAcre": 604
+        },
+        {
+          "planId": "plan-3",
+          "bestCount": 0,
+          "minNetPerAcre": -142,
+          "maxNetPerAcre": 524
+        },
+        {
+          "planId": "current",
+          "bestCount": 0,
+          "minNetPerAcre": -122,
+          "maxNetPerAcre": 530
+        }
+      ]
+    },
+    "currentNet": 590
+  }
+}

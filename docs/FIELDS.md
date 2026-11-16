@@ -13,7 +13,33 @@ npx wrangler dev -c wrangler.offline.jsonc --port 8801 --var FIELDS_ENABLED:on
 
 `src/shared/fields.ts` is the shared F1/F2/F3 contract. App owns `selectedFields: FieldBoundary[]`; `MapPicker` accepts optional boundaries, selection and callback. Pixel-fit and multiwatch sessions may consume that state additively; this PR does not implement those features. Checkboxes support keyboard selection; ordinary polygon clicks replace selection, Shift/Ctrl/Command-click toggles. The shared-edge button adds one hop of exactly touching neighbours, not all nearby or road-separated fields. Any subset can be selected explicitly, including noncontiguous fields; no ownership or single-farm relationship is inferred.
 
-Selecting an outline alone does **not** change the planning point. For one selected field, the optional centroid button explicitly uses its centroid through the existing point picker. No CSB crop sequence is injected into `recentCrops`; historical years are 2018–2025, not a verified 2026 farmer crop. The existing point-based history and current-crop question remain authoritative. A centroid of a concave polygon can lie outside the polygon. Selection is visit-local React state; it is not registered, uploaded or claimed as ownership.
+Selecting exactly one outline makes that field the default planning target and loads its centroid through the point picker. **Plan this field** is available on every selected field, including multi-selections: it loads that individual field and opens the questions/history controls; generating the plan sends its **exact centroid** and its CSB history. Different fields are never averaged. With more than one selected field, choose the individual action to target one; the ordinary point workflow remains available otherwise. A centroid of a concave polygon can lie outside the polygon or the demo query box; the chosen area catalog is retained in that case. Selection is visit-local React state; it is not registered, uploaded or claimed as ownership.
+
+### Friendly names and browser-only renaming
+
+Each committed area vintage is numbered by centroid **north to south**, then **west to east**, with CSB id as the tie-breaker. Numbering does not depend on API order, selection order or language. The same label helper feeds map tooltips, the keyboard checkbox list and selected summary: e.g. `Field 3 · 9.1 ac · Corn → Corn → Winter Wheat (2023–2025)` (`Parcela 3` in Spanish). Acreage is estimated; the raw `csb:<CSBID>` remains on a secondary line for provenance. Numbers can change if the underlying area dataset is replaced.
+
+Selected fields can be renamed locally. Names are trimmed plain text, limited to 60 Unicode characters, with control characters rejected; blank resets to the generated label. Storage key: `soilsense:field-name:v1:<CSB id>`. Names are not sent in plan requests or written to an account/server. Storage failures are disclosed and the label remains visit-local. Custom names are not translated.
+
+### CSB → plan crop history
+
+`fieldPlanHistory` takes the latest **three source calendar observations**, sorts oldest first, then drops unknown/non-modeled crops (no backfilling old years across recent gaps). This matches `effectiveHistory` and the API's maximum of three `recentCrops`; the last crop is the most recent. Years remain visibly attached to the history controls and plan summary. CSB does **not** establish what the farmer planted in 2026: its 2018–2025 satellite history is sent as historical observations only, never relabeled as farmer-reported current-season crops.
+
+The mapping is deliberately small and centralized in `cdlToCropId`, using the [USDA NASS CDL code list](https://www.nass.usda.gov/Research_and_Science/Cropland/):
+
+| CDL code | Source crop | Plan CropId |
+|---|---|---|
+| 1 | Corn | `corn` |
+| 4 | Sorghum | `sorghum` |
+| 5 | Soybeans | `soybean` |
+| 24 | Winter wheat | `winter_wheat` |
+| 28 | Oats | `oats` |
+| 36 | Alfalfa | `alfalfa` |
+| 61 | Fallow/idle cropland | `fallow` |
+
+All other codes are unknown for this plan, including double-crop classes (e.g. 26, 225, 236), noncrop land cover and non-modeled crops. They are not guessed, split, or collapsed to a modeled crop. An EN/ES note lists each dropped year's original source label and CDL code. If every recent crop is unknown (or the sequence is absent), generation is disabled until the farmer supplies at least one modeled crop; this prevents the engine's empty-override fallback from silently substituting point-based history.
+
+The questions view replaces its single-current-season crop question with chronological history controls for the targeted CSB field. Corrections are visit-local, retained separately by CSB id, and disclosed as corrected in this browser. The plan view identifies the field/acreage/id, exact history used, and source: **USDA Crop Sequence Boundaries 2018–2025, satellite-derived, not farmer-reported; edit if wrong.** Its correction action returns to the history controls. With the flag off, the original point/current-season workflow and request payload are unchanged, irrespective of stored field labels.
 
 ## What the data is / is not
 

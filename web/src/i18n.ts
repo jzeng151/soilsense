@@ -1,11 +1,13 @@
 import { createContext, createElement, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { CropId } from "../../src/shared/types";
+import { exploreMessages } from "./i18n-explore";
 import { fieldMessages } from "./i18n-fields";
 import { cardMessages } from "./i18n-cards";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
+  ...exploreMessages,
   ...fieldMessages,
   ...cardMessages,
   "District outlook (next ~4 weeks, team's Kansas model)": "Perspectiva del distrito (próximas ~4 semanas, modelo de Kansas del equipo)",

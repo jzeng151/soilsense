@@ -190,7 +190,8 @@
   border: 0;
 }
 .explore-layers {
-  bottom: 50px;
+  /* Just above the map credits in the same corner, however many lines they wrap to (--attrib-h from ExploreMap). */
+  bottom: max(50px, calc(var(--attrib-h, 30px) + 20px));
   right: calc(var(--assist-w) + 20px);
   display: flex;
   flex-direction: column-reverse;

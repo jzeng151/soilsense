@@ -116,6 +116,12 @@ export function ExploreMap(props: Props) {
     map.current = m;
     const resize = new ResizeObserver(() => m.resize());
     resize.observe(el.current);
+    // The credits share the bottom-right corner with the Layers button and wrap when the visible map narrows
+    // (rail open, planner open, longer field-outline credits). Publish their height so Layers always sits above them.
+    const corner = el.current.querySelector<HTMLElement>(".maplibregl-ctrl-bottom-right");
+    const page = el.current.closest<HTMLElement>(".explore-page");
+    const credits = corner && page ? new ResizeObserver(() => page.style.setProperty("--attrib-h", `${corner.offsetHeight}px`)) : null;
+    if (corner) credits?.observe(corner);
     m.addControl(
       new maplibregl.ScaleControl({ unit: "imperial" }),
       "bottom-left",
@@ -211,6 +217,7 @@ export function ExploreMap(props: Props) {
       container.removeEventListener('keydown', stop);
       motion.removeEventListener('change', onMotion);
       resize.disconnect();
+      credits?.disconnect();
       clearInterval(spin);
       latest.current.onReady(null);
       m.remove();

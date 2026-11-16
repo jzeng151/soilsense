@@ -22,7 +22,7 @@ const Assistant = lazy(() =>
     default: m.FieldAssistantPanel,
   })),
 );
-export function ExplorePage() {
+export function ExplorePage({ active = true }: { active?: boolean } = {}) {
   const { t } = useI18n();
   const [location, setLocation] = useState<ExploreLocation | null>(() =>
     locationFromHash(window.location.hash),
@@ -59,9 +59,10 @@ export function ExplorePage() {
     lookup = useRef(0);
   useEffect(() => {
     const f = () => {
+      if (!window.location.hash.startsWith("#/explore")) return;
       const p = locationFromHash(window.location.hash);
-      setLocation(p);
-      setSelected([]);
+      // A bare Explore navigation returns to the existing field, not a blank globe.
+      if (p) setLocation(previous => previous?.lat === p.lat && previous?.lon === p.lon ? previous : p);
     };
     window.addEventListener("hashchange", f);
     return () => window.removeEventListener("hashchange", f);
@@ -211,7 +212,7 @@ export function ExplorePage() {
   );
   return (
     <main
-      id="content"
+      id={active ? "content" : undefined}
       tabIndex={-1}
       className={`explore-page ${location ? "has-location" : "is-globe"} ${assistantOpen ? "assistant-open" : ""}`}
     >

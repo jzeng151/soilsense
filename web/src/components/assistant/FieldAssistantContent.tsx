@@ -1,6 +1,5 @@
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
-import { useEffect, useMemo, useRef, useState, type JSX } from "react";
+import { useScoutSession } from "../../ScoutSession";
+import { useEffect, useRef, useState, type JSX } from "react";
 import type { PlanResponse } from "../../../../src/shared/types";
 import { FERTILIZER_SUGGESTION } from "../../../../src/engine/fertilizerProducts";
 import { authFetch } from "../../auth";
@@ -22,7 +21,7 @@ export function FieldAssistantContent({ context, sharedPlan, onClose, className 
   const [statusFailed, setStatusFailed] = useState(false);
   const [input, setInput] = useState("");
   const [menu, setMenu] = useState(false);
-  const [httpError, setHttpError] = useState(0);
+
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const menuRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -30,15 +29,10 @@ export function FieldAssistantContent({ context, sharedPlan, onClose, className 
   const [jump, setJump] = useState(false);
   const timestamps = useRef(new Map<string, string>());
   const [loadedAt, setLoadedAt] = useState<string | null>(null);
-  // Scout accepts UI messages, not a context body. Enrich the outgoing user turn only;
-  // server tools remain the source of truth, and displayed bubbles stay readable.
-  const transport = useMemo(() => new DefaultChatTransport({ api: "/api/scout/chat",
-    fetch: async (url, options) => { const res = await authFetch(url, options); setHttpError(res.ok ? 0 : res.status); return res; },
-    prepareSendMessagesRequest: ({ messages, body }) => ({ body: { ...body, messages: messages.map((m, i) => i !== messages.length - 1 ? m : { ...m, parts: [...m.parts, { type: "text", text: `\n\nSelected location and client plan context (verify claims with data tools; field ids are memory lookup identifiers, not current measurements):\n${JSON.stringify({ location: context, request: plan?.request ?? null, plan: plan ? { generatedAt: plan.generatedAt, summary: plan.explanation.summary, facts: plan.facts, assumptions: plan.assumptions, topRotation: plan.plans[0]?.years.map(y => ({ year: y.year, crop: y.cropName })) } : null })}\nReply in ${language === "es" ? "Spanish" : "English"}.` }] }) } }),
-  }), [context, plan, language]);
-  const { messages, sendMessage, status, error, stop, clearError, setMessages, regenerate } = useChat({ transport });
+  const { messages, sendMessage, status, error, stop, clearError, clearChat: clearSession, regenerate, setFieldContext, httpError, blockedReason } = useScoutSession();
+  useEffect(() => { if (context) setFieldContext({ location: context, plan, requiresPlan: sharedPlan !== undefined }); }, [context, plan, sharedPlan, setFieldContext]);
   const busy = status === "submitted" || status === "streaming";
-  const canSend = !!context && (sharedPlan === undefined || !!sharedPlan) && !loading && configured === true && !busy;
+  const canSend = !!context && (sharedPlan === undefined || !!sharedPlan) && !loading && configured === true && !busy && !blockedReason;
   useEffect(() => {
     const ctrl = new AbortController(); setStatusFailed(false);
     authFetch("/api/scout/status", { signal: ctrl.signal }).then(async res => {
@@ -64,18 +58,18 @@ export function FieldAssistantContent({ context, sharedPlan, onClose, className 
     return () => ctrl.abort();
     // Location changes remount this component. Translation helpers are unstable dependencies.
   }, [attempt, language, sharedPlan]);
-  useEffect(() => () => { void stop(); }, [stop]);
+
   useEffect(() => {
     for (const m of messages) if (!timestamps.current.has(m.id)) timestamps.current.set(m.id, new Date().toISOString());
     const el = scrollRef.current; if (el && pinned.current && messages.length) el.scrollTop = el.scrollHeight;
   }, [messages, status, plan]);
   function send(value: string) {
     if (!value.trim() || !canSend) return;
-    clearError(); setHttpError(0); setInput(""); pinned.current = true; setJump(false);
+    clearError(); setInput(""); pinned.current = true; setJump(false);
     void sendMessage({ text: value.trim() }); inputRef.current?.focus();
   }
   function clearChat() {
-    void stop(); setMessages([]); clearError(); setHttpError(0); timestamps.current.clear(); setMenu(false); inputRef.current?.focus();
+    clearSession(); timestamps.current.clear(); setMenu(false); inputRef.current?.focus();
   }
   function time(iso: string | null | undefined) {
     return iso ? <time dateTime={iso}>{new Date(iso).toLocaleTimeString(language === "es" ? "es-US" : "en-US", { hour: "numeric", minute: "2-digit" })}</time> : null;
@@ -94,7 +88,7 @@ export function FieldAssistantContent({ context, sharedPlan, onClose, className 
       <div><h2>{t("Sprout")}</h2><p>{t("Your AI field advisor")}</p></div>
       <details open={menu} className="fa-menu" onToggle={e => setMenu(e.currentTarget.open)} onKeyDown={e => { if (e.key === "Escape") { setMenu(false); menuRef.current?.focus(); } }}>
         <summary ref={menuRef} aria-label={t("Assistant options")}><span aria-hidden="true">•••</span></summary>
-        <div><button type="button" onClick={clearChat}>{t("Clear chat")}</button><a href="#/scout">{t("Open full chat")}</a></div>
+        <div><button type="button" onClick={clearChat}>{t("Clear chat")}</button><a href="#/scout" onClick={() => setMenu(false)}>{t("Open full chat")}</a></div>
       </details>
       {onClose && <button type="button" className="fa-icon" onClick={onClose} aria-label={t("Close assistant")}>×</button>}
     </header>
@@ -115,7 +109,8 @@ export function FieldAssistantContent({ context, sharedPlan, onClose, className 
         </div>)}
         {status === "submitted" && <p role="status">{t("Thinking…")}</p>}
       </div>
-      {error && <div role="alert" className="fa-notice"><p>{errorMessage}</p><button type="button" disabled={busy || httpError === 503} onClick={() => { clearError(); setHttpError(0); void regenerate(); }}>{t("Try again")}</button></div>}
+      {blockedReason === "archived-plan" && <p role="status">{t("This conversation belongs to an earlier field plan. Start a new chat to ask about the current plan.")}</p>}
+      {error && <div role="alert" className="fa-notice"><p>{errorMessage}</p><button type="button" disabled={busy || httpError === 503 || !!blockedReason} onClick={() => { clearError(); void regenerate(); }}>{t("Try again")}</button></div>}
       {context && !messages.length && <section className="fa-suggestions"><h3>{t("Try asking about")}</h3>{SUGGESTIONS.map(s => <button type="button" key={s} disabled={!canSend} onClick={() => send(t(s))}>{t(s)}<span aria-hidden="true"> ↗</span></button>)}</section>}
     </div>
     <footer className="fa-footer">{jump && <button type="button" className="fa-jump" onClick={() => { pinned.current = true; setJump(false); if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }}>{t("Scroll to latest")}</button>}

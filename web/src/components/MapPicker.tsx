@@ -1,5 +1,7 @@
 import { useI18n } from "../i18n";
 import L from "leaflet";
+import { fieldLabel } from "./fieldLabels";
+import type { FieldBoundary } from "../../../src/shared/fields";
 import { useEffect, useRef } from "react";
 
 export interface DemoFarm {
@@ -28,9 +30,12 @@ interface Props {
   onPick: (lat: number, lon: number) => void;
   /** Move the map here (e.g. after a ZIP search) without choosing a field. */
   focus?: { lat: number; lon: number; zoom: number; key: number } | null;
+  boundaries?: FieldBoundary[];
+  selectedFields?: FieldBoundary[];
+  onSelectFields?: (fields: FieldBoundary[]) => void;
 }
 
-export function MapPicker({ point, onPick, focus }: Props) {
+export function MapPicker({ point, onPick, focus, boundaries, selectedFields, onSelectFields }: Props) {
   const { t, language } = useI18n();
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
@@ -123,6 +128,34 @@ export function MapPicker({ point, onPick, focus }: Props) {
   useEffect(() => {
     if (focus && map.current) map.current.flyTo([focus.lat, focus.lon], focus.zoom, { duration: 0.8, animate: !window.matchMedia("(prefers-reduced-motion: reduce)").matches });
   }, [focus, language]);
+
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !boundaries?.length || !onSelectFields) return;
+    const group = L.layerGroup().addTo(m);
+    const selected = selectedFields ?? [];
+    for (const field of boundaries) {
+      const active = selected.some(f => f.id === field.id);
+      const polygon = L.polygon(field.polygon.map(ring => ring.map(([lon, lat]) => [lat, lon] as L.LatLngTuple)), {
+        color: active ? '#ffe066' : '#59d8e6', weight: active ? 4 : 2,
+        fillColor: active ? '#ffe066' : '#59d8e6', fillOpacity: active ? 0.30 : 0.10,
+        bubblingMouseEvents: false,
+      }).addTo(group);
+      const label = document.createElement('span');
+      label.textContent = fieldLabel(field, language);
+      const source = document.createElement('small');
+      source.style.display = 'block';
+      source.textContent = field.id;
+      label.append(source);
+      polygon.bindTooltip(label);
+      polygon.on('click', (event: L.LeafletMouseEvent) => {
+        L.DomEvent.stopPropagation(event.originalEvent);
+        const additive = event.originalEvent.shiftKey || event.originalEvent.ctrlKey || event.originalEvent.metaKey;
+        onSelectFields(additive ? (active ? selected.filter(f=>f.id!==field.id) : [...selected,field]) : [field]);
+      });
+    }
+    return () => { group.remove(); };
+  }, [boundaries, selectedFields, onSelectFields, language]);
 
   return <>
     <p id="map-keyboard-help" className="jr-note">{t("Keyboard: focus the map, use arrow keys to move, + or − to zoom, and Enter to select the center. Or choose an example below.")}</p>

@@ -2,6 +2,7 @@
 import { dap4Constraint, parseDap4 } from "./dap4";
 import type { Env } from "../env";
 import { cached } from "../lib/cache";
+import { imergTtlSeconds } from "./cache-policy";
 
 export type Stream = "final" | "late";
 export const PRODUCTS = {
@@ -43,7 +44,7 @@ const metadataPending = new Map<string, Promise<string>>();
 async function metadata(env: Pick<Env, "DB" | "EARTHDATA_TOKEN">, base: string, stream: Stream, fetcher: Fetcher) {
   const key = `imerg-dmr:V07:dap4-qa2:${base}`;
   if (metadataPending.has(key)) return metadataPending.get(key)!;
-  const run = cached(env.DB, key, stream === "final" ? 30 * 86400 : 3600, () => text(`${base}.dmr.xml`, env.EARTHDATA_TOKEN, fetcher)).then(r => r.value);
+  const run = cached(env.DB, key, imergTtlSeconds(stream), () => text(`${base}.dmr.xml`, env.EARTHDATA_TOKEN, fetcher)).then(r => r.value);
   metadataPending.set(key, run);
   try { return await run; } finally { metadataPending.delete(key); }
 }
@@ -140,7 +141,7 @@ export async function retrieveSubset(env: Pick<Env, "EARTHDATA_TOKEN" | "DB">, l
   const dates = days(start, end), grid = gridPoint(lat, lon), product = PRODUCTS[stream];
     const key = `imerg:V07:dap4-qa2:${stream}:${grid.key}:${start}:${end}`;
   if (pending.has(key)) return pending.get(key)!;
-  const run = cached(env.DB, key, stream === "final" ? 30 * 86400 : 3600, async () => {
+  const run = cached(env.DB, key, imergTtlSeconds(stream), async () => {
     if (!env.EARTHDATA_TOKEN) throw new Error("Optional IMERG unavailable: EARTHDATA_TOKEN is not configured");
     const q = new URLSearchParams({ short_name: product.shortName, version: "07", temporal: `${start}T00:00:00Z,${end}T23:59:59Z`, page_size: "20", sort_key: "start_date" });
     const cmr = JSON.parse(await text(`https://cmr.earthdata.nasa.gov/search/granules.json?${q}`, undefined, fetcher)) as { feed?: { entry?: { time_start?: string; time_end?: string; producer_granule_id?: string; updated?: string; links?: { href?: string; title?: string; inherited?: boolean }[] }[] } };
@@ -157,7 +158,7 @@ export async function retrieveSubset(env: Pick<Env, "EARTHDATA_TOKEN" | "DB">, l
       const base = legacyBase(link, product.shortName, date);
       const revision = e.producer_granule_id ?? decodeURIComponent(base.split("/").pop()!);
       const dayKey = `imerg-day:V07:dap4-qa2:${stream}:${grid.key}:${date}:${revision}`;
-      const { value: observation } = await cached(env.DB, dayKey, stream === "final" ? 30 * 86400 : 3600, async () => {
+      const { value: observation } = await cached(env.DB, dayKey, imergTtlSeconds(stream), async () => {
         const dmr = await metadata(env, base, stream, fetcher);
         const url = `${base}.dap?dap4.ce=${encodeURIComponent(dap4Constraint(dmr, grid))}`;
         const data = await bytes(url, env.EARTHDATA_TOKEN, fetcher);

@@ -1,4 +1,4 @@
-import type { CropYearFertilizer, Nutrient, NutrientRec, PlanFertilizer } from "../shared/fertilizer";
+import { nutrientStatusText, type CropYearFertilizer, type Nutrient, type NutrientRec, type PlanFertilizer } from "../shared/fertilizer";
 import { FERTILIZER_CROPS } from "./fertilizer";
 
 export const MF2586_URL = "https://bookstore.ksre.ksu.edu/pubs/soil-test-interpretations-and-fertilizer-recommendations_MF2586.pdf";
@@ -96,7 +96,7 @@ export function fertilizerCalculation(y: CropYearFertilizer, r: NutrientRec): st
 export interface FertilizerFact { id: string; text: string; source: string; url: string }
 export function fertilizerFacts(plan: PlanFertilizer): FertilizerFact[] {
   return plan.years.flatMap(y => [
-    ...y.recs.map((r, i) => ({ id: `fertilizer-${plan.planId}-${y.year}-${r.nutrient}-${i}`, text: `${y.year} ${y.crop}; expected yield ${y.expectedYield} ${y.yieldUnit} from the plan. ${r.nutrient}: ${r.lbPerAcre === null ? "soil test needed" : `${r.lbPerAcre} lb/acre`}; basis=${r.basis}. Inputs=${JSON.stringify(r.inputsUsed)}. ${r.notes.join(" ")} ${fertilizerCalculation(y, r) ?? ""} ${plan.disclaimer}`, source: `K-State MF2586 p. ${r.source.page}`, url: MF2586_URL })),
+    ...y.recs.map((r, i) => ({ id: `fertilizer-${plan.planId}-${y.year}-${r.nutrient}-${i}`, text: `${y.year} ${y.crop}; expected yield ${y.expectedYield} ${y.yieldUnit} from the plan. ${r.nutrient}: ${nutrientStatusText(r)}; basis=${r.basis}. Inputs=${JSON.stringify(r.inputsUsed)}. ${r.notes.join(" ")} ${fertilizerCalculation(y, r) ?? ""} ${plan.disclaimer}`, source: `K-State MF2586 p. ${r.source.page}`, url: MF2586_URL })),
     ...fertilizerProductOptions(y).flatMap((o, i) => o.lines.map((l, j) => ({ id: `fertilizer-${plan.planId}-${y.year}-products-${i}-${j}`, text: `${y.year} ${y.crop}; illustrative option ${i + 1}, not ranked: ${l.product.name} ${l.product.grade}: ${l.lbProductPerAcre.toFixed(1)} lb product/acre; supplies ${JSON.stringify(l.supplies)} lb nutrient/acre. Option N credit from phosphate/sulfate: ${o.nCreditLbPerAcre.toFixed(1)} lb/acre; remaining N target after credits: ${o.remainingNLbPerAcre?.toFixed(1) ?? "unknown"}; excess N: ${o.excessNLbPerAcre?.toFixed(1) ?? "unknown"}. Product lb = nutrient lb / mass fraction. No price or seed-placement claim. ${plan.disclaimer}`, source: `${l.product.name} ${l.product.grade} guaranteed-analysis example — ${l.product.locator}`, url: l.product.sourceUrl }))),
     ...fertilizerTiming(y).map((n, i) => ({ id: `fertilizer-${plan.planId}-${y.year}-timing-${i}`, text: n.text, source: `K-State MF2586 p. ${n.page}`, url: n.url })),
   ]);

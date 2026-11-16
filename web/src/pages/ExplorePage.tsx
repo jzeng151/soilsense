@@ -229,7 +229,7 @@ export function ExplorePage() {
             <h2>{t("What's your ZIP code?")}</h2>
             <p>
               {t(
-                "Satellite imagery and a field assistant, grounded in real data.",
+                "Satellite imagery and Sprout, your AI field advisor, grounded in real data.",
               )}
             </p>
             {zipForm}
@@ -289,7 +289,7 @@ export function ExplorePage() {
           <p role="status" className="explore-status">
             {message ||
               t(
-                "Map unavailable. ZIP lookup and the field assistant still work.",
+                "Map unavailable. ZIP lookup and Sprout still work.",
               )}
           </p>
         )}
@@ -384,14 +384,14 @@ export function ExplorePage() {
             onClick={() => setAssistantOpen((v) => !v)}
           >
             {t(
-              assistantOpen ? "Close field assistant" : "Open field assistant",
+              assistantOpen ? "Close Sprout" : "Open Sprout",
             )}
           </button>
         )}
       </div>
       {location && assistantOpen && (
         <aside className="explore-assistant theme-canopy">
-          <Suspense fallback={<p>{t("Field assistant loading…")}</p>}>
+          <Suspense fallback={<p>{t("Sprout loading…")}</p>}>
             <Assistant
               context={{ ...location, selectedFieldIds: selected }}
               onClose={() => setAssistantOpen(false)}

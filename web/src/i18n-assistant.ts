@@ -1,8 +1,8 @@
 export const assistantMessages = {
   "Details": "Detalles",
   "You": "Tú",
-  "Field Assistant": "Asistente de parcelas",
-  "Your AI agronomy partner": "Tu compañero de agronomía con IA",
+  "Sprout": "Sprout",
+  "Your AI field advisor": "Tu asesor de campo con IA",
   "Assistant options": "Opciones del asistente",
   "Clear chat": "Borrar conversación",
   "Open full chat": "Abrir conversación completa",

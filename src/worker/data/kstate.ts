@@ -5,11 +5,12 @@
 import savedFile from "../../../kansas-crop-rotation/data/app_rotation_advice.json";
 import type { CropId, KStateRotation, SecondOpinion } from "../../shared/types";
 import { cached } from "../lib/cache";
+import { freshnessKey, kstateTtl, successful } from "../lib/freshness";
 import { fetchJson } from "../lib/http";
 
 export const KSTATE_URL = "https://pub-fe3948f31a9c462890b089ed5356c336.r2.dev/app_rotation_advice.json";
 const SOURCE = "K-State recommended rain-fed rotations, ranked by our team's Kansas model (NASA POWER weather)";
-const TTL_SECONDS = 6 * 3600;
+const OUTAGE_SECONDS = 60;
 
 interface RawRotation {
   rank: number;
@@ -55,10 +56,10 @@ function toRotation(r: RawRotation): KStateRotation {
 }
 
 interface LoadedFile { file: RawFile; savedCopy: boolean }
-let fileMemo: { at: number; file: Promise<LoadedFile> } | null = null;
+let fileMemo: { expires: number; file: Promise<LoadedFile> } | null = null;
 
 function loadFile(): Promise<LoadedFile> {
-  if (fileMemo && Date.now() - fileMemo.at < TTL_SECONDS * 1000) return fileMemo.file;
+  if (fileMemo && Date.now() < fileMemo.expires) return fileMemo.file;
   const file = fetchJson<RawFile>(KSTATE_URL, { service: "K-State rotation file (R2)", timeoutMs: 8000, retries: 1 })
     .then((live): LoadedFile => {
       if (!Array.isArray(live?.counties) || typeof live.data_through !== "string" || typeof live.disclaimer !== "string")
@@ -67,9 +68,10 @@ function loadFile(): Promise<LoadedFile> {
     })
     .catch((err): LoadedFile => {
       console.warn(JSON.stringify({ msg: "kstate using saved copy", dataThrough: savedFile.data_through, err: String(err) }));
+      if (fileMemo) fileMemo.expires = Date.now() + OUTAGE_SECONDS * 1000;
       return { file: savedFile, savedCopy: true };
     });
-  fileMemo = { at: Date.now(), file };
+  fileMemo = { expires: Date.now() + kstateTtl() * 1000, file };
   return file;
 }
 
@@ -102,7 +104,7 @@ export function toSecondOpinion(file: RawFile, fips: string): SecondOpinion | nu
 export async function getSecondOpinion(db: D1Database | undefined, fips: string): Promise<SecondOpinion | null> {
   if (!/^20\d{3}$/.test(fips)) return null;
   try {
-    const { value } = await cached(db, `kstate:v2:${fips}`, TTL_SECONDS, async () => {
+    const { value } = await cached(db, freshnessKey(`kstate:v2:${fips}`), successful({ softTtlSeconds: kstateTtl(), staleSeconds: 0, expiresAt: Date.now() + kstateTtl() * 1000 }), async () => {
       const loaded = await loadFile();
       const opinion = toSecondOpinion(loaded.file, fips);
       return opinion ? { ...opinion, savedCopy: loaded.savedCopy } : null;

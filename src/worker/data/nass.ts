@@ -9,7 +9,8 @@
 
 import { ALL_CROPS, CROPS } from "../../engine/crops";
 import type { CountyInfo, CropId, CropPrice, NassData, PracticeSeries } from "../../shared/types";
-import { cached, DAY_SECONDS } from "../lib/cache";
+import { cached } from "../lib/cache";
+import { freshnessKey, nassRelease } from "../lib/freshness";
 import { fetchWithRetry, UpstreamError } from "../lib/http";
 
 const API = "https://quickstats.nass.usda.gov/api/api_GET/";
@@ -111,9 +112,10 @@ export async function getNassData(db: D1Database | undefined, apiKey: string | u
   const stateFips = county.countyFips.slice(0, 2);
   const countyAnsi = county.countyFips.slice(2);
   const errors: string[] = [];
-  const load = async <T>(label: string, key: string, ttlDays: number, fn: () => Promise<T>, empty: T): Promise<T> => {
+  const load = async <T>(label: string, key: string, _ttlDays: number, fn: () => Promise<T>, empty: T): Promise<T> => {
     try {
-      return (await cached(db, key, ttlDays * DAY_SECONDS, fn)).value;
+      const release = nassRelease(key.includes(":prices:") ? "prices" : "yields");
+      return (await cached(db, freshnessKey(key, release.token), { softTtlSeconds: release.ttl, staleSeconds: 0, expiresAt: Date.now() + release.ttl * 1000 }, fn)).value;
     } catch (err) {
       errors.push(label);
       console.warn(JSON.stringify({ msg: "nass request failed", label, err: String(err) }));

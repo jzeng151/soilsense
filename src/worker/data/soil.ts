@@ -2,7 +2,8 @@
 // Docs: https://sdmdataaccess.nrcs.usda.gov/WebServiceHelp.aspx
 
 import type { SoilProfile } from "../../shared/types";
-import { cached, DAY_SECONDS } from "../lib/cache";
+import { cached } from "../lib/cache";
+import { freshnessKey, HISTORY, soilRelease, successful } from "../lib/freshness";
 import { fetchJson } from "../lib/http";
 
 const SDA_URL = "https://SDMDataAccess.sc.egov.usda.gov/Tabular/post.rest";
@@ -77,9 +78,9 @@ export function parseSoil(resp: SdaResponse): SoilProfile {
 }
 
 export async function getSoil(db: D1Database | undefined, lat: number, lon: number): Promise<SoilProfile> {
-  const key = `soil:v1:${lat.toFixed(4)}:${lon.toFixed(4)}`;
+  const key = freshnessKey(`soil:v1:${lat.toFixed(4)}:${lon.toFixed(4)}`, soilRelease());
   try {
-    const { value } = await cached(db, key, 90 * DAY_SECONDS, async () => {
+    const { value } = await cached(db, key, successful(HISTORY), async () => {
       const resp = await fetchJson<SdaResponse>(SDA_URL, {
         service: "USDA Soil Data Access",
         method: "POST",

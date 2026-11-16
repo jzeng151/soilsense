@@ -14,6 +14,7 @@ import {
 } from "../../engine/usdm";
 import type { UsdmCategoryResult, UsdmTimeline, UsdmWeek } from "../../shared/types";
 import { cached, DAY_SECONDS } from "../lib/cache";
+import { freshnessKey, usdmTtl } from "../lib/freshness";
 import { fetchJson, UpstreamError } from "../lib/http";
 
 const SERVICE = "U.S. Drought Monitor";
@@ -81,9 +82,10 @@ export function clearUsdmSnapshots(): void {
 export async function getUsdmRows(db: D1Database | undefined, fips: string, start: string, end: string, now = new Date()): Promise<RowsSnapshot> {
   if (!isFips(fips)) throw new Error("fips must be a 5-digit county code");
   const recent = end >= addDays(today(now), -14);
-  const key = `usdm:v1:${fips}:${start}:${end}${recent ? `:${today(now)}` : ""}`;
+  const key = freshnessKey(`usdm:v1:${fips}:${start}:${end}`);
   try {
-    const { value } = await cached(db, key, recent ? 6 * 3600 : 365 * DAY_SECONDS, () => download(fips, start, end, now));
+    const ttl = recent ? usdmTtl(now) : 365 * DAY_SECONDS;
+    const { value } = await cached(db, key, { softTtlSeconds: ttl, staleSeconds: 0, expiresAt: now.getTime() + ttl * 1000 }, () => download(fips, start, end, now));
     if (recent && value.rows.length) await saveLast(db, fips, value);
     return value;
   } catch (err) {

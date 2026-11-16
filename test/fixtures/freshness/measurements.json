@@ -1,0 +1,125 @@
+{
+  "baselineCommit": "ac9db24",
+  "method": "real-provider cold capture, exact response-tape replay; fixed Date 2026-11-15; 31-day advance; no D1; no NASS/OpenET credentials; opts.now bypasses finished-plan cache",
+  "before": [
+    {
+      "farm": "Finney KS",
+      "cold": {
+        "power.larc.nasa.gov": 1,
+        "daymet.ornl.gov": 1,
+        "sdmdataaccess.sc.egov.usda.gov": 1,
+        "nassgeodata.gmu.edu": 11,
+        "geo.fcc.gov": 1
+      },
+      "warm": {},
+      "after31Days": {
+        "power.larc.nasa.gov": 1,
+        "daymet.ornl.gov": 1
+      },
+      "complete": true
+    },
+    {
+      "farm": "Story IA",
+      "cold": {
+        "power.larc.nasa.gov": 1,
+        "daymet.ornl.gov": 1,
+        "sdmdataaccess.sc.egov.usda.gov": 1,
+        "nassgeodata.gmu.edu": 13,
+        "geo.fcc.gov": 1
+      },
+      "warm": {},
+      "after31Days": {
+        "power.larc.nasa.gov": 1,
+        "daymet.ornl.gov": 1
+      },
+      "complete": true
+    },
+    {
+      "farm": "Champaign IL",
+      "cold": {
+        "power.larc.nasa.gov": 1,
+        "daymet.ornl.gov": 1,
+        "sdmdataaccess.sc.egov.usda.gov": 1,
+        "nassgeodata.gmu.edu": 13,
+        "geo.fcc.gov": 1
+      },
+      "warm": {},
+      "after31Days": {
+        "power.larc.nasa.gov": 1,
+        "daymet.ornl.gov": 1
+      },
+      "complete": true
+    },
+    {
+      "farm": "Lancaster NE",
+      "cold": {
+        "power.larc.nasa.gov": 1,
+        "daymet.ornl.gov": 1,
+        "sdmdataaccess.sc.egov.usda.gov": 1,
+        "nassgeodata.gmu.edu": 10,
+        "geo.fcc.gov": 1
+      },
+      "warm": {},
+      "after31Days": {
+        "power.larc.nasa.gov": 1,
+        "daymet.ornl.gov": 1
+      },
+      "complete": true
+    }
+  ],
+  "after": [
+    {
+      "farm": "Finney KS",
+      "cold": {
+        "power.larc.nasa.gov": 1,
+        "daymet.ornl.gov": 1,
+        "sdmdataaccess.sc.egov.usda.gov": 1,
+        "nassgeodata.gmu.edu": 11,
+        "geo.fcc.gov": 1
+      },
+      "warm": {},
+      "after31Days": {},
+      "complete": true
+    },
+    {
+      "farm": "Story IA",
+      "cold": {
+        "power.larc.nasa.gov": 1,
+        "daymet.ornl.gov": 1,
+        "sdmdataaccess.sc.egov.usda.gov": 1,
+        "nassgeodata.gmu.edu": 13,
+        "geo.fcc.gov": 1
+      },
+      "warm": {},
+      "after31Days": {},
+      "complete": true
+    },
+    {
+      "farm": "Champaign IL",
+      "cold": {
+        "power.larc.nasa.gov": 1,
+        "daymet.ornl.gov": 1,
+        "sdmdataaccess.sc.egov.usda.gov": 1,
+        "nassgeodata.gmu.edu": 13,
+        "geo.fcc.gov": 1
+      },
+      "warm": {},
+      "after31Days": {},
+      "complete": true
+    },
+    {
+      "farm": "Lancaster NE",
+      "cold": {
+        "power.larc.nasa.gov": 1,
+        "daymet.ornl.gov": 1,
+        "sdmdataaccess.sc.egov.usda.gov": 1,
+        "nassgeodata.gmu.edu": 10,
+        "geo.fcc.gov": 1
+      },
+      "warm": {},
+      "after31Days": {},
+      "complete": true
+    }
+  ],
+  "tapeSha256": "b1fa756d940eb3ea7974afa3ccb16df8a3328608a1a2286bcff7bafdd85b1025"
+}

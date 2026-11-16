@@ -1,5 +1,6 @@
 import type { TimingDay } from "../../engine/cropTiming";
-import { cached, DAY_SECONDS } from "../lib/cache";
+import { cached } from "../lib/cache";
+import { freshnessKey, powerPolicy } from "../lib/freshness";
 import { fetchJson } from "../lib/http";
 import { snapToPowerGrid } from "./power";
 interface RawPower {
@@ -11,7 +12,7 @@ interface RawPower {
 export async function getTimingPower(db: D1Database | undefined, lat: number, lon: number, year: number) {
   const grid = snapToPowerGrid(lat, lon);
   const url = `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M_MIN,T2M_MAX,PRECTOTCORR&community=AG&latitude=${grid.lat}&longitude=${grid.lon}&start=${year}0101&end=${year}1231&format=JSON&time-standard=LST`;
-  const { value } = await cached(db, `timing-power:v1:${grid.lat}:${grid.lon}:${year}`, 30 * DAY_SECONDS, async () => {
+  const { value } = await cached(db, freshnessKey(`timing-power:v1:${grid.lat}:${grid.lon}:${year}`, "MERRA2-GEOSIT"), powerPolicy(year), async () => {
     const raw = await fetchJson<RawPower>(url, { service: "NASA POWER timing", timeoutMs: 25000, retries: 1 });
     if (raw.header?.time_standard !== "LST" || raw.parameters?.T2M_MIN?.units !== "C" || raw.parameters?.T2M_MAX?.units !== "C" || raw.parameters?.PRECTOTCORR?.units !== "mm/day") throw new Error("POWER timing units/time standard unavailable");
     const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(raw)));

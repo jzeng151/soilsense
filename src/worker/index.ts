@@ -22,7 +22,14 @@ export { PowerRefreshWorkflow } from "./refresh/workflow";
 export { DocIngestWorkflow } from "./ingest/workflow";
 import { queue } from "./ingest/queue";
 
+import { withCacheContext } from "./lib/cache";
+
 const app = new Hono<{ Bindings: Env }>();
+app.use("*", (c, next) => {
+  let ctx: { waitUntil(promise: Promise<unknown>): void };
+  try { ctx = c.executionCtx; } catch { return next(); }
+  return withCacheContext(ctx, next);
+});
 
 app.use("*", async (c, next) => {
   await next();

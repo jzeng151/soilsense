@@ -6,7 +6,8 @@
 
 import type { WindSeries } from "../../engine/windErosion";
 import type { WindMeta } from "../../shared/types";
-import { cached, DAY_SECONDS } from "../lib/cache";
+import { cached } from "../lib/cache";
+import { freshnessKey, powerPolicy } from "../lib/freshness";
 import { fetchJson, UpstreamError } from "../lib/http";
 import { snapToPowerGrid } from "./power";
 
@@ -89,8 +90,8 @@ export function windUrl(lat: number, lon: number, startYear: number, endYear: nu
 /** Daily wind for the POWER grid cell, cached 30 days per cell and year range (historical days don't change). */
 export async function getDailyWind(db: D1Database | undefined, lat: number, lon: number, startYear: number, endYear: number): Promise<WindSnapshot> {
   const grid = snapToPowerGrid(lat, lon);
-  const key = `${WIND_CONTENT_VERSION}:${grid.lat.toFixed(3)}:${grid.lon.toFixed(3)}:${startYear}:${endYear}`;
-  const { value } = await cached(db, key, 30 * DAY_SECONDS, async () => {
+  const key = freshnessKey(`${WIND_CONTENT_VERSION}:${grid.lat.toFixed(3)}:${grid.lon.toFixed(3)}:${startYear}:${endYear}`, "MERRA2-GEOSIT");
+  const { value } = await cached(db, key, powerPolicy(endYear), async () => {
     const url = windUrl(lat, lon, startYear, endYear);
     const json = await fetchJson<PowerWindResponse>(url, { service: "NASA POWER", timeoutMs: 20000, retries: 1 });
     return parseWind(json, url, new Date().toISOString());

@@ -3,7 +3,8 @@
 // Daymet uses a 365-day year (Dec 31 is dropped in leap years), so its yday equals the calendar day of year.
 
 import type { DaymetDay } from "../../engine/climate";
-import { cached, DAY_SECONDS } from "../lib/cache";
+import { cached } from "../lib/cache";
+import { freshnessKey, HISTORY, DAYMET_RELEASE } from "../lib/freshness";
 import { fetchWithRetry } from "../lib/http";
 
 interface Compact {
@@ -53,7 +54,7 @@ export async function getDaymet(db: D1Database | undefined, lat: number, lon: nu
   const la = lat.toFixed(2);
   const lo = lon.toFixed(2);
   try {
-    const { value } = await cached(db, `daymet:v1:${la}:${lo}:${startYear}:${endYear}`, 30 * DAY_SECONDS, async () => {
+    const { value } = await cached(db, freshnessKey(`daymet:v1:${la}:${lo}:${startYear}:${endYear}`, DAYMET_RELEASE), HISTORY, async () => {
       const url = `https://daymet.ornl.gov/single-pixel/api/data?lat=${la}&lon=${lo}&vars=prcp,tmax,tmin&start=${startYear}-01-01&end=${endYear}-12-31`;
       const res = await fetchWithRetry(url, { service: "NASA Daymet", timeoutMs: 20000, retries: 1, headers: { Accept: "text/csv" } });
       const days = parseDaymetCsv(await res.text());

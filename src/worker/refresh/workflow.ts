@@ -12,6 +12,8 @@ import type { Env } from "../env";
 import { WATCHED_FIELDS } from "../fieldwatch/run";
 import { publishLive } from "../live/publish";
 import { fetchWithRetry } from "../lib/http";
+import { putCached, DAY_SECONDS } from "../lib/cache";
+import { freshnessKey } from "../lib/freshness";
 import { buildQuery, planCells, validateCandidate, type Farm, type Verdict } from "./snapshot";
 import { publishSnapshot, recordFailure, type RefreshTrigger } from "./store";
 
@@ -121,10 +123,35 @@ export async function runPowerRefresh(
   return { instanceId: opts.instanceId, runDate: opts.now.toISOString().slice(0, 10), cells: results };
 }
 
+/** Sunday revision sweep: retain all 90 requested days separately; never change Field Watch's 60-day stream. */
+export async function recheckPowerRevisions(env: Env, step: StepRunner, now: Date, fetchPower: FetchPower = defaultFetch): Promise<void> {
+  if (now.getUTCDay() !== 0 || !env.DB) return;
+  for (const cell of planCells(REFRESH_FARMS)) {
+    const query = buildQuery(cell, now);
+    query.start = new Date(Date.parse(`${query.end}T00:00:00Z`) - 89 * DAY_SECONDS * 1000).toISOString().slice(0, 10);
+    query.params.start = query.start.replace(/-/g, "");
+    query.url = query.url.replace(/&start=\d{8}/, `&start=${query.params.start}`);
+    try {
+      await step.do(`recheck revisions ${cell.key}`, STEP_CONFIG.fetch, async () => {
+        const response = await fetchPower(query.url);
+        if (response.status !== 200) throw new Error(`POWER revision status ${response.status}`);
+        const raw: unknown = JSON.parse(response.text);
+        const verdict = await validateCandidate(raw, query, cell);
+        if (!verdict.ok) throw new Error(verdict.errors.join("; "));
+        // Raw revision archive is deliberately not a rule input. A failure cannot replace accepted data.
+        await putCached(env.DB!, freshnessKey(`power-revisions:v1:${cell.key}:${query.start}:${query.end}`), 365 * DAY_SECONDS,
+          { raw, query, retrievedAt: new Date().toISOString() });
+        return null;
+      });
+    } catch (err) { console.warn(JSON.stringify({ msg: "POWER revision sweep failed", cell: cell.key, err: String(err) })); }
+  }
+}
+
 export class PowerRefreshWorkflow extends WorkflowEntrypoint<Env, RefreshParams> {
   override async run(event: Readonly<WorkflowEvent<RefreshParams>>, step: WorkflowStep) {
     const trigger: RefreshTrigger = event.payload?.trigger === "manual" ? "manual" : "cron";
     // event.timestamp is fixed for the instance, so a replayed run uses the same request range.
+    await recheckPowerRevisions(this.env, step as unknown as StepRunner, new Date(event.timestamp));
     return runPowerRefresh(this.env, step as unknown as StepRunner, { now: new Date(event.timestamp), trigger, instanceId: event.instanceId });
   }
 }

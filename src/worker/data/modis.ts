@@ -1,6 +1,7 @@
 // ORNL TESViS REST v1. Product-specific rules: MOD13 Collection 6.1 user guide, Tables 1, 4, 5.
 import type { ModisObservation, ModisVegetation } from "../../shared/types";
-import { cached, DAY_SECONDS } from "../lib/cache";
+import { cached } from "../lib/cache";
+import { freshnessKey, modisPolicy, successful } from "../lib/freshness";
 import { fetchJson, fetchWithRetry } from "../lib/http";
 
 const BASE = "https://modis.ornl.gov/rst/api/v1/MOD13Q1";
@@ -54,7 +55,7 @@ export async function getModisNdvi(db: D1Database | undefined, lat: number, lon:
     attribution: "Didan, K. (2021), MOD13Q1.061, NASA LP DAAC, doi:10.5067/MODIS/MOD13Q1.061. Subsets: ORNL DAAC TESViS RESTful Web Service (2018), doi:10.3334/ORNLDAAC/1600.",
     note: "Coarse historical point pixel, not a field measurement or observations of alternative rotations. Low NDVI does not establish bare soil; residue and mixed pixels remain unresolved. No interpolation or cross-sensor merging. Field-area coverage is unknown. MODIS uses provider NDVI, not reflectance-derived field NDVI." };
   try {
-    return (await cached(db, `modis:MOD13Q1:061:qa-v2-csv:${lat}:${lon}:${year}`, 30 * DAY_SECONDS, async () => {
+    return (await cached(db, freshnessKey(`modis:MOD13Q1:061:qa-v2-csv:${lat}:${lon}:${year}`), successful(modisPolicy(year)), async () => {
       const opts = { service: "ORNL DAAC MODIS", timeoutMs: 60000, retries: 1 };
       const inventory = await fetchJson<{ dates: { modis_date: string }[] }>(datesUrl, opts);
       if (!Array.isArray(inventory.dates)) throw new Error("Invalid MODIS date inventory");

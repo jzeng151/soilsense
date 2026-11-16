@@ -3,7 +3,8 @@
 // Docs: https://sdmdataaccess.nrcs.usda.gov/WebServiceHelp.aspx
 
 import type { WindSoil, WindSoilComponent } from "../../shared/types";
-import { cached, DAY_SECONDS } from "../lib/cache";
+import { cached } from "../lib/cache";
+import { freshnessKey, HISTORY, soilRelease, successful } from "../lib/freshness";
 import { fetchJson } from "../lib/http";
 
 const SDA_URL = "https://SDMDataAccess.sc.egov.usda.gov/Tabular/post.rest";
@@ -63,9 +64,9 @@ export function parseWindSoil(resp: { Table?: string[][] }, retrievedAt: string)
 }
 
 export async function getWindSoil(db: D1Database | undefined, lat: number, lon: number): Promise<WindSoil> {
-  const key = `soilwind:v1:${lat.toFixed(4)}:${lon.toFixed(4)}`;
+  const key = freshnessKey(`soilwind:v1:${lat.toFixed(4)}:${lon.toFixed(4)}`, soilRelease());
   try {
-    const { value } = await cached(db, key, 90 * DAY_SECONDS, async () => {
+    const { value } = await cached(db, key, successful(HISTORY), async () => {
       const resp = await fetchJson<{ Table?: string[][] }>(SDA_URL, {
         service: "USDA Soil Data Access",
         method: "POST",

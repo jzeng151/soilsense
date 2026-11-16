@@ -10,7 +10,7 @@ beforeEach(() => { vi.resetModules(); http.fetchJson.mockReset(); });
 afterEach(() => { vi.useRealTimers(); });
 
 describe("Kansas rotation file fallback", () => {
-  it("returns the dated saved copy on R2 failure, retains it for six hours, then retries live", async () => {
+  it("returns the dated saved copy on R2 failure, memos the outage for one minute, then retries live", async () => {
     vi.useFakeTimers();
     const start = new Date("2026-11-15T14:00:00Z");
     vi.setSystemTime(start);
@@ -19,12 +19,12 @@ describe("Kansas rotation file fallback", () => {
     const first = await getSecondOpinion(undefined, "20055");
     expect(first).toMatchObject({ county: "Finney County", savedCopy: true, dataThrough: "2026-11-09", disclaimer: saved.disclaimer });
     expect(first!.byCurrentCrop.wheat!.rotations[0]!.code).toBe("W-S-F");
-    vi.setSystemTime(start.getTime() + 6 * 3600_000 - 1);
+    vi.setSystemTime(start.getTime() + 60_000 - 1);
     expect(await getSecondOpinion(undefined, "20055")).toEqual(first);
     await getSecondOpinion(undefined, "20001");
     expect(http.fetchJson).toHaveBeenCalledTimes(1);
     http.fetchJson.mockResolvedValue({ ...saved, data_through: "2026-11-14" });
-    vi.setSystemTime(start.getTime() + 6 * 3600_000 + 1);
+    vi.setSystemTime(start.getTime() + 60_000 + 1);
     expect(await getSecondOpinion(undefined, "20055")).toMatchObject({ savedCopy: false, dataThrough: "2026-11-14" });
     expect(http.fetchJson).toHaveBeenCalledTimes(2);
   });
@@ -37,7 +37,7 @@ describe("Kansas rotation file fallback", () => {
     expect(await getSecondOpinion(undefined, "20055")).toMatchObject({ savedCopy: false, dataThrough: "2026-11-14" });
   });
 
-  it("preserves saved-copy provenance in D1 across isolate restarts", async () => {
+  it("does not persist an outage fallback in D1 across isolate restarts", async () => {
     const sqlite = new DatabaseSync(":memory:");
     sqlite.exec("CREATE TABLE cache (key TEXT PRIMARY KEY, value TEXT, expires_at INTEGER, created_at INTEGER)");
     const statement = (sql: string, args: unknown[] = []) => ({
@@ -55,7 +55,7 @@ describe("Kansas rotation file fallback", () => {
       http.fetchJson.mockClear();
       const restarted = await import("../src/worker/data/kstate");
       expect(await restarted.getSecondOpinion(db, "20055")).toEqual(first);
-      expect(http.fetchJson).not.toHaveBeenCalled();
+      expect(http.fetchJson).toHaveBeenCalledTimes(1);
     } finally {
       sqlite.close();
     }

@@ -4,7 +4,8 @@
 // the same grid cell shares one cached request, as NASA asks.
 
 import { type DailyClimate, parsePower, type PowerResponse } from "../../engine/climate";
-import { cached, DAY_SECONDS } from "../lib/cache";
+import { cached } from "../lib/cache";
+import { freshnessKey, powerPolicy } from "../lib/freshness";
 import { fetchJson, UpstreamError } from "../lib/http";
 
 const PARAMS = ["PRECTOTCORR", "T2M", "T2M_MAX", "T2M_MIN", "GWETROOT"] as const;
@@ -60,18 +61,30 @@ export async function getDailyClimate(
   endYear: number,
 ): Promise<DailyClimate> {
   const grid = snapToPowerGrid(lat, lon);
-  const key = `power:v1:${grid.lat.toFixed(3)}:${grid.lon.toFixed(3)}:${startYear}:${endYear}`;
   const url =
     `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=${PARAMS.join(",")}` +
     `&community=AG&latitude=${grid.lat}&longitude=${grid.lon}&start=${startYear}0101&end=${endYear}1231&format=JSON&time-standard=LST`;
-  const { value, cache } = await cached(db, key, 30 * DAY_SECONDS, async () => {
-    const url =
-      `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=${PARAMS.join(",")}` +
-      `&community=AG&latitude=${grid.lat}&longitude=${grid.lon}&start=${startYear}0101&end=${endYear}1231&format=JSON&time-standard=LST`;
-    const json = await fetchJson<PowerResponse>(url, { service: "NASA POWER", timeoutMs: 25000, retries: 1 });
-    if (!json?.properties?.parameter?.T2M_MAX) throw new UpstreamError("NASA POWER", "unexpected response shape");
-    return { ...compact(json), retrievedAt: new Date().toISOString(), version: json.header?.api?.version };
-  });
+  // Keep the stable archive separate from years overlapping the 90-day revision window.
+  // At most two requests, not one request per historical year.
+  const recentYear = new Date(Date.now() - 90 * 86_400_000).getUTCFullYear();
+  const ranges = [[startYear, Math.min(endYear, recentYear - 1)], [Math.max(startYear, recentYear), endYear]]
+    .filter(([start, end]) => start! <= end!);
+  const parts = await Promise.all(ranges.map(async ([start, end]) => cached(db,
+    freshnessKey(`power:v1:${grid.lat.toFixed(3)}:${grid.lon.toFixed(3)}:${start}:${end}`, "MERRA2-GEOSIT"),
+    powerPolicy(end!), async () => {
+      const partUrl = url.replace(`start=${startYear}0101&end=${endYear}1231`, `start=${start}0101&end=${end}1231`);
+      const json = await fetchJson<PowerResponse>(partUrl, { service: "NASA POWER", timeoutMs: 25000, retries: 1 });
+      if (!json?.properties?.parameter?.T2M_MAX) throw new UpstreamError("NASA POWER", "unexpected response shape");
+      const value = compact(json);
+      if (!value.dates.length || (end! - start! >= 9 && parsePower(expand(value)).years.length < 10))
+        throw new UpstreamError("NASA POWER", "incomplete historical response");
+      return { ...value, retrievedAt: new Date().toISOString(), version: json.header?.api?.version };
+    })));
+  const value: CompactPower = { ...parts[0]!.value,
+    dates: parts.flatMap(p => p.value.dates),
+    values: Object.fromEntries(PARAMS.map(name => [name, parts.flatMap(p => p.value.values[name])])) as CompactPower["values"],
+  };
+  const cache = parts.every(p => p.cache !== "miss") ? "memory" : "miss";
   const parsed = parsePower(expand(value));
   const expectedDays = (Date.UTC(endYear + 1, 0, 1) - Date.UTC(startYear, 0, 1)) / 86_400_000;
   const validValues = ["PRECTOTCORR", "T2M_MAX", "T2M_MIN"].reduce((n, key) =>

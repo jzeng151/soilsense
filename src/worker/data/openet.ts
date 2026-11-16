@@ -2,7 +2,8 @@
 // Free API key from https://etdata.org (set OPENET_API_KEY). Point time series, Ensemble model, 30 m pixels.
 // The API allows at most 10 years per request, so we ask once for the latest 10 full years and cache it.
 
-import { cached, DAY_SECONDS } from "../lib/cache";
+import { cached } from "../lib/cache";
+import { freshnessKey, openetPolicy } from "../lib/freshness";
 import { fetchWithRetry } from "../lib/http";
 
 import type { EtMonth } from "../../shared/types";
@@ -17,7 +18,7 @@ export async function getOpenEt(db: D1Database | undefined, apiKey: string | und
   const la = Number(lat.toFixed(3));
   const lo = Number(lon.toFixed(3));
   try {
-    const { value } = await cached(db, `openet:v1:${la}:${lo}:${startYear}:${endYear}`, 180 * DAY_SECONDS, async () => {
+    const { value } = await cached(db, freshnessKey(`openet:v1:${la}:${lo}:${startYear}:${endYear}`), openetPolicy(endYear), async () => {
       const res = await fetchWithRetry("https://openet-api.org/raster/timeseries/point", {
         service: "OpenET",
         method: "POST",

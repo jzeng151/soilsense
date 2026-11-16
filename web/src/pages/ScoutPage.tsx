@@ -328,7 +328,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
                 <span className="dot" />
                 <span className="dot" />
                 <span className="dot" />
-                <span className="sc-thinking-text">{tx("Sprout is checking the NASA data…")}</span>
+                <span className="sc-thinking-text">{tx("Thinking…")}</span>
               </div>
             )}
             {error && (

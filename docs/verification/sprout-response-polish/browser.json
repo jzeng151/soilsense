@@ -1,0 +1,46 @@
+{
+  "mode": "LOCAL FIXTURE — not live AI; real HTTP chunked SSE into production UI",
+  "base": "http://127.0.0.1:8831",
+  "runs": [
+    {
+      "language": "en",
+      "width": 1280,
+      "pending": "Thinking…",
+      "partial": "Why this option\n\nSorghum → Fallow → Sorghum fits the water assumptions.\n\nMore accumulated warmth in the weather history (NASA POWER (fixture)).",
+      "final": "Why this option\n\nSorghum → Fallow → Sorghum fits the water assumptions.\n\nMore accumulated warmth in the weather history (NASA POWER (fixture)).\nCheck the plan inputs with a local agronomist.\nLimits\n\nStress is modeled, not an observed crop failure or a forecast. This evidence alone does not establish fewer bad years. Source unavailable (soil)\n\nOriginal source\n\nAnswer stopped early. Ask Sprout to continue.",
+      "errors": [],
+      "overflow": false,
+      "status": "passed"
+    },
+    {
+      "language": "es",
+      "width": 1280,
+      "pending": "Pensando…",
+      "partial": "Why this option\n\nSorghum → Fallow → Sorghum fits the water assumptions.\n\nMore accumulated warmth in the weather history (NASA POWER (fixture)).",
+      "final": "Why this option\n\nSorghum → Fallow → Sorghum fits the water assumptions.\n\nMore accumulated warmth in the weather history (NASA POWER (fixture)).\nCheck the plan inputs with a local agronomist.\nLimits\n\nStress is modeled, not an observed crop failure or a forecast. This evidence alone does not establish fewer bad years. Fuente no disponible (soil)\n\nOriginal source\n\nLa respuesta se interrumpió. Pide a Sprout que continúe.",
+      "errors": [],
+      "overflow": false,
+      "status": "passed"
+    },
+    {
+      "language": "ko",
+      "width": 1280,
+      "pending": "생각 중…",
+      "partial": "Why this option\n\nSorghum → Fallow → Sorghum fits the water assumptions.\n\nMore accumulated warmth in the weather history (NASA POWER (fixture)).",
+      "final": "Why this option\n\nSorghum → Fallow → Sorghum fits the water assumptions.\n\nMore accumulated warmth in the weather history (NASA POWER (fixture)).\nCheck the plan inputs with a local agronomist.\nLimits\n\nStress is modeled, not an observed crop failure or a forecast. This evidence alone does not establish fewer bad years. 출처를 확인할 수 없음 (soil)\n\nOriginal source\n\n답변이 중간에 멈췄습니다. Sprout에게 계속해 달라고 요청하세요.",
+      "errors": [],
+      "overflow": false,
+      "status": "passed"
+    },
+    {
+      "language": "en",
+      "width": 390,
+      "pending": "Thinking…",
+      "partial": "Why this option\n\nSorghum → Fallow → Sorghum fits the water assumptions.\n\nMore accumulated warmth in the weather history (NASA POWER (fixture)).",
+      "final": "Why this option\n\nSorghum → Fallow → Sorghum fits the water assumptions.\n\nMore accumulated warmth in the weather history (NASA POWER (fixture)).\nCheck the plan inputs with a local agronomist.\nLimits\n\nStress is modeled, not an observed crop failure or a forecast. This evidence alone does not establish fewer bad years. Source unavailable (soil)\n\nOriginal source\n\nAnswer stopped early. Ask Sprout to continue.",
+      "errors": [],
+      "overflow": false,
+      "status": "passed"
+    }
+  ]
+}

@@ -113,7 +113,7 @@ export function FieldAssistantContent({ context, sharedPlan, onClose, className 
           {m.role === "user" ? <span className="fa-avatar" aria-label={t("You")}>◉</span> : <Sprout mood="hello" width={30} decorative />}
           <div className="fa-turn-content">{m.role === "user" ? <p className="fa-user-bubble">{m.parts.filter(p => p.type === "text").map(p => p.text).join("")}</p> : <ScoutMessage message={m} streaming={busy && i === messages.length - 1} />}{messageTime(m.id)}</div>
         </div>)}
-        {status === "submitted" && <p role="status">{t("Sprout is checking the NASA data…")}</p>}
+        {status === "submitted" && <p role="status">{t("Thinking…")}</p>}
       </div>
       {error && <div role="alert" className="fa-notice"><p>{errorMessage}</p><button type="button" disabled={busy || httpError === 503} onClick={() => { clearError(); setHttpError(0); void regenerate(); }}>{t("Try again")}</button></div>}
       {context && !messages.length && <section className="fa-suggestions"><h3>{t("Try asking about")}</h3>{SUGGESTIONS.map(s => <button type="button" key={s} disabled={!canSend} onClick={() => send(t(s))}>{t(s)}<span aria-hidden="true"> ↗</span></button>)}</section>}

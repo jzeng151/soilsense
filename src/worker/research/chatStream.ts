@@ -8,10 +8,12 @@ export function checkedCitationStream(stream: ReadableStream<UIMessageChunk>, re
   let answer = "";
   return stream.pipeThrough(new TransformStream<UIMessageChunk, UIMessageChunk>({
     transform(part, controller) {
+      if (part.type.startsWith("reasoning-")) return;
       if (part.type === "text-delta") answer += part.delta;
       // Dataset links are emitted by trusted tools separately. Never forward model-invented sources.
       if (part.type === "source-url" || part.type === "source-document") return;
       if (part.type === "finish") {
+        if (part.finishReason === "length") controller.enqueue({ type: "data-answer-incomplete", data: true });
         const checked = research.validate(answer);
         const history = memory?.validate(answer) ?? { valid: [], records: [], invalid: [...new Set([...answer.matchAll(/\[(F\d+)\]/g)].map(m => m[1]!))] };
         const guideline = fertilizer?.validate(answer) ?? { facts: [], invalid: [...new Set([...answer.matchAll(/\[(G\d+)\]/g)].map(m => m[1]!))] };

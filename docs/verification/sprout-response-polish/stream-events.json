@@ -1,0 +1,214 @@
+[
+  {
+    "type": "start",
+    "messageId": "fixture-0"
+  },
+  {
+    "type": "reasoning-start",
+    "id": "r"
+  },
+  {
+    "type": "reasoning-delta",
+    "id": "r",
+    "delta": "PRIVATE FIXTURE REASONING MUST NEVER APPEAR"
+  },
+  {
+    "type": "reasoning-end",
+    "id": "r"
+  },
+  {
+    "type": "data-plan-facts",
+    "data": [
+      {
+        "id": "trend-gdd",
+        "text": "LOCAL FIXTURE: accumulated warmth increased in the supplied history.",
+        "source": "NASA POWER (fixture)"
+      }
+    ]
+  },
+  {
+    "type": "text-start",
+    "id": "answer"
+  },
+  {
+    "type": "text-delta",
+    "id": "answer",
+    "delta": "## Why this option\nSorghum $\\rightarrow$ Fallow $\\rightarrow$ Sorghum fits the water assumptions.\n- More accumulated warmth in the weather history [trend-gdd].\n"
+  },
+  {
+    "type": "text-delta",
+    "id": "answer",
+    "delta": "1. Check the plan inputs with a local agronomist.\n## Limits\nStress is modeled, not an observed crop failure or a forecast. This evidence alone does not establish fewer bad years. [soil]\n\n[Original source](https://power.larc.nasa.gov/)"
+  },
+  {
+    "type": "text-end",
+    "id": "answer"
+  },
+  {
+    "type": "data-answer-incomplete",
+    "data": true
+  },
+  {
+    "type": "finish",
+    "finishReason": "length"
+  },
+  {
+    "type": "start",
+    "messageId": "fixture-11"
+  },
+  {
+    "type": "reasoning-start",
+    "id": "r"
+  },
+  {
+    "type": "reasoning-delta",
+    "id": "r",
+    "delta": "PRIVATE FIXTURE REASONING MUST NEVER APPEAR"
+  },
+  {
+    "type": "reasoning-end",
+    "id": "r"
+  },
+  {
+    "type": "data-plan-facts",
+    "data": [
+      {
+        "id": "trend-gdd",
+        "text": "LOCAL FIXTURE: accumulated warmth increased in the supplied history.",
+        "source": "NASA POWER (fixture)"
+      }
+    ]
+  },
+  {
+    "type": "text-start",
+    "id": "answer"
+  },
+  {
+    "type": "text-delta",
+    "id": "answer",
+    "delta": "## Why this option\nSorghum $\\rightarrow$ Fallow $\\rightarrow$ Sorghum fits the water assumptions.\n- More accumulated warmth in the weather history [trend-gdd].\n"
+  },
+  {
+    "type": "text-delta",
+    "id": "answer",
+    "delta": "1. Check the plan inputs with a local agronomist.\n## Limits\nStress is modeled, not an observed crop failure or a forecast. This evidence alone does not establish fewer bad years. [soil]\n\n[Original source](https://power.larc.nasa.gov/)"
+  },
+  {
+    "type": "text-end",
+    "id": "answer"
+  },
+  {
+    "type": "data-answer-incomplete",
+    "data": true
+  },
+  {
+    "type": "finish",
+    "finishReason": "length"
+  },
+  {
+    "type": "start",
+    "messageId": "fixture-22"
+  },
+  {
+    "type": "reasoning-start",
+    "id": "r"
+  },
+  {
+    "type": "reasoning-delta",
+    "id": "r",
+    "delta": "PRIVATE FIXTURE REASONING MUST NEVER APPEAR"
+  },
+  {
+    "type": "reasoning-end",
+    "id": "r"
+  },
+  {
+    "type": "data-plan-facts",
+    "data": [
+      {
+        "id": "trend-gdd",
+        "text": "LOCAL FIXTURE: accumulated warmth increased in the supplied history.",
+        "source": "NASA POWER (fixture)"
+      }
+    ]
+  },
+  {
+    "type": "text-start",
+    "id": "answer"
+  },
+  {
+    "type": "text-delta",
+    "id": "answer",
+    "delta": "## Why this option\nSorghum $\\rightarrow$ Fallow $\\rightarrow$ Sorghum fits the water assumptions.\n- More accumulated warmth in the weather history [trend-gdd].\n"
+  },
+  {
+    "type": "text-delta",
+    "id": "answer",
+    "delta": "1. Check the plan inputs with a local agronomist.\n## Limits\nStress is modeled, not an observed crop failure or a forecast. This evidence alone does not establish fewer bad years. [soil]\n\n[Original source](https://power.larc.nasa.gov/)"
+  },
+  {
+    "type": "text-end",
+    "id": "answer"
+  },
+  {
+    "type": "data-answer-incomplete",
+    "data": true
+  },
+  {
+    "type": "finish",
+    "finishReason": "length"
+  },
+  {
+    "type": "start",
+    "messageId": "fixture-33"
+  },
+  {
+    "type": "reasoning-start",
+    "id": "r"
+  },
+  {
+    "type": "reasoning-delta",
+    "id": "r",
+    "delta": "PRIVATE FIXTURE REASONING MUST NEVER APPEAR"
+  },
+  {
+    "type": "reasoning-end",
+    "id": "r"
+  },
+  {
+    "type": "data-plan-facts",
+    "data": [
+      {
+        "id": "trend-gdd",
+        "text": "LOCAL FIXTURE: accumulated warmth increased in the supplied history.",
+        "source": "NASA POWER (fixture)"
+      }
+    ]
+  },
+  {
+    "type": "text-start",
+    "id": "answer"
+  },
+  {
+    "type": "text-delta",
+    "id": "answer",
+    "delta": "## Why this option\nSorghum $\\rightarrow$ Fallow $\\rightarrow$ Sorghum fits the water assumptions.\n- More accumulated warmth in the weather history [trend-gdd].\n"
+  },
+  {
+    "type": "text-delta",
+    "id": "answer",
+    "delta": "1. Check the plan inputs with a local agronomist.\n## Limits\nStress is modeled, not an observed crop failure or a forecast. This evidence alone does not establish fewer bad years. [soil]\n\n[Original source](https://power.larc.nasa.gov/)"
+  },
+  {
+    "type": "text-end",
+    "id": "answer"
+  },
+  {
+    "type": "data-answer-incomplete",
+    "data": true
+  },
+  {
+    "type": "finish",
+    "finishReason": "length"
+  }
+]

@@ -1,12 +1,12 @@
 import { cropText, rotationText, translate, translateKnown, useI18n, type Language } from "../i18n";
 // Renders one Scout assistant message from its AI SDK parts:
-// reasoning → collapsible "Thinking", tool parts → live analysis steps, text → markdown,
+// Reasoning is never rendered. Pending turns show generic Thinking; completed tools summarize data.
 // source parts → a "Sources" list under the answer.
 
 import type { UIMessage } from "ai";
 import type { ChatCitationDisplay } from "../../../src/shared/chatResearch";
 import { detectLang } from "../lang";
-import { Markdown } from "./Markdown";
+import { Markdown, type MarkdownReferences } from "./Markdown";
 import { sourceLink } from "./sourceLink";
 
 type Part = UIMessage["parts"][number];
@@ -113,26 +113,29 @@ export function ScoutMessage({ message, streaming }: { message: UIMessage; strea
   const citations = (citationPart && "data" in citationPart ? citationPart.data : null) as ChatCitationDisplay | null;
   const researchStates = parts.filter(p => p.type === "data-research-status").map(p => (p as { data: { status: string; reason?: string } }).data);
   const sources = parts.filter((p): p is Extract<Part, { type: "source-url" | "source-document" }> => p.type === "source-url" || p.type === "source-document");
+  const references: MarkdownReferences = {};
+  for (const source of sources) references[source.sourceId] = { label: source.title ?? source.sourceId, href: source.type === "source-url" ? source.url : undefined };
+  for (const passage of citations?.passages ?? []) references[passage.citationId] = { label: passage.sourceTitle, href: passage.sourceUrl, detail: passage.text };
+  for (const part of parts) {
+    if (part.type !== "data-plan-facts" || !("data" in part) || !Array.isArray(part.data)) continue;
+    for (const raw of part.data) {
+      const fact = obj(raw);
+      if (typeof fact.id === "string" && typeof fact.source === "string" && typeof fact.text === "string") references[fact.id] = { label: fact.source, detail: fact.text };
+    }
+  }
   const tools = parts.filter(isTool);
   const toolsRunning = tools.some((t) => t.state === "input-streaming" || t.state === "input-available");
   const hasText = parts.some((p) => p.type === "text" && p.text.trim());
 
   // Group the message into: reasoning, analysis steps (all tool calls, in order), answer text.
-  const reasoning = parts.filter((p): p is Extract<Part, { type: "reasoning" }> => p.type === "reasoning" && !!p.text.trim());
+
   const texts = parts.filter((p): p is Extract<Part, { type: "text" }> => p.type === "text");
 
   return (
     <div className="sc-msg sc-bot">
-      {reasoning.length > 0 && (
-        <details className="an-think" open={streaming && !hasText}>
-          <summary>{streaming && !hasText ? tx("Thinking…") : tx("Thought process")}</summary>
-          {reasoning.map((r, i) => (
-            <Markdown key={i} text={r.text} />
-          ))}
-        </details>
-      )}
+      {streaming && !hasText && <p className="an-writing" role="status">{tx("Thinking…")}</p>}
 
-      {tools.length > 0 && (
+      {!streaming && tools.length > 0 && (
         <div className="an-card">
           <p className="an-title">
             {toolsRunning ? <span className="spin" /> : null}{tx("Analysis ·")}{" "}{tools.length}{" "}{tx(tools.length === 1 ? "step" : "steps")}
@@ -148,11 +151,12 @@ export function ScoutMessage({ message, streaming }: { message: UIMessage; strea
       {texts.map((t, i) => (
         // WCAG 3.1.2: Sprout answers in the farmer's language; tag the passage when it isn't English.
         <div key={i} lang={streaming ? undefined : detectLang(t.text)}>
-          <Markdown text={t.text} />
+          <Markdown text={t.text} references={references} />
         </div>
       ))}
-      {streaming && !toolsRunning && tools.length > 0 && !hasText && <p className="an-writing">{tx("Writing the answer…")}</p>}
 
+
+      {parts.some(p => p.type === "data-answer-incomplete") && <p role="status">{tx("Answer stopped early. Ask Sprout to continue.")}</p>}
       {researchStates.map((state, i) => <p key={i} className="sc-research-state" role="status">{tx("Research")}{" "}{localize(state.status)}: {state.reason}</p>)}
       {citations?.passages.map(p => (
         <details className="sc-research-quote" key={p.citationId}>

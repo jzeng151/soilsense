@@ -1,12 +1,14 @@
 import { createContext, createElement, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { CropId } from "../../src/shared/types";
+import { constraintMessages } from './i18n-constraints';
 import { fieldMessages } from "./i18n-fields";
 import { cardMessages } from "./i18n-cards";
 import { myFieldsMessages } from "./i18n-myfields";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
+  ...constraintMessages,
   ...fieldMessages,
   ...cardMessages,
   ...myFieldsMessages,

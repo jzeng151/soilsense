@@ -86,10 +86,10 @@ try {
     await visit(page);
     await page.locator('.map.leaflet-container').waitFor();
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
-    await page.getByRole('button', { name: 'ES Español', exact: true }).click();
+    await page.locator('#content').getByRole('button', { name: 'ES Español', exact: true }).click();
     await until(async () => await page.locator('html').getAttribute('lang') === 'es', 'Spanish html lang');
     await page.getByText('Hola, soy Sprout', { exact: true }).waitFor();
-    await page.getByRole('button', { name: 'EN English', exact: true }).click();
+    await page.locator('#content').getByRole('button', { name: 'EN English', exact: true }).click();
     await until(async () => await page.locator('html').getAttribute('lang') === 'en', 'English html lang');
     await page.getByText("Hi, I'm Sprout", { exact: true }).waitFor();
   });

@@ -118,7 +118,7 @@ export function ExploreMap(props: Props) {
       const line = css.getPropertyValue("--color-on-data").trim() || "white";
       const selected = css.getPropertyValue("--color-accent").trim();
       const fill = css.getPropertyValue("--color-data").trim();
-      m.addSource("fields", { type: "geojson", data: empty });
+      m.addSource("fields", { type: "geojson", data: empty, attribution: 'USDA NASS Crop Sequence Boundaries (not surveyed parcel lines)' });
       m.addLayer({
         id: "field-fill",
         type: "fill",
@@ -147,7 +147,7 @@ export function ExploreMap(props: Props) {
           ],
         },
       });
-      m.addSource("zip", { type: "geojson", data: empty });
+      m.addSource("zip", { type: "geojson", data: empty, attribution: 'U.S. Census Bureau · 2020 ZCTA (approximate postal area)' });
       m.addLayer({
         id: "zip-line",
         type: "line",
@@ -172,6 +172,11 @@ export function ExploreMap(props: Props) {
       latest.current.onReady(m);
     });
     const stop = () => latest.current.onInteract();
+    const container = el.current;
+    container.addEventListener('keydown', stop);
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onMotion = () => { if (motion.matches) m.stop(); };
+    motion.addEventListener('change', onMotion);
     m.on("mousedown", stop);
     m.on("touchstart", stop);
     m.on("wheel", stop);
@@ -190,6 +195,8 @@ export function ExploreMap(props: Props) {
       }
     }, 2200);
     return () => {
+      container.removeEventListener('keydown', stop);
+      motion.removeEventListener('change', onMotion);
       resize.disconnect();
       clearInterval(spin);
       latest.current.onReady(null);
@@ -203,7 +210,7 @@ export function ExploreMap(props: Props) {
   useEffect(() => {
     const m = map.current;
     if (!m) return;
-    const apply = () => {
+    const apply = (animate = true) => {
       const p = props.location;
       const camera = p
         ? {
@@ -221,11 +228,15 @@ export function ExploreMap(props: Props) {
               right: window.innerWidth > 700 ? 400 : 0,
             },
           };
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+      if (!p || !animate || window.matchMedia("(prefers-reduced-motion: reduce)").matches)
         m.jumpTo(camera);
       else m.flyTo({ ...camera, duration: 2400, essential: false });
     };
     apply();
+    const breakpoint = window.matchMedia('(max-width: 700px)');
+    const onBreakpoint = () => { if (!props.location) apply(false); };
+    breakpoint.addEventListener('change', onBreakpoint);
+    return () => breakpoint.removeEventListener('change', onBreakpoint);
   }, [props.location]);
   useEffect(() => {
     const m = map.current;

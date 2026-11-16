@@ -383,6 +383,7 @@
   }
 }
 @media (max-width: 700px) {
+  .is-globe .explore-layers:not(:has(section)) { display: none; }
   .explore-rail {
     width: 56px;
     padding: 14px 5px;

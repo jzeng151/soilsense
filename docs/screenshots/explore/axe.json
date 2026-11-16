@@ -119,6 +119,15 @@
     },
     {
       "language": "en",
+      "width": 1440,
+      "state": "demo",
+      "errors": [],
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "language": "en",
       "width": 375,
       "state": "globe",
       "errors": [],
@@ -128,6 +137,12 @@
         {
           "id": "color-contrast",
           "nodes": [
+            [
+              ".maplibregl-ctrl-scale"
+            ],
+            [
+              ".maplibregl-ctrl-attrib-inner"
+            ],
             [
               ".explore-intro > span"
             ],
@@ -160,9 +175,6 @@
             ],
             [
               "button[aria-label=\"Stop globe rotation\"]"
-            ],
-            [
-              "button[aria-controls=\"explore-layer-menu\"]"
             ]
           ]
         },
@@ -203,6 +215,9 @@
               ".maplibregl-ctrl-scale"
             ],
             [
+              ".maplibregl-ctrl-attrib-inner"
+            ],
+            [
               ".explore-location-chip > span"
             ],
             [
@@ -237,6 +252,15 @@
           ]
         }
       ]
+    },
+    {
+      "language": "en",
+      "width": 375,
+      "state": "demo",
+      "errors": [],
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
     },
     {
       "language": "es",
@@ -355,6 +379,15 @@
     },
     {
       "language": "es",
+      "width": 1440,
+      "state": "demo",
+      "errors": [],
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "language": "es",
       "width": 375,
       "state": "globe",
       "errors": [],
@@ -364,6 +397,12 @@
         {
           "id": "color-contrast",
           "nodes": [
+            [
+              ".maplibregl-ctrl-scale"
+            ],
+            [
+              ".maplibregl-ctrl-attrib-inner"
+            ],
             [
               ".explore-intro > span"
             ],
@@ -396,9 +435,6 @@
             ],
             [
               "button[aria-label=\"Detener rotación del globo\"]"
-            ],
-            [
-              "button[aria-controls=\"explore-layer-menu\"]"
             ]
           ]
         },
@@ -439,6 +475,9 @@
               ".maplibregl-ctrl-scale"
             ],
             [
+              ".maplibregl-ctrl-attrib-inner"
+            ],
+            [
               ".explore-location-chip > span"
             ],
             [
@@ -473,6 +512,15 @@
           ]
         }
       ]
+    },
+    {
+      "language": "es",
+      "width": 375,
+      "state": "demo",
+      "errors": [],
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
     }
   ]
 }

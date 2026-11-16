@@ -1,4 +1,8 @@
 export const exploreMessages = {
+  "Clarion loam · Corn Belt, rain-fed": "Franco Clarion · Cinturón del Maíz, secano",
+  "Elburn silt loam · rain-fed": "Franco limoso Elburn · secano",
+  "Center-pivot field · High Plains, irrigated": "Parcela con pivote central · Grandes Llanuras, regadío",
+  "Nodaway silt loam · rain-fed": "Franco limoso Nodaway · secano",
   "Cancel": "Cancelar",
   "Explore": "Explorar",
   "Demo farms": "Granjas de ejemplo",

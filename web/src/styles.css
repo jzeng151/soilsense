@@ -238,7 +238,7 @@ a.sb-foot:hover { color: var(--color-text); text-decoration: underline; }
 .src-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
 .src-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem; display: flex; flex-direction: column; }
 .src-card p { margin: 0 0 0.4rem; color: var(--color-text-2); font-size: 0.95rem; }
-.src-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.6rem; }
+.src-card-head { display: flex; flex-wrap: wrap; /* WCAG 1.4.12: badge wraps under the title with text spacing at 320px */ justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.6rem; }
 .src-card h3 { margin: 0; font-size: 1.2rem; color: var(--color-heading); }
 .src-card .src-org { margin: 0.1rem 0 0; font-size: 0.82rem; color: var(--muted); }
 .src-card h4 { margin: 0.8rem 0 0.35rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }

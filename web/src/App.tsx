@@ -24,6 +24,7 @@ import { VegetationCard } from "./components/VegetationCard";
 
 import { CropTimingEvidence } from "./components/CropTimingEvidence";
 import { SmapCard } from "./components/SmapCard";
+import { SensorFitCard } from "./components/SensorFitCard";
 import { GraceWellsCard } from "./components/GraceWellsCard";
 import { EconomicsCard } from "./components/EconomicsCard";
 import { HistoricalScenarios } from "./components/HistoricalScenarios";
@@ -660,7 +661,7 @@ function MainFlow() {
                 )}
 
                 {/* stretch: data evidence */}
-
+                <SensorFitCard fields={selectedFields} plan={plan} />
                 <UsdmContext plan={plan} />
                 <WindScreenCard plan={plan} />
                 <EconomicsCard plan={plan} />

@@ -1,5 +1,15 @@
 # AI Activity Log — NASA Space Apps 2026
 
+> **Historical / upstream record - not a description of current SoilSense behaviour.** This is a copy of
+> Varun Pisharody's AI activity log for his Kansas crop rotation pipeline (`kansas-crop-rotation/`). Some entries describe
+> his newer upstream repository or earlier states of features such as Field Watch that have since changed. For current
+> behaviour, read the code and README on the branch you are judging.
+> Web links are a record of what was consulted on the entry date. NASA JPL and Earthdata reorganise their sites and some
+> links may now return 404; current sources are listed in `kansas-crop-rotation/reports/REFERENCES.md`.
+> Public copy: device and hostname details, a database service identifier and a travel itinerary were removed, and one
+> filename that contained the first characters of a token was redacted. No credential values are in this record.
+> Corrections to earlier entries are listed in [README.md](README.md#corrections).
+
 Purpose: a running record of everything Claude (Anthropic's AI assistant) has done for Varun Pisharody on this project, kept for integrity and AI-use disclosure. Model: Claude Fable 5.2 for entries 1–8; Claude Opus 5.5 from entry 9 (Varun switched models at about 11:45).
 
 All times are US Eastern, Saturday Nov 14, 2026. Newest entries go at the bottom.
@@ -262,10 +272,11 @@ All times are US Eastern, Saturday Nov 14, 2026. Newest entries go at the bottom
 - Sources: https://www.fao.org/gaez/gaezv4/en , https://previous.iiasa.ac.at/web/home/research/researchPrograms/water/GAEZ_v.4_Data_Portal.html , https://sswm.info/index.php/sswm-solutions-bop-markets/improving-water-and-sanitation-services-provided-public-institutions-0/crop-selection , https://sswm.info/water-nutrient-cycle/water-use/hardwares/conservation-soil-moisture/crop-selection , https://www.fao.org/land-water/databases-and-software/crop-information/sorghum/ar , https://sage.nelson.wisc.edu/data-and-models/datasets/crop-calendar-dataset , https://b2find.eudat.eu/dataset/69209d5c-289a-5b1a-aaa0-de72f9fec04c , https://eld.bl.uk/catalog/100156703004_0x000001
 
 ### 23. 12:33 — Request: recommended datasets; how to build the prediction model without overloading Varun's laptop; how to automate with agents; how to make it live; problems and fixes
-- Claude read its saved note on Varun's computer (ThinkPad P14s Gen 7: Core Ultra 7, 32 GB RAM, 1 TB SSD, RTX PRO 500; WSL2 Ubuntu; Windows Documents folder is in OneDrive).
+- Claude read its saved note on Varun's computer ([device details removed in this public copy]).
 - Claude ran two web searches (Space Apps 2026 AI rules; NASA IMERG precipitation) and fetched the 2026 Space Apps Participant Terms page.
 - Findings from sources:
   - Space Apps 2026 Participant Terms (updated Aug 7, 2026): no mention of AI or generative AI. They do require citing every source used, OSI-approved open licenses for non-NASA data/code with licenses listed in the submission, and say NASA may remove uncited material or revoke awards. This resolves the open item about AI rules: no AI-specific rule found; citing and this log cover the general citation rule.
+  - **Correction (added Nov 15, 2026):** the statement above was incomplete. It was based only on the Participant Terms page. Space Apps does have AI-specific requirements, summarised in the team's [docs/SUBMISSION.md](../../docs/SUBMISSION.md): AI-generated code and data must be acknowledged in descriptive text and in metadata, and AI-generated images and video need a visible watermark.
   - IMERG Early Run: global, 0.1° (about 10 km), minimum latency 4 hours, records from 1998 per GPM's page (another NASA catalog page says from 2000; minor conflict noted). Daily Early product (GPM_3IMERGDE) exists.
   - SPEI classes from a published table: SPEI ≤ −1 is moderately dry, ≤ −1.5 severely dry, ≤ −2 extremely dry.
 - Plan given (Claude's own design and engineering advice unless sourced above):
@@ -350,7 +361,7 @@ All times are US Eastern, Saturday Nov 14, 2026. Newest entries go at the bottom
 
 ### 31. 13:23–13:58 — Token file, region decisions, and the first data pipeline (download, clean, normals, check chart)
 - 13:23: Varun asked how to save the token. Claude gave Notepad steps for saving a new token to C:\SpaceApps2026\.edl_token.
-- 13:49: Varun asked Claude to check the file. Claude listed the folder: Notepad had saved it as "eyJ0eXAiOiJKV1QiLCJvcmlnaW4iOiJFYXJ.txt" (the file name was the token's first characters, which are the standard header shared by all Earthdata tokens and not secret). Claude renamed it to .edl_token without opening it, and checked only its shape (1 line, 712 characters, 2 dots, as a token should have).
+- 13:49: Varun asked Claude to check the file. Claude listed the folder: Notepad had saved it under a filename made of the token's first characters ([filename redacted in this public copy]). Claude renamed it to .edl_token without opening it, and checked only its shape (1 line, 712 characters, 2 dots, as a token should have).
 - Team decisions (Varun): option B (Claude writes scripts, Varun runs downloads) plus option A if possible; 13:50 US-first; 13:50 Illinois; 13:51 changed to Kansas. Varun noted his role is data analytics.
 - Network re-checked at 13:50 from the laptop's sandboxed shell: NASA POWER, CMR, AppEEARS, Harmony and Earthdata Login all still refused. So Varun runs download scripts; Claude does the analysis on files in the folder.
 - Varun offered computer use; Claude declined because computer use cannot type into terminals, so it could not run commands.

@@ -1,6 +1,16 @@
 # AI Activity Log — NASA Space Apps 2026 (Part 2: entries 33 onward)
 
-Continues `claude/ai-activity-log.md` (entries 1–32). Same purpose: a record of everything Claude (Anthropic's AI assistant, model Claude Opus 5.5) has done for Varun Pisharody, kept for integrity and AI-use disclosure. All times US Eastern, Saturday Nov 14, 2026; ranges are approximate. Newest entries at the bottom.
+> **Historical / upstream record - not a description of current SoilSense behaviour.** This is a copy of
+> Varun Pisharody's AI activity log for his Kansas crop rotation pipeline (`kansas-crop-rotation/`). Some entries describe
+> his newer upstream repository or earlier states of features such as Field Watch that have since changed. For current
+> behaviour, read the code and README on the branch you are judging.
+> Web links are a record of what was consulted on the entry date. NASA JPL and Earthdata reorganise their sites and some
+> links may now return 404; current sources are listed in `kansas-crop-rotation/reports/REFERENCES.md`.
+> Public copy: device and hostname details, a database service identifier and a travel itinerary were removed, and one
+> filename that contained the first characters of a token was redacted. No credential values are in this record.
+> Corrections to earlier entries are listed in [README.md](README.md#corrections).
+
+Continues [AI-activity-log-part1.md](AI-activity-log-part1.md) (entries 1–32). Same purpose: a record of everything Claude (Anthropic's AI assistant, model Claude Opus 5.5) has done for Varun Pisharody, kept for integrity and AI-use disclosure. All times US Eastern, Saturday Nov 14, 2026; ranges are approximate. Newest entries at the bottom.
 
 ## Summary of AI contribution (updated 15:40)
 
@@ -25,6 +35,7 @@ Continues `claude/ai-activity-log.md` (entries 1–32). Same purpose: a record o
 - **10_model_backtest.py:**
   - Logistic regression plus gradient boosting.
   - Target: at least 50% of the district in D1 or worse, 29 days after the last input day.
+    - **Correction (added Nov 15, 2026):** more exactly, the target is whether the unweighted mean of the counties' D1-or-worse percentages is at least 50, within an approximate district grouping (each county assigned to the nearest of 9 points; not official NASS districts and not area-weighted). See `kansas-crop-rotation/scripts/09_usdm_labels.py`.
   - Train 2015–22, test 2023–26.
   - Baselines: persistence and climatology.
 - **Timing flaw found and fixed:** the first version's "4 weeks ahead" was really 22 days. Changed to LEAD=5 weeks (29 days) and re-ran everything.
@@ -163,7 +174,7 @@ Continues `claude/ai-activity-log.md` (entries 1–32). Same purpose: a record o
   - Covers the JSON option, the database view with SQL, Python and Node examples, every field, display rules, honest wording, read-only login SQL for Varun to run, secret handling, refresh, gotchas and limits.
 
 ### 42. 15:55–16:11 — Read-only database login created (Varun, guided by Claude)
-- Claude gave step-by-step instructions. Varun ran SQL in the Tiger Cloud console (Data view, Scratchpad, service db-28639, database tsdb).
+- Claude gave step-by-step instructions. Varun ran SQL in the Tiger Cloud console (Data view, Scratchpad; [service identifier removed in this public copy]).
 - **Issues along the way:**
   - The Run (limit 100) button appends LIMIT and failed on GRANT. It was run without the limit.
   - CREATE ROLE reported that app_reader already existed from an earlier run.
@@ -428,7 +439,7 @@ Continues `claude/ai-activity-log.md` (entries 1–32). Same purpose: a record o
 - Next check-in scheduled for 08:15 Sunday (overnight quiet hours skipped).
 
 ### 63. Sun Nov 15, 06:59–08:16 — Directions; morning check-in (scheduled)
-- 06:59–07:25: Varun asked for directions back to the event. Claude confirmed the downtown A to Jay St–MetroTech, listed the stops from 14 St, and gave NYU Tandon's main address (6 MetroTech Center, Brooklyn, NY 11201). Claude noted the exact room is in the event page or registration email.
+- 06:59–07:25: Varun asked for directions back to the event venue; Claude gave them. [Route details removed in this public copy.]
 - 08:16 check-in:
   - GitHub: no new runs (latest is still #3, success).
   - SMAP: still no AppEEARS results (only the task files). Cutoff is noon.

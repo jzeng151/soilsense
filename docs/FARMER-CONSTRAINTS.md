@@ -1,6 +1,6 @@
 # Farmer-constraint screen and dryland treatment library preview (#38)
 
-This optional item is deliberately a **draft partial implementation**, not closure of #38. The existing app enumerates three-year plans; the requested R3 is four years. It must not be truncated or assigned copied treatment yields to fit.
+This optional item is deliberately a **partial implementation**, not closure of #38. The existing app enumerates three-year plans; the requested R3 is four years. It must not be truncated or assigned copied treatment yields to fit.
 
 ## Acceptance checklist
 
@@ -25,8 +25,16 @@ The grazing/haying options require farmer-confirmed livestock access or forage m
 
 `https://www.k-state.edu/irrigate/oow/p12/Schlegel12LIC.pdf` was attempted in terminal but could not be parsed as PDF; it is not cited as verification of R3 or transferred into R4.
 
+## Relationship to feat/plan-constraints
+
+This is a local read-only preview over the already-returned top three, not an in-search constraint implementation. It is expected to be superseded by `feat/plan-constraints`; the sourced dryland treatment library and whole-phase annualization helper remain independently useful. No plan API/cache keys, persisted settings, scores or Field Watch rules are changed.
+
+For cover treatments the crop screen includes oats and the remaining fallow interval; that applicability crop list is not a phase calendar or a four-year rotation. Actual phase durations remain unknown.
+
 ## Verification
 
-Pure Vitest tests (no new network dependency): crop exclusion/corn limit, current rotation retained with no eligible alternatives, dryland/forage toggles, unknown/over-limit/zero per-phase irrigation, treatment distinctions/unknown parameters, complete-cycle annualization and missing phase rejection. Existing engine tests remain unchanged. `npm test`, `npm run typecheck`, `npm run build` pass.
+Pure Vitest coverage includes crop exclusion/corn limits, unchanged input rankings, excluded current rotation retention, dryland/forage toggles, unknown/over-limit/zero per-phase irrigation, oat exclusion across the three cover treatments, Spanish dynamic evidence copy and complete-cycle annualization with invalid/missing phase rejection. The App change is only one import plus one mount in the first canonical evidence block; all incoming `next` content is retained.
 
-After deploy: exercise all toggles and a current rotation excluded by every constraint, verify no change to the original selected plan/Field Watch, inspect narrow-screen controls, and integrate all additive mounts inside the canonical shared App evidence block. Origin/next lacked that block at branch time; this branch adds it without rearranging layout.
+Local manual check (2026-11-15, port 8795): selected Kansas / Finney County, ran a rain-only plan, toggled every checkbox both ways and set maximum corn years to zero. Excluding all seven crop choices retained the current Corn → Soybean → Corn rotation with crop and corn-cap reasons, and showed no supplied alternatives passing. The ranked plan stayed Fallow → Winter wheat → Grain sorghum, with no new plan request from preview toggles. Field Watch is mounted only on the field-selection step; its `/api/fieldwatch/latest` response was identical before/after toggles (no local runs; no watch result invented). English and Spanish previews were inspected at 375 px; the card had no horizontal overflow. Switching language regenerates the main plan and resets the local-only preview, as changing plans does.
+
+Screenshots are retained locally in the active profile scratch `pr70-evidence/`: `desktop-excluded.png`, `phone-en.png`, `phone-es.png`. Typecheck, tests and build results plus the merged `origin/next` SHA are recorded in PR #70. No deployment was performed; deployed UI/accessibility and treatment-parameter/agronomist audits remain outside this preview.

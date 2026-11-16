@@ -1,8 +1,21 @@
 import { describe,it,expect } from "vitest";
-import { annualizedTreatmentMargin,checkFarmerConstraints,constrainRotationComparison,ROTATION_RESEARCH_LIBRARY,type FarmerConstraints,type ConstraintCandidate } from "../src/engine/farmerConstraints";
+import { messages, translate } from "../web/src/i18n";
+import { annualizedTreatmentMargin,checkFarmerConstraints,constrainRotationComparison,ROTATION_RESEARCH_LIBRARY,ROTATION_TRADEOFF,type FarmerConstraints,type ConstraintCandidate } from "../src/engine/farmerConstraints";
 const constraints:FarmerConstraints={excludedCrops:[],maxCornYears:1,drylandOnly:true,livestockOrForageMarket:false};
 const candidate:ConstraintCandidate={id:"fixture",label:"Fixture",crops:["winter_wheat","sorghum","fallow"],drylandAllowed:true,requiresForageMarket:false};
 describe("farmer constraints",()=>{
+ it("has Spanish copy for dynamic applicability reasons and research prose",()=>{
+   const copy=[ROTATION_TRADEOFF,...ROTATION_RESEARCH_LIBRARY.map(r=>r.residue).filter((v):v is string=>v!==null),"Dryland applicability undocumented","Treatment requires irrigation","Livestock access or a forage market required"];
+   for(const value of copy){expect(Object.hasOwn(messages,value)).toBe(true);expect(messages[value as keyof typeof messages]).not.toBe(value);}
+   expect(translate("es","Excluded crop: {crop}",{crop:"Maíz"})).toBe("Cultivo excluido: Maíz");
+   expect(translate("es","Exceeds maximum {count} corn years per displayed cycle",{count:0})).toContain("0 años de maíz");
+ });
+ it("does not mutate supplied rankings, current rotation or constraints",()=>{
+   const plans=[{...candidate,id:"first"},{...candidate,id:"second",crops:["corn"] as ConstraintCandidate["crops"]}];
+   const before=JSON.stringify({plans,candidate,constraints});
+   constrainRotationComparison(plans,candidate,{...constraints,excludedCrops:["corn"]});
+   expect(JSON.stringify({plans,candidate,constraints})).toBe(before);
+ });
  it("excludes oats in every cover treatment without excluding chemical fallow",()=>{
    const screen={...constraints,excludedCrops:["oats"] as ConstraintCandidate["crops"],livestockOrForageMarket:true};
    const covers=ROTATION_RESEARCH_LIBRARY.filter(r=>r.id.includes("oat-triticale"));

@@ -1,5 +1,6 @@
 import { useI18n } from "../i18n";
 import L from "leaflet";
+import { fieldLabel } from "./fieldLabels";
 import type { FieldBoundary } from "../../../src/shared/fields";
 import { useEffect, useRef } from "react";
 
@@ -141,7 +142,11 @@ export function MapPicker({ point, onPick, focus, boundaries, selectedFields, on
         bubblingMouseEvents: false,
       }).addTo(group);
       const label = document.createElement('span');
-      label.textContent = `${field.id} · ${t('{acres} acres', { acres: field.areaAcres.toFixed(1) })}`;
+      label.textContent = fieldLabel(field, language);
+      const source = document.createElement('small');
+      source.style.display = 'block';
+      source.textContent = field.id;
+      label.append(source);
       polygon.bindTooltip(label);
       polygon.on('click', (event: L.LeafletMouseEvent) => {
         L.DomEvent.stopPropagation(event.originalEvent);

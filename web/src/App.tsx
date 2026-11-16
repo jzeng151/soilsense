@@ -713,7 +713,7 @@ function MainFlow() {
                 {(plan.request.soilTest || plan.request.yieldRecords?.length) && <div className="jr-card">
                   <h2 className="jr-h2">{t("Your measurements in this plan")}</h2>
                   {plan.request.soilTest && <SoilComparison soil={plan.soil} test={plan.request.soilTest} />}
-                  <ul className="reasons">{plan.facts.filter((f) => f.id.startsWith("farmer-")).map((f) => <li key={f.id}>{f.text}</li>)}</ul>
+                  <ul className="reasons">{plan.facts.filter((f) => f.id.startsWith("farmer-")).map((f) => <li key={f.id}>{factText(f.text, language)}</li>)}</ul>
                 </div>}
                 <DataEvidence plan={plan} />
 

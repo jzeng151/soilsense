@@ -1,0 +1,365 @@
+{
+  "timestamp": "2026-11-15T16:59:29.697Z",
+  "observations": [
+    {
+      "language": "en",
+      "width": 1280,
+      "order": [
+        {
+          "tag": "A",
+          "text": "Skip to main content"
+        },
+        {
+          "tag": "A",
+          "text": "Soil SenseTeaching satellites to speak Farmer"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "New chat"
+        },
+        {
+          "tag": "A",
+          "text": "Rotation planner"
+        },
+        {
+          "tag": "A",
+          "text": "SproutAI"
+        },
+        {
+          "tag": "A",
+          "text": "Live call"
+        },
+        {
+          "tag": "A",
+          "text": "Sources"
+        },
+        {
+          "tag": "A",
+          "text": "Settings"
+        },
+        {
+          "tag": "A",
+          "text": "Data: NASA · USDA · FCC — see all sources"
+        },
+        {
+          "tag": "A",
+          "text": "Team sign-in"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "SUMMARY",
+          "text": "Plain-language glossary — what the terms mean"
+        },
+        {
+          "tag": "INPUT",
+          "text": "ZIP code"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Go"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "📍 Use my location"
+        },
+        {
+          "tag": "DIV",
+          "text": "+− NASA satellite Close-up photo Street map Plant greenness (NASA MODIS NDVI) Soil moistur"
+        },
+        {
+          "tag": "A",
+          "text": "+"
+        },
+        {
+          "tag": "A",
+          "text": "−"
+        },
+        {
+          "tag": "A",
+          "text": ""
+        },
+        {
+          "tag": "A",
+          "text": "Leaflet"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Iowa"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Illinois"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Kansas"
+        }
+      ],
+      "undersizedButtons": [],
+      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Crop rotation planner\"><ol class=\"jr-progress\" aria-label=\"Progress\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</span>Your field</but",
+      "planHeading": "Grow alfalfa (hay) in 2027, alfalfa (hay) in 2028, then alfalfa (hay) in 2029.",
+      "mapKeyboardSelection": true
+    },
+    {
+      "language": "en",
+      "width": 375,
+      "order": [
+        {
+          "tag": "A",
+          "text": "Skip to main content"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Open sidebar"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "SUMMARY",
+          "text": "Plain-language glossary — what the terms mean"
+        },
+        {
+          "tag": "INPUT",
+          "text": "ZIP code"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Go"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "📍 Use my location"
+        },
+        {
+          "tag": "DIV",
+          "text": "+− NASA satellite Close-up photo Street map Plant greenness (NASA MODIS NDVI) Soil moistur"
+        },
+        {
+          "tag": "A",
+          "text": "+"
+        },
+        {
+          "tag": "A",
+          "text": "−"
+        },
+        {
+          "tag": "A",
+          "text": ""
+        },
+        {
+          "tag": "A",
+          "text": "Leaflet"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Iowa"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Illinois"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Kansas"
+        }
+      ],
+      "undersizedButtons": [],
+      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Crop rotation planner\"><ol class=\"jr-progress\" aria-label=\"Progress\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</span>Your field</but",
+      "planHeading": "Grow alfalfa (hay) in 2027, alfalfa (hay) in 2028, then alfalfa (hay) in 2029.",
+      "mapKeyboardSelection": true
+    },
+    {
+      "language": "es",
+      "width": 1280,
+      "order": [
+        {
+          "tag": "A",
+          "text": "Skip to main content"
+        },
+        {
+          "tag": "A",
+          "text": "Soil SenseTeaching satellites to speak Farmer"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "New chat"
+        },
+        {
+          "tag": "A",
+          "text": "Rotation planner"
+        },
+        {
+          "tag": "A",
+          "text": "SproutAI"
+        },
+        {
+          "tag": "A",
+          "text": "Live call"
+        },
+        {
+          "tag": "A",
+          "text": "Sources"
+        },
+        {
+          "tag": "A",
+          "text": "Settings"
+        },
+        {
+          "tag": "A",
+          "text": "Data: NASA · USDA · FCC — see all sources"
+        },
+        {
+          "tag": "A",
+          "text": "Team sign-in"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "SUMMARY",
+          "text": "Plain-language glossary — what the terms mean"
+        },
+        {
+          "tag": "INPUT",
+          "text": "Código postal de EE. UU."
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Buscar"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "📍 Usar mi ubicación"
+        },
+        {
+          "tag": "DIV",
+          "text": "+− Satélite de NASA Imagen de detalle Mapa de calles Verdor de la vegetación (NASA MODIS N"
+        },
+        {
+          "tag": "A",
+          "text": "+"
+        },
+        {
+          "tag": "A",
+          "text": "−"
+        },
+        {
+          "tag": "A",
+          "text": ""
+        },
+        {
+          "tag": "A",
+          "text": "Leaflet"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Iowa"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Illinois"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Kansas"
+        }
+      ],
+      "undersizedButtons": [],
+      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Crop rotation planner\"><ol class=\"jr-progress\" aria-label=\"Progreso\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</span>Tu parcela</but",
+      "planHeading": "Recomendamos cultivar alfalfa / heno en 2027, cultivar alfalfa / heno en 2028 y después cultivar alfalfa / heno en 2029.",
+      "mapKeyboardSelection": true
+    },
+    {
+      "language": "es",
+      "width": 375,
+      "order": [
+        {
+          "tag": "A",
+          "text": "Skip to main content"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Open sidebar"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "SUMMARY",
+          "text": "Plain-language glossary — what the terms mean"
+        },
+        {
+          "tag": "INPUT",
+          "text": "Código postal de EE. UU."
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Buscar"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "📍 Usar mi ubicación"
+        },
+        {
+          "tag": "DIV",
+          "text": "+− Satélite de NASA Imagen de detalle Mapa de calles Verdor de la vegetación (NASA MODIS N"
+        },
+        {
+          "tag": "A",
+          "text": "+"
+        },
+        {
+          "tag": "A",
+          "text": "−"
+        },
+        {
+          "tag": "A",
+          "text": ""
+        },
+        {
+          "tag": "A",
+          "text": "Leaflet"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Iowa"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Illinois"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Kansas"
+        }
+      ],
+      "undersizedButtons": [],
+      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Crop rotation planner\"><ol class=\"jr-progress\" aria-label=\"Progreso\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</span>Tu parcela</but",
+      "planHeading": "Recomendamos cultivar alfalfa / heno en 2027, cultivar alfalfa / heno en 2028 y después cultivar alfalfa / heno en 2029.",
+      "mapKeyboardSelection": true
+    }
+  ]
+}

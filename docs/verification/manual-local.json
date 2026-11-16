@@ -1,0 +1,630 @@
+{
+  "manual": {
+    "status": 200,
+    "data": {
+      "runs": [
+        {
+          "runId": "story-ia:2026-11-12",
+          "fieldId": "story-ia",
+          "fieldName": "Story County, IA",
+          "dataThrough": "2026-11-12",
+          "status": "ok",
+          "headline": "OK: 2.45 in of rain in 14 days, wetter than usual for this time of year",
+          "reasons": [
+            {
+              "id": "rain14",
+              "text": "Rain Oct 30\u2013Nov 12: 2.45 in, wetter than 91% of the same two weeks in 1991\u20132025 (typical: 0.91 in).",
+              "source": "NASA POWER daily (PRECTOTCORR)"
+            },
+            {
+              "id": "balance14",
+              "text": "Water balance Oct 30\u2013Nov 12 (context only): rain minus estimated crop water demand is +1.75 in (demand 0.69 in, FAO-56 Hargreaves).",
+              "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+            },
+            {
+              "id": "rootzone",
+              "text": "Root-zone soil wetness (7 days to Nov 12): 97th percentile for this time of year.",
+              "source": "NASA POWER daily (GWETROOT)"
+            },
+            {
+              "id": "season",
+              "text": "Outside the main growing season: this matters most for winter wheat and for refilling soil water before spring.",
+              "source": "SoilSense"
+            }
+          ],
+          "metrics": {
+            "windowStart": "2026-10-30",
+            "dataThrough": "2026-11-12",
+            "rain14Mm": 62.1,
+            "normalRain14Mm": 23.2,
+            "rainPercentile": 91,
+            "et014Mm": 17.5,
+            "balance14Mm": 44.6,
+            "rootzoneDate": "2026-11-12",
+            "rootzoneWetness": 0.711,
+            "rootzonePercentile": 97,
+            "normalYears": 35,
+            "normalPeriod": "1991\u20132025",
+            "kansas": null
+          },
+          "sources": [
+            {
+              "name": "NASA POWER daily",
+              "url": "https://power.larc.nasa.gov/",
+              "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+            },
+            {
+              "name": "FAO-56 Hargreaves ET0",
+              "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+              "detail": "Crop water demand from daily temperature and latitude"
+            }
+          ],
+          "trigger": "manual",
+          "firstCheckedAt": 1794785843683,
+          "checkedAt": 1794785843683,
+          "checkCount": 1
+        },
+        {
+          "runId": "champaign-il:2026-11-12",
+          "fieldId": "champaign-il",
+          "fieldName": "Champaign County, IL",
+          "dataThrough": "2026-11-12",
+          "status": "watch",
+          "headline": "Watch: soil drier than usual (9th percentile)",
+          "reasons": [
+            {
+              "id": "rain14",
+              "text": "Rain Oct 30\u2013Nov 12: 0.94 in, about normal for these two weeks in 1991\u20132025 (51st percentile) (typical: 0.92 in).",
+              "source": "NASA POWER daily (PRECTOTCORR)"
+            },
+            {
+              "id": "balance14",
+              "text": "Water balance Oct 30\u2013Nov 12 (context only): rain minus estimated crop water demand is +0.10 in (demand 0.84 in, FAO-56 Hargreaves).",
+              "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+            },
+            {
+              "id": "rootzone",
+              "text": "Root-zone soil wetness (7 days to Nov 12): 9th percentile for this time of year.",
+              "source": "NASA POWER daily (GWETROOT)"
+            },
+            {
+              "id": "season",
+              "text": "Outside the main growing season: this matters most for winter wheat and for refilling soil water before spring.",
+              "source": "SoilSense"
+            }
+          ],
+          "metrics": {
+            "windowStart": "2026-10-30",
+            "dataThrough": "2026-11-12",
+            "rain14Mm": 23.8,
+            "normalRain14Mm": 23.3,
+            "rainPercentile": 51,
+            "et014Mm": 21.3,
+            "balance14Mm": 2.5,
+            "rootzoneDate": "2026-11-12",
+            "rootzoneWetness": 0.541,
+            "rootzonePercentile": 9,
+            "normalYears": 35,
+            "normalPeriod": "1991\u20132025",
+            "kansas": null
+          },
+          "sources": [
+            {
+              "name": "NASA POWER daily",
+              "url": "https://power.larc.nasa.gov/",
+              "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+            },
+            {
+              "name": "FAO-56 Hargreaves ET0",
+              "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+              "detail": "Crop water demand from daily temperature and latitude"
+            }
+          ],
+          "trigger": "manual",
+          "firstCheckedAt": 1794785843683,
+          "checkedAt": 1794785843683,
+          "checkCount": 1
+        },
+        {
+          "runId": "finney-ks:2026-11-12",
+          "fieldId": "finney-ks",
+          "fieldName": "Finney County, KS",
+          "dataThrough": "2026-11-12",
+          "status": "ok",
+          "headline": "OK: 1.04 in of rain in 14 days, wetter than usual for this time of year",
+          "reasons": [
+            {
+              "id": "rain14",
+              "text": "Rain Oct 30\u2013Nov 12: 1.04 in, wetter than 89% of the same two weeks in 1991\u20132025 (typical: 0.11 in).",
+              "source": "NASA POWER daily (PRECTOTCORR)"
+            },
+            {
+              "id": "balance14",
+              "text": "Water balance Oct 30\u2013Nov 12 (context only): rain minus estimated crop water demand is \u22120.02 in (demand 1.06 in, FAO-56 Hargreaves).",
+              "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+            },
+            {
+              "id": "rootzone",
+              "text": "Root-zone soil wetness (7 days to Nov 12): 100th percentile for this time of year.",
+              "source": "NASA POWER daily (GWETROOT)"
+            },
+            {
+              "id": "kansas",
+              "text": "Kansas weekly outlook for Finney County (data through 2026-11-09, context only): alert \"normal\".",
+              "source": "Kansas Crop Rotation Advice pipeline (V. Pisharody, team): NASA POWER + U.S. Drought Monitor"
+            },
+            {
+              "id": "season",
+              "text": "Outside the main growing season: this matters most for winter wheat and for refilling soil water before spring.",
+              "source": "SoilSense"
+            }
+          ],
+          "metrics": {
+            "windowStart": "2026-10-30",
+            "dataThrough": "2026-11-12",
+            "rain14Mm": 26.3,
+            "normalRain14Mm": 2.8,
+            "rainPercentile": 89,
+            "et014Mm": 26.9,
+            "balance14Mm": -0.6,
+            "rootzoneDate": "2026-11-12",
+            "rootzoneWetness": 0.386,
+            "rootzonePercentile": 100,
+            "normalYears": 35,
+            "normalPeriod": "1991\u20132025",
+            "kansas": {
+              "county": "Finney County",
+              "alert": "normal",
+              "basis": "normal-year water",
+              "droughtProbability": 0.07,
+              "rootzonePct": 89,
+              "dataThrough": "2026-11-09"
+            }
+          },
+          "sources": [
+            {
+              "name": "NASA POWER daily",
+              "url": "https://power.larc.nasa.gov/",
+              "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+            },
+            {
+              "name": "FAO-56 Hargreaves ET0",
+              "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+              "detail": "Crop water demand from daily temperature and latitude"
+            },
+            {
+              "name": "Kansas Crop Rotation Advice (team pipeline, V. Pisharody)",
+              "url": "https://pub-fe3948f31a9c462890b089ed5356c336.r2.dev/app_rotation_advice.json",
+              "detail": "Weekly drought outlook, data through 2026-11-09"
+            }
+          ],
+          "trigger": "manual",
+          "firstCheckedAt": 1794785843683,
+          "checkedAt": 1794785843683,
+          "checkCount": 1
+        },
+        {
+          "runId": "lancaster-ne:2026-11-12",
+          "fieldId": "lancaster-ne",
+          "fieldName": "Lancaster County, NE",
+          "dataThrough": "2026-11-12",
+          "status": "ok",
+          "headline": "OK: 1.53 in of rain in 14 days, wetter than usual for this time of year",
+          "reasons": [
+            {
+              "id": "rain14",
+              "text": "Rain Oct 30\u2013Nov 12: 1.53 in, wetter than 80% of the same two weeks in 1991\u20132025 (typical: 0.51 in).",
+              "source": "NASA POWER daily (PRECTOTCORR)"
+            },
+            {
+              "id": "balance14",
+              "text": "Water balance Oct 30\u2013Nov 12 (context only): rain minus estimated crop water demand is +0.75 in (demand 0.78 in, FAO-56 Hargreaves).",
+              "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+            },
+            {
+              "id": "rootzone",
+              "text": "Root-zone soil wetness (7 days to Nov 12): 94th percentile for this time of year.",
+              "source": "NASA POWER daily (GWETROOT)"
+            },
+            {
+              "id": "season",
+              "text": "Outside the main growing season: this matters most for winter wheat and for refilling soil water before spring.",
+              "source": "SoilSense"
+            }
+          ],
+          "metrics": {
+            "windowStart": "2026-10-30",
+            "dataThrough": "2026-11-12",
+            "rain14Mm": 38.7,
+            "normalRain14Mm": 13,
+            "rainPercentile": 80,
+            "et014Mm": 19.7,
+            "balance14Mm": 19,
+            "rootzoneDate": "2026-11-12",
+            "rootzoneWetness": 0.651,
+            "rootzonePercentile": 94,
+            "normalYears": 35,
+            "normalPeriod": "1991\u20132025",
+            "kansas": null
+          },
+          "sources": [
+            {
+              "name": "NASA POWER daily",
+              "url": "https://power.larc.nasa.gov/",
+              "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+            },
+            {
+              "name": "FAO-56 Hargreaves ET0",
+              "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+              "detail": "Crop water demand from daily temperature and latitude"
+            }
+          ],
+          "trigger": "manual",
+          "firstCheckedAt": 1794785843683,
+          "checkedAt": 1794785843683,
+          "checkCount": 1
+        }
+      ],
+      "lastCronAt": null,
+      "lastCheckAt": 1794785843683,
+      "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st\u201330th, D1 = 11th\u201320th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+      "thresholds": {
+        "windowDays": 14,
+        "rootDays": 7,
+        "maxLagDays": 21,
+        "minNormalYears": 20,
+        "dryPct": 20,
+        "watchPct": 30
+      },
+      "schedule": {
+        "cron": "17 * * * *",
+        "description": "Every hour at :17 (Cloudflare Cron Trigger)"
+      },
+      "fields": [
+        {
+          "id": "story-ia",
+          "name": "Story County, IA",
+          "lat": 42.0563,
+          "lon": -93.495
+        },
+        {
+          "id": "champaign-il",
+          "name": "Champaign County, IL",
+          "lat": 40.048,
+          "lon": -88.33
+        },
+        {
+          "id": "finney-ks",
+          "name": "Finney County, KS",
+          "lat": 38.1095,
+          "lon": -100.706
+        },
+        {
+          "id": "lancaster-ne",
+          "name": "Lancaster County, NE",
+          "lat": 40.73,
+          "lon": -96.55
+        }
+      ],
+      "cooldown": false
+    }
+  },
+  "cooldown": {
+    "status": 200,
+    "data": {
+      "runs": [
+        {
+          "runId": "story-ia:2026-11-12",
+          "fieldId": "story-ia",
+          "fieldName": "Story County, IA",
+          "dataThrough": "2026-11-12",
+          "status": "ok",
+          "headline": "OK: 2.45 in of rain in 14 days, wetter than usual for this time of year",
+          "reasons": [
+            {
+              "id": "rain14",
+              "text": "Rain Oct 30\u2013Nov 12: 2.45 in, wetter than 91% of the same two weeks in 1991\u20132025 (typical: 0.91 in).",
+              "source": "NASA POWER daily (PRECTOTCORR)"
+            },
+            {
+              "id": "balance14",
+              "text": "Water balance Oct 30\u2013Nov 12 (context only): rain minus estimated crop water demand is +1.75 in (demand 0.69 in, FAO-56 Hargreaves).",
+              "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+            },
+            {
+              "id": "rootzone",
+              "text": "Root-zone soil wetness (7 days to Nov 12): 97th percentile for this time of year.",
+              "source": "NASA POWER daily (GWETROOT)"
+            },
+            {
+              "id": "season",
+              "text": "Outside the main growing season: this matters most for winter wheat and for refilling soil water before spring.",
+              "source": "SoilSense"
+            }
+          ],
+          "metrics": {
+            "windowStart": "2026-10-30",
+            "dataThrough": "2026-11-12",
+            "rain14Mm": 62.1,
+            "normalRain14Mm": 23.2,
+            "rainPercentile": 91,
+            "et014Mm": 17.5,
+            "balance14Mm": 44.6,
+            "rootzoneDate": "2026-11-12",
+            "rootzoneWetness": 0.711,
+            "rootzonePercentile": 97,
+            "normalYears": 35,
+            "normalPeriod": "1991\u20132025",
+            "kansas": null
+          },
+          "sources": [
+            {
+              "name": "NASA POWER daily",
+              "url": "https://power.larc.nasa.gov/",
+              "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+            },
+            {
+              "name": "FAO-56 Hargreaves ET0",
+              "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+              "detail": "Crop water demand from daily temperature and latitude"
+            }
+          ],
+          "trigger": "manual",
+          "firstCheckedAt": 1794785843683,
+          "checkedAt": 1794785843683,
+          "checkCount": 1
+        },
+        {
+          "runId": "champaign-il:2026-11-12",
+          "fieldId": "champaign-il",
+          "fieldName": "Champaign County, IL",
+          "dataThrough": "2026-11-12",
+          "status": "watch",
+          "headline": "Watch: soil drier than usual (9th percentile)",
+          "reasons": [
+            {
+              "id": "rain14",
+              "text": "Rain Oct 30\u2013Nov 12: 0.94 in, about normal for these two weeks in 1991\u20132025 (51st percentile) (typical: 0.92 in).",
+              "source": "NASA POWER daily (PRECTOTCORR)"
+            },
+            {
+              "id": "balance14",
+              "text": "Water balance Oct 30\u2013Nov 12 (context only): rain minus estimated crop water demand is +0.10 in (demand 0.84 in, FAO-56 Hargreaves).",
+              "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+            },
+            {
+              "id": "rootzone",
+              "text": "Root-zone soil wetness (7 days to Nov 12): 9th percentile for this time of year.",
+              "source": "NASA POWER daily (GWETROOT)"
+            },
+            {
+              "id": "season",
+              "text": "Outside the main growing season: this matters most for winter wheat and for refilling soil water before spring.",
+              "source": "SoilSense"
+            }
+          ],
+          "metrics": {
+            "windowStart": "2026-10-30",
+            "dataThrough": "2026-11-12",
+            "rain14Mm": 23.8,
+            "normalRain14Mm": 23.3,
+            "rainPercentile": 51,
+            "et014Mm": 21.3,
+            "balance14Mm": 2.5,
+            "rootzoneDate": "2026-11-12",
+            "rootzoneWetness": 0.541,
+            "rootzonePercentile": 9,
+            "normalYears": 35,
+            "normalPeriod": "1991\u20132025",
+            "kansas": null
+          },
+          "sources": [
+            {
+              "name": "NASA POWER daily",
+              "url": "https://power.larc.nasa.gov/",
+              "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+            },
+            {
+              "name": "FAO-56 Hargreaves ET0",
+              "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+              "detail": "Crop water demand from daily temperature and latitude"
+            }
+          ],
+          "trigger": "manual",
+          "firstCheckedAt": 1794785843683,
+          "checkedAt": 1794785843683,
+          "checkCount": 1
+        },
+        {
+          "runId": "finney-ks:2026-11-12",
+          "fieldId": "finney-ks",
+          "fieldName": "Finney County, KS",
+          "dataThrough": "2026-11-12",
+          "status": "ok",
+          "headline": "OK: 1.04 in of rain in 14 days, wetter than usual for this time of year",
+          "reasons": [
+            {
+              "id": "rain14",
+              "text": "Rain Oct 30\u2013Nov 12: 1.04 in, wetter than 89% of the same two weeks in 1991\u20132025 (typical: 0.11 in).",
+              "source": "NASA POWER daily (PRECTOTCORR)"
+            },
+            {
+              "id": "balance14",
+              "text": "Water balance Oct 30\u2013Nov 12 (context only): rain minus estimated crop water demand is \u22120.02 in (demand 1.06 in, FAO-56 Hargreaves).",
+              "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+            },
+            {
+              "id": "rootzone",
+              "text": "Root-zone soil wetness (7 days to Nov 12): 100th percentile for this time of year.",
+              "source": "NASA POWER daily (GWETROOT)"
+            },
+            {
+              "id": "kansas",
+              "text": "Kansas weekly outlook for Finney County (data through 2026-11-09, context only): alert \"normal\".",
+              "source": "Kansas Crop Rotation Advice pipeline (V. Pisharody, team): NASA POWER + U.S. Drought Monitor"
+            },
+            {
+              "id": "season",
+              "text": "Outside the main growing season: this matters most for winter wheat and for refilling soil water before spring.",
+              "source": "SoilSense"
+            }
+          ],
+          "metrics": {
+            "windowStart": "2026-10-30",
+            "dataThrough": "2026-11-12",
+            "rain14Mm": 26.3,
+            "normalRain14Mm": 2.8,
+            "rainPercentile": 89,
+            "et014Mm": 26.9,
+            "balance14Mm": -0.6,
+            "rootzoneDate": "2026-11-12",
+            "rootzoneWetness": 0.386,
+            "rootzonePercentile": 100,
+            "normalYears": 35,
+            "normalPeriod": "1991\u20132025",
+            "kansas": {
+              "county": "Finney County",
+              "alert": "normal",
+              "basis": "normal-year water",
+              "droughtProbability": 0.07,
+              "rootzonePct": 89,
+              "dataThrough": "2026-11-09"
+            }
+          },
+          "sources": [
+            {
+              "name": "NASA POWER daily",
+              "url": "https://power.larc.nasa.gov/",
+              "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+            },
+            {
+              "name": "FAO-56 Hargreaves ET0",
+              "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+              "detail": "Crop water demand from daily temperature and latitude"
+            },
+            {
+              "name": "Kansas Crop Rotation Advice (team pipeline, V. Pisharody)",
+              "url": "https://pub-fe3948f31a9c462890b089ed5356c336.r2.dev/app_rotation_advice.json",
+              "detail": "Weekly drought outlook, data through 2026-11-09"
+            }
+          ],
+          "trigger": "manual",
+          "firstCheckedAt": 1794785843683,
+          "checkedAt": 1794785843683,
+          "checkCount": 1
+        },
+        {
+          "runId": "lancaster-ne:2026-11-12",
+          "fieldId": "lancaster-ne",
+          "fieldName": "Lancaster County, NE",
+          "dataThrough": "2026-11-12",
+          "status": "ok",
+          "headline": "OK: 1.53 in of rain in 14 days, wetter than usual for this time of year",
+          "reasons": [
+            {
+              "id": "rain14",
+              "text": "Rain Oct 30\u2013Nov 12: 1.53 in, wetter than 80% of the same two weeks in 1991\u20132025 (typical: 0.51 in).",
+              "source": "NASA POWER daily (PRECTOTCORR)"
+            },
+            {
+              "id": "balance14",
+              "text": "Water balance Oct 30\u2013Nov 12 (context only): rain minus estimated crop water demand is +0.75 in (demand 0.78 in, FAO-56 Hargreaves).",
+              "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+            },
+            {
+              "id": "rootzone",
+              "text": "Root-zone soil wetness (7 days to Nov 12): 94th percentile for this time of year.",
+              "source": "NASA POWER daily (GWETROOT)"
+            },
+            {
+              "id": "season",
+              "text": "Outside the main growing season: this matters most for winter wheat and for refilling soil water before spring.",
+              "source": "SoilSense"
+            }
+          ],
+          "metrics": {
+            "windowStart": "2026-10-30",
+            "dataThrough": "2026-11-12",
+            "rain14Mm": 38.7,
+            "normalRain14Mm": 13,
+            "rainPercentile": 80,
+            "et014Mm": 19.7,
+            "balance14Mm": 19,
+            "rootzoneDate": "2026-11-12",
+            "rootzoneWetness": 0.651,
+            "rootzonePercentile": 94,
+            "normalYears": 35,
+            "normalPeriod": "1991\u20132025",
+            "kansas": null
+          },
+          "sources": [
+            {
+              "name": "NASA POWER daily",
+              "url": "https://power.larc.nasa.gov/",
+              "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+            },
+            {
+              "name": "FAO-56 Hargreaves ET0",
+              "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+              "detail": "Crop water demand from daily temperature and latitude"
+            }
+          ],
+          "trigger": "manual",
+          "firstCheckedAt": 1794785843683,
+          "checkedAt": 1794785843683,
+          "checkCount": 1
+        }
+      ],
+      "lastCronAt": null,
+      "lastCheckAt": 1794785843683,
+      "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st\u201330th, D1 = 11th\u201320th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+      "thresholds": {
+        "windowDays": 14,
+        "rootDays": 7,
+        "maxLagDays": 21,
+        "minNormalYears": 20,
+        "dryPct": 20,
+        "watchPct": 30
+      },
+      "schedule": {
+        "cron": "17 * * * *",
+        "description": "Every hour at :17 (Cloudflare Cron Trigger)"
+      },
+      "fields": [
+        {
+          "id": "story-ia",
+          "name": "Story County, IA",
+          "lat": 42.0563,
+          "lon": -93.495
+        },
+        {
+          "id": "champaign-il",
+          "name": "Champaign County, IL",
+          "lat": 40.048,
+          "lon": -88.33
+        },
+        {
+          "id": "finney-ks",
+          "name": "Finney County, KS",
+          "lat": 38.1095,
+          "lon": -100.706
+        },
+        {
+          "id": "lancaster-ne",
+          "name": "Lancaster County, NE",
+          "lat": 40.73,
+          "lon": -96.55
+        }
+      ],
+      "cooldown": true,
+      "message": "Checked less than a minute ago. Showing that result."
+    }
+  },
+  "ask": {
+    "status": 200,
+    "data": {
+      "answer": "Soil pH is 6.5.",
+      "source": "facts"
+    }
+  }
+}

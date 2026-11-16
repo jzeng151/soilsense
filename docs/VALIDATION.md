@@ -63,3 +63,7 @@ On a center-pivot field in Finney County, KS (2016–2024), our modelled crop wa
 - USDA stopped publishing separate rain-fed yields around 2010 in most counties, so many recent checks use "all fields", which include irrigated fields.
 - Winter wheat is the weakest crop (freeze, disease and grain prices drive its yields as much as water).
 - No agronomist or farmer review yet.
+
+## Field Watch rule backtest (separate exploratory analysis)
+
+The [Kansas Field Watch backtest report](validation/KANSAS-BACKTEST.md) recalculates recorded candidate alerts against regional USDM context and annual district yield anomalies. It is not the crop-yield validation above and does not establish live accuracy, optimal thresholds, field-level stress or professional agronomy approval. Reproduction commands, input hashes, reviewer critiques and the remaining #53 acceptance gaps are included.

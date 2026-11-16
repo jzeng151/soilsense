@@ -31,8 +31,8 @@
 .sb-scrim { display: none; }
 .sb-toggle { display: none; }
 @media (max-width: 860px) {
-  .sidebar { position: fixed; left: 0; top: 0; transform: translateX(-100%); transition: transform 0.2s ease; box-shadow: var(--shadow-lg); }
-  .sidebar.open { transform: none; }
+  .sidebar { position: fixed; left: 0; top: 0; transform: translateX(-100%); visibility: hidden; transition: transform 0.2s ease; box-shadow: var(--shadow-lg); }
+  .sidebar.open { transform: none; visibility: visible; }
   .sb-scrim.show { display: block; position: fixed; inset: 0; background: var(--color-scrim); z-index: 30; }
   .sb-toggle { display: grid; place-items: center; position: absolute; top: 0.7rem; left: 0.7rem; z-index: 20; width: 38px; height: 38px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-sm); cursor: pointer; }
   .sb-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
@@ -228,6 +228,13 @@
 .auth-eyebrow { margin: 0 0 1rem; font-size: 0.875rem; letter-spacing: var(--tracking-label); text-transform: uppercase; font-weight: 600; color: var(--color-brand-highlight); }
 .auth-tagline { margin: 0.6rem 0 0; font-size: 1.35rem; line-height: 1.4; color: var(--color-brand-panel-text); }
 .auth-sprout { align-self: center; max-width: 60%; height: auto; }
+
+/* Research evidence: native details/summary stays keyboard accessible at narrow widths. */
+.sc-research-state { margin: 0.6rem 1rem; padding: 0.65rem; border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-2); font-size: 0.85rem; overflow-wrap: anywhere; }
+.sc-research-quote { max-width: 100%; min-width: 0; margin: 0.7rem 0; padding: 0.8rem; border: 1px solid var(--color-border); border-radius: 10px; overflow-wrap: anywhere; }
+.sc-research-quote summary { cursor: pointer; min-height: 44px; }
+.sc-research-quote summary:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.sc-research-quote blockquote { margin: 0.7rem 0; padding-left: 0.8rem; border-left: 3px solid var(--color-border); white-space: pre-wrap; }
 
 /* Mobile: leave room for the menu button above the planner's progress steps */
 @media (max-width: 860px) { .route-planner .jr-main { padding-top: 3.8rem; } }

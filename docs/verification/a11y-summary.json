@@ -1,0 +1,451 @@
+{
+  "timestamp": "2026-11-15T23:46:02.974Z",
+  "base": "http://127.0.0.1:8792",
+  "revision": "386ebb6ab100d534ab96ff6b4ccdb62037465914",
+  "browser": "159.0.8154.6",
+  "axe": "4.14.0",
+  "tags": [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa"
+  ],
+  "scans": [
+    {
+      "state": "landing",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": 2
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "state": "field-confirmation",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 7
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": 2
+        }
+      ]
+    },
+    {
+      "state": "three-questions",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 2
+        }
+      ]
+    },
+    {
+      "state": "two-goals-selected",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 2
+        }
+      ]
+    },
+    {
+      "state": "kansas-plan-expanded",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 76
+        }
+      ]
+    },
+    {
+      "state": "field-watch",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "state": "admin-docs",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "state": "admin-docs-review-fixture",
+      "language": "en",
+      "width": 1280,
+      "fixture": "Synthetic local-only document API interception; not authenticated server coverage",
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "state": "landing",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": 2
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "state": "field-confirmation",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 4
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": 2
+        }
+      ]
+    },
+    {
+      "state": "three-questions",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 2
+        }
+      ]
+    },
+    {
+      "state": "two-goals-selected",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 2
+        }
+      ]
+    },
+    {
+      "state": "kansas-plan-expanded",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 77
+        }
+      ]
+    },
+    {
+      "state": "field-watch",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "state": "admin-docs",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "state": "admin-docs-review-fixture",
+      "language": "en",
+      "width": 375,
+      "fixture": "Synthetic local-only document API interception; not authenticated server coverage",
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "state": "landing",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": 2
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "state": "field-confirmation",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 7
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": 2
+        }
+      ]
+    },
+    {
+      "state": "three-questions",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "state": "two-goals-selected",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "state": "kansas-plan-expanded",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 75
+        }
+      ]
+    },
+    {
+      "state": "field-watch",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "state": "admin-docs",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "state": "admin-docs-review-fixture",
+      "language": "es",
+      "width": 1280,
+      "fixture": "Synthetic local-only document API interception; not authenticated server coverage",
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "state": "landing",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": 2
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "state": "field-confirmation",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 3
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": 2
+        }
+      ]
+    },
+    {
+      "state": "three-questions",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "state": "two-goals-selected",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "state": "kansas-plan-expanded",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 75
+        }
+      ]
+    },
+    {
+      "state": "field-watch",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "state": "admin-docs",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "state": "admin-docs-review-fixture",
+      "language": "es",
+      "width": 375,
+      "fixture": "Synthetic local-only document API interception; not authenticated server coverage",
+      "overflow": false,
+      "violations": [],
+      "incomplete": []
+    }
+  ]
+}

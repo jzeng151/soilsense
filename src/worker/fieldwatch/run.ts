@@ -2,6 +2,11 @@
 // run_id = "<field>:<data day>"), and publishes run events to the live room when that binding exists.
 // Called by the Cloudflare Cron Trigger (scheduled handler) and by POST /api/fieldwatch/run.
 
+import type { DistrictOutlook } from "../../shared/districtOutlook";
+import type { UsdmCategoryResult } from "../../shared/types";
+import { usdmCategoryFor } from "../data/usdm";
+import { districtOutlookFor } from "./outlook";
+import type { CropId } from "../../shared/types";
 import type { Env } from "../env";
 import { getDailyClimate } from "../data/power";
 import { yearsFor } from "../service";
@@ -16,14 +21,16 @@ export interface WatchedField {
   /** 5-digit county FIPS (used for the Kansas outlook). */
   fips: string;
   state: string;
+  /** Demo planner crop tags (not a confirmed current-season crop). */
+  crops?: CropId[];
 }
 
 /** The demo farms (same points as the planner's examples and scripts/prefetch-demo.mjs). */
 export const WATCHED_FIELDS: WatchedField[] = [
-  { id: "story-ia", name: "Story County, IA", lat: 42.0563, lon: -93.495, fips: "19169", state: "IA" },
-  { id: "champaign-il", name: "Champaign County, IL", lat: 40.048, lon: -88.33, fips: "17019", state: "IL" },
-  { id: "finney-ks", name: "Finney County, KS", lat: 38.1095, lon: -100.706, fips: "20055", state: "KS" },
-  { id: "lancaster-ne", name: "Lancaster County, NE", lat: 40.73, lon: -96.55, fips: "31109", state: "NE" },
+  { id: "story-ia", name: "Story County, IA", lat: 42.0563, lon: -93.495, fips: "19169", state: "IA", crops: ["corn"] },
+  { id: "champaign-il", name: "Champaign County, IL", lat: 40.048, lon: -88.33, fips: "17019", state: "IL", crops: ["soybean", "corn"] },
+  { id: "finney-ks", name: "Finney County, KS", lat: 38.1095, lon: -100.706, fips: "20055", state: "KS", crops: ["corn"] },
+  { id: "lancaster-ne", name: "Lancaster County, NE", lat: 40.73, lon: -96.55, fips: "31109", state: "NE", crops: ["corn", "soybean"] },
 ];
 
 export type Trigger = "cron" | "manual";
@@ -49,10 +56,12 @@ export interface FieldRun {
 export interface FieldWatchDeps {
   recent: (db: D1Database | undefined, f: WatchedField, today: Date) => Promise<DayMap>;
   history: (env: Env, f: WatchedField, today: Date) => Promise<{ map: DayMap; first: number; last: number }>;
+  usdm?: (db: D1Database | undefined, fips: string, now: Date) => Promise<UsdmCategoryResult>;
   kansas: (db: D1Database | undefined, fips: string) => Promise<KansasSignal | null>;
 }
 
 export const defaultDeps: FieldWatchDeps = {
+  usdm: (db, fips, now) => usdmCategoryFor(fips, isoDate(now), { db, now }),
   recent: (db, f, today) => getRecentDays(db, f.lat, f.lon, today),
   history: async (env, f, today) => {
     const y = yearsFor(env, today);
@@ -60,6 +69,16 @@ export const defaultDeps: FieldWatchDeps = {
   },
   kansas: (db, fips) => getKansasSignal(db, fips),
 };
+
+export async function loadDistrictOutlook(env: Env, f: WatchedField, now: Date, kansas: KansasSignal | null, deps: FieldWatchDeps): Promise<DistrictOutlook | undefined> {
+  if (f.state !== "KS" || !/^20\d{3}$/.test(f.fips) || !kansas || !["watch", "warning"].includes(kansas.alert) || !deps.usdm) return;
+  try {
+    return districtOutlookFor(f.state, f.fips, kansas, await deps.usdm(env.DB, f.fips, now));
+  } catch {
+    // An optional context service must never turn a valid rule result into an error.
+    return;
+  }
+}
 
 export function sourcesFor(f: WatchedField, kansas: KansasSignal | null) {
   const s = [
@@ -75,14 +94,15 @@ export function sourcesFor(f: WatchedField, kansas: KansasSignal | null) {
   return s;
 }
 
-export async function checkField(env: Env, f: WatchedField, now: Date, deps: FieldWatchDeps = defaultDeps): Promise<{ result: WatchResult; kansas: KansasSignal | null }> {
+export async function checkField(env: Env, f: WatchedField, now: Date, deps: FieldWatchDeps = defaultDeps): Promise<{ result: WatchResult; kansas: KansasSignal | null; districtOutlook?: DistrictOutlook }> {
   const [recent, history, kansas] = await Promise.all([
     deps.recent(env.DB, f, now),
     deps.history(env, f, now),
     f.state === "KS" ? deps.kansas(env.DB, f.fips) : Promise.resolve(null),
   ]);
   const result = evaluateField({ fieldName: f.name, lat: f.lat, today: isoDate(now), recent, history: history.map, historyYears: { first: history.first, last: history.last }, kansas });
-  return { result, kansas };
+  const districtOutlook = await loadDistrictOutlook(env, f, now, kansas, deps);
+  return { result, kansas, districtOutlook };
 }
 
 async function saveRun(db: D1Database, run: Omit<FieldRun, "firstCheckedAt" | "checkCount">): Promise<FieldRun> {
@@ -144,7 +164,7 @@ export async function runFieldWatch(env: Env, trigger: Trigger, opts: { now?: Da
             status: s.value.result.status as RunStatus,
             headline: s.value.result.headline,
             reasons: s.value.result.reasons,
-            metrics: s.value.result.metrics as unknown as Record<string, unknown>,
+            metrics: { ...s.value.result.metrics, districtOutlook: s.value.districtOutlook },
             sources: sourcesFor(f, s.value.kansas),
           }
         : {

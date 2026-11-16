@@ -30,6 +30,9 @@
   // Everything still works without it (deterministic templates are the fallback).
   "ai": { "binding": "AI" },
 
+  // Optional URL document rendering. Enable only after Browser Rendering is enabled in the account:
+  // "browser": { "binding": "BROWSER" },
+
   // Caps public Scout chat use (Gemini calls cost money): per visitor IP, per minute.
   "ratelimits": [{ "name": "SCOUT_LIMITER", "namespace_id": "1001", "simple": { "limit": 20, "period": 60 } }],
 
@@ -47,13 +50,24 @@
   ],
 
   // Field Watch: check every watched field each hour in the background (scheduled() in src/worker/index.ts).
-  "triggers": { "crons": ["17 * * * *"] },
+  "triggers": { "crons": ["17 * * * *", "43 5 * * *"] },
+
+  // NASA POWER snapshot refresh: daily at 05:43 UTC (second cron above) and POST /api/refresh/run (ADMIN_TOKEN).
+  "workflows": [{ "name": "soilsense-power-refresh", "binding": "POWER_REFRESH", "class_name": "PowerRefreshWorkflow" }, { "name": "soilsense-doc-ingest", "binding": "DOC_INGEST", "class_name": "DocIngestWorkflow" }],
+
+  // Immutable, content-addressed evidence bundles. Create with: npx wrangler r2 bucket create soilsense-evidence
+  "r2_buckets": [{ "binding": "EVIDENCE", "bucket_name": "soilsense-evidence" }, { "binding": "DOCS", "bucket_name": "soilsense-docs" }],
+
+  "queues": {
+    "consumers": [{ "queue": "soilsense-docs", "max_batch_size": 10, "max_batch_timeout": 5, "max_retries": 3 }],
+    "producers": [{ "binding": "DOC_QUEUE", "queue": "soilsense-docs" }]
+  },
 
   // Cited research passages (#7). Create the index + metadata indexes BEFORE ingesting: see docs/RESEARCH.md.
   "vectorize": [{ "binding": "RESEARCH_INDEX", "index_name": "soilsense-research-v1" }],
 
   "vars": {
-    "AI_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "AI_MODEL": "@cf/google/gemma-4-26b-a4b-it",
     "TWILIO_VALIDATE": "true",
     "HISTORY_START_YEAR": "1991"
   }

@@ -99,7 +99,7 @@ select, .ask input { padding: 0.7rem 0.8rem; border: 1px solid var(--line); bord
 .plan-row-money { text-align: right; font-weight: 700; display: flex; align-items: baseline; gap: 0.4rem; justify-content: flex-end; flex-wrap: wrap; }
 .plan-row-money small { color: var(--muted); font-weight: 500; font-size: 0.8rem; }
 .plan-row-muted .plan-row-title { color: var(--muted); }
-.plan-row-muted .chip { opacity: 0.75; }
+.plan-row-muted .chip { color: var(--color-on-crop); }
 @media (max-width: 640px) {
   .plan-row { grid-template-columns: 1fr; gap: 0.4rem; }
   .plan-row-money { justify-content: flex-start; text-align: left; }
@@ -119,7 +119,8 @@ select, .ask input { padding: 0.7rem 0.8rem; border: 1px solid var(--line); bord
 .charts summary, .fine summary { cursor: pointer; font-weight: 600; color: var(--green); }
 .trends { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.75rem; margin-top: 0.9rem; }
 .trend { margin: 0; border: 1px solid var(--line); border-radius: 12px; padding: 0.7rem 0.8rem 0.4rem; }
-.trend figcaption { display: flex; justify-content: space-between; gap: 0.5rem; align-items: flex-start; font-size: 0.85rem; margin-bottom: 0.3rem; }
+.trend figcaption { display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-start; font-size: 0.85rem; margin-bottom: 0.3rem; }
+.trend figcaption .badge { max-width: 100%; white-space: normal; }
 .trend-title { font-weight: 650; }
 .trend svg { width: 100%; height: auto; display: block; }
 .trend .grid { stroke: var(--color-chart-grid); }
@@ -353,3 +354,25 @@ a.sb-foot:hover { color: var(--color-text); text-decoration: underline; }
 .jr-hero .sprout { flex: none; }
 .jr-answer .jr-hero { margin-bottom: 0.75rem; }
 @media (max-width: 560px) { .jr-hero { flex-direction: column; align-items: flex-start; gap: 0.5rem; } }
+
+/* ---------- Accessibility (WCAG 2.1 AA) ---------- */
+/* Text only screen readers hear. */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+/* 2.4.1 Bypass Blocks: hidden until focused. */
+.skip-link { position: absolute; left: 0.75rem; top: -3rem; z-index: 100; padding: 0.6rem 1rem; border-radius: var(--radius-md); background: var(--color-cta); color: var(--color-on-cta); font-weight: 600; text-decoration: none; }
+.skip-link:focus { top: 0.75rem; }
+.shell-main:focus { outline: none; }
+/* 1.4.11 Non-text Contrast: form-field outlines need 3:1 against the page. */
+:root :is(select, .ask input, .jr-zip input, .st-login input, .set-text, .auth-field input, .sc-composer) { border-color: var(--color-input-border); }
+/* 2.4.7 Focus Visible: these fields replaced the outline with a faint glow; restore a clear ring. */
+:root :is(.jr-zip input, .set-text, .auth-field input, .ask input, .st-login input, select):focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+:root .sc-composer:focus-within { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+/* 2.1.1 Keyboard: show a crosshair while the map has keyboard focus; Enter picks that spot. */
+.map:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.map:focus-visible::after { content: ""; position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 0 2px var(--color-focus); z-index: 1000; pointer-events: none; }
+.jr-note:empty { margin: 0; }
+/* 1.4.1 Use of Color: map credit links are underlined, not just colored. */
+.leaflet-control-attribution a { text-decoration: underline; color: var(--color-info); }
+/* Keep screen-reader-only labels inside their message box; otherwise, inside a scrolling transcript,
+   they are placed relative to the page and stretch it (which also un-sticks the sidebar). */
+.lv-say, .st-msg, .lv-who, .st-who { position: relative; }

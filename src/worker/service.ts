@@ -1,5 +1,6 @@
 // Fetches every data source for a location (in parallel, cached) and runs the engine.
 
+import { hasMeasurements } from "../shared/measurements";
 import { mergeDaymet } from "../engine/climate";
 import { buildPlan } from "../engine/plan";
 import type { FieldResponse, PlanRequest, PlanResponse } from "../shared/types";
@@ -13,6 +14,7 @@ import { getDailyClimate } from "./data/power";
 import { getSoil } from "./data/soil";
 import type { Env } from "./env";
 import { cached } from "./lib/cache";
+import { planMemory, writeFieldMemory } from "./fieldMemory";
 
 export function yearsFor(env: Env, now = new Date()) {
   const year = now.getUTCFullYear();
@@ -62,30 +64,50 @@ export interface PlanOpts {
 }
 
 /** Bump whenever the engine's output changes, so cached plans from older code are never served. */
-export const PLAN_ENGINE_VERSION = "e3";
+export const PLAN_ENGINE_VERSION = "e7-diverse-cpu-safe";
+
+/** Cloudflare terminates an isolate on 1102; a try/catch cannot recover from it. */
+export class PlanNotReady extends Error {
+  constructor() {
+    super("This plan is not precomputed yet. Please try again shortly or ask the operator to warm this field. Fresh planning requires a larger Worker CPU budget.");
+  }
+}
+
+export function planCacheKey(request: PlanRequest, opts: PlanOpts = {}, now = new Date()): string {
+  const water = request.water ?? (request.irrigated ? "full" : "rain");
+  return [
+    `plan:${PLAN_ENGINE_VERSION}`,
+    request.lat.toFixed(4),
+    request.lon.toFixed(4),
+    water,
+    request.priority,
+    ...(request.goals?.length ? [`goals=${request.goals.join(",")}`] : []),
+    (request.recentCrops ?? []).join(","),
+    request.language ?? "en",
+    opts.skipCropHistory ? "nocdl" : "cdl",
+    opts.placeName ?? "",
+    now.toISOString().slice(0, 10),
+  ].join(":");
+}
 
 export async function makePlan(
   env: Env,
   request: PlanRequest,
   opts: PlanOpts = {},
 ): Promise<PlanResponse> {
-  if (opts.now) return makePlanFresh(env, request, opts); // tests pin the date: always compute
-  const water = request.water ?? (request.irrigated ? "full" : "rain");
-  const key = [
-    `plan:${PLAN_ENGINE_VERSION}`,
-    request.lat.toFixed(4),
-    request.lon.toFixed(4),
-    water,
-    request.priority,
-    (request.recentCrops ?? []).join(","),
-    request.language ?? "en",
-    opts.skipCropHistory ? "nocdl" : "cdl",
-    opts.placeName ?? "",
-    new Date().toISOString().slice(0, 10),
-  ].join(":");
+  // Default is inline (fresh computation). Set PLAN_COMPUTE_MODE=cache-only on a Workers Free account, where an
+  // uncached plan exceeds the 10 ms CPU budget, and prewarm with scripts/prefetch-demo.mjs.
+  const inline = env.PLAN_COMPUTE_MODE !== "cache-only";
+  // Personal data never reaches shared caches, even on the low-budget fallback path.
+  if (opts.now || hasMeasurements(request)) {
+    if (!inline) throw new PlanNotReady();
+    return makePlanFresh(env, request, opts);
+  }
+  const key = planCacheKey(request, opts);
   const t0 = Date.now();
   try {
     const { value, cache } = await cached(env.DB, key, 6 * 3600, async () => {
+      if (!inline) throw new PlanNotReady();
       const meta: FreshMeta = { complete: true };
       const plan = await makePlanFresh(env, request, opts, meta);
       // A plan built while a key source was down (county, USDA) is shown but never saved, so the next
@@ -188,7 +210,7 @@ export async function logPlan(
   },
 ): Promise<string> {
   const id = crypto.randomUUID();
-  if (!env.DB) return id;
+  if (!env.DB || hasMeasurements(entry.plan.request)) return id;
   const top = entry.plan.plans[0];
   try {
     await env.DB.prepare(
@@ -211,6 +233,7 @@ export async function logPlan(
         entry.smsSent ? 1 : 0,
       )
       .run();
+    await writeFieldMemory(env, planMemory(entry.plan, id));
   } catch (err) {
     console.warn(JSON.stringify({ msg: "plan log failed", err: String(err) }));
   }

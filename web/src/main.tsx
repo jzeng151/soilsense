@@ -4,10 +4,12 @@ import "leaflet/dist/leaflet.css";
 import "./tokens.css"; // brand guide tokens: load first, everything else reads from it
 import "./styles.css";
 import "./shell.css";
+import "./a11y.css";
 import { Shell } from "./Shell";
+import { LanguageProvider } from "./i18n";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Shell />
+    <LanguageProvider><Shell /></LanguageProvider>
   </StrictMode>,
 );

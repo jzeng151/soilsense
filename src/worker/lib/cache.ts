@@ -7,6 +7,16 @@ const MAX_MEMORY_ENTRIES = 200;
 
 export const DAY_SECONDS = 86_400;
 
+/** Trusted precompute import: fail if durable storage fails; do not acknowledge memory-only warming. */
+export async function putCached<T>(db: D1Database, key: string, ttlSeconds: number, value: T): Promise<void> {
+  const now = Date.now();
+  const serialized = JSON.stringify(value);
+  const expires = now + ttlSeconds * 1000;
+  await db.prepare("INSERT INTO cache (key, value, expires_at, created_at) VALUES (?1, ?2, ?3, ?4) ON CONFLICT(key) DO UPDATE SET value = excluded.value, expires_at = excluded.expires_at, created_at = excluded.created_at")
+    .bind(key, serialized, expires, now).run();
+  remember(key, serialized, expires);
+}
+
 export async function cached<T>(
   db: D1Database | undefined,
   key: string,

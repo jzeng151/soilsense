@@ -1,3 +1,4 @@
+import { useI18n } from "../i18n";
 import { useState, type FormEvent } from "react";
 import { signIn, signUp, type User } from "../auth";
 import { LogoMark } from "../components/Logo";
@@ -25,6 +26,7 @@ const COPY: Record<Mode, { title: string; lead: string; submit: string; busy: st
 };
 
 export function AuthPage({ onSignedIn }: { onSignedIn: (u: User) => void }) {
+  const { text: localize } = useI18n();
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,10 +64,10 @@ export function AuthPage({ onSignedIn }: { onSignedIn: (u: User) => void }) {
         <div className="auth-pitch">
           <p className="auth-eyebrow">NASA Space Apps NYC 2026</p>
           <h1>Soil Sense</h1>
-          <p className="auth-tagline">Teaching satellites to speak Farmer.</p>
+          <p className="auth-tagline">{localize("Teaching satellites to speak Farmer.")}</p>
         </div>
         <Sprout mood="hello" width={230} className="auth-sprout" />
-        <p className="auth-brand-foot">Meet Sprout. Rises where the soil needs a rest. Speaks your language, by phone.</p>
+        <p className="auth-brand-foot">{localize("Meet Sprout. Rises where the soil needs a rest. Speaks your language, by phone.")}</p>
       </aside>
 
       <main className="auth-main">
@@ -75,23 +77,23 @@ export function AuthPage({ onSignedIn }: { onSignedIn: (u: User) => void }) {
             <span>Soil Sense</span>
           </div>
 
-          <div className="auth-tabs" role="tablist" aria-label="Account">
+          <div className="auth-tabs" role="tablist" aria-label={localize("Account")}>
             <button type="button" role="tab" aria-selected={mode === "signin"} className={mode === "signin" ? "on" : ""} onClick={() => switchMode("signin")}>
-              Sign in
+              {localize("Sign in")}
             </button>
             <button type="button" role="tab" aria-selected={mode === "signup"} className={mode === "signup" ? "on" : ""} onClick={() => switchMode("signup")}>
-              Create account
+              {localize("Create account")}
             </button>
           </div>
 
           <header className="auth-head">
-            <h2>{t.title}</h2>
-            <p>{t.lead}</p>
+            <h2>{localize(t.title)}</h2>
+            <p>{localize(t.lead)}</p>
           </header>
 
           <form className="auth-form" onSubmit={submit} noValidate>
             <label className="auth-field" htmlFor="auth-email">
-              <span>Email</span>
+              <span>{localize("Email")}</span>
               <input
                 id="auth-email"
                 type="email"
@@ -106,45 +108,45 @@ export function AuthPage({ onSignedIn }: { onSignedIn: (u: User) => void }) {
             </label>
 
             <label className="auth-field" htmlFor="auth-password">
-              <span>Password</span>
+              <span>{localize("Password")}</span>
               <div className="auth-pw">
                 <input
                   id="auth-password"
                   type={showPw ? "text" : "password"}
                   autoComplete={mode === "signin" ? "current-password" : "new-password"}
-                  placeholder={mode === "signup" ? "At least 8 characters" : "Your password"}
+                  placeholder={localize(mode === "signup" ? "At least 8 characters" : "Your password")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={mode === "signup" ? 8 : undefined}
                   maxLength={128}
                 />
-                <button type="button" className="auth-pw-toggle" onClick={() => setShowPw((s) => !s)} aria-pressed={showPw} aria-label={showPw ? "Hide password" : "Show password"}>
-                  {showPw ? "Hide" : "Show"}
+                <button type="button" className="auth-pw-toggle" onClick={() => setShowPw((s) => !s)} aria-pressed={showPw} aria-label={localize(showPw ? "Hide password" : "Show password")}>
+                  {localize(showPw ? "Hide" : "Show")}
                 </button>
               </div>
-              {mode === "signup" && <small>Use 8 or more characters. A short phrase is easy to remember.</small>}
+              {mode === "signup" && <small>{localize("Use 8 or more characters. A short phrase is easy to remember.")}</small>}
             </label>
 
             {error && (
               <p className="auth-error" role="alert">
-                {error}
+                {localize(error)}
               </p>
             )}
 
             <button type="submit" className="auth-submit" disabled={busy || !email || !password}>
-              {busy ? t.busy : t.submit}
+              {localize(busy ? t.busy : t.submit)}
             </button>
           </form>
 
           <p className="auth-switch">
-            {t.switchText}{" "}
+            {localize(t.switchText)}{" "}
             <button type="button" onClick={() => switchMode(mode === "signin" ? "signup" : "signin")}>
-              {t.switchCta}
+              {localize(t.switchCta)}
             </button>
           </p>
         </div>
-        <p className="auth-fine">Built on NASA and USDA data.</p>
+        <p className="auth-fine">{localize("Built on NASA and USDA data.")}</p>
       </main>
     </div>
   );

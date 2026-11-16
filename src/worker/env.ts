@@ -1,9 +1,11 @@
 export interface Env {
+  /** Earthdata bearer token: server-side only, never exposed in evidence URLs. */
+  EARTHDATA_TOKEN?: string;
   ASSETS?: Fetcher;
   DB?: D1Database;
   AI?: Ai;
   AI_MODEL?: string;
-  /** Cloudflare AI Gateway id for Workers AI calls (default "default", auto-created on first request). */
+  /** Cloudflare AI Gateway id for every model/provider call (default "default", auto-created on first request). */
   AI_GATEWAY_ID?: string;
   /** Scout's model: a Workers AI model ("@cf/...") or a Gemini model; the other provider is the fallback. */
   SCOUT_MODEL?: string;
@@ -17,6 +19,8 @@ export interface Env {
   /** OpenET API key (https://etdata.org): measured field water use, used to check the water model. Optional. */
   OPENET_API_KEY?: string;
   PUBLIC_BASE_URL?: string;
+  /** Inline planning needs a paid CPU budget (or local Wrangler). Default: serve only prewarmed plans. */
+  PLAN_COMPUTE_MODE?: "inline" | "cache-only";
   PLAN_START_YEAR?: string;
   HISTORY_START_YEAR?: string;
   ADMIN_TOKEN?: string;
@@ -36,4 +40,16 @@ export interface Env {
   FIELD_AGENT?: DurableObjectNamespace;
   /** Vectorize index for cited research passages (#7): soilsense-research-v1, 768 dims, cosine. Optional. */
   RESEARCH_INDEX?: Vectorize;
+  /** NASA POWER refresh Workflow (PowerRefreshWorkflow): fetch -> validate -> publish current snapshots (optional). */
+  POWER_REFRESH?: Workflow<{ trigger?: "cron" | "manual" }>;
+  /** R2 bucket for immutable, content-addressed evidence bundles (optional; D1 still indexes snapshots without it). */
+  EVIDENCE?: R2Bucket;
+  /** Document pipeline (docs/INGEST.md): uploads bucket soilsense-docs (optional). */
+  DOCS?: R2Bucket;
+  /** Optional Browser Rendering for URL intake; absence uses local HTML-to-text. */
+  BROWSER?: Fetcher;
+  /** Document pipeline queue (R2 event notifications land here); producer binding for retries (optional). */
+  DOC_QUEUE?: Queue;
+  /** Document pipeline Workflow (DocIngestWorkflow): extract -> chunk -> review -> embed -> upsert (optional). */
+  DOC_INGEST?: Workflow<import("../shared/ingest").DocIngestParams>;
 }

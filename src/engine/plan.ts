@@ -2,12 +2,14 @@
 // so the whole engine is unit-testable with fixtures.
 
 import type { CountyInfo, CountyLosses, CropHistory, CropId, CropValidation, DroughtReplay, EtMonth, NassData, PlanRequest, PlanResponse, SoilProfile, WaterCheck, WaterLevel, WaterOption } from "../shared/types";
+import { effectiveSoil, validateMeasurements } from "../shared/measurements";
 import { buildIndicators, type DailyClimate } from "./climate";
-import { buildExplanation, buildFacts } from "./explain";
+import { buildExplanation, buildFacts, CROP_ES } from "./explain";
 import { ALL_CROPS, CROPS } from "./crops";
 import { availableCrops, FALLOW_MAX_ANNUAL_RAIN_MM, statePotential } from "./regions";
 import { buildDroughtReplays } from "./droughtReplay";
-import { buildWaterContext, evaluateCropClimate, LIMITED_IRRIGATION_MM, makeReplay, meanAnnualRainMm, runEngine } from "./rotation";
+import { planAdvice } from "./pestNotes";
+import { buildWaterContext, type CropWeatherMemo, evaluateCropClimate, LIMITED_IRRIGATION_MM, makeReplay, meanAnnualRainMm, runEngine } from "./rotation";
 import { usdaInputs, type RecentYield, type ValidationSeries } from "./usda";
 import { checkWaterUse, validateCrop, type YieldRecord } from "./validate";
 
@@ -104,7 +106,10 @@ const WATER_WORDS: Record<WaterLevel, string> = {
 };
 
 export function buildPlan(inputs: PlanInputs): PlanResponse {
-  const { request, climate, soil, cropHistory, county, planStartYear, now } = inputs;
+  const { request, climate, cropHistory, county, planStartYear, now } = inputs;
+  const checked = validateMeasurements({ soilTest: request.soilTest, yieldRecords: request.yieldRecords }, now.getUTCFullYear());
+  if (typeof checked === "string") throw new Error(checked);
+  const soil = effectiveSoil(inputs.soil, checked.soilTest);
   const history = effectiveHistory(cropHistory, request.recentCrops);
   const targetYear = planStartYear + 1;
   const level = waterLevelOf(request);
@@ -115,7 +120,14 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   const wheatDeadline = new Date(Date.UTC(planStartYear - 1, 9, 15));
   const firstYearWheatAllowed = now.getTime() < wheatDeadline.getTime();
 
-  const annualRain = meanAnnualRainMm(buildWaterContext(climate, soil, false));
+  const waterBase = buildWaterContext(climate, soil, false);
+  const waterMemo = new Map<WaterLevel, ReturnType<typeof buildWaterContext>>();
+  const waterFor = (w: WaterLevel) => {
+    let ctx = waterMemo.get(w);
+    if (!ctx) waterMemo.set(w, ctx = { ...waterBase, irrigated: w === "full", allowanceMm: w === "limited" ? LIMITED_IRRIGATION_MM : 0 });
+    return ctx;
+  };
+  const annualRain = meanAnnualRainMm(waterBase);
   const dryRegion = annualRain < FALLOW_MAX_ANNUAL_RAIN_MM;
   const region = availableCrops(county?.stateCode, ALL_CROPS);
   const prices = inputs.nass?.prices ?? {};
@@ -123,20 +135,21 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
 
   // Weather work is shared: the crop climate depends only on full irrigation (canopy cooling) and on
   // whether trends are applied, so compute each variant once per plan.
+  const weatherMemo: CropWeatherMemo = new Map();
   const ccMemo = new Map<string, ReturnType<typeof evaluateCropClimate>>();
   const cropClimateFor = (full: boolean, adjust: boolean) => {
     const key = `${full}:${adjust}`;
     let cc = ccMemo.get(key);
     if (!cc) {
-      cc = evaluateCropClimate(climate, soil, full, adjust ? targetYear : climate.lastYear, { adjustTrends: adjust });
+      cc = evaluateCropClimate(climate, soil, full, adjust ? targetYear : climate.lastYear, { adjustTrends: adjust, weatherMemo });
       ccMemo.set(key, cc);
     }
     return cc;
   };
 
   // Real past years replayed rain-fed, without trend shifting: used to check the model and to calibrate.
-  const replay = makeReplay(climate, soil, false, 0, cropClimateFor(false, false));
-  const fullReplay = makeReplay(climate, soil, true, 0, cropClimateFor(true, false));
+  const replay = makeReplay(climate, soil, false, 0, cropClimateFor(false, false), waterFor("rain"));
+  const fullReplay = makeReplay(climate, soil, true, 0, cropClimateFor(true, false), waterFor("full"));
   const replays = new Map<CropId, ReturnType<typeof replay>>();
   for (const crop of region.crops) replays.set(crop, replay(crop, usualPreviousCrop(crop, dryRegion)));
   const fracOf = (rs: ReturnType<typeof replay>) => {
@@ -145,13 +158,26 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   };
   const recentFrac = (crop: CropId) => fracOf(replays.get(crop) ?? []);
   const table = statePotential(county?.stateCode);
+  // Records describe the selected practice. Keep one inferred local potential across water comparisons.
+  const localReplay = level === "full" ? fullReplay : level === "limited" ? makeReplay(climate, soil, false, LIMITED_IRRIGATION_MM, cropClimateFor(false, false), waterFor("limited")) : replay;
+  const local = new Map<CropId, { count: number; average: number; fraction: number; fallback: number; years: number[] }>();
+  for (const crop of region.crops) {
+    const records = checked.yieldRecords?.filter((r) => r.crop === crop) ?? [];
+    if (!records.length) continue;
+    const rs = localReplay(crop, usualPreviousCrop(crop, dryRegion));
+    const fallbackFrac = fracOf(rs);
+    const fractions = records.map((r) => rs.find((y) => y.year === r.year)?.yieldFrac);
+    local.set(crop, { count: records.length, average: records.reduce((a, r) => a + r.value, 0) / records.length,
+      fraction: Math.max(0.25, fractions.reduce<number>((a, f) => a + (f ?? fallbackFrac), 0) / fractions.length),
+      fallback: fractions.filter((f) => f === undefined).length, years: records.map((r) => r.year) });
+  }
 
   /** Everything that depends on how much water the field gets. */
   const plansFor = (w: WaterLevel, quick = false) => {
     const full = w === "full";
     const allowance = w === "limited" ? LIMITED_IRRIGATION_MM : 0;
     const cropClimate = cropClimateFor(full, true);
-    const water = buildWaterContext(climate, soil, full, allowance);
+    const water = waterFor(w);
     // Fallow where it is a real practice (dry, rain-fed), or where the farmer already uses it.
     const fallowAllowed = (w === "rain" && dryRegion) || history.includes("fallow");
     const crops = fallowAllowed ? [...region.crops, "fallow" as CropId] : region.crops;
@@ -171,10 +197,19 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       const frac = Math.max(0.25, calFrac(c));
       yieldOverrides[c] = Math.round(Math.min(POTENTIAL_BOUNDS[1] * base, Math.max(POTENTIAL_BOUNDS[0] * base, rec.value / frac)) * 10) / 10;
     }
+    const calibrations = [...local].map(([crop, rec]) => {
+      const base = table[crop] ?? CROPS[crop].baseYield;
+      const before = yieldOverrides[crop] ?? base;
+      // Add half of the local-minus-regional potential difference, bounded as for NASS calibration.
+      const after = Math.round(Math.min(POTENTIAL_BOUNDS[1] * base, Math.max(POTENTIAL_BOUNDS[0] * base, before + 0.5 * (rec.average / rec.fraction - before))) * 10) / 10;
+      yieldOverrides[crop] = after;
+      return { crop, ...rec, before, after };
+    });
     const result = runEngine({
       cropClimate,
       history,
       priority: request.priority,
+      goals: request.goals,
       planStartYear,
       baseYieldOverrides: yieldOverrides,
       firstYearWheatAllowed,
@@ -184,7 +219,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       prices: priceMap,
       ...(quick ? { quickSearch: 30 } : {}),
     });
-    return { ...result, cropClimate, crops, fallowAllowed, recentYields, usda, allowance };
+    return { ...result, cropClimate, crops, fallowAllowed, recentYields, usda, allowance, calibrations };
   };
 
   const main = plansFor(level);
@@ -216,7 +251,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   validation.sort((a, b) => b.years.length - a.years.length || b.correlation - a.correlation);
 
   // The field's water level, replayed on real past years (no trend shifting).
-  const fieldReplay = level === "full" ? fullReplay : level === "limited" ? makeReplay(climate, soil, false, LIMITED_IRRIGATION_MM, cropClimateFor(false, false)) : replay;
+  const fieldReplay = level === "full" ? fullReplay : level === "limited" ? makeReplay(climate, soil, false, LIMITED_IRRIGATION_MM, cropClimateFor(false, false), waterFor("limited")) : replay;
 
   // Water check: our crop water use vs. OpenET's measured water use, for the crops actually grown here.
   let waterCheck: WaterCheck | null = null;
@@ -250,10 +285,14 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       })
     : [];
 
+  for (const plan of [...plans, ...(currentPractice ? [currentPractice] : [])]) {
+    plan.includes_non_corn_year = plan.years.some((y) => y.crop !== "corn");
+  }
+
   const facts = buildFacts({
     climate: climateSummary,
     cropClimate,
-    soil,
+    soil: checked.soilTest ? { ...soil, source: "Farmer-entered soil test for supplied properties; USDA soil map for other properties" } : soil,
     history: cropHistory,
     effectiveHistory: history,
     plans,
@@ -262,6 +301,48 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     losses: inputs.losses ?? null,
     countyName: county?.countyName ?? null,
   });
+
+  // Keep the original map in the response; all engine consumers above use the effective profile.
+  const soilFacts = request.soilTest;
+  if (soilFacts) {
+    const es = request.language === "es";
+    for (const [key, label, unit] of [["ph", "pH", ""], ["organicMatterPct", es ? "materia orgánica" : "organic matter", "%"], ["awc", es ? "agua disponible" : "available water capacity", " cm/cm"]] as const) {
+      if (soilFacts[key] === undefined && !(key === "awc" && soilFacts.texture)) continue;
+      const value = `${soil[key]}${unit}`;
+      const mapped = inputs.soil[key] === undefined ? (es ? "no disponible" : "unavailable") : `${Number(inputs.soil[key]!.toFixed(key === "awc" ? 3 : 1))}${unit}`;
+      const inferred = key === "awc" && soilFacts.awc === undefined;
+      const text = es
+        ? `Usando tu análisis de suelo: ${label} ${value} en lugar del mapa de suelos: ${mapped}.`
+        : `Using your soil test ${label} ${value} instead of the soil map's ${mapped}.`;
+      facts.push({ id: `farmer-soil-${key}`, kind: "soil", source: es ? "Datos del agricultor (sin verificar)" : "Farmer-entered soil test (unverified)", text: text + (inferred ? (es ? ` Capacidad aproximada a partir de la textura ${soilFacts.texture}; no medida.` : ` Approximate capacity inferred from your ${soilFacts.texture} texture; not measured.`) : "") });
+    }
+    if (soilFacts.organicMatterPct !== undefined) facts.push({ id: "farmer-om-limit", kind: "soil", source: "SoilSense model limitation", text: es ? "La materia orgánica reemplaza el valor del mapa en la evidencia; el modelo no calcula cambios de rendimiento ni de agua a partir de ella." : "Your organic matter replaces the map value in soil evidence; the model does not infer yield or water capacity changes from organic matter." });
+  }
+
+  for (const c of main.calibrations) {
+    const es = request.language === "es";
+    const unit = c.crop === "alfalfa" ? "US short tons/acre" : "bu/acre";
+    facts.push({ id: `farmer-yield-${c.crop}`, kind: "agronomy", source: es ? "Rendimientos del agricultor (sin verificar); calibración SoilSense" : "Farmer-entered harvest records (unverified); SoilSense local calibration",
+      text: es
+        ? `Calibrado con tus ${c.count} años de rendimientos de ${CROP_ES[c.crop]} (${c.years.join(", ")}), promedio ${c.average.toFixed(1)} ${unit}. Potencial regional ${c.before.toFixed(1)} → ${c.after.toFixed(1)}: ajuste del 50% hacia promedio ÷ fracción climática ${c.fraction.toFixed(3)}, limitado al 60–115% del valor estatal. ${c.fallback} años fuera del historial usan la fracción de los últimos 10 años. Se supone el mismo riego y cultivo anterior típico; no es una validación independiente.`
+        : `Calibrated with your ${c.count} years of ${CROPS[c.crop].name.toLowerCase()} yields (${c.years.join(", ")}), average ${c.average.toFixed(1)} ${unit}. Regional potential ${c.before.toFixed(1)} → ${c.after.toFixed(1)}: additive 50% adjustment toward average ÷ modeled weather fraction ${c.fraction.toFixed(3)}, bounded to 60–115% of the state value. ${c.fallback} years outside weather history use the last-10-year fraction. Assumes the selected water supply and usual previous crop; not independent validation.` });
+  }
+  for (const record of checked.yieldRecords ?? []) {
+    if (!local.has(record.crop) && !facts.some((f) => f.id === `farmer-yield-${record.crop}`)) facts.push({ id: `farmer-yield-${record.crop}`, kind: "agronomy", source: "Farmer records", text: request.language === "es" ? `Rendimientos de ${CROPS[record.crop].name} guardados en este navegador, pero este cultivo no se modela en esta región; no se aplicó calibración.` : `Your ${CROPS[record.crop].name.toLowerCase()} yields are stored in this browser, but this crop is not modeled in this region; no calibration was applied.` });
+  }
+
+  for (const goal of plans[0]?.scores.goals ?? []) {
+    facts.push({ id: `goal-${goal.goal}`, kind: "agronomy", source: "SoilSense engine: simulated water/N and rotation proxies (src/engine/goals.ts)", text: `${goal.reason} Adds +${goal.bonus.toFixed(4)} to the unchanged priority score.` });
+  }
+
+  if (plans[0]) {
+    const advice = planAdvice(plans[0], level);
+    facts.push({ id: `advice-${advice.version}`, kind: "agronomy", source: "Versioned model-assumption checklist",
+      text: `Ask your agronomist about: ${advice.checks.join(" ")}` });
+    for (const note of advice.pestNotes) facts.push({ id: `pest-${note.pest}`, kind: "agronomy", source: note.sourceUrl,
+      text: `${note.sequence}. ${note.potentialEffect} ${note.conditions.join(" ")}` });
+    if (advice.undocumentedBenefit) facts.push({ id: "pest-undocumented", kind: "agronomy", source: "Plan crop phases", text: advice.undocumentedBenefit });
+  }
 
   const explanation = buildExplanation({
     plans,
@@ -277,7 +358,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     request: { ...request, water: level, irrigated: level !== "rain" },
     generatedAt: now.toISOString(),
     location: { county, lat: request.lat, lon: request.lon },
-    soil,
+    soil: inputs.soil,
     cropHistory,
     climate: climateSummary,
     plans,
@@ -286,6 +367,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     explanation,
     assumptions: [
       ...ASSUMPTIONS,
+      ...(plans[0]?.scores.goals?.length ? ["Optional farmer goals add at most +0.1 total to the unchanged priority score, shared equally between the selected goals. Metrics are min–max normalized across feasible candidate plans before choosing covers; ties earn no bonus. Feasibility and crop-reliability gates still take precedence. Water uses simulated pumping (rain-only: main-crop water use); N uses lower fertilizer after credits (70%) and legume seasons (30%); erosion and organic matter use explicit rotation proxies, not measured outcomes. Forage-market bonus requires that goal; hay economics are unchanged."] : []),
       ...region.notes,
       `Water: ${WATER_WORDS[level]}.${level === "limited" ? " Limited irrigation covers the crop's shortfall first, up to about 10 inches a season, as in K-State's Tribune limited-irrigation trial; stored soil water covers the rest." : ""} Pumping costs about $8 per inch of water per acre.`,
       "Bad years out of 10: how often a crop would have been badly stressed when replayed through the 35 years of NASA weather (shifted to today's climate trends), averaged over the plan's crops.",
@@ -306,6 +388,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       `This area averages about ${Math.round(annualRain / 25.4)} inches of rain a year; fallow was ${fallowAllowed ? "" : "not "}considered.`,
       "Replayed past years are history, not a forecast: each uses that year's real NASA weather on this soil, compared with what the county really harvested (USDA NASS) and why crop insurance paid out (USDA RMA).",
     ],
+    ...(climate.powerEvidence ? { powerEvidence: climate.powerEvidence } : {}),
     dataSources: DATA_SOURCES,
     disclaimer: DISCLAIMER,
     water: level,

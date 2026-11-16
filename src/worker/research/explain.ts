@@ -3,6 +3,7 @@
 // saved explanation (exact comparison key only) or the deterministic template. The model never changes
 // scores, rankings or facts.
 
+import { generateAI } from "../lib/ai";
 import type { PlanResponse, RotationPlan } from "../../shared/types";
 import type { ComparisonKeyParts, ExplainFactView, ExplanationResponse, ResearchPassage, ResearchResult } from "../../shared/research";
 import { CORPUS_VERSION, EMBEDDING, GENERATION } from "./config";
@@ -89,7 +90,7 @@ export function comparisonKeyParts(plan: PlanResponse, rotation: RotationPlan, f
   return {
     field: `${req.lat.toFixed(4)},${req.lon.toFixed(4)}`,
     evidence: `${plan.climate.firstYear}-${plan.climate.lastYear}:${fnv1a(JSON.stringify(facts.map((f) => [f.id, f.rotationId, f.value, f.display])) + JSON.stringify(plan.facts.map((f) => [f.id, f.text])))}`,
-    scenario: `water=${water};recent=${(req.recentCrops ?? []).join(",")}`,
+    scenario: `water=${water};recent=${(req.recentCrops ?? []).join(",")}${req.goals?.length ? `;goals=${req.goals.join(",")}` : ""}`,
     rotation: rotationSignature(rotation),
     priority: req.priority,
     scoring: scoringVersion,
@@ -230,34 +231,19 @@ function modelText(out: unknown): string {
   return typeof c === "string" ? c : "";
 }
 
-async function callModel(ai: AiLike, prompt: { system: string; user: string }, timeoutMs: number, gatewayId?: string): Promise<string> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const timeout = new Promise<never>((_, reject) => {
-    timer = setTimeout(() => reject(Object.assign(new Error("generation timed out"), { name: "TimeoutError" })), timeoutMs);
-  });
-  try {
-    const run = ai.run(
-      GENERATION.model,
-      {
-        messages: [
-          { role: "system", content: prompt.system },
-          { role: "user", content: prompt.user },
-        ],
-        max_tokens: GENERATION.maxTokens,
-        temperature: GENERATION.temperature,
-        chat_template_kwargs: { enable_thinking: false },
-      },
-      gatewayId ? { gateway: { id: gatewayId } } : undefined,
-    );
-    return modelText(await Promise.race([run, timeout]));
-  } finally {
-    if (timer !== undefined) clearTimeout(timer);
-  }
+async function callModel(ai: AiLike, prompt: { system: string; user: string }, timeoutMs: number, gatewayId?: string, db?: D1Database): Promise<{ text: string; model: string }> {
+  const result = await generateAI(ai, {
+    messages: [{ role: "system", content: prompt.system }, { role: "user", content: prompt.user }],
+    max_tokens: GENERATION.maxTokens,
+    temperature: GENERATION.temperature,
+  }, { feature: "research-explain", timeoutMs, gatewayId, db });
+  return { text: modelText(result.output), model: result.model };
 }
 
 // ---------- Orchestration ----------
 
 export interface ExplainDeps {
+  db?: D1Database;
   ai?: AiLike;
   index?: VectorIndexLike;
   saved: SavedBundle;
@@ -286,7 +272,7 @@ export async function explainRotation(deps: ExplainDeps, plan: PlanResponse, rot
   const saved = findSaved(deps.saved, key);
   const allRotationIds = [...plan.plans.map((p) => p.id), ...(plan.currentPractice ? [plan.currentPractice.id] : [])];
   const query = rotationQuery(rotation, plan.water);
-  let research: ResearchResult = await researchFor({ ai: deps.ai, index: deps.index, now, gatewayId: deps.gatewayId }, tagsForRotation(rotation), query, saved);
+  let research: ResearchResult = await researchFor({ ai: deps.ai, index: deps.index, db: deps.db, now, gatewayId: deps.gatewayId }, tagsForRotation(rotation), query, saved);
 
   const view = (ids: string[]): ExplainFactView[] =>
     ids.map((id) => facts.find((f) => f.id === id)).filter((f): f is ExplainFact => !!f).map(({ id, label, display, period, source }) => ({ id, label, display, period, source }));
@@ -329,9 +315,10 @@ export async function explainRotation(deps: ExplainDeps, plan: PlanResponse, rot
     "Weather facts are historical replays, not forecasts.",
   ];
   let text: string;
+  let model: string;
   try {
-    // Exactly one attempt: no retry loop (a retired model, 410/5028, would never recover).
-    text = await callModel(deps.ai, buildPrompt(rotation, facts, research.passages, gaps), deps.timeoutMs ?? GENERATION.timeoutMs, deps.gatewayId);
+    // Bounded Gemma → Llama chain; both outputs share the same validation below.
+    ({ text, model } = await callModel(deps.ai, buildPrompt(rotation, facts, research.passages, gaps), deps.timeoutMs ?? GENERATION.timeoutMs, deps.gatewayId, deps.db));
   } catch (err) {
     const kind = classifyAiError(err);
     console.warn(JSON.stringify({ msg: "explanation generation failed", kind, model: GENERATION.model, err: String(err).slice(0, 200) }));
@@ -343,14 +330,14 @@ export async function explainRotation(deps: ExplainDeps, plan: PlanResponse, rot
     return { response: respond("template", { ...templateNarrative(rotation, facts), citations: [] }, { reason: `model output rejected: ${v.reason}` }), capture: null };
   }
   const generatedAt = now().toISOString();
-  const response = respond("live", v, { model: { id: GENERATION.model, promptVersion: GENERATION.promptVersion } });
+  const response = respond("live", v, { model: { id: model, promptVersion: GENERATION.promptVersion } });
   const capture: SavedEntry | null =
     research.status === "live" || research.status === "empty"
       ? {
           comparisonKey: key,
           keyParts,
           research: { ...research, query },
-          explanation: { narrative: v.narrative, citations: v.citations, factIds: v.factIds, generatedAt, modelId: GENERATION.model, promptVersion: GENERATION.promptVersion },
+          explanation: { narrative: v.narrative, citations: v.citations, factIds: v.factIds, generatedAt, modelId: model, promptVersion: GENERATION.promptVersion },
         }
       : null;
   return { response, capture };

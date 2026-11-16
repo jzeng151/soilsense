@@ -6,13 +6,16 @@
 // {type:"end"} to hang up or hand the call to the keypad menu.
 // Protocol: https://www.twilio.com/docs/voice/conversationrelay/websocket-messages
 
-import { createGoogle } from "@ai-sdk/google";
+import { firstWorking, googleModel, workersModel, GENERATION_FALLBACK } from "../lib/ai";
+import { GENERATION } from "../research/config";
+
 import { type ModelMessage, stepCountIs, streamText, tool } from "ai";
 import { z } from "zod";
 import { ALL_CROPS } from "../../engine/crops";
 import type { CropId, PlanResponse, Priority, WaterLevel } from "../../shared/types";
 import { lookupZip } from "../data/geo";
 import type { Env } from "../env";
+import { ChatResearch, appendResearchUrls, SEARCH_RESEARCH_DESCRIPTION, searchResearchSchema } from "../research/chat";
 import { maskPhone, sendSms, xmlEscape } from "../lib/twilio";
 import { isLiveDemoOn, publishLive } from "../live/publish";
 import { isInContiguousUS, logPlan, makePlan } from "../service";
@@ -204,7 +207,7 @@ interface RelayMessage {
   description?: string;
 }
 
-class CallSession {
+export class CallSession {
   private history: ModelMessage[] = [];
   private callSid = "";
   private caller = "";
@@ -212,6 +215,7 @@ class CallSession {
   private verified = false;
   private running: AbortController | null = null;
   private spoken = "";
+  private research: ChatResearch;
   private lastPlan: { plan: PlanResponse; place?: string } | null = null;
   /** Caller turn number, and the turn in which the agent was sent back to ask about the crop. */
   private turn = 0;
@@ -245,6 +249,7 @@ class CallSession {
     private ws: WebSocket,
     private env: Env,
   ) {
+    this.research = new ChatResearch({ ai: env.AI, index: env.RESEARCH_INDEX, db: env.DB, gatewayId: env.AI_GATEWAY_ID });
     this.ready = new Promise((r) => (this.markReady = r));
   }
 
@@ -321,7 +326,7 @@ class CallSession {
     this.log("agent", { detail: this.settings.greeting });
     this.liveOn = await isLiveDemoOn(this.env.DB);
     this.live("call.start", { caller: maskPhone(this.caller), languages: this.multi ? this.settings.languages.enabled.map(languageName) : ["English"] });
-    this.live("call.say", { who: "agent", text: this.settings.greeting });
+    this.live("call.say", { who: "agent", text: this.settings.greeting, lang: "en" });
     this.markReady();
   }
 
@@ -332,8 +337,8 @@ class CallSession {
     // Keep what the caller actually heard, so the model knows it was cut off.
     if (this.spoken.trim()) {
       this.history.push({ role: "assistant", content: `${this.spoken.trim()} [interrupted by caller]` });
-      this.log("agent", { detail: `${this.spoken.trim()} [interrupted]` });
-      this.live("call.say", { who: "agent", text: this.spoken.trim(), interrupted: true });
+      this.log("agent", { detail: `${this.spoken.trim()} [interrupted]`, name: this.multi ? this.lang : undefined });
+      this.live("call.say", { who: "agent", text: this.spoken.trim(), interrupted: true, lang: this.lang });
     }
     this.spoken = "";
   }
@@ -389,6 +394,11 @@ class CallSession {
   private allTools() {
     const env = this.env;
     return {
+      search_research: tool({
+        description: SEARCH_RESEARCH_DESCRIPTION,
+        inputSchema: searchResearchSchema,
+        execute: this.timed("search_research", (input: z.infer<typeof searchResearchSchema>) => this.research.search(input)),
+      }),
       find_location: tool({
         description: "Look up a US 5-digit ZIP code: place name, state, latitude and longitude.",
         inputSchema: z.object({ zip: z.string().describe("5-digit US ZIP code, digits only") }),
@@ -484,7 +494,7 @@ class CallSession {
           const from = env.TWILIO_FROM_NUMBER || this.calledNumber;
           const ok =
             Boolean(this.caller && from && env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN) &&
-            (await sendSms({ accountSid: env.TWILIO_ACCOUNT_SID!, authToken: env.TWILIO_AUTH_TOKEN!, from, to: this.caller, body: this.lastPlan.plan.explanation.sms }));
+            (await sendSms({ accountSid: env.TWILIO_ACCOUNT_SID!, authToken: env.TWILIO_AUTH_TOKEN!, from, to: this.caller, body: appendResearchUrls(this.lastPlan.plan.explanation.sms, this.research.citedPassages()) }));
           this.smsSent = ok;
           this.live("sms", { ok, to: maskPhone(this.caller) });
           return { sent: ok };
@@ -502,7 +512,7 @@ class CallSession {
   }
 
   private async respond(userText: string) {
-    if (!this.env.GEMINI_API_KEY) {
+    if (!this.env.AI) {
       this.say("Sorry, the advisor isn't available right now. Let me move you to the keypad menu.");
       setTimeout(() => this.send({ type: "end", handoffData: JSON.stringify({ reason: "ivr" }) }), 4000);
       return;
@@ -520,33 +530,53 @@ class CallSession {
     const turnStart = Date.now();
     if (this.history.length > MAX_HISTORY) this.history = this.history.slice(-MAX_HISTORY);
 
-    const google = createGoogle({ apiKey: this.env.GEMINI_API_KEY });
+    const candidates = [
+      ...(this.env.GEMINI_API_KEY ? [{ id: this.env.VOICE_MODEL || DEFAULT_MODEL, provider: "gemini" as const, model: googleModel(this.env, this.env.VOICE_MODEL || DEFAULT_MODEL, "phone-agent") }] : []),
+      { id: GENERATION.model, provider: "workers-ai" as const, model: workersModel(this.env, GENERATION.model, "phone-agent", Boolean(this.env.GEMINI_API_KEY)) },
+      { id: GENERATION_FALLBACK, provider: "workers-ai" as const, model: workersModel(this.env, GENERATION_FALLBACK, "phone-agent", true) },
+    ];
+    // Buffer each text block so a citation split across stream tokens is validated before TTS.
+    let pendingText = "";
+    const flushSpeech = () => {
+      if (!pendingText) return;
+      const checked = this.research.forSpeech(pendingText);
+      pendingText = "";
+      if (checked.invalid.length) this.log("error", { name: "invalid_research_citation", detail: JSON.stringify({ ids: checked.invalid }), ok: false });
+      const text = speakable(checked.text);
+      this.spoken += text;
+      this.say(text, false);
+    };
     let filled = false;
     let fillerTimer: ReturnType<typeof setTimeout> | null = null;
     try {
-      const result = streamText({
-        model: google(this.env.VOICE_MODEL || DEFAULT_MODEL),
+      const start = (candidate: { model: import("ai").LanguageModel; provider: string }, signal: AbortSignal) => streamText({
+        model: candidate.model,
+        maxRetries: 0,
+        maxOutputTokens: 1200,
         instructions: [this.settings?.instructions ?? "", LOCKED_RULES, this.multi && this.settings ? languageRules(this.settings.languages.enabled) : ""].filter(Boolean).join("\n\n"),
         messages: this.history,
         tools: this.tools(),
         stopWhen: stepCountIs(MAX_STEPS),
         temperature: 0.4,
-        abortSignal: ctrl.signal,
+        abortSignal: AbortSignal.any([ctrl.signal, signal]),
         // Phone callers notice every second of silence: keep model thinking minimal.
-        providerOptions: { google: { thinkingConfig: { thinkingLevel: "low" } } },
+        ...(candidate.provider === "gemini" ? { providerOptions: { google: { thinkingConfig: { thinkingLevel: "low" } } } } : {}),
       });
-      for await (const part of result.fullStream) {
+      let result: ReturnType<typeof start> | undefined;
+      const selected = await firstWorking(candidates, (candidate, signal) => {
+        result = start(candidate, signal);
+        return result.fullStream;
+      });
+      for await (const part of selected.stream) {
         if (ctrl.signal.aborted) return;
         if (part.type === "start-step" && this.spoken && !/\s$/.test(this.spoken)) {
           // Text from separate steps (before and after a tool call) needs a space between sentences.
           this.spoken += " ";
           this.say(" ", false);
         } else if (part.type === "text-delta") {
-          const t = speakable(part.text);
-          if (t) {
-            this.spoken += t;
-            this.say(t, false);
-          }
+          pendingText += part.text;
+        } else if (part.type === "text-end") {
+          flushSpeech();
         } else if (part.type === "tool-call" && part.toolName === "build_rotation_plan" && !this.spoken.trim() && !filled) {
           // If the plan takes more than a moment (data not cached yet), tell the caller to wait
           // instead of leaving them in silence. A cached plan answers before this ever plays.
@@ -565,10 +595,11 @@ class CallSession {
         }
       }
       if (ctrl.signal.aborted) return;
-      this.history.push(...((await result.responseMessages) as ModelMessage[]));
+      flushSpeech();
+      this.history.push(...((await result!.responseMessages) as ModelMessage[]));
       this.say("", true);
-      this.log("agent", { detail: this.spoken.trim(), durationMs: Date.now() - turnStart, ok: true });
-      this.live("call.say", { who: "agent", text: this.spoken.trim(), ms: Date.now() - turnStart });
+      this.log("agent", { detail: this.spoken.trim(), durationMs: Date.now() - turnStart, ok: true, name: this.multi ? this.lang : undefined });
+      this.live("call.say", { who: "agent", text: this.spoken.trim(), ms: Date.now() - turnStart, lang: this.lang });
     } catch (err) {
       if (ctrl.signal.aborted) return;
       console.error(JSON.stringify({ msg: "voice agent turn failed", callSid: this.callSid, err: String(err) }));

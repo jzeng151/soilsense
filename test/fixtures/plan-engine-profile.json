@@ -1,0 +1,1195 @@
+{
+  "measuredOn": "2026-11-15",
+  "baselineCommit": "4f44678",
+  "runtime": "Node v24.20.0, Windows 11, esbuild ESM bundle",
+  "method": "12 synchronous uncached buildPlan calls per combination in one standalone Node process; performance.now wall and process.cpuUsage CPU. Process CPU includes V8/GC and Windows counter quantization; not Cloudflare CPU telemetry. Source parse/download excluded. Before run occurs after after run; other worktrees share the host.",
+  "data": "Real public-source captures: POWER + Daymet (existing Story/Finney fixtures; fetched Champaign/Lancaster), SSURGO and USDA NASS retrieved 2026-11-15. Explicit history overrides: Finney wheat/corn/wheat; Story corn/corn; Champaign soybean/corn; Lancaster corn/soybean. Not identical to all production upstream cache vintages.",
+  "optimizationDifferential": "32/32 plans + currentPractice + waterOptions deeply identical before applying diversity selection. Final result retains all 32 winners and changes only 21 third alternatives.",
+  "memoryCheck": "384 optimized builds completed with Node --max-old-space-size=64. Normal Node heap grows beyond 128MB before GC; this is not a workerd memory profile and does not rule out a production memory limit.",
+  "rows": [
+    {
+      "farm": "finney",
+      "irrigated": false,
+      "priority": "balanced",
+      "before": {
+        "wallMedianMs": 73.13,
+        "processCpuMeanMs": 104.08,
+        "firstWallMs": 120.2,
+        "topPlans": [
+          "Fallow (no crop) \u2192 Winter wheat \u2192 Grain sorghum",
+          "Grain sorghum \u2192 Fallow (no crop) \u2192 Grain sorghum",
+          "Fallow (no crop) \u2192 Grain sorghum \u2192 Fallow (no crop)"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": -3
+      },
+      "after": {
+        "wallMedianMs": 32.43,
+        "processCpuMeanMs": 56,
+        "firstWallMs": 67.83,
+        "topPlans": [
+          "Fallow (no crop) \u2192 Winter wheat \u2192 Grain sorghum",
+          "Grain sorghum \u2192 Fallow (no crop) \u2192 Grain sorghum",
+          "Fallow (no crop) \u2192 Grain sorghum \u2192 Fallow (no crop)"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": -3
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": false,
+      "priority": "profit",
+      "before": {
+        "wallMedianMs": 61.96,
+        "processCpuMeanMs": 67.75,
+        "firstWallMs": 82.69,
+        "topPlans": [
+          "Grain sorghum \u2192 Fallow (no crop) \u2192 Grain sorghum",
+          "Fallow (no crop) \u2192 Winter wheat \u2192 Grain sorghum",
+          "Fallow (no crop) \u2192 Grain sorghum \u2192 Fallow (no crop)"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": -1
+      },
+      "after": {
+        "wallMedianMs": 25.92,
+        "processCpuMeanMs": 31.25,
+        "firstWallMs": 26.19,
+        "topPlans": [
+          "Grain sorghum \u2192 Fallow (no crop) \u2192 Grain sorghum",
+          "Fallow (no crop) \u2192 Winter wheat \u2192 Grain sorghum",
+          "Fallow (no crop) \u2192 Grain sorghum \u2192 Fallow (no crop)"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": -1
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": false,
+      "priority": "soil",
+      "before": {
+        "wallMedianMs": 71.35,
+        "processCpuMeanMs": 84.67,
+        "firstWallMs": 70.01,
+        "topPlans": [
+          "Grain sorghum \u2192 Fallow (no crop) \u2192 Winter wheat",
+          "Grain sorghum \u2192 Fallow (no crop) \u2192 Alfalfa (hay)",
+          "Grain sorghum \u2192 Fallow (no crop) \u2192 Grain sorghum"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "crimson_clover"
+        ],
+        "topAvgNetReturnPerAcre": -20
+      },
+      "after": {
+        "wallMedianMs": 31.09,
+        "processCpuMeanMs": 32.5,
+        "firstWallMs": 31.0,
+        "topPlans": [
+          "Grain sorghum \u2192 Fallow (no crop) \u2192 Winter wheat",
+          "Grain sorghum \u2192 Fallow (no crop) \u2192 Alfalfa (hay)",
+          "Fallow (no crop) \u2192 Grain sorghum \u2192 Fallow (no crop)"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "crimson_clover"
+        ],
+        "topAvgNetReturnPerAcre": -20
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": false,
+      "priority": "risk",
+      "before": {
+        "wallMedianMs": 53.8,
+        "processCpuMeanMs": 61.17,
+        "firstWallMs": 54.82,
+        "topPlans": [
+          "Fallow (no crop) \u2192 Grain sorghum \u2192 Fallow (no crop)",
+          "Grain sorghum \u2192 Fallow (no crop) \u2192 Grain sorghum",
+          "Fallow (no crop) \u2192 Winter wheat \u2192 Grain sorghum"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": -18
+      },
+      "after": {
+        "wallMedianMs": 25.01,
+        "processCpuMeanMs": 26.08,
+        "firstWallMs": 30.05,
+        "topPlans": [
+          "Fallow (no crop) \u2192 Grain sorghum \u2192 Fallow (no crop)",
+          "Grain sorghum \u2192 Fallow (no crop) \u2192 Grain sorghum",
+          "Fallow (no crop) \u2192 Winter wheat \u2192 Grain sorghum"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": -18
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": true,
+      "priority": "balanced",
+      "before": {
+        "wallMedianMs": 50.48,
+        "processCpuMeanMs": 53.42,
+        "firstWallMs": 51.64,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Soybean \u2192 Grain sorghum \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 194
+      },
+      "after": {
+        "wallMedianMs": 21.62,
+        "processCpuMeanMs": 20.83,
+        "firstWallMs": 23.72,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 194
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": true,
+      "priority": "profit",
+      "before": {
+        "wallMedianMs": 50.45,
+        "processCpuMeanMs": 54.67,
+        "firstWallMs": 50.32,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Grain sorghum \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 194
+      },
+      "after": {
+        "wallMedianMs": 22.22,
+        "processCpuMeanMs": 27.42,
+        "firstWallMs": 20.7,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Grain sorghum \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 194
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": true,
+      "priority": "soil",
+      "before": {
+        "wallMedianMs": 69.86,
+        "processCpuMeanMs": 70.33,
+        "firstWallMs": 68.79,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Soybean \u2192 Corn \u2192 Oats"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 161
+      },
+      "after": {
+        "wallMedianMs": 28.27,
+        "processCpuMeanMs": 32.5,
+        "firstWallMs": 27.67,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Oats \u2192 Corn \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 161
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": true,
+      "priority": "risk",
+      "before": {
+        "wallMedianMs": 49.41,
+        "processCpuMeanMs": 56,
+        "firstWallMs": 47.87,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Grain sorghum \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 194
+      },
+      "after": {
+        "wallMedianMs": 20.82,
+        "processCpuMeanMs": 24.75,
+        "firstWallMs": 19.52,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Grain sorghum \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 194
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": false,
+      "priority": "balanced",
+      "before": {
+        "wallMedianMs": 39.88,
+        "processCpuMeanMs": 45.58,
+        "firstWallMs": 46.47,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 314
+      },
+      "after": {
+        "wallMedianMs": 17.86,
+        "processCpuMeanMs": 22.17,
+        "firstWallMs": 20.25,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean",
+          "Oats \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 314
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": false,
+      "priority": "profit",
+      "before": {
+        "wallMedianMs": 39.99,
+        "processCpuMeanMs": 41.67,
+        "firstWallMs": 40.22,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 322
+      },
+      "after": {
+        "wallMedianMs": 16.42,
+        "processCpuMeanMs": 19.5,
+        "firstWallMs": 17.35,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Oats \u2192 Soybean \u2192 Soybean"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 322
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": false,
+      "priority": "soil",
+      "before": {
+        "wallMedianMs": 40.03,
+        "processCpuMeanMs": 40.33,
+        "firstWallMs": 41.77,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Corn \u2192 Oats",
+          "Soybean \u2192 Oats \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 278
+      },
+      "after": {
+        "wallMedianMs": 17.79,
+        "processCpuMeanMs": 18.25,
+        "firstWallMs": 17.19,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Corn \u2192 Oats",
+          "Oats \u2192 Soybean \u2192 Alfalfa (hay)"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 278
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": false,
+      "priority": "risk",
+      "before": {
+        "wallMedianMs": 41.48,
+        "processCpuMeanMs": 40.33,
+        "firstWallMs": 48.94,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean",
+          "Soybean \u2192 Corn \u2192 Corn"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 322
+      },
+      "after": {
+        "wallMedianMs": 17.29,
+        "processCpuMeanMs": 16.92,
+        "firstWallMs": 17.21,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean",
+          "Oats \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 322
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": true,
+      "priority": "balanced",
+      "before": {
+        "wallMedianMs": 39.5,
+        "processCpuMeanMs": 40.33,
+        "firstWallMs": 40.05,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 266
+      },
+      "after": {
+        "wallMedianMs": 16.55,
+        "processCpuMeanMs": 16.92,
+        "firstWallMs": 16.79,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean",
+          "Oats \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 266
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": true,
+      "priority": "profit",
+      "before": {
+        "wallMedianMs": 41.23,
+        "processCpuMeanMs": 41.75,
+        "firstWallMs": 39.57,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 266
+      },
+      "after": {
+        "wallMedianMs": 16.63,
+        "processCpuMeanMs": 18.25,
+        "firstWallMs": 16.83,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Oats \u2192 Soybean \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 266
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": true,
+      "priority": "soil",
+      "before": {
+        "wallMedianMs": 42.54,
+        "processCpuMeanMs": 42.92,
+        "firstWallMs": 40.84,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Corn \u2192 Oats",
+          "Soybean \u2192 Oats \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 233
+      },
+      "after": {
+        "wallMedianMs": 18.11,
+        "processCpuMeanMs": 19.42,
+        "firstWallMs": 18.79,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Corn \u2192 Oats",
+          "Oats \u2192 Soybean \u2192 Alfalfa (hay)"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 233
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": true,
+      "priority": "risk",
+      "before": {
+        "wallMedianMs": 40.22,
+        "processCpuMeanMs": 41.67,
+        "firstWallMs": 40.47,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean",
+          "Soybean \u2192 Corn \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 266
+      },
+      "after": {
+        "wallMedianMs": 16.67,
+        "processCpuMeanMs": 17,
+        "firstWallMs": 19.58,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean",
+          "Oats \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 266
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": false,
+      "priority": "balanced",
+      "before": {
+        "wallMedianMs": 42.9,
+        "processCpuMeanMs": 46.83,
+        "firstWallMs": 44.98,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 348
+      },
+      "after": {
+        "wallMedianMs": 17.81,
+        "processCpuMeanMs": 18.17,
+        "firstWallMs": 17.24,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 348
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": false,
+      "priority": "profit",
+      "before": {
+        "wallMedianMs": 41.11,
+        "processCpuMeanMs": 41.67,
+        "firstWallMs": 40.85,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Soybean \u2192 Corn \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 348
+      },
+      "after": {
+        "wallMedianMs": 17.13,
+        "processCpuMeanMs": 22.17,
+        "firstWallMs": 17.65,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 348
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": false,
+      "priority": "soil",
+      "before": {
+        "wallMedianMs": 44.07,
+        "processCpuMeanMs": 44.25,
+        "firstWallMs": 43.29,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 315
+      },
+      "after": {
+        "wallMedianMs": 18.17,
+        "processCpuMeanMs": 19.5,
+        "firstWallMs": 18.67,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Oats \u2192 Corn \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 315
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": false,
+      "priority": "risk",
+      "before": {
+        "wallMedianMs": 42.1,
+        "processCpuMeanMs": 43,
+        "firstWallMs": 40.42,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 348
+      },
+      "after": {
+        "wallMedianMs": 16.67,
+        "processCpuMeanMs": 18.25,
+        "firstWallMs": 16.04,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 348
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": true,
+      "priority": "balanced",
+      "before": {
+        "wallMedianMs": 40.42,
+        "processCpuMeanMs": 40.33,
+        "firstWallMs": 40.53,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 287
+      },
+      "after": {
+        "wallMedianMs": 17.89,
+        "processCpuMeanMs": 22.17,
+        "firstWallMs": 18.52,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 287
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": true,
+      "priority": "profit",
+      "before": {
+        "wallMedianMs": 40.55,
+        "processCpuMeanMs": 43,
+        "firstWallMs": 39.18,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 287
+      },
+      "after": {
+        "wallMedianMs": 17.54,
+        "processCpuMeanMs": 22.17,
+        "firstWallMs": 18.89,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 287
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": true,
+      "priority": "soil",
+      "before": {
+        "wallMedianMs": 43.9,
+        "processCpuMeanMs": 42.92,
+        "firstWallMs": 43.55,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 254
+      },
+      "after": {
+        "wallMedianMs": 18.39,
+        "processCpuMeanMs": 18.25,
+        "firstWallMs": 16.74,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Oats \u2192 Corn \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 254
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": true,
+      "priority": "risk",
+      "before": {
+        "wallMedianMs": 39.79,
+        "processCpuMeanMs": 40.42,
+        "firstWallMs": 40.54,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Soybean \u2192 Oats \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 287
+      },
+      "after": {
+        "wallMedianMs": 16.95,
+        "processCpuMeanMs": 16.83,
+        "firstWallMs": 16.21,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 287
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": false,
+      "priority": "balanced",
+      "before": {
+        "wallMedianMs": 50.0,
+        "processCpuMeanMs": 49.5,
+        "firstWallMs": 51.49,
+        "topPlans": [
+          "Corn \u2192 Soybean \u2192 Soybean",
+          "Grain sorghum \u2192 Soybean \u2192 Soybean",
+          "Grain sorghum \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 246
+      },
+      "after": {
+        "wallMedianMs": 23.19,
+        "processCpuMeanMs": 23.42,
+        "firstWallMs": 21.03,
+        "topPlans": [
+          "Corn \u2192 Soybean \u2192 Soybean",
+          "Grain sorghum \u2192 Soybean \u2192 Soybean",
+          "Grain sorghum \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 246
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": false,
+      "priority": "profit",
+      "before": {
+        "wallMedianMs": 49.92,
+        "processCpuMeanMs": 52,
+        "firstWallMs": 48.99,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn",
+          "Grain sorghum \u2192 Soybean \u2192 Soybean"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 248
+      },
+      "after": {
+        "wallMedianMs": 24.32,
+        "processCpuMeanMs": 24.75,
+        "firstWallMs": 29.2,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn",
+          "Grain sorghum \u2192 Soybean \u2192 Soybean"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 248
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": false,
+      "priority": "soil",
+      "before": {
+        "wallMedianMs": 65.24,
+        "processCpuMeanMs": 69,
+        "firstWallMs": 66.4,
+        "topPlans": [
+          "Oats \u2192 Corn \u2192 Soybean",
+          "Oats \u2192 Soybean \u2192 Grain sorghum",
+          "Grain sorghum \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "crimson_clover",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 123
+      },
+      "after": {
+        "wallMedianMs": 26.9,
+        "processCpuMeanMs": 43,
+        "firstWallMs": 26.18,
+        "topPlans": [
+          "Oats \u2192 Corn \u2192 Soybean",
+          "Oats \u2192 Soybean \u2192 Grain sorghum",
+          "Grain sorghum \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "crimson_clover",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 123
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": false,
+      "priority": "risk",
+      "before": {
+        "wallMedianMs": 51.83,
+        "processCpuMeanMs": 52.08,
+        "firstWallMs": 51.67,
+        "topPlans": [
+          "Grain sorghum \u2192 Soybean \u2192 Soybean",
+          "Oats \u2192 Soybean \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Soybean"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 209
+      },
+      "after": {
+        "wallMedianMs": 22.74,
+        "processCpuMeanMs": 24.75,
+        "firstWallMs": 23.38,
+        "topPlans": [
+          "Grain sorghum \u2192 Soybean \u2192 Soybean",
+          "Oats \u2192 Soybean \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Soybean"
+        ],
+        "topCovers": [
+          "none",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 209
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": true,
+      "priority": "balanced",
+      "before": {
+        "wallMedianMs": 49.24,
+        "processCpuMeanMs": 49.5,
+        "firstWallMs": 47.92,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn",
+          "Grain sorghum \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 235
+      },
+      "after": {
+        "wallMedianMs": 18.65,
+        "processCpuMeanMs": 20.83,
+        "firstWallMs": 18.69,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn",
+          "Grain sorghum \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 235
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": true,
+      "priority": "profit",
+      "before": {
+        "wallMedianMs": 49.46,
+        "processCpuMeanMs": 50.75,
+        "firstWallMs": 53.16,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn",
+          "Soybean \u2192 Winter wheat \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 235
+      },
+      "after": {
+        "wallMedianMs": 18.41,
+        "processCpuMeanMs": 19.5,
+        "firstWallMs": 18.19,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn",
+          "Soybean \u2192 Winter wheat \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 235
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": true,
+      "priority": "soil",
+      "before": {
+        "wallMedianMs": 63.54,
+        "processCpuMeanMs": 63.83,
+        "firstWallMs": 68.18,
+        "topPlans": [
+          "Oats \u2192 Corn \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Winter wheat",
+          "Grain sorghum \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "crimson_clover",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 111
+      },
+      "after": {
+        "wallMedianMs": 24.69,
+        "processCpuMeanMs": 27.42,
+        "firstWallMs": 24.08,
+        "topPlans": [
+          "Oats \u2192 Corn \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Winter wheat",
+          "Grain sorghum \u2192 Soybean \u2192 Corn"
+        ],
+        "topCovers": [
+          "crimson_clover",
+          "cereal_rye",
+          "hairy_vetch"
+        ],
+        "topAvgNetReturnPerAcre": 111
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": true,
+      "priority": "risk",
+      "before": {
+        "wallMedianMs": 49.3,
+        "processCpuMeanMs": 49.5,
+        "firstWallMs": 50.54,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn",
+          "Soybean \u2192 Grain sorghum \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 235
+      },
+      "after": {
+        "wallMedianMs": 19.21,
+        "processCpuMeanMs": 19.5,
+        "firstWallMs": 19.47,
+        "topPlans": [
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn",
+          "Soybean \u2192 Grain sorghum \u2192 Soybean"
+        ],
+        "topCovers": [
+          "hairy_vetch",
+          "none",
+          "none"
+        ],
+        "topAvgNetReturnPerAcre": 235
+      }
+    }
+  ]
+}

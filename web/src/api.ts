@@ -66,7 +66,7 @@ export async function fetchField(lat: number, lon: number, signal?: AbortSignal)
 
 export async function fetchPlan(req: PlanRequest, signal?: AbortSignal): Promise<PlanResponse> {
   const plan = await handle<PlanResponse>(
-    await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req), signal }),
+    await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...req, includeFertilizer: true }), signal }),
   );
   setLastPlan(plan);
   return plan;

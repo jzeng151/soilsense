@@ -20,7 +20,7 @@ cropTiming.get("/", async c => {
       try { const w = await getTimingPower(c.env.DB,lat,lon,previous); estimates.push({ year: previous, silking: estimateCornTiming(w.days,`${previous}${planting.slice(4)}`,`${previous}-10-31`).silking }); }
       catch { estimates.push({ year: previous, silking: null }); }
     }
-    const county = c.env.NASS_API_KEY ? await getCounty(c.env.DB,lat,lon) : null;
+    const county = c.env.NASS_API_KEY ? await getCounty(c.env.DB,lat,lon, { kv: c.env.GEO_KV, readReplica: c.env.GEO_CACHE_READ_REPLICA === "on" }) : null;
     return c.json({ timing, weather, nassComparison: await getNassSilking(c.env.DB,c.env.NASS_API_KEY,county,estimates) });
   } catch { return c.json({ status: "unavailable", reason: "NASA POWER timing request failed; no dates estimated" }, 502); }
 });

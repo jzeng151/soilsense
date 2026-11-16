@@ -54,4 +54,12 @@ export interface Env {
   DOC_QUEUE?: Queue;
   /** Document pipeline Workflow (DocIngestWorkflow): extract -> chunk -> review -> embed -> upsert (optional). */
   DOC_INGEST?: Workflow<import("../shared/ingest").DocIngestParams>;
+  /** Optional hot public geography cache; never contains farmer records. */
+  GEO_KV?: KVNamespace;
+  /** "off" disables Cache API storage for controlled comparisons (HTTP policies remain). */
+  EDGE_CACHE_MODE?: "off";
+  /** Additional deployment namespace; bump on public data/schema changes. */
+  EDGE_CACHE_VERSION?: string;
+  /** Opt-in eventually consistent reads for immutable geography cache entries only. */
+  GEO_CACHE_READ_REPLICA?: "on";
 }

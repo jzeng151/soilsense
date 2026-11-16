@@ -214,7 +214,7 @@ voice.post("/zip", async (c) => {
   const l = lang(c);
   const { digits, speech } = input(c);
   const zip = parseZip(digits, speech);
-  const place = zip ? await lookupZip(c.env.DB, zip) : null;
+  const place = zip ? await lookupZip(c.env.DB, zip, { kv: c.env.GEO_KV, readReplica: c.env.GEO_CACHE_READ_REPLICA === "on" }) : null;
   const g = (inner: string) => gather({ action: next("zip", state(c)), numDigits: 5, lang: l }, inner);
   if (!zip || !place) return retryOrGiveUp(c, "zip", T[l].zipRetry, T[l].zipPrompt, g);
   if (!isInContiguousUS(place.lat, place.lon)) return twiml(c, response(say(T[l].outside, l), "<Hangup/>"));

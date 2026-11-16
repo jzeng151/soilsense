@@ -185,7 +185,7 @@ export function makeTools(env: Env, writer: UIMessageStreamWriter, research: Cha
       description: "Look up a US 5-digit ZIP code and return its place name, state, latitude and longitude.",
       inputSchema: z.object({ zip: z.string().describe("5-digit US ZIP code") }),
       execute: async ({ zip }) => {
-        const place = await lookupZip(env.DB, zip.trim());
+        const place = await lookupZip(env.DB, zip.trim(), { kv: env.GEO_KV, readReplica: env.GEO_CACHE_READ_REPLICA === "on" });
         if (!place) throw new Error(`ZIP code ${zip} was not found. Ask the user for a valid 5-digit US ZIP or lat/lon.`);
         cite("find_location");
         return place;

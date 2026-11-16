@@ -404,7 +404,7 @@ export class CallSession {
         inputSchema: z.object({ zip: z.string().describe("5-digit US ZIP code, digits only") }),
         execute: this.timed("find_location", async ({ zip }: { zip: string }) => {
           const clean = zip.replace(/\D/g, "");
-          const place = clean.length === 5 ? await lookupZip(env.DB, clean) : null;
+          const place = clean.length === 5 ? await lookupZip(env.DB, clean, { kv: env.GEO_KV, readReplica: env.GEO_CACHE_READ_REPLICA === "on" }) : null;
           if (!place) return { error: `ZIP code ${zip} was not found. Ask the caller to repeat it.` };
           if (!isInContiguousUS(place.lat, place.lon)) return { error: "That ZIP is outside the lower 48 states, which Soil Sense covers." };
           // Warm every data source now, while the caller answers the next question, so the

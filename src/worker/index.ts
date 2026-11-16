@@ -1,5 +1,6 @@
 // SoilSense Worker: JSON API for the dashboard, Twilio voice webhooks, and static dashboard assets.
 
+import { publicCachedResponse } from "./lib/edgeCache";
 import { fields } from "./routes/fields";
 import { imerg } from "./imerg/routes";
 import { myFields } from "./routes/myfields";
@@ -68,4 +69,8 @@ async function scheduled(controller: ScheduledController, env: Env, ctx: Executi
 }
 
 // The Hono app stays the default export (tests call app.request); Workers also reads its scheduled handler.
+// Keep request() and the deployed fetch handler on the same public HTTP cache boundary.
+const originFetch = app.fetch.bind(app);
+app.fetch = (request, env, ctx) => publicCachedResponse(request, env ?? {}, ctx, async () => originFetch(request, env ?? {}, ctx));
+
 export default Object.assign(app, { scheduled, queue });

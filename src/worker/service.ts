@@ -35,7 +35,7 @@ export function isInContiguousUS(lat: number, lon: number): boolean {
 export async function getField(env: Env, lat: number, lon: number): Promise<FieldResponse> {
   const { cdlLastYear } = yearsFor(env);
   const [county, soil, cropHistory] = await Promise.all([
-    getCounty(env.DB, lat, lon),
+    getCounty(env.DB, lat, lon, { kv: env.GEO_KV, readReplica: env.GEO_CACHE_READ_REPLICA === "on" }),
     getSoil(env.DB, lat, lon),
     getCropHistory(env.DB, lat, lon, cdlLastYear),
   ]);
@@ -173,7 +173,7 @@ async function makePlanFresh(
     opts.skipCropHistory
       ? Promise.resolve({ available: false, source: "Farmer input (phone call)", years: [] })
       : timed("cdl", getCropHistory(env.DB, request.lat, request.lon, years.cdlLastYear)),
-    timed("county", getCounty(env.DB, request.lat, request.lon)),
+    timed("county", getCounty(env.DB, request.lat, request.lon, { kv: env.GEO_KV, readReplica: env.GEO_CACHE_READ_REPLICA === "on" })),
   ]);
   // Weather: average of NASA POWER and NASA Daymet when Daymet answered; NASA POWER alone otherwise.
   const climate = daymet ? mergeDaymet(powerClimate, daymet).climate : powerClimate;

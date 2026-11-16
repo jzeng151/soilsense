@@ -24,7 +24,7 @@ function safeEqual(a: string, b: string): boolean {
 }
 
 refresh.use("*", async (c, next) => {
-  c.header("Cache-Control", "no-store");
+  if (c.req.method !== "GET") c.header("Cache-Control", "no-store");
   await next();
 });
 

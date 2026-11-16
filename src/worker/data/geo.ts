@@ -1,7 +1,7 @@
 // County (FCC Area API) and ZIP code (Zippopotam.us) lookups.
 
 import type { CountyInfo } from "../../shared/types";
-import { cached, DAY_SECONDS } from "../lib/cache";
+import { cached, DAY_SECONDS, type CacheOptions } from "../lib/cache";
 import { fetchJson } from "../lib/http";
 
 interface FccResponse {
@@ -48,7 +48,7 @@ export async function fromCensus(lat: number, lon: number): Promise<CountyInfo |
 }
 
 /** County for a point: FCC first, the Census geocoder if FCC fails. A failed lookup is not cached (only "no county", e.g. at sea). */
-export async function getCounty(db: D1Database | undefined, lat: number, lon: number): Promise<CountyInfo | null> {
+export async function getCounty(db: D1Database | undefined, lat: number, lon: number, options: CacheOptions = {}): Promise<CountyInfo | null> {
   const key = `county:v1:${lat.toFixed(3)}:${lon.toFixed(3)}`;
   try {
     const { value } = await cached(db, key, 365 * DAY_SECONDS, async () => {
@@ -59,7 +59,7 @@ export async function getCounty(db: D1Database | undefined, lat: number, lon: nu
         console.warn(JSON.stringify({ msg: "FCC county lookup failed, trying Census", err: String(err) }));
       }
       return fromCensus(lat, lon);
-    });
+    }, options);
     return value;
   } catch (err) {
     console.warn(JSON.stringify({ msg: "county lookup failed", err: String(err) }));
@@ -79,7 +79,7 @@ export interface ZipPlace {
   state: string;
 }
 
-export async function lookupZip(db: D1Database | undefined, zip: string): Promise<ZipPlace | null> {
+export async function lookupZip(db: D1Database | undefined, zip: string, options: CacheOptions = {}): Promise<ZipPlace | null> {
   if (!/^\d{5}$/.test(zip)) return null;
   try {
     const { value } = await cached(db, `zip:v1:${zip}`, 365 * DAY_SECONDS, async () => {
@@ -87,7 +87,7 @@ export async function lookupZip(db: D1Database | undefined, zip: string): Promis
       const p = json.places?.[0];
       if (!p) return null;
       return { zip, lat: Number(p.latitude), lon: Number(p.longitude), place: p["place name"], state: p["state abbreviation"] };
-    });
+    }, options);
     return value;
   } catch {
     return null;

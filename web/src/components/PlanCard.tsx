@@ -1,8 +1,9 @@
 import { GoalScore } from "./GoalPicker";
 import { useI18n, cropName, coverNames } from "../i18n";
 import { Definition } from "./Glossary";
-import type { CropId, RotationPlan } from "../../../src/shared/types";
+import type { CropId, PlanYear, RotationPlan } from "../../../src/shared/types";
 import { LANGUAGE_LOCALES, type Language } from "../../../src/shared/language";
+import "./prices.css";
 import { PlanExplanation } from "./PlanExplanation";
 
 const localizedCoverNames = {
@@ -42,6 +43,14 @@ function DeltaTag({ delta }: { delta: number }) {
   return <span className={`delta ${delta > 0 ? "delta-up" : "delta-down"}`}>{delta > 0 ? `+${money(delta, language)}` : money(delta, language)} {t("vs. now")}</span>;
 }
 
+function YearEconomics({ year }: { year: PlanYear }) {
+  const { t, language } = useI18n();
+  return <dl className="year-economics">
+    <div><dt>{t("Expected yield")}</dt><dd>{year.crop==="fallow" ? t("No harvest") : `${year.expectedYield} ${t(year.yieldUnit.startsWith("tons") ? "US short tons/acre" : "bu/acre")}`}</dd></div>
+    <div><dt>{t("Net $/acre")}</dt><dd>{money(year.netReturnPerAcre, language)}</dd></div>
+  </dl>;
+}
+
 /** The big recommended plan at the top of the results. */
 export function TopPlan({ plan, compareTo, summary }: { plan: RotationPlan; compareTo: RotationPlan | null; summary?: string }) {
   const { t, language } = useI18n();
@@ -54,6 +63,7 @@ export function TopPlan({ plan, compareTo, summary }: { plan: RotationPlan; comp
           <li key={y.year} style={{ ["--crop" as string]: CROP_COLORS[y.crop] }}>
             <span className="years-year">{y.year}</span>
             <span className="years-crop">{cropName(y.crop, language)}</span>
+            <YearEconomics year={y} />
             <span className="years-cover">{y.cover === "none" ? t("No cover crop") : t("+ {cover} over winter", { cover: coverName(y, language) })}</span>
           </li>
         ))}
@@ -115,6 +125,7 @@ export function PlanRow({ plan, title, compareTo, muted }: { plan: RotationPlan;
         <span className="plan-row-bad">{numbers.format(plan.badYearsIn10)}/10 {t("Bad years").toLowerCase()}</span>
         {delta !== null && <DeltaTag delta={delta} />}
       </span>
+      <ul className="plan-year-details">{plan.years.map(y=><li key={y.year}><strong>{y.year} · {cropName(y.crop,language)}</strong><YearEconomics year={y}/></li>)}</ul>
       <GoalScore plan={plan} />
     </li>
   );

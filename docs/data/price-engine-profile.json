@@ -1,0 +1,650 @@
+{
+  "runtime": "v24.20.0",
+  "method": "32 farm \u00d7 irrigation \u00d7 priority combinations; 12 repetitions each, alternating baseline/default/scenarios order; standalone esbuild Node bundles. Process CPU includes GC/V8 threads and Windows quantization; not Worker CPU telemetry. Full default responses deeply equal for all 32 inputs.",
+  "summary": {
+    "before": {
+      "meanWallMs": 23.988970572916674,
+      "meanProcessCpuMs": 25.911458333333332,
+      "builds": 384
+    },
+    "after": {
+      "meanWallMs": 23.168857812500022,
+      "meanProcessCpuMs": 25.809895833333332,
+      "builds": 384
+    },
+    "scenarios": {
+      "meanWallMs": 23.35503489583337,
+      "meanProcessCpuMs": 24.088541666666668,
+      "builds": 384
+    }
+  },
+  "rows": [
+    {
+      "farm": "finney",
+      "irrigated": false,
+      "priority": "balanced",
+      "means": {
+        "before": {
+          "wallMs": 33.03301666666666,
+          "processCpuMs": 45.583333333333336
+        },
+        "after": {
+          "wallMs": 32.11780833333331,
+          "processCpuMs": 44.166666666666664
+        },
+        "scenarios": {
+          "wallMs": 29.576683333333335,
+          "processCpuMs": 34
+        }
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": false,
+      "priority": "profit",
+      "means": {
+        "before": {
+          "wallMs": 30.573925000000088,
+          "processCpuMs": 38.916666666666664
+        },
+        "after": {
+          "wallMs": 28.662749999999942,
+          "processCpuMs": 35.25
+        },
+        "scenarios": {
+          "wallMs": 28.2844833333333,
+          "processCpuMs": 27.333333333333332
+        }
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": false,
+      "priority": "soil",
+      "means": {
+        "before": {
+          "wallMs": 34.96064166666671,
+          "processCpuMs": 37.583333333333336
+        },
+        "after": {
+          "wallMs": 35.17926666666673,
+          "processCpuMs": 33.916666666666664
+        },
+        "scenarios": {
+          "wallMs": 32.753224999999965,
+          "processCpuMs": 37.833333333333336
+        }
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": false,
+      "priority": "risk",
+      "means": {
+        "before": {
+          "wallMs": 29.69933333333347,
+          "processCpuMs": 28.666666666666668
+        },
+        "after": {
+          "wallMs": 26.18900833333335,
+          "processCpuMs": 29.916666666666668
+        },
+        "scenarios": {
+          "wallMs": 27.80276666666661,
+          "processCpuMs": 27.416666666666668
+        }
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": true,
+      "priority": "balanced",
+      "means": {
+        "before": {
+          "wallMs": 24.199683333333496,
+          "processCpuMs": 23.333333333333332
+        },
+        "after": {
+          "wallMs": 22.66453333333334,
+          "processCpuMs": 25
+        },
+        "scenarios": {
+          "wallMs": 22.71465833333332,
+          "processCpuMs": 27.166666666666668
+        }
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": true,
+      "priority": "profit",
+      "means": {
+        "before": {
+          "wallMs": 22.379158333333333,
+          "processCpuMs": 20.916666666666668
+        },
+        "after": {
+          "wallMs": 23.88575833333357,
+          "processCpuMs": 32.416666666666664
+        },
+        "scenarios": {
+          "wallMs": 23.34719999999993,
+          "processCpuMs": 27.333333333333332
+        }
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": true,
+      "priority": "soil",
+      "means": {
+        "before": {
+          "wallMs": 36.736733333333326,
+          "processCpuMs": 44.25
+        },
+        "after": {
+          "wallMs": 35.46488333333324,
+          "processCpuMs": 40.5
+        },
+        "scenarios": {
+          "wallMs": 36.03362500000003,
+          "processCpuMs": 39
+        }
+      }
+    },
+    {
+      "farm": "finney",
+      "irrigated": true,
+      "priority": "risk",
+      "means": {
+        "before": {
+          "wallMs": 22.781416666667003,
+          "processCpuMs": 23.25
+        },
+        "after": {
+          "wallMs": 23.180108333333465,
+          "processCpuMs": 23.5
+        },
+        "scenarios": {
+          "wallMs": 23.444508333333335,
+          "processCpuMs": 23.5
+        }
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": false,
+      "priority": "balanced",
+      "means": {
+        "before": {
+          "wallMs": 19.285616666666556,
+          "processCpuMs": 22.083333333333332
+        },
+        "after": {
+          "wallMs": 19.10703333333322,
+          "processCpuMs": 18.333333333333332
+        },
+        "scenarios": {
+          "wallMs": 19.71935000000015,
+          "processCpuMs": 19.5
+        }
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": false,
+      "priority": "profit",
+      "means": {
+        "before": {
+          "wallMs": 18.548333333333176,
+          "processCpuMs": 19.583333333333332
+        },
+        "after": {
+          "wallMs": 19.212658333333213,
+          "processCpuMs": 19.5
+        },
+        "scenarios": {
+          "wallMs": 19.77935833333322,
+          "processCpuMs": 20.833333333333332
+        }
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": false,
+      "priority": "soil",
+      "means": {
+        "before": {
+          "wallMs": 19.609074999999546,
+          "processCpuMs": 22.166666666666668
+        },
+        "after": {
+          "wallMs": 18.80518333333354,
+          "processCpuMs": 26.166666666666668
+        },
+        "scenarios": {
+          "wallMs": 18.310799999999745,
+          "processCpuMs": 16.75
+        }
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": false,
+      "priority": "risk",
+      "means": {
+        "before": {
+          "wallMs": 17.58560833333316,
+          "processCpuMs": 20.833333333333332
+        },
+        "after": {
+          "wallMs": 17.35450000000007,
+          "processCpuMs": 13.083333333333334
+        },
+        "scenarios": {
+          "wallMs": 17.518583333333783,
+          "processCpuMs": 20.833333333333332
+        }
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": true,
+      "priority": "balanced",
+      "means": {
+        "before": {
+          "wallMs": 17.506491666666534,
+          "processCpuMs": 18.166666666666668
+        },
+        "after": {
+          "wallMs": 17.148875000000164,
+          "processCpuMs": 21.083333333333332
+        },
+        "scenarios": {
+          "wallMs": 17.651500000000244,
+          "processCpuMs": 16.833333333333332
+        }
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": true,
+      "priority": "profit",
+      "means": {
+        "before": {
+          "wallMs": 18.826033333333726,
+          "processCpuMs": 18.166666666666668
+        },
+        "after": {
+          "wallMs": 17.81349166666693,
+          "processCpuMs": 19.583333333333332
+        },
+        "scenarios": {
+          "wallMs": 17.49050833333361,
+          "processCpuMs": 16.916666666666668
+        }
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": true,
+      "priority": "soil",
+      "means": {
+        "before": {
+          "wallMs": 19.554875000000113,
+          "processCpuMs": 19.5
+        },
+        "after": {
+          "wallMs": 18.401408333333166,
+          "processCpuMs": 24.666666666666668
+        },
+        "scenarios": {
+          "wallMs": 19.079516666666223,
+          "processCpuMs": 19.583333333333332
+        }
+      }
+    },
+    {
+      "farm": "story",
+      "irrigated": true,
+      "priority": "risk",
+      "means": {
+        "before": {
+          "wallMs": 17.872200000000248,
+          "processCpuMs": 18.333333333333332
+        },
+        "after": {
+          "wallMs": 17.593683333333654,
+          "processCpuMs": 19.5
+        },
+        "scenarios": {
+          "wallMs": 17.945616666666712,
+          "processCpuMs": 16.916666666666668
+        }
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": false,
+      "priority": "balanced",
+      "means": {
+        "before": {
+          "wallMs": 20.562749999999898,
+          "processCpuMs": 22.25
+        },
+        "after": {
+          "wallMs": 19.477700000000066,
+          "processCpuMs": 24.666666666666668
+        },
+        "scenarios": {
+          "wallMs": 18.83359166666681,
+          "processCpuMs": 18.166666666666668
+        }
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": false,
+      "priority": "profit",
+      "means": {
+        "before": {
+          "wallMs": 18.641508333333302,
+          "processCpuMs": 15.75
+        },
+        "after": {
+          "wallMs": 18.124008333333222,
+          "processCpuMs": 19.416666666666668
+        },
+        "scenarios": {
+          "wallMs": 18.790650000000216,
+          "processCpuMs": 16.916666666666668
+        }
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": false,
+      "priority": "soil",
+      "means": {
+        "before": {
+          "wallMs": 19.81598333333386,
+          "processCpuMs": 18.083333333333332
+        },
+        "after": {
+          "wallMs": 19.09162499999972,
+          "processCpuMs": 22.166666666666668
+        },
+        "scenarios": {
+          "wallMs": 19.03414166666668,
+          "processCpuMs": 18.25
+        }
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": false,
+      "priority": "risk",
+      "means": {
+        "before": {
+          "wallMs": 18.817674999999934,
+          "processCpuMs": 20.833333333333332
+        },
+        "after": {
+          "wallMs": 18.974125000000033,
+          "processCpuMs": 20.916666666666668
+        },
+        "scenarios": {
+          "wallMs": 17.81684166666643,
+          "processCpuMs": 14.25
+        }
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": true,
+      "priority": "balanced",
+      "means": {
+        "before": {
+          "wallMs": 18.09880833333318,
+          "processCpuMs": 16.916666666666668
+        },
+        "after": {
+          "wallMs": 17.317433333333913,
+          "processCpuMs": 18.166666666666668
+        },
+        "scenarios": {
+          "wallMs": 17.618941666666615,
+          "processCpuMs": 18.25
+        }
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": true,
+      "priority": "profit",
+      "means": {
+        "before": {
+          "wallMs": 19.303266666667696,
+          "processCpuMs": 19.583333333333332
+        },
+        "after": {
+          "wallMs": 17.83770000000004,
+          "processCpuMs": 18.25
+        },
+        "scenarios": {
+          "wallMs": 18.079691666666804,
+          "processCpuMs": 19.5
+        }
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": true,
+      "priority": "soil",
+      "means": {
+        "before": {
+          "wallMs": 20.53240833333348,
+          "processCpuMs": 22.166666666666668
+        },
+        "after": {
+          "wallMs": 20.385716666666667,
+          "processCpuMs": 23.333333333333332
+        },
+        "scenarios": {
+          "wallMs": 20.568916666667366,
+          "processCpuMs": 22.166666666666668
+        }
+      }
+    },
+    {
+      "farm": "champaign",
+      "irrigated": true,
+      "priority": "risk",
+      "means": {
+        "before": {
+          "wallMs": 20.975299999998242,
+          "processCpuMs": 18.333333333333332
+        },
+        "after": {
+          "wallMs": 20.155924999999115,
+          "processCpuMs": 25.833333333333332
+        },
+        "scenarios": {
+          "wallMs": 21.16188333333351,
+          "processCpuMs": 15.75
+        }
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": false,
+      "priority": "balanced",
+      "means": {
+        "before": {
+          "wallMs": 33.548408333333704,
+          "processCpuMs": 41.833333333333336
+        },
+        "after": {
+          "wallMs": 32.70006666666753,
+          "processCpuMs": 39
+        },
+        "scenarios": {
+          "wallMs": 32.699491666665985,
+          "processCpuMs": 35.083333333333336
+        }
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": false,
+      "priority": "profit",
+      "means": {
+        "before": {
+          "wallMs": 31.89663333333313,
+          "processCpuMs": 35.083333333333336
+        },
+        "after": {
+          "wallMs": 29.818033333333613,
+          "processCpuMs": 30.083333333333332
+        },
+        "scenarios": {
+          "wallMs": 30.826608333333144,
+          "processCpuMs": 36.416666666666664
+        }
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": false,
+      "priority": "soil",
+      "means": {
+        "before": {
+          "wallMs": 34.630141666666226,
+          "processCpuMs": 38.916666666666664
+        },
+        "after": {
+          "wallMs": 32.908825000000434,
+          "processCpuMs": 30
+        },
+        "scenarios": {
+          "wallMs": 33.413283333334526,
+          "processCpuMs": 33.833333333333336
+        }
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": false,
+      "priority": "risk",
+      "means": {
+        "before": {
+          "wallMs": 27.923000000000076,
+          "processCpuMs": 28.583333333333332
+        },
+        "after": {
+          "wallMs": 27.08158333333328,
+          "processCpuMs": 22.25
+        },
+        "scenarios": {
+          "wallMs": 28.1871000000001,
+          "processCpuMs": 29.916666666666668
+        }
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": true,
+      "priority": "balanced",
+      "means": {
+        "before": {
+          "wallMs": 24.197991666667196,
+          "processCpuMs": 23.416666666666668
+        },
+        "after": {
+          "wallMs": 23.419733333332562,
+          "processCpuMs": 27.333333333333332
+        },
+        "scenarios": {
+          "wallMs": 24.920724999999646,
+          "processCpuMs": 26.166666666666668
+        }
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": true,
+      "priority": "profit",
+      "means": {
+        "before": {
+          "wallMs": 23.88946666666622,
+          "processCpuMs": 26
+        },
+        "after": {
+          "wallMs": 22.00034999999995,
+          "processCpuMs": 18.25
+        },
+        "scenarios": {
+          "wallMs": 23.40970833333328,
+          "processCpuMs": 27.333333333333332
+        }
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": true,
+      "priority": "soil",
+      "means": {
+        "before": {
+          "wallMs": 31.43449166666657,
+          "processCpuMs": 36.5
+        },
+        "after": {
+          "wallMs": 28.439216666666955,
+          "processCpuMs": 31.25
+        },
+        "scenarios": {
+          "wallMs": 29.317724999999882,
+          "processCpuMs": 29.916666666666668
+        }
+      }
+    },
+    {
+      "farm": "lancaster",
+      "irrigated": true,
+      "priority": "risk",
+      "means": {
+        "before": {
+          "wallMs": 20.22708333333382,
+          "processCpuMs": 23.583333333333332
+        },
+        "after": {
+          "wallMs": 20.890458333332692,
+          "processCpuMs": 28.416666666666668
+        },
+        "scenarios": {
+          "wallMs": 21.229433333333265,
+          "processCpuMs": 17.166666666666668
+        }
+      }
+    }
+  ],
+  "baselineRevision": "825f163ad03cc087e0789e4c22787db296dfe517",
+  "captureSha256": {
+    "finney": "fff451e032065667f05a6546d79411fbd119b3c5c23c1673a22743855d04bf17",
+    "story": "f478a33c658cb8c1871627ab44f7cbba68cf542dda737f8132540359ffe6207a",
+    "champaign": "783e6e1bbffa544b15dcfb570efde0dbf394a68922b85b875d266b89480343ff",
+    "lancaster": "8e15a0d7d6404dd3db2a4623deeabeea5660c4a184cd4b3d789666c755df4453"
+  },
+  "existingBenchmark": {
+    "before": {
+      "rows": 32,
+      "meanWallMs": 26.130896093750003,
+      "meanProcessCpuMs": 29.9140625
+    },
+    "after": {
+      "rows": 32,
+      "meanWallMs": 32.51309296875001,
+      "meanProcessCpuMs": 37.609375
+    }
+  }
+}

@@ -3,6 +3,7 @@ import type { CropYearFertilizer } from "../../../src/shared/fertilizer";
 import { FERTILIZER_PRODUCTS, fertilizerCalculation, fertilizerProductOptions, fertilizerTiming, limeProductAmount, LIME_SOURCE, MF2586_URL } from "../../../src/engine/fertilizerProducts";
 import { useI18n } from "../i18n";
 
+const KO: Record<string, string> = { "not needed (legume)": "필요 없음(두과작물)" };
 const ES: Record<string, string> = {
   "Products & timing": "Productos y aplicación",
   "How was this calculated?": "¿Cómo se calculó?",
@@ -16,14 +17,14 @@ const ES: Record<string, string> = {
   "Product lb/acre = nutrient lb/acre ÷ (analysis % / 100).": "lb de producto/acre = lb de nutriente/acre ÷ (análisis % / 100).",
   "Size MAP/DAP to P2O5; credit its N and ammonium-sulfate N, then remaining N = max(0, guideline N − credits). Potash = K2O ÷ 0.60. Aglime = lb ECC ÷ (product ECC % / 100).": "Calcula MAP/DAP según P2O5; descuenta su N y el del sulfato de amonio: N restante = máx(0, N de la guía − créditos). Potasa = K2O ÷ 0.60. Cal agrícola = lb de ECC ÷ (ECC del producto % / 100).",
   "Expected yield is the plan's expected yield for this crop-year.": "El rendimiento esperado es el del plan para este cultivo y año.",
-  "Inputs": "Datos utilizados", "soil test needed": "se necesita análisis de suelo", "Known product analyses": "Análisis de los productos",
+  "Inputs": "Datos utilizados", "soil test needed": "se necesita análisis de suelo", "not needed (legume)": "no necesario (leguminosa)", "Known product analyses": "Análisis de los productos",
   "Anhydrous ammonia": "Amoníaco anhidro", "Urea": "Urea", "Ammonium sulfate": "Sulfato de amonio", "Potash (potassium chloride)": "Potasa (cloruro de potasio)",
   "Removal only — not an application rate": "Solo extracción — no es una dosis de aplicación",
   "Timing & placement": "Momento y colocación",
 };
 export function FertilizerProducts({ year }: { year: CropYearFertilizer }) {
   const { language } = useI18n();
-  const tx = (s: string) => language === "es" ? ES[s] ?? s : s;
+  const tx = (s: string) => language === "es" ? ES[s] ?? s : language === "ko" ? KO[s] ?? s : s;
   const options = fertilizerProductOptions(year);
   const [ecc, setEcc] = useState("");
   const id = useId();
@@ -54,7 +55,7 @@ export function FertilizerProducts({ year }: { year: CropYearFertilizer }) {
       <p>{tx("Product lb/acre = nutrient lb/acre ÷ (analysis % / 100).")}</p>
       <p>{tx("Size MAP/DAP to P2O5; credit its N and ammonium-sulfate N, then remaining N = max(0, guideline N − credits). Potash = K2O ÷ 0.60. Aglime = lb ECC ÷ (product ECC % / 100).")}</p>
       <p>{tx("Source notes and inputs (original English)")}</p>
-      {year.recs.map((r, i) => <div lang="en" key={`${r.nutrient}-${i}`}><strong>{r.nutrient}: {r.lbPerAcre === null ? tx("soil test needed") : `${r.lbPerAcre} lb/acre`}</strong> — {r.basis === "removal" ? tx("Removal only — not an application rate") : r.basis}
+      {year.recs.map((r, i) => <div lang="en" key={`${r.nutrient}-${i}`}><strong>{r.nutrient}: {r.basis === "legume-not-needed" ? tx("not needed (legume)") : r.lbPerAcre === null ? tx("soil test needed") : `${r.lbPerAcre} lb/acre`}</strong> — {r.basis === "removal" ? tx("Removal only — not an application rate") : r.basis}
         {fertilizerCalculation(year, r) && <p>{fertilizerCalculation(year, r)}</p>}
         <p>{tx("Inputs")}: {Object.entries(r.inputsUsed).map(([key, value]) => `${key}=${value}`).join("; ") || "—"}</p>
         <ul>{r.notes.map((note, j) => <li key={j}>{note}</li>)}</ul><a href={MF2586_URL}>MF2586 p. {r.source.page}</a>

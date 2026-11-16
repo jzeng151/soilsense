@@ -65,9 +65,10 @@ export function Sidebar({ route, user, onSignOut, open, onClose, chats, activeCh
             <path d="M12 5v14M5 12h14" />
           </svg>{tx("New chat")}</button>
 
-        <div className="language-switch" role="group" aria-label={tx("Language")}>
+        {/* The planner page header has its own switcher; keep one language control per view. */}
+        {route !== "planner" && <div className="language-switch" role="group" aria-label={tx("Language")}>
           {LANGUAGES.map((code) => <button key={code} type="button" lang={code} aria-label={code === "ko" ? LANGUAGE_NAMES[code] : `${code.toUpperCase()} ${LANGUAGE_NAMES[code]}`} aria-pressed={language === code} onClick={() => setLanguage(code)}>{code === "ko" ? LANGUAGE_NAMES[code] : code.toUpperCase()}</button>)}
-        </div>
+        </div>}
         <nav className="sb-nav">
           <a href="#/explore" className={route === "explore" ? "on" : ""} onClick={() => onNavigate("explore")}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c6 5 6 13 0 18-6-5-6-13 0-18"/></svg>{tx("Explore")}</a>
           <a href="#/demo" onClick={() => onNavigate("demo")}>{tx("Demo farms")}</a>

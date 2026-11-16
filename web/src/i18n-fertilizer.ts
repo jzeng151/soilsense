@@ -7,6 +7,9 @@ export const fertilizerMessages = {
   "Rates in lb nutrient/acre; lime in lb effective calcium carbonate (ECC)/acre, not product weight.": "Dosis en lb de nutriente/acre; cal en lb de carbonato de calcio efectivo (ECC)/acre, no peso del producto.",
   "Year": "Año", "Crop": "Cultivo", "Lime": "Cal", "Expected yield": "Rendimiento esperado",
   "Soil test needed": "Se necesita análisis de suelo",
+  "Not needed (legume)": "No necesario (leguminosa)",
+  "Legumes fix their own nitrogen; MF2586 gives no soybean N rate.": "Las leguminosas fijan su propio nitrógeno; MF2586 no da dosis de N para soja.",
+  "legume-not-needed": "no necesario (leguminosa)",
   "Confirm with agronomist": "Confirma con tu agrónomo",
   "Crop removal": "Extracción por cosecha",
   "Removal is not an application rate.": "La extracción no es una dosis de aplicación.",
@@ -27,4 +30,6 @@ export const fertilizerMessages = {
   "Farmer soil-test organic matter": "Materia orgánica del análisis del agricultor",
   "Lime assumes 6-inch incorporation (2 inches for established alfalfa); no-till needs one-third of the 6-inch rate. Confirm depth before use.": "La cal supone incorporación a 6 pulg (2 para alfalfa establecida); sin labranza se necesita un tercio de la dosis de 6 pulg. Confirma la profundidad antes de usarla.",
 } as const;
-export function fertilizerText(key: string, language: string): string { return language === "es" && key in fertilizerMessages ? fertilizerMessages[key as keyof typeof fertilizerMessages] : key; }
+/** Korean otherwise uses the English fallback for fertilizer detail; legume status is translated so it never reads as a missing test. */
+const fertilizerKo: Record<string, string> = { "Not needed (legume)": "필요 없음(두과작물)", "Legumes fix their own nitrogen; MF2586 gives no soybean N rate.": "두과작물은 스스로 질소를 고정합니다. MF2586에는 대두 질소 시비량이 없습니다.", "legume-not-needed": "필요 없음(두과작물)" };
+export function fertilizerText(key: string, language: string): string { if (language === "ko") return fertilizerKo[key] ?? key; return language === "es" && key in fertilizerMessages ? fertilizerMessages[key as keyof typeof fertilizerMessages] : key; }

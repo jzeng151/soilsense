@@ -1464,4 +1464,11 @@ export const korean: Partial<Record<string, string>> = {
   "Delete and forget": "삭제하고 저장 정보 지우기",
   "Keep field": "포장 유지",
   "acres": "acres",
+  "Sprout": "Sprout",
+  "Your AI field advisor": "AI 영농 조언자",
+  "Open Sprout": "Sprout 열기",
+  "Close Sprout": "Sprout 닫기",
+  "Sprout loading…": "Sprout 불러오는 중…",
+  "Satellite imagery and Sprout, your AI field advisor, grounded in real data.": "실제 데이터에 기반한 위성 영상과 AI 영농 조언자 Sprout.",
+  "Map unavailable. ZIP lookup and Sprout still work.": "지도를 사용할 수 없습니다. 우편번호 검색과 Sprout는 계속 사용할 수 있습니다.",
 };

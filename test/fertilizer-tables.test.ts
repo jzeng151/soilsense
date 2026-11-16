@@ -25,6 +25,10 @@ describe("MF2586 printed tables and conservative missing-data behavior", () => {
   });
   it("does not invent soybean N, alfalfa stand credit, organic matter or legume cover credits", () => {
     expect(rec("soybean", 50, "N").lbPerAcre).toBeNull();
+    expect(rec("soybean", 50, "N").basis).toBe("legume-not-needed");
+    expect(rec("soybean", 50, "N").notes.join(" ")).toContain("MF2586 gives no soybean N recommendation");
+    expect(rec("alfalfa", 4, "N")).toMatchObject({ lbPerAcre: 0, basis: "legume-not-needed" });
+    expect(rec("soybean", 50, "P2O5").basis).toBe("soil-test-needed");
     expect(rec("corn", 160, "N", {}, { previousCrop: "alfalfa" }).lbPerAcre).toBeNull();
     expect(rec("corn", 160, "N", {}, { organicMatterPct: undefined }).lbPerAcre).toBeNull();
     const cover = rec("corn", 160, "N", {}, { previousCover: "hairy_vetch" });

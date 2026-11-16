@@ -275,7 +275,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
   const last = messages[messages.length - 1];
 
   return (
-    <div className="scout">
+    <main className="scout">
       <header className="sc-top">
         <button type="button" className="sc-icon-btn sc-menu-btn" aria-label={tx("Open sidebar")} onClick={onMenu}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -352,7 +352,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
           </div>
         </>
       )}
-    </div>
+    </main>
   );
 }
 

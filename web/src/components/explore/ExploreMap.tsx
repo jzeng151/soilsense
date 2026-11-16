@@ -120,6 +120,10 @@ export function ExploreMap(props: Props) {
       if (e.error?.message?.includes("WebGL")) latest.current.onError();
     });
     m.on("load", () => {
+      // Phones: start the compact attribution collapsed (MapLibre opens it) so it does not cover the
+      // ZIP card or assistant controls; the 24×24 info toggle still exposes the full credits.
+      const attrib = el.current?.querySelector(".maplibregl-ctrl-attrib.maplibregl-compact");
+      if (attrib && window.matchMedia("(max-width: 700px)").matches) attrib.classList.remove("maplibregl-compact-show");
       const css = getComputedStyle(el.current!);
       const line = css.getPropertyValue("--color-on-data").trim() || "white";
       const selected = css.getPropertyValue("--color-accent").trim();

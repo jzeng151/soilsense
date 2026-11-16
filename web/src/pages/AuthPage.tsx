@@ -63,7 +63,7 @@ export function AuthPage({ onSignedIn }: { onSignedIn: (u: User) => void }) {
       <aside className="auth-brand">
         <div className="auth-pitch">
           <p className="auth-eyebrow">NASA Space Apps NYC 2026</p>
-          <h1>Soil Sense</h1>
+          <p className="auth-name">Soil Sense</p>
           <p className="auth-tagline">{localize("Teaching satellites to speak Farmer.")}</p>
         </div>
         <Sprout mood="hello" width={230} className="auth-sprout" />
@@ -87,7 +87,7 @@ export function AuthPage({ onSignedIn }: { onSignedIn: (u: User) => void }) {
           </div>
 
           <header className="auth-head">
-            <h2>{localize(t.title)}</h2>
+            <h1>{localize(t.title)}</h1>
             <p>{localize(t.lead)}</p>
           </header>
 

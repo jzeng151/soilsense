@@ -111,7 +111,7 @@ it("uses Spanish for controls and crop names and exposes the close action", asyn
   localStorage.setItem("soilsense.language", "es"); const close = vi.fn();
   vi.stubGlobal("fetch", vi.fn(async (url: RequestInfo | URL) => String(url).endsWith("/status") ? Response.json({ configured: false }) : Response.json(planFixture)));
   await act(async () => root.render(createElement(LanguageProvider, { children: createElement(FieldAssistantPanel, { context: location, onClose: close }) })));
-  await settle(); expect(host.textContent).toContain("Asistente de parcelas"); expect(host.querySelector(".fa-rotation")?.textContent).toContain("Avena");
+  await settle(); expect(host.textContent).toContain("Tu asesor de campo con IA"); expect(host.querySelector(".fa-rotation")?.textContent).toContain("Avena");
   await act(async () => (host.querySelector('[aria-label="Cerrar asistente"]') as HTMLButtonElement).click()); expect(close).toHaveBeenCalledOnce();
   localStorage.removeItem("soilsense.language");
 });

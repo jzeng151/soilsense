@@ -1,4 +1,4 @@
-import type { CropYearFertilizer, FertilizerInputs, Nutrient, NutrientRec, PlanFertilizer } from "../shared/fertilizer";
+import { LEGUME_N_NOTE, type CropYearFertilizer, type FertilizerInputs, type Nutrient, type NutrientRec, type PlanFertilizer } from "../shared/fertilizer";
 import { validateFertilizerInputs } from "../shared/fertilizer-inputs";
 import type { PlanResponse, PlanYear, RotationPlan } from "../shared/types";
 
@@ -54,8 +54,8 @@ export function cropYearFertilizer(y: PlanYear, c: FertilizerContext, inputs: Fe
   if (c.previousCover && c.previousCover !== "none") nNotes.push("No cover-crop N credit: MF2586 does not quantify cereal rye, crimson clover or hairy vetch credits. Do not equate crimson clover with red/sweet clover.");
   if (!c.previousCrop) nNotes.push("Previous crop unknown; no previous-crop credit assumed.");
   let n: NutrientRec;
-  if (r.alfalfa) n = rate("N", 0, "not-needed", r.nPage, {}, ["Established alfalfa assumed. New seedings have different recommendations (p20)."]);
-  else if (y.crop === "soybean") n = needed("N", r.nPage, "MF2586 does not provide a soybean fertilizer-N rate formula. Confirm nodulation and N management with your agronomist; no numeric rate inferred.");
+  if (r.alfalfa) n = rate("N", 0, "legume-not-needed", r.nPage, {}, [LEGUME_N_NOTE, "Established alfalfa assumed. New seedings have different recommendations (p20)."]);
+  else if (y.crop === "soybean") n = rate("N", null, "legume-not-needed", r.nPage, {}, [LEGUME_N_NOTE]);
   else if (om === undefined) n = needed("N", r.nPage, "Organic matter soil test or SSURGO value needed; no organic matter value invented.", nInputs);
   else if (c.previousCrop === "alfalfa") n = needed("N", "3–4", "Previous alfalfa credit requires stand density and destruction tillage. Confirm those before calculating N.", nInputs);
   else {
@@ -109,7 +109,7 @@ export function planFertilizer(plan: RotationPlan, response: PlanResponse, input
     organicMatterSource: test?.organicMatterPct !== undefined ? "farmer soil test" : "USDA SSURGO (mapped estimate, not a lab result)",
     soilPh: test?.ph, coarseTexture: test?.texture ? ["sand", "sandy_loam"].includes(test.texture) : (response.soil.sandPct ?? 0) >= 70,
     previousCrop: i ? plan.years[i - 1]?.crop : history.at(-1), previousCover: i ? plan.years[i - 1]?.cover : undefined,
-  }, inputs)), assumptions: ["Expected yield is the plan's expected yield for that crop-year, not a new yield prediction.", "Display only: no changes to rankings, scores, economics, or the engine's cost-model nitrogen.", "Initial measured P/K reused for each year; no invented future soil tests. Build-maintenance uses four years.", "Kansas-specific rates withheld outside Kansas. Lime implementation limited to central/western Kansas (longitude ≤ −98).", "Alfalfa is treated as an established stand. MF2586 has no numeric soybean N formula; that rate is withheld."], disclaimer: FERTILIZER_DISCLAIMER };
+  }, inputs)), assumptions: ["Expected yield is the plan's expected yield for that crop-year, not a new yield prediction.", "Display only: no changes to rankings, scores, economics, or the engine's cost-model nitrogen.", "Initial measured P/K reused for each year; no invented future soil tests. Build-maintenance uses four years.", "Kansas-specific rates withheld outside Kansas. Lime implementation limited to central/western Kansas (longitude ≤ −98).", "Alfalfa is treated as an established stand. MF2586 has no numeric soybean N formula; soybean (legume) N is shown as not needed, with no rate."], disclaimer: FERTILIZER_DISCLAIMER };
 }
 /** Opt-in enrichment; no mutation of input, cached plans, or current practice. */
 export function withFertilizer(response: PlanResponse): PlanResponse {

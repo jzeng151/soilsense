@@ -1,4 +1,5 @@
 import { useI18n } from "../i18n";
+import { LANGUAGE_LOCALES } from "../../../src/shared/language";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -86,7 +87,7 @@ interface Props {
 
 export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props) {
   const { t: tx, text: localize, language } = useI18n();
-  const transport = useMemo(() => new DefaultChatTransport({ api: "/api/scout/chat", fetch: authFetch }), []);
+  const transport = useMemo(() => new DefaultChatTransport({ api: "/api/scout/chat", fetch: authFetch, body: { language } }), [language]);
   const { messages, sendMessage, status, error, stop, regenerate, clearError } = useChat({ id: chatId, messages: initialMessages, transport });
   const [input, setInput] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -177,7 +178,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
       return;
     }
     const rec = new Ctor();
-    rec.lang = language === "es" ? "es-US" : "en-US";
+    rec.lang = LANGUAGE_LOCALES[language];
     rec.interimResults = true;
     rec.onresult = (e) => setInput(Array.from(e.results).map((r) => r[0]?.transcript ?? "").join(""));
     rec.onend = () => setListening(false);
@@ -332,7 +333,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
             )}
             {error && (
               <div className="sc-msg sc-bot sc-err">
-                <p>{errorText(error)}</p>
+                <p>{localize(errorText(error))}</p>
                 <button type="button" className="sc-retry" onClick={() => void regenerate()}>{tx("Try again")}</button>
               </div>
             )}

@@ -1,3 +1,4 @@
+import { factText } from "../i18n-facts";
 import { translate, translateKnown, useI18n, type Language } from "../i18n";
 import type { PlanResponse } from "../../../src/shared/types";
 import { evidenceForPlan } from "../../../src/engine/dataEvidence";
@@ -19,7 +20,7 @@ export function evidenceText(value: string, language: Language): string {
   if (daily) return translate(language, "{valid} / {expected} required daily rain/max/min values; incomplete years excluded from replay", { valid: daily[1]!, expected: daily[2]! });
   const crops = /^(\d+) annual classifications; expected coverage unknown$/.exec(value);
   if (crops) return translate(language, "{count} annual classifications; expected coverage unknown", { count: crops[1]! });
-  return translateKnown(language, value);
+  return factText(translateKnown(language, value), language);
 }
 
 export function DecisionNotice() {

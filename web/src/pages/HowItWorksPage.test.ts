@@ -41,7 +41,7 @@ it.each(["en", "es"] as const)("opens the public how-it-works route in %s with s
     await act(async () => container.querySelector<HTMLButtonElement>(`button[aria-label="${switchTo}"]`)!.click());
     expect(container.querySelector("h1")?.textContent).toBe(language === "en" ? "Cómo funciona" : "How it works");
     await act(async () => container.querySelector<HTMLAnchorElement>('a[href="#/sources"]')!.click());
-    expect(container.querySelector("h1")?.textContent).toBe("Where our data comes from");
+    expect(container.querySelector("h1")?.textContent).toBe(language === "en" ? "De dónde vienen nuestros datos" : "Where our data comes from");
     await act(async () => container.querySelector<HTMLAnchorElement>('a[href="#/how-it-works"]')!.click());
     expect(container.querySelector("h1")?.textContent).toBe(language === "en" ? "Cómo funciona" : "How it works");
   } finally {

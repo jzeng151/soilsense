@@ -1,14 +1,21 @@
 import { createContext, createElement, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { CropId } from "../../src/shared/types";
+import { constraintMessages } from './i18n-constraints';
 import { fieldMessages } from "./i18n-fields";
 import { cardMessages } from "./i18n-cards";
+import { korean } from "./i18n-ko";
+import { LANGUAGES, parseLanguage, type Language } from "../../src/shared/language";
+export type { Language } from "../../src/shared/language";
+import { priceMessages } from "./i18n-prices";
 import { myFieldsMessages } from "./i18n-myfields";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
+  ...constraintMessages,
   ...fieldMessages,
   ...cardMessages,
+  ...priceMessages,
   ...myFieldsMessages,
   "District outlook (next ~4 weeks, team's Kansas model)": "Perspectiva del distrito (próximas ~4 semanas, modelo de Kansas del equipo)",
   "drought likely to continue.": "es probable que la sequía continúe.",
@@ -209,9 +216,9 @@ export const messages = {
   "Risk return tradeoff": "En promedio, tus cultivos actuales generan unos ${less} más por acre al año porque los años buenos son muy rentables. Pero son poco frecuentes aquí: tus cultivos actuales salen adelante en unos {now} de cada 10 años, y este plan en unos {ours}. Varios años difíciles seguidos cuestan mucho más que esa diferencia promedio.",
 } as const;
 
-export type Language = "en" | "es";
+
 /** Judge/farmer guide: paired copy keeps the tables and diagram fully bilingual. */
-const bilingual = (en: string, es: string): Record<Language, string> => ({ en, es });
+const bilingual = (en: string, es: string): Record<Language, string> => Object.fromEntries(LANGUAGES.map(language => [language, language === "es" ? es : language === "ko" ? korean[en] ?? en : en])) as Record<Language, string>;
 export const howItWorksCopy = {
   title: bilingual("How it works", "Cómo funciona"),
   menu: bilingual("Open sidebar", "Abrir navegación"),
@@ -294,17 +301,17 @@ english["Decision notice"] = "SoilSense helps explore options using NASA data an
 english["Low return warning"] = "At today's prices, none of the rotations we compared reliably makes money on this field without irrigation. This plan is the best balance of cost, risk and soil: it fails less often and protects the ground until prices or water improve.";
 english["Lower return tradeoff"] = "On average this plan earns about ${less}/acre a year less than what you do now. We suggest it because it is better for your soil and fits your goal.";
 english["Risk return tradeoff"] = "On average your current crops earn about ${less}/acre a year more, because their good years pay very well. But those good years are rare here: your current crops come through in about {now} of 10 years, this plan in about {ours}. A few bad years in a row cost far more than that average difference.";
-export const dictionaries = { en: english, es: messages };
+export const dictionaries: { en: Record<TranslationKey, string>; es: Record<TranslationKey, string>; ko: Partial<Record<string, string>> } = { en: english, es: messages, ko: korean };
 /** Translate fixed metadata/enum labels at their render site; unknown provider text is preserved. */
 export function translateKnown(language: Language, value: string): string {
   return Object.hasOwn(messages, value) ? translate(language, value as TranslationKey) : value;
 }
 export function translate(language: Language, key: TranslationKey, values: Record<string, string | number> = {}): string {
-  return dictionaries[language][key].replace(/\{(\w+)\}/g, (match, name: string) => String(values[name] ?? match));
+  return (dictionaries[language][key] ?? english[key]).replace(/\{(\w+)\}/g, (match, name: string) => String(values[name] ?? match));
 }
 export const LANGUAGE_STORAGE_KEY = "soilsense.language";
 function initialLanguage(): Language {
-  try { return localStorage.getItem(LANGUAGE_STORAGE_KEY) === "es" ? "es" : "en"; } catch { return "en"; }
+  try { return parseLanguage(localStorage.getItem(LANGUAGE_STORAGE_KEY)); } catch { return "en"; }
 }
 const defaultLanguage = { language: "en" as Language, setLanguage: (_language: Language) => {} };
 const LanguageContext = createContext<typeof defaultLanguage | null>(null);
@@ -318,7 +325,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     try { localStorage.setItem(LANGUAGE_STORAGE_KEY, language); } catch { /* Storage can be blocked in private browsers. */ }
   }, [language, parent]);
   if (parent) return children;
-  return createElement(LanguageContext.Provider, { value: { language, setLanguage } }, children);
+  return createElement(LanguageContext.Provider, { value: { language, setLanguage } },
+    language === "ko" ? createElement("p", { className: "translation-disclosure", lang: "ko", role: "note" }, "한국어는 AI가 번역했으며 아직 한국어 원어민의 검토를 받지 않았습니다.") : null, children);
 }
 export function useI18n() {
   const context = useContext(LanguageContext) ?? defaultLanguage;
@@ -337,7 +345,7 @@ export function cropText(value: string, language: Language): string {
   return Object.hasOwn(cropKeys, crop) ? cropName(crop as CropId, language) : translateKnown(language, value);
 }
 export function rotationText(value: string, language: Language): string {
-  if (language === "es" && value.startsWith("Current pattern: ")) return `Práctica actual: ${rotationText(value.slice("Current pattern: ".length), language)}`;
+  if (language !== "en" && value.startsWith("Current pattern: ")) return `${language === "ko" ? "현재 재배 방식" : "Práctica actual"}: ${rotationText(value.slice("Current pattern: ".length), language)}`;
   return value.split(" → ").map(crop => cropText(crop, language)).join(" → ");
 }
 export const coverNames: Record<string, string> = { cereal_rye: "centeno", crimson_clover: "trébol encarnado", hairy_vetch: "veza vellosa", none: "sin cultivo de cobertura" };

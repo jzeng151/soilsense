@@ -22,6 +22,7 @@ export const assistantMessages = {
   "Why is this rotation recommended?": "¿Por qué se recomienda esta rotación?",
   "How does limited irrigation change the plan?": "¿Cómo cambia el plan con riego limitado?",
   "What are the soil and climate limits here?": "¿Cuáles son las limitaciones del suelo y el clima aquí?",
+  "Fertilizer guide for this rotation (K-State)": "Guía de fertilización para esta rotación (K-State)",
   "Ask a question about your fields…": "Haz una pregunta sobre tus parcelas…",
   "Too many messages. Wait a minute before trying again.": "Demasiados mensajes. Espera un minuto antes de volver a intentarlo.",
   "Conversation": "Conversación",

@@ -2,6 +2,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useEffect, useMemo, useRef, useState, type JSX } from "react";
 import type { PlanResponse } from "../../../../src/shared/types";
+import { FERTILIZER_SUGGESTION } from "../../../../src/engine/fertilizerProducts";
 import { authFetch } from "../../auth";
 import { cropName, useI18n } from "../../i18n";
 import { ScoutMessage } from "../ScoutMessage";
@@ -9,7 +10,7 @@ import { Sprout } from "../Sprout";
 import type { FieldAssistantPanelProps } from "./FieldAssistantPanel";
 import "./field-assistant.css";
 
-const SUGGESTIONS = ["Why is this rotation recommended?", "How does limited irrigation change the plan?", "What are the soil and climate limits here?"] as const;
+const SUGGESTIONS = ["Why is this rotation recommended?", "How does limited irrigation change the plan?", "What are the soil and climate limits here?", FERTILIZER_SUGGESTION] as const;
 export function FieldAssistantContent({ context, onClose, className = "" }: FieldAssistantPanelProps): JSX.Element {
   const { t, language } = useI18n();
   const [plan, setPlan] = useState<PlanResponse | null>(null);

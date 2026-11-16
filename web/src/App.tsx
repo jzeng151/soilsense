@@ -26,6 +26,7 @@ import { CropTimingEvidence } from "./components/CropTimingEvidence";
 import { SmapCard } from "./components/SmapCard";
 import { SensorFitCard } from "./components/SensorFitCard";
 import { GraceWellsCard } from "./components/GraceWellsCard";
+import { FarmerConstraintEvidence } from "./components/FarmerConstraintEvidence";
 import { EconomicsCard } from "./components/EconomicsCard";
 import { HistoricalScenarios } from "./components/HistoricalScenarios";
 
@@ -666,6 +667,7 @@ function MainFlow() {
                 <VegetationCard plan={plan} />
                 <SmapCard plan={plan} />
                 <GraceWellsCard plan={plan} />
+                <FarmerConstraintEvidence key={`farmer-constraints:${plan.generatedAt}`} plans={plan.plans} current={plan.currentPractice} rainOnly={plan.water === "rain"} />
                 {/* /stretch: data evidence */}
 
                 <div className="jr-card">

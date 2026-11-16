@@ -4,10 +4,6 @@ summary { min-height: 44px; }
 .jr-main { grid-template-columns: minmax(0, 1fr); overflow-wrap: anywhere; }
 .jr-main > * { min-width: 0; }
 .jr-main a { overflow-wrap: anywhere; }
-.sb-close { display: none; }
-@media (max-width: 860px) {
-  .sb-close { display: block; background: var(--color-subtle); color: var(--color-text); border: 1px solid currentColor; border-radius: var(--radius-md); }
-}
 button, [role="button"] { min-width: 44px; }
 .leaflet-touch .leaflet-bar a, .leaflet-bar a { width: 44px; height: 44px; line-height: 44px; }
 .leaflet-control-layers-toggle { min-width: 44px; min-height: 44px; }

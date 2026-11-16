@@ -1,0 +1,200 @@
+/* App-wide navigation rail (components/explore/ExploreRail.tsx), the same on every page.
+   It never expands on hover: its toggle switches between open (icons + labels) and minimized (icons only), and the
+   state is mirrored on <html data-rail>. --rail-w is the width page content must clear, so content and Explore's
+   overlays always start beside the rail instead of underneath it. Translucent over the Explore map, solid elsewhere. */
+:root {
+  --rail-collapsed-w: 76px;
+  --rail-open-w: 236px;
+  --rail-w: var(--rail-collapsed-w);
+}
+:root[data-rail="open"] {
+  --rail-w: var(--rail-open-w);
+}
+@media (max-width: 700px) {
+  /* Phones: the open rail is a drawer over the page, so content keeps the minimized width. */
+  :root,
+  :root[data-rail="open"] {
+    --rail-collapsed-w: 56px;
+    --rail-w: var(--rail-collapsed-w);
+  }
+}
+.explore-rail {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--rail-collapsed-w);
+  /* Above Explore's map controls and notes (z-index 7) so nothing on the map is ever drawn over the rail. */
+  z-index: 8;
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  padding: 20px 14px;
+  gap: 8px;
+  overflow: hidden auto;
+  border-right: 1px solid var(--color-border);
+  /* Slightly see-through Canopy; text stays ≥7:1 because the blur keeps the backdrop dark. */
+  background: color-mix(in srgb, var(--color-bg) 86%, transparent);
+  backdrop-filter: blur(14px);
+  transition: width 0.18s ease, box-shadow 0.18s ease;
+}
+.explore-rail.is-open {
+  width: var(--rail-open-w);
+}
+.explore-rail a,
+.explore-rail button {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 14px;
+  flex: none;
+  min-height: 46px;
+  width: 100%;
+  padding: 0 11px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  background: transparent;
+  text-decoration: none;
+  font: 500 14px var(--font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.explore-rail svg {
+  flex: none;
+}
+.explore-rail .er-label {
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.explore-rail.is-open .er-label {
+  opacity: 1;
+}
+/* Minimized: labels stay in the DOM as accessible names but must not catch clicks or widen anything. */
+.explore-rail:not(.is-open) .er-label {
+  pointer-events: none;
+}
+.rail-toggle {
+  color: var(--color-muted);
+}
+.explore-rail .rail-toggle svg {
+  stroke-width: 1.8;
+}
+.rail-scrim {
+  display: none;
+}
+.explore-rail .er-code {
+  flex: none;
+  width: 24px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+.explore-rail a[aria-current="page"] {
+  background: var(--color-subtle);
+  border-color: var(--color-border-strong);
+}
+/* Outlines must stay inside the clipped rail. */
+.explore-rail :focus-visible {
+  outline-offset: -3px;
+  box-shadow: none;
+}
+.explore-rail a:hover,
+.explore-rail button:hover {
+  background: var(--color-subtle);
+  border-color: var(--color-border);
+}
+.explore-rail svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.explore-rail .explore-brand {
+  padding: 0 4px;
+  margin-bottom: 20px;
+  font: 600 18px var(--font-display);
+}
+.explore-rail-bottom {
+  margin-top: auto;
+  display: grid;
+  gap: 8px;
+}
+/* Small "AI" tag beside the Sprout label (visible with the label). */
+.explore-rail .er-tag {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+/* Signed-in team member: initial avatar in the collapsed rail, email + sign out when expanded. */
+.explore-rail .er-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: 800;
+  font-size: 13px;
+}
+.explore-rail .er-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Beside ordinary page content there is no map behind the rail: use solid Canopy (no see-through blur over cream text)
+   and stay above sticky page headers while expanded. */
+.explore-rail.rail-solid {
+  background: var(--color-bg);
+  backdrop-filter: none;
+  z-index: 45;
+}
+@media (max-width: 700px) {
+  /* Phone drawer: the open rail slides over the page above every overlay; tapping the scrim closes it. */
+  .rail-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 59;
+    background: var(--color-scrim);
+  }
+  .explore-rail.is-open {
+    z-index: 60;
+    box-shadow: var(--shadow-lg);
+  }
+  .explore-rail {
+    padding: 14px 6px;
+    gap: 6px;
+  }
+  .explore-rail .explore-brand {
+    margin-bottom: 12px;
+  }
+  .explore-brand img {
+    width: 32px;
+    height: 32px;
+  }
+  .explore-rail a,
+  .explore-rail button {
+    min-height: 40px;
+    padding: 0 9px;
+  }
+  .explore-rail svg {
+    width: 21px;
+    height: 21px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .explore-rail,
+  .explore-rail .er-label {
+    transition: none;
+  }
+}

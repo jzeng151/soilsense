@@ -33,7 +33,7 @@ import { ResearchNote } from "./ResearchNote";
 import { ScoutMessage } from "./ScoutMessage";
 import { TrendChart } from "./TrendChart";
 import { ScheduledCheck } from "./ScheduledCheck";
-import { Sidebar } from "./Sidebar";
+import { ExploreRail } from "./explore/ExploreRail";
 import { SettingsPage } from "../pages/SettingsPage";
 import { summarizeSmap } from "../../../src/engine/smap";
 
@@ -235,8 +235,8 @@ describe("Spanish plan and evidence cards", () => {
   it("translates sidebar and settings controls while keeping editable agent text", async () => {
     const settings = { greeting: "Existing English agent greeting", instructions: "Existing operator instructions", tools: { find_location: { enabled: true, description: "Existing tool prompt" } }, languages: { autoDetect: true, enabled: ["en", "es"] } };
     vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ settings, defaults: settings, status: { database: true, gemini: true, twilio: true, mode: "gemini-live", model: "Gemini" }, tools: [{ name: "find_location", title: "Find location", about: "Turns a spoken or typed ZIP code into a town, state and map point (Zippopotam.us).", required: true }], languages: [{ code: "en", name: "English", native: "English" }, { code: "es", name: "Spanish", native: "Español" }], limits: { greeting: 500, instructions: 5000 }, lockedRules: "Original rules", updatedAt: null }))));
-    await render(group(h(Sidebar, { route: "settings", user: null, onSignOut: () => {}, open: false, onClose: () => {}, chats: [], activeChatId: null, onNavigate: () => {}, onNewChat: () => {}, onOpenChat: () => {}, onDeleteChat: () => {} }), h(SettingsPage, { onMenu: () => {} })));
-    for (const text of ["Field Watch", "Nueva conversación", "Configuración", "Agente telefónico", "Qué dice", "Qué puede hacer", "Hablar el idioma de quien llama"]) expect(container.textContent).toContain(text);
+    await render(group(h(ExploreRail, { solid: true, current: "#/settings" }), h(SettingsPage)));
+    for (const text of ["Field Watch", "Configuración", "Agente telefónico", "Qué dice", "Qué puede hacer", "Hablar el idioma de quien llama"]) expect(container.textContent).toContain(text);
     expect((container.querySelector('#st-greeting') as HTMLTextAreaElement).value).toBe("Existing English agent greeting");
     expect(container.querySelector('[aria-label="Navegación principal"]')).toBeTruthy();
     const toolsTab = [...container.querySelectorAll('button')].find(el => el.textContent === "Qué puede hacer")!;

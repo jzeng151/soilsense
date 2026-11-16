@@ -38,13 +38,10 @@ function Flow({ index, language }: { index: number; language: Language }) {
   </div>;
 }
 
-export function HowItWorksPage({ onMenu }: { onMenu: () => void }) {
+export function HowItWorksPage() {
   const { language, setLanguage, t } = useI18n();
   const text = (value: Record<Language, string>) => value[language];
   return <div className="app hiw">
-    <button type="button" className="sb-toggle" aria-label={text(copy.menu)} onClick={onMenu}>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
-    </button>
     <main className="hiw-wrap">
       <header className="hiw-head">
         <div className="hiw-language" role="group" aria-label={t("Language")}>

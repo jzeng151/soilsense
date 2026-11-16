@@ -1,16 +1,9 @@
 .explore-page,
 .demo-page {
-  /* The rail and Sprout float over the map, so overlays are offset by their widths. */
-  --rail-w: 76px;
-  --rail-open-w: 236px;
+  /* The rail and Sprout float over the map, so overlays are offset by their widths. --rail-w comes from
+     components/explore/rail.css and follows the rail's open/minimized toggle, so overlays never sit under it. */
   --rail-clearance: var(--rail-w);
   --assist-w: 0px;
-}
-/* Move map labels out of the expanded rail's footprint without moving the map itself.
-   Keyboard focus uses the same layout as pointer hover. */
-.explore-page:has(.explore-rail:hover),
-.explore-page:has(.explore-rail:focus-within) {
-  --rail-clearance: var(--rail-open-w);
 }
 .explore-page.assistant-open.has-location {
   --assist-w: 416px;
@@ -40,101 +33,6 @@
   outline: 3px solid var(--color-on-data);
   outline-offset: 4px;
   box-shadow: 0 0 0 6px var(--color-data);
-}
-.explore-rail {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: var(--rail-w);
-  z-index: 6;
-  display: flex;
-  align-items: stretch;
-  flex-direction: column;
-  padding: 20px 14px;
-  gap: 8px;
-  overflow: hidden auto;
-  border-right: 1px solid var(--color-border);
-  /* Slightly see-through Canopy; text stays ≥7:1 because the blur keeps the backdrop dark. */
-  background: color-mix(in srgb, var(--color-bg) 86%, transparent);
-  backdrop-filter: blur(14px);
-  transition: width 0.18s ease, box-shadow 0.18s ease;
-}
-/* Hover (pointer) or keyboard focus expands the rail over the map to show each label. */
-.explore-rail:hover,
-.explore-rail:focus-within {
-  width: var(--rail-open-w);
-  box-shadow: var(--shadow-lg);
-}
-.explore-rail a,
-.explore-rail button {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 14px;
-  flex: none;
-  min-height: 46px;
-  width: 100%;
-  padding: 0 11px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  color: var(--color-text);
-  background: transparent;
-  text-decoration: none;
-  font: 500 14px var(--font-sans);
-  white-space: nowrap;
-  cursor: pointer;
-}
-.explore-rail svg {
-  flex: none;
-}
-.explore-rail .er-label {
-  opacity: 0;
-  transition: opacity 0.12s ease;
-}
-.explore-rail:hover .er-label,
-.explore-rail:focus-within .er-label {
-  opacity: 1;
-}
-.explore-rail .er-code {
-  flex: none;
-  width: 24px;
-  text-align: center;
-  font-weight: 700;
-  font-size: 13px;
-}
-.explore-rail a[aria-current="page"] {
-  background: var(--color-subtle);
-  border-color: var(--color-border-strong);
-}
-/* Outlines must stay inside the clipped rail. */
-.explore-rail :focus-visible {
-  outline-offset: -3px;
-  box-shadow: none;
-}
-.explore-rail a:hover,
-.explore-rail button:hover {
-  background: var(--color-subtle);
-  border-color: var(--color-border);
-}
-.explore-rail svg {
-  width: 24px;
-  height: 24px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.explore-rail .explore-brand {
-  padding: 0 4px;
-  margin-bottom: 20px;
-  font: 600 18px var(--font-display);
-}
-.explore-rail-bottom {
-  margin-top: auto;
-  display: grid;
-  gap: 8px;
 }
 .explore-map-area {
   position: absolute;
@@ -292,7 +190,8 @@
   border: 0;
 }
 .explore-layers {
-  bottom: 50px;
+  /* Just above the map credits in the same corner, however many lines they wrap to (--attrib-h from ExploreMap). */
+  bottom: max(50px, calc(var(--attrib-h, 30px) + 20px));
   right: calc(var(--assist-w) + 20px);
   display: flex;
   flex-direction: column-reverse;
@@ -351,6 +250,10 @@
 }
 .explore-page.assistant-open .maplibregl-ctrl-bottom-right {
   right: var(--assist-w);
+}
+/* The expanded attribution wraps leftward from the right edge; stop it at the rail instead of drawing over it. */
+.explore-page .maplibregl-ctrl-bottom-right {
+  max-width: calc(100% - var(--rail-clearance) - var(--assist-w));
 }
 .explore-page .maplibregl-ctrl-bottom-left,
 .explore-page .maplibregl-ctrl-bottom-right,
@@ -497,32 +400,8 @@
 }
 @media (max-width: 700px) {
   .is-globe .explore-layers:not(:has(section)) { display: none; }
-  .explore-page,
-  .demo-page {
-    --rail-w: 56px;
-  }
   .explore-page.assistant-open.has-location {
     --assist-w: 0px;
-  }
-  .explore-rail {
-    padding: 14px 6px;
-    gap: 6px;
-  }
-  .explore-rail .explore-brand {
-    margin-bottom: 12px;
-  }
-  .explore-brand img {
-    width: 32px;
-    height: 32px;
-  }
-  .explore-rail a,
-  .explore-rail button {
-    min-height: 40px;
-    padding: 0 9px;
-  }
-  .explore-rail svg {
-    width: 21px;
-    height: 21px;
   }
   .explore-intro {
     top: 28px;

@@ -1,5 +1,5 @@
 import { useI18n } from "./i18n";
-import { useCallback, useEffect, useState, lazy, Suspense } from "react";
+import { useCallback, useEffect, useMemo, useState, lazy, Suspense } from "react";
 import { landingRedirect } from "./components/explore/location";
 const ExplorePage = lazy(() => import('./pages/ExplorePage').then(m => ({ default: m.ExplorePage })));
 const DemoFarmsPage = lazy(() => import('./pages/DemoFarmsPage').then(m => ({ default: m.DemoFarmsPage })));
@@ -9,7 +9,7 @@ import { HowItWorksPage } from "./pages/HowItWorksPage";
 import { DocsAdmin } from "./components/DocsAdmin";
 import { ScoutSessionProvider, useScoutSession } from "./ScoutSession";
 import { GUEST_ID } from "./chats";
-import { Sidebar, type Route } from "./components/Sidebar";
+import { ExploreRail, NavAccountContext, NavRailProvider, type RailHref } from "./components/explore/ExploreRail";
 import { ScoutPage } from "./pages/ScoutPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { SourcesPage } from "./pages/SourcesPage";
@@ -17,7 +17,13 @@ import { LivePage } from "./pages/LivePage";
 import { AuthPage } from "./pages/AuthPage";
 import { getMe, SIGNED_OUT_EVENT, signOut, type User } from "./auth";
 
+export type Route = "planner" | "scout" | "live" | "sources" | "how-it-works" | "settings" | "signin" | "explore" | "demo";
 type WorkspaceRoute = Route | "admin/docs";
+/** Which rail link is highlighted on each Shell route (Explore and Demo render their own rail). */
+const RAIL_CURRENT: Record<WorkspaceRoute, RailHref | null> = {
+  planner: "#/field-watch", scout: "#/scout", live: "#/live", sources: "#/sources", "how-it-works": "#/how-it-works",
+  settings: "#/settings", signin: null, explore: "#/explore", demo: "#/demo", "admin/docs": null,
+};
 const routeFromHash = (): WorkspaceRoute => {
   const h = window.location.hash;
   if (h === "#/field-watch" || h === "#/planner") return "planner";
@@ -55,7 +61,7 @@ export function Shell() {
   }, []);
 
   return (
-    <LanguageProvider><ScoutSessionProvider ownerId={user?.id ?? GUEST_ID}><Workspace
+    <LanguageProvider><NavRailProvider><ScoutSessionProvider ownerId={user?.id ?? GUEST_ID}><Workspace
       key={user?.id ?? GUEST_ID}
       user={user}
       onSignedIn={setUser}
@@ -63,7 +69,7 @@ export function Shell() {
         await signOut();
         setUser(null);
       }}
-    /></ScoutSessionProvider></LanguageProvider>
+    /></ScoutSessionProvider></NavRailProvider></LanguageProvider>
   );
 }
 
@@ -72,7 +78,6 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
   const [route, setRoute] = useState<WorkspaceRoute>(routeFromHash);
   const [exploreVisited, setExploreVisited] = useState(route === "explore");
   useEffect(() => { if (route === "explore") setExploreVisited(true); }, [route]);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [exploreLanding, setExploreLanding] = useState(false);
   useEffect(() => {
     let active = true;
@@ -85,7 +90,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
     }).catch(() => {});
     return () => { active = false; };
   }, []);
-  const { chats, activeId, newChat, openChat, deleteChat } = useScoutSession();
+  const { activeId } = useScoutSession();
 
   useEffect(() => {
     const onHash = () => {
@@ -97,61 +102,41 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
     return () => window.removeEventListener("hashchange", onHash);
   }, [exploreLanding]);
 
-
-
   const go = useCallback((r: Route) => {
     setRoute(r);
-    setSidebarOpen(false);
     const hash = r === "planner" ? "#/field-watch" : `#/${r}`;
     if (window.location.hash !== hash) window.location.hash = hash;
-  }, [exploreLanding]);
-
+  }, []);
+  const account = useMemo(() => ({ user, onSignOut }), [user, onSignOut]);
 
   return (
-    <>
+    <NavAccountContext.Provider value={account}>
     {/* Keep the selected field, exact plan and active tab when opening full chat. */}
     {(exploreVisited || route === "explore") && <div hidden={route !== "explore"}>
       <Suspense fallback={<main aria-busy="true">Soil Sense…</main>}><ExplorePage active={route === "explore"} /></Suspense>
     </div>}
     {route === "demo" ? <Suspense fallback={<main aria-busy="true">Soil Sense…</main>}><DemoFarmsPage /></Suspense> : route === "explore" ? null : (
     <div className={`shell route-${route}`}>
-      {/* WCAG 2.4.1: let keyboard and screen-reader users jump past the sidebar. */}
+      {/* WCAG 2.4.1: let keyboard and screen-reader users jump past the navigation rail. */}
       <a className="skip-link" href="#content" onClick={(e) => { e.preventDefault(); document.getElementById("content")?.focus(); }}>
         {tx("Skip to main content")}
       </a>
-      <Sidebar
-        route={route === "admin/docs" ? "planner" : route}
-        user={user}
-        onSignOut={onSignOut}
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        chats={chats}
-        activeChatId={activeId}
-        onNavigate={go}
-        onNewChat={() => {
-          newChat();
-          go("scout");
-        }}
-        onOpenChat={(id) => {
-          openChat(id);
-          go("scout");
-        }}
-        onDeleteChat={deleteChat}
-      />
+      {/* One navigation for every page: the same rail as Explore and Demo, solid because no map sits behind it. */}
+      <ExploreRail solid current={RAIL_CURRENT[route]} />
       <div className="shell-main" id="content" tabIndex={-1}>
         {route === "admin/docs" ? (
           <DocsAdmin />
         ) : route === "scout" ? (
-          <ScoutPage key={activeId} onMenu={() => setSidebarOpen(true)} />
+          <ScoutPage key={activeId} />
         ) : route === "live" ? (
-          <LivePage onMenu={() => setSidebarOpen(true)} />
+          <LivePage />
         ) : route === "how-it-works" ? (
-          <HowItWorksPage onMenu={() => setSidebarOpen(true)} />
+          <HowItWorksPage />
         ) : route === "sources" ? (
-          <SourcesPage onMenu={() => setSidebarOpen(true)} />
+          <SourcesPage />
         ) : route === "settings" || route === "signin" ? (
           user && route === "settings" ? (
-            <SettingsPage onMenu={() => setSidebarOpen(true)} />
+            <SettingsPage />
           ) : (
             // Settings changes the live phone agent, so it needs a team account.
             <AuthPage
@@ -162,18 +147,11 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
             />
           )
         ) : (
-          <>
-            <button type="button" className="sb-toggle" aria-label={tx("Open sidebar")} onClick={() => setSidebarOpen(true)}>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M4 7h16M4 12h16M4 17h16" />
-              </svg>
-            </button>
-            <FieldWatchPage />
-          </>
+          <FieldWatchPage />
         )}
       </div>
     </div>
     )}
-    </>
+    </NavAccountContext.Provider>
   );
 }

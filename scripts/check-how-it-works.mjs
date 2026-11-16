@@ -55,12 +55,9 @@ try {
       await page.getByRole('button', { name: language === 'en' ? 'Español' : 'English', exact: true }).focus();
       await page.keyboard.press('Enter');
       await page.getByRole('heading', { level: 1, name: language === 'en' ? 'Cómo funciona' : 'How it works', exact: true }).waitFor();
-      if (width < 860) {
-        await page.getByRole('button', { name: language === 'en' ? 'Abrir navegación' : 'Open sidebar', exact: true }).click();
-        await page.getByRole('link', { name: language === 'en' ? 'Cómo funciona' : 'How it works', exact: true }).waitFor();
-        await page.keyboard.press('Escape');
-        assert(await page.locator('.hiw > .sb-toggle').evaluate(el => el === document.activeElement), 'Escape restores mobile menu focus');
-      }
+      // Every width uses the same always-present navigation rail (no phone drawer): its link marks this page as current.
+      const railLink = page.locator('nav.explore-rail').getByRole('link', { name: language === 'en' ? 'Cómo funciona' : 'How it works', exact: true });
+      assert.equal(await railLink.getAttribute('aria-current'), 'page', 'Rail marks How it works as the current page');
       console.log(`${width} ${language}: ${result.violations.length} violations, ${result.incomplete.length} incomplete; ${JSON.stringify(inventory)}`);
       await context.close();
     }

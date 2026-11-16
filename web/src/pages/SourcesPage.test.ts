@@ -26,14 +26,13 @@ it.each(["en", "es", "ko"] as const)("renders every Sources description, chip, b
   const container = document.createElement("div"); document.body.append(container);
   root = createRoot(container);
   await act(async () => root!.render(createElement(LanguageProvider, { children: createElement("div", null,
-    createElement(LanguageControls), createElement(SourcesPage, { onMenu: () => {} })) })));
+    createElement(LanguageControls), createElement(SourcesPage)) })));
   const selector = ".src-head p, .src-head h1, .src-group > h2, .src-group > p, .src-card > p, .src-card h4, .src-chip, .src-badge, .src-link";
   const english = [...container.querySelectorAll(selector)].map(node => node.textContent!);
   const urls = [...container.querySelectorAll<HTMLAnchorElement>(".src-link")].map(link => link.href);
   await act(async () => [...container.querySelectorAll("button")].find(button => button.textContent === language)!.click());
   expect(container.querySelector("h1")?.textContent).toBe({ en: "Where our data comes from", es: "De dónde vienen nuestros datos", ko: "데이터는 어디에서 오나요" }[language]);
   expect(container.querySelector(".sources")?.getAttribute("lang")).toBe(language);
-  expect(container.querySelector(".sb-toggle")?.getAttribute("aria-label")).toBe({ en: "Open sidebar", es: "Abrir menú lateral", ko: "사이드바 열기" }[language]);
   expect(container.querySelectorAll(".src-card")).toHaveLength(14);
   const localized = [...container.querySelectorAll(selector)].map(node => node.textContent!);
   english.forEach((value, index) => {

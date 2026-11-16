@@ -9,6 +9,9 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef } from "react";
 import type { FieldBoundary } from "../../../../src/shared/fields";
 import type { ExploreLocation } from "./location";
+
+/** Current rail width (--rail-w follows the rail's open/minimized toggle); `fallback` if CSS is unavailable. */
+const railWidth = (fallback: number) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--rail-w")) || fallback;
 export const NASA_TILES =
   "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg";
 export const MODIS_TILES =
@@ -113,6 +116,12 @@ export function ExploreMap(props: Props) {
     map.current = m;
     const resize = new ResizeObserver(() => m.resize());
     resize.observe(el.current);
+    // The credits share the bottom-right corner with the Layers button and wrap when the visible map narrows
+    // (rail open, planner open, longer field-outline credits). Publish their height so Layers always sits above them.
+    const corner = el.current.querySelector<HTMLElement>(".maplibregl-ctrl-bottom-right");
+    const page = el.current.closest<HTMLElement>(".explore-page");
+    const credits = corner && page ? new ResizeObserver(() => page.style.setProperty("--attrib-h", `${corner.offsetHeight}px`)) : null;
+    if (corner) credits?.observe(corner);
     m.addControl(
       new maplibregl.ScaleControl({ unit: "imperial" }),
       "bottom-left",
@@ -208,6 +217,7 @@ export function ExploreMap(props: Props) {
       container.removeEventListener('keydown', stop);
       motion.removeEventListener('change', onMotion);
       resize.disconnect();
+      credits?.disconnect();
       clearInterval(spin);
       latest.current.onReady(null);
       m.remove();
@@ -226,8 +236,8 @@ export function ExploreMap(props: Props) {
         ? {
             center: [p.lon, p.lat] as [number, number],
             zoom: p.zip ? 12 : 14,
-            // Keep the field centred in the map area left visible by the floating rail and Sprout panel.
-            padding: window.innerWidth > 700 ? { top: 0, bottom: 0, left: 76, right: props.panelMode === "closed" ? 0 : Math.min(window.innerWidth - 176, props.panelMode === "plan" ? 792 : 416) } : { top: 0, bottom: 0, left: 56, right: 0 },
+            // Keep the field centred in the map area left visible by the rail (open or minimized) and Sprout panel.
+            padding: window.innerWidth > 700 ? { top: 0, bottom: 0, left: railWidth(76), right: props.panelMode === "closed" ? 0 : Math.min(window.innerWidth - 176, props.panelMode === "plan" ? 792 : 416) } : { top: 0, bottom: 0, left: railWidth(56), right: 0 },
           }
         : {
             center: [-95, 30] as [number, number],

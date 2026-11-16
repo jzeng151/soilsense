@@ -8,6 +8,7 @@ import { ScoutMessage } from "../components/ScoutMessage";
 import { detectLang } from "../lang";
 import { LogoMark } from "../components/Logo";
 import { Sprout } from "../components/Sprout";
+import { ChatHistory } from "../components/ChatHistory";
 
 const SUGGESTIONS: { icon: "grid" | "cal" | "chart" | "soil"; text: string }[] = [
   { icon: "grid", text: "What should I plant next year on my rain-fed field near ZIP 50010?" },
@@ -77,12 +78,7 @@ type SpeechRec = {
   interimResults: boolean;
 };
 
-interface Props {
-
-  onMenu: () => void;
-}
-
-export function ScoutPage({ onMenu }: Props) {
+export function ScoutPage() {
   const { t: tx, text: localize, language } = useI18n();
   const { messages, sendMessage, status, error, stop, regenerate, clearError, blockedReason } = useScoutSession();
   const [input, setInput] = useState("");
@@ -266,16 +262,12 @@ export function ScoutPage({ onMenu }: Props) {
   return (
     <main className="scout">
       <header className="sc-top">
-        <button type="button" className="sc-icon-btn sc-menu-btn" aria-label={tx("Open sidebar")} onClick={onMenu}>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 7h16M4 12h16M4 17h16" />
-          </svg>
-        </button>
         <span className="sc-title">
           <LogoMark size={28} />
           Sprout
         </span>
         {model && !model.configured && <span className="sc-warn">{tx("AI model not set up")}</span>}
+        <ChatHistory />
       </header>
 
       {model?.research === "unavailable" && <p className="sc-research-state" role="status">{tx("Research unavailable: retrieval bindings are not configured. No research citations can be verified until search is available.")}</p>}

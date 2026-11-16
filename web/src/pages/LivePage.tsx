@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Sprout } from "../components/Sprout";
+import { useI18n, translate } from "../i18n";
+import { LANGUAGE_LOCALES, type Language } from "../../../src/shared/language";
+import { pageCropText, pageTranslate, pageWatchText } from "../i18n-pages";
+import { detectLang } from "../lang";
 import "./live.css";
 
 // Live screen (#/live): watch a phone call to Sprout, the Soil Sense agent as it happens, for demos.
@@ -34,14 +38,14 @@ const TOOLS: Record<string, string> = {
   end_call: "End the call",
 };
 
-/** A BCP 47 tag for a detected language, or undefined to inherit the page's English. */
+/** Validate the language supplied by the call events before using it as a language tag. */
 function langTag(code: string | undefined): string | undefined {
   return code && /^[a-z]{2,3}(-[A-Za-z]{2,4})?$/.test(code) ? code : undefined;
 }
 
-function langName(code: string): string {
+function langName(code: string, language: string): string {
   try {
-    return new Intl.DisplayNames(["en"], { type: "language" }).of(code) ?? code.toUpperCase();
+    return new Intl.DisplayNames([language], { type: "language" }).of(code) ?? code.toUpperCase();
   } catch {
     return code.toUpperCase();
   }
@@ -51,7 +55,7 @@ const WATER: Record<string, string> = { rain: "Rain only", limited: "Limited wat
 
 const ms = (n: unknown) => (typeof n === "number" ? (n >= 1000 ? `${(n / 1000).toFixed(1)} s` : `${Math.round(n)} ms`) : "");
 const money = (n: unknown) => (typeof n === "number" ? `${n < 0 ? "−" : ""}$${Math.abs(Math.round(n))}` : "–");
-const time = (at: unknown) => (typeof at === "number" ? new Date(at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" }) : "");
+const time = (at: unknown, language: Language) => (typeof at === "number" ? new Date(at).toLocaleTimeString(LANGUAGE_LOCALES[language], { hour: "numeric", minute: "2-digit", second: "2-digit" }) : "");
 
 type Step =
   | { kind: "say"; who: "caller" | "agent"; text: string; lang?: string; at?: number; interrupted?: boolean; seq: number }
@@ -246,6 +250,8 @@ function useLiveEvents() {
 }
 
 function SourceRow({ id, s }: { id: string; s: { ms?: number; ok?: boolean } }) {
+  const { language } = useI18n();
+  const t = (key: string) => pageTranslate(language, key);
   const meta = SOURCES[id] ?? { label: id, org: "" };
   const state = s.ms === undefined ? "run" : s.ok === false ? "bad" : "ok";
   return (
@@ -254,10 +260,10 @@ function SourceRow({ id, s }: { id: string; s: { ms?: number; ok?: boolean } }) 
         {state === "run" ? "" : state === "ok" ? "✓" : "–"}
       </span>
       <span className="lv-src-label">
-        {meta.label}
-        <small>{meta.org}</small>
+        {t(meta.label)}
+        <small>{t(meta.org)}</small>
       </span>
-      <span className="lv-ms">{state === "run" ? "…" : state === "bad" ? "skipped" : ms(s.ms)}</span>
+      <span className="lv-ms">{state === "run" ? "…" : state === "bad" ? t("skipped") : ms(s.ms)}</span>
     </li>
   );
 }
@@ -267,23 +273,25 @@ function sortedSources(m: Map<string, { ms?: number; ok?: boolean }>) {
 }
 
 function ToolStep({ step }: { step: Extract<Step, { kind: "tool" }> }) {
+  const { language } = useI18n();
+  const t = (key: string, values?: Record<string, string | number>) => pageTranslate(language, key, values);
   const input = step.input as Record<string, unknown> | undefined;
   const detail =
     step.name === "find_location" && input?.zip
-      ? `ZIP ${String(input.zip)}`
+      ? t("ZIP {zip}", { zip: String(input.zip) })
       : step.name === "build_rotation_plan" && input
-        ? [input.place_name, Array.isArray(input.recent_crops) && input.recent_crops.length ? `grew ${input.recent_crops.join(", ")}` : null, input.water ? WATER[String(input.water)] : null]
+        ? [input.place_name, Array.isArray(input.recent_crops) && input.recent_crops.length ? t("grew {crops}", { crops: input.recent_crops.map(crop => pageCropText(language, String(crop))).join(", ") }) : null, input.water ? t(WATER[String(input.water)] ?? "–") : null]
             .filter(Boolean)
             .join(" · ")
         : "";
   return (
     <div className={`lv-tool ${!step.done ? "lv-tool-run" : step.waiting ? "" : step.ok === false ? "lv-tool-bad" : "lv-tool-ok"}`}>
       <div className="lv-tool-head">
-        <span className="lv-tool-tag">Tool</span>
-        <strong>{TOOLS[step.name] ?? step.name}</strong>
-        <span className="lv-ms">{!step.done ? "running…" : step.waiting ? "waits" : step.ok === false ? "didn't work" : ms(step.ms)}</span>
+        <span className="lv-tool-tag">{t("Tool")}</span>
+        <strong>{t(TOOLS[step.name] ?? step.name)}</strong>
+        <span className="lv-ms">{!step.done ? t("running…") : step.waiting ? t("waits") : step.ok === false ? t("didn't work") : ms(step.ms)}</span>
       </div>
-      {step.waiting ? <p className="lv-tool-detail">Asks what the farmer grew this year first</p> : detail && <p className="lv-tool-detail">{detail}</p>}
+      {step.waiting ? <p className="lv-tool-detail">{t("Asks what the farmer grew this year first")}</p> : detail && <p className="lv-tool-detail">{detail}</p>}
       {step.sources.size > 0 && (
         <ul className="lv-srcs">
           {sortedSources(step.sources).map(([id, s]) => (
@@ -296,54 +304,56 @@ function ToolStep({ step }: { step: Extract<Step, { kind: "tool" }> }) {
 }
 
 function PlanResult({ plan }: { plan: Record<string, unknown> }) {
+  const { language } = useI18n();
+  const t = (key: string, values?: Record<string, string | number>) => pageTranslate(language, key, values);
   const years = (plan.years as { year: number; crop: string; cropName: string; cover: string | null }[]) ?? [];
   const current = plan.current as { label: string; netPerAcre: number; badYearsIn10: number } | null;
   const replay = plan.replay as { year: number; rainIn: number | null; typicalRainIn: number | null; currentNet: number | null; planNet: number | null } | null;
   return (
     <section className="lv-card lv-plan" aria-live="polite">
-      <p className="eyebrow">The plan the caller heard</p>
-      <h2>{plan.place ? `For ${String(plan.place)}` : "Recommended plan"}</h2>
+      <p className="eyebrow">{t("The plan the caller heard")}</p>
+      <h2>{plan.place ? t("For {place}", { place: String(plan.place) }) : t("Recommended plan")}</h2>
       <div className="lv-years">
         {years.map((y) => (
           <div key={y.year} className="lv-year" style={{ ["--crop" as string]: `var(--crop-${y.crop === "winter_wheat" ? "winter-wheat" : y.crop})` }}>
             <span>{y.year}</span>
-            <strong>{y.cropName}</strong>
-            {y.cover && <small>+ {y.cover}</small>}
+            <strong>{pageCropText(language, y.crop) === y.crop ? y.cropName : pageCropText(language, y.crop)}</strong>
+            {y.cover && <small>+ {pageCropText(language, y.cover)}</small>}
           </div>
         ))}
       </div>
       <dl className="lv-stats">
         <div>
-          <dt>Bad years</dt>
+          <dt>{t("Bad years")}</dt>
           <dd>
-            {String(plan.badYearsIn10 ?? "–")} <small>in 10</small>
+            {String(plan.badYearsIn10 ?? "–")} <small>{t("in 10")}</small>
           </dd>
         </div>
         {current && (
           <div>
-            <dt>Current crops</dt>
+            <dt>{t("Current crops")}</dt>
             <dd>
-              {current.badYearsIn10} <small>in 10</small>
+              {current.badYearsIn10} <small>{t("in 10")}</small>
             </dd>
           </div>
         )}
         <div>
-          <dt>Profit</dt>
+          <dt>{t("Profit")}</dt>
           <dd>
             {money(plan.netPerAcre)}
-            <small>/acre/yr</small>
+            <small>{translate(language, "/acre/year")}</small>
           </dd>
         </div>
         <div>
-          <dt>Water</dt>
-          <dd className="lv-small">{WATER[String(plan.water)] ?? "–"}</dd>
+          <dt>{t("Water")}</dt>
+          <dd className="lv-small">{t(WATER[String(plan.water)] ?? "–")}</dd>
         </div>
       </dl>
       {replay && (
         <p className="lv-replay">
-          <strong>Worst past year: {replay.year}.</strong>{" "}
-          {replay.rainIn != null && replay.typicalRainIn != null && `${replay.rainIn.toFixed(1)} in of summer rain (usually ${replay.typicalRainIn.toFixed(1)}). `}
-          {replay.currentNet != null && replay.planNet != null && `Current crops ${money(replay.currentNet)}/acre, this plan ${money(replay.planNet)}/acre.`}
+          <strong>{t("Worst past year: {year}.", { year: replay.year })}</strong>{" "}
+          {replay.rainIn != null && replay.typicalRainIn != null && <>{t("{rain} in of summer rain (usually {typical}).", { rain: replay.rainIn.toFixed(1), typical: replay.typicalRainIn.toFixed(1) })}{" "}</>}
+          {replay.currentNet != null && replay.planNet != null && t("Current crops {current}/acre, this plan {plan}/acre.", { current: money(replay.currentNet), plan: money(replay.planNet) })}
         </p>
       )}
     </section>
@@ -351,13 +361,15 @@ function PlanResult({ plan }: { plan: Record<string, unknown> }) {
 }
 
 function FieldWatchPanel({ events }: { events: LiveEvent[] }) {
+  const { language } = useI18n();
+  const t = (key: string, values?: Record<string, string | number>) => pageTranslate(language, key, values);
   const runs = events.filter((e) => e.type === "fieldwatch.run").slice(-5).reverse();
   return (
     <section className="lv-card lv-watch">
       <p className="eyebrow">Field Watch</p>
-      <h2>Background checks</h2>
+      <h2>{t("Background checks")}</h2>
       {runs.length === 0 ? (
-        <p className="lv-muted">Soil Sense checks watched fields on its own every hour, with no browser open. New checks appear here.</p>
+        <p className="lv-muted">{t("Soil Sense checks watched fields on its own every hour, with no browser open. New checks appear here.")}</p>
       ) : (
         <ul>
           {runs.map((r) => (
@@ -365,10 +377,10 @@ function FieldWatchPanel({ events }: { events: LiveEvent[] }) {
               <span className="lv-dot" aria-hidden="true" />
               <div>
                 <strong>{String(r.fieldName ?? r.fieldId)}</strong>
-                <p>{String(r.headline ?? "")}</p>
+                <p lang={pageWatchText(language, String(r.headline ?? "")) === r.headline ? detectLang(String(r.headline)) ?? "en" : language}>{pageWatchText(language, String(r.headline ?? ""))}</p>
                 <small>
-                  {r.trigger === "manual" ? "Checked on request" : "Automatic check"} · {time(r.checkedAt ?? r.at)}
-                  {r.dataThrough ? ` · NASA data through ${String(r.dataThrough)}` : ""}
+                  {t(r.trigger === "manual" ? "Checked on request" : "Automatic check")} · {time(r.checkedAt ?? r.at, language)}
+                  {r.dataThrough ? ` · ${t("NASA data through {date}", { date: String(r.dataThrough) })}` : ""}
                 </small>
               </div>
             </li>
@@ -380,6 +392,8 @@ function FieldWatchPanel({ events }: { events: LiveEvent[] }) {
 }
 
 export function LivePage({ onMenu }: { onMenu: () => void }) {
+  const { language } = useI18n();
+  const t = (key: string, values?: Record<string, string | number>) => pageTranslate(language, key, values);
   const { events, conn, phone } = useLiveEvents();
   const calls = useMemo(() => buildCalls(events), [events]);
   const call = calls[0];
@@ -391,18 +405,18 @@ export function LivePage({ onMenu }: { onMenu: () => void }) {
 
   const status =
     conn === "off"
-      ? "Demo mode is off. A team member can turn it on in Settings."
+      ? t("Demo mode is off. A team member can turn it on in Settings.")
       : conn === "unavailable"
-        ? "The live screen isn't set up on this server."
+        ? t("The live screen isn't set up on this server.")
         : !call
-          ? "Waiting for a call…"
+          ? t("Waiting for a call…")
           : call.ended
-            ? `Call ended · ${time(call.startedAt)}`
-            : "On a call now";
+            ? t("Call ended · {time}", { time: time(call.startedAt, language) })
+            : t("On a call now");
 
   return (
-    <div className="app live">
-      <button type="button" className="sb-toggle" aria-label="Open sidebar" onClick={onMenu}>
+    <div className="app live" lang={language}>
+      <button type="button" className="sb-toggle" aria-label={t("Open sidebar")} onClick={onMenu}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 7h16M4 12h16M4 17h16" />
         </svg>
@@ -410,14 +424,14 @@ export function LivePage({ onMenu }: { onMenu: () => void }) {
       <main className="lv-wrap">
         <header className="lv-head">
           <div>
-            <p className="eyebrow">Live</p>
-            <h1>Watch a call</h1>
+            <p className="eyebrow">{t("Live")}</p>
+            <h1>{t("Watch a call")}</h1>
             <p className="intro-lead">
-              Every word, every tool the phone agent uses, and every NASA and USDA source it pulls, as it happens.
+              {t("Every word, every tool the phone agent uses, and every NASA and USDA source it pulls, as it happens.")}
               {phone ? (
                 <>
                   {" "}
-                  Call <strong className="lv-phone">{phone}</strong> to try it.
+                  {t("Call")} <strong className="lv-phone">{phone}</strong> {t("to try it.")}
                 </>
               ) : null}
             </p>
@@ -427,7 +441,7 @@ export function LivePage({ onMenu }: { onMenu: () => void }) {
           <span className={`lv-status ${call && !call.ended && conn !== "off" ? "lv-status-on" : ""}`}>
             <span className="lv-dot" aria-hidden="true" />
             {status}
-            {conn === "polling" && <small> (updating every second)</small>}
+            {conn === "polling" && <small> {t("(updating every second)")}</small>}
           </span>
           </div>
         </header>
@@ -435,23 +449,23 @@ export function LivePage({ onMenu }: { onMenu: () => void }) {
         <div className="lv-grid">
           <section className="lv-card lv-call">
             <div className="lv-call-head">
-              <h2>Conversation</h2>
+              <h2>{t("Conversation")}</h2>
               {call && (
                 <span className="lv-muted">
-                  {call.caller ?? "Caller"}
-                  {call.lastLang ? ` · speaking ${langName(call.lastLang)}` : ""}
+                  {call.caller ?? t("Caller")}
+                  {call.lastLang ? ` · ${t("speaking {language}", { language: langName(call.lastLang, language) })}` : ""}
                 </span>
               )}
             </div>
             {/* role=log + aria-live: screen readers hear new lines of the call as they arrive (WCAG 4.1.3). */}
-            <div className="lv-feed" ref={feed} role="log" aria-live="polite" aria-label="Call transcript" tabIndex={0}>
-              {!call && <p className="lv-empty">When someone calls, the conversation shows up here.</p>}
+            <div className="lv-feed" ref={feed} role="log" aria-live="polite" aria-label={t("Call transcript")} tabIndex={0}>
+              {!call && <p className="lv-empty">{t("When someone calls, the conversation shows up here.")}</p>}
               {call?.steps.map((s) =>
                 s.kind === "prefetch" ? (
                   <div key={s.seq} className="lv-tool lv-tool-ok lv-prefetch">
                     <div className="lv-tool-head">
-                      <span className="lv-tool-tag">Background</span>
-                      <strong>Loading field data while the caller talks</strong>
+                      <span className="lv-tool-tag">{t("Background")}</span>
+                      <strong>{t("Loading field data while the caller talks")}</strong>
                     </div>
                     <ul className="lv-srcs">
                       {sortedSources(call.prefetch).map(([id, src]) => (
@@ -462,18 +476,17 @@ export function LivePage({ onMenu }: { onMenu: () => void }) {
                 ) : s.kind === "say" ? (
                   <div key={s.seq} className={`lv-say lv-say-${s.who}`}>
                     <span className="lv-who">
-                      {s.who === "caller" ? "Farmer" : "Sprout"}
+                      {s.who === "caller" ? t("Farmer") : "Sprout"}
                       {s.who === "caller" && s.lang ? (
-                        <em title={langName(s.lang)}>
-                          <span className="sr-only">speaking </span>
-                          {langName(s.lang)}
+                        <em title={langName(s.lang, language)}>
+                          {t("speaking {language}", { language: langName(s.lang, language) })}
                         </em>
                       ) : null}
                     </span>
                     {/* WCAG 3.1.2: each line carries the language it was spoken in, so screen readers pronounce it correctly. */}
-                    <p lang={langTag(s.lang)}>
+                    <p lang={langTag(s.lang) ?? detectLang(s.text) ?? "en"}>
                       {s.text}
-                      {s.interrupted && <small lang="en"> (interrupted)</small>}
+                      {s.interrupted && <small lang={language}> {t("(interrupted)")}</small>}
                     </p>
                   </div>
                 ) : s.kind === "tool" ? (
@@ -481,19 +494,19 @@ export function LivePage({ onMenu }: { onMenu: () => void }) {
                 ) : s.kind === "sms" ? (
                   <div key={s.seq} className={`lv-tool ${s.ok ? "lv-tool-ok" : "lv-tool-bad"}`}>
                     <div className="lv-tool-head">
-                      <span className="lv-tool-tag">Text</span>
-                      <strong>{s.ok ? `Plan texted to ${s.to ?? "the caller"}` : "The text message didn't go through"}</strong>
+                      <span className="lv-tool-tag">{t("Text")}</span>
+                      <strong>{s.ok ? t("Plan texted to {to}", { to: s.to ?? t("the caller") }) : t("The text message didn't go through")}</strong>
                     </div>
                   </div>
                 ) : (
                   <div key={s.seq} className="lv-tool lv-tool-bad">
                     <div className="lv-tool-head">
-                      <strong>The agent had trouble with that turn and asked again</strong>
+                      <strong>{t("The agent had trouble with that turn and asked again")}</strong>
                     </div>
                   </div>
                 ),
               )}
-              {call?.ended && <p className="lv-empty">Call ended.</p>}
+              {call?.ended && <p className="lv-empty">{t("Call ended.")}</p>}
             </div>
           </section>
 
@@ -502,9 +515,9 @@ export function LivePage({ onMenu }: { onMenu: () => void }) {
               <PlanResult plan={call.plan} />
             ) : (
               <section className="lv-card">
-                <p className="eyebrow">The plan</p>
-                <h2>Not built yet</h2>
-                <p className="lv-muted">After the caller gives a ZIP code and their crop, the 3-year plan appears here.</p>
+                <p className="eyebrow">{t("The plan")}</p>
+                <h2>{t("Not built yet")}</h2>
+                <p className="lv-muted">{t("After the caller gives a ZIP code and their crop, the 3-year plan appears here.")}</p>
               </section>
             )}
             <FieldWatchPanel events={events} />

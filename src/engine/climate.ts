@@ -171,16 +171,36 @@ export function et0HargreavesMm(ys: YearSeries, w: Window, latDeg: number): numb
   let sum = 0;
   for (const d of windowDays(ys, w)) {
     if (d.tmax === null || d.tmin === null) continue;
-    const j = d.doy;
-    const dr = 1 + 0.033 * Math.cos((2 * Math.PI * j) / 365);
-    const delta = 0.409 * Math.sin((2 * Math.PI * j) / 365 - 1.39);
-    const ws = Math.acos(Math.max(-1, Math.min(1, -Math.tan(phi) * Math.tan(delta))));
-    const ra = ((24 * 60) / Math.PI) * 0.082 * dr * (ws * Math.sin(phi) * Math.sin(delta) + Math.cos(phi) * Math.cos(delta) * Math.sin(ws));
-    const tmean = (d.tmax + d.tmin) / 2;
-    const range = Math.max(0, d.tmax - d.tmin);
-    sum += Math.max(0, 0.0023 * (tmean + 17.8) * Math.sqrt(range) * ra * 0.408);
+    sum += hargreavesDay(d, phi);
   }
   return sum;
+}
+function hargreavesDay(d: DailyRecord, phi: number): number {
+  if (d.tmax === null || d.tmin === null) return 0;
+  const j = d.doy;
+  const dr = 1 + 0.033 * Math.cos((2 * Math.PI * j) / 365);
+  const delta = 0.409 * Math.sin((2 * Math.PI * j) / 365 - 1.39);
+  const ws = Math.acos(Math.max(-1, Math.min(1, -Math.tan(phi) * Math.tan(delta))));
+  const ra = ((24 * 60) / Math.PI) * 0.082 * dr * (ws * Math.sin(phi) * Math.sin(delta) + Math.cos(phi) * Math.cos(delta) * Math.sin(ws));
+  const tmean = (d.tmax + d.tmin) / 2;
+  const range = Math.max(0, d.tmax - d.tmin);
+  return Math.max(0, 0.0023 * (tmean + 17.8) * Math.sqrt(range) * ra * 0.408);
+}
+/** Per-build memo, never a cross-request weather cache. Sum in the ORIGINAL day order
+ * (not prefix subtraction) to preserve exact floating-point results and tie breaks. */
+export function createEt0Memo(latDeg: number): (ys: YearSeries, w: Window) => number {
+  const phi = (latDeg * Math.PI) / 180;
+  const memo = new Map<YearSeries, Float64Array>();
+  return (ys, w) => {
+    let values = memo.get(ys);
+    if (!values) {
+      values = Float64Array.from(ys.days, d => hargreavesDay(d, phi));
+      memo.set(ys, values);
+    }
+    let sum = 0;
+    for (let i = 0; i < ys.days.length; i++) if (inWindow(ys.days[i]!, w)) sum += values[i]!;
+    return sum;
+  };
 }
 
 export function hotDays(ys: YearSeries, w: Window, thresholdC: number): number {

@@ -1,3 +1,5 @@
+import { useI18n } from "../i18n";
+import type { TranslationKey } from "../i18n";
 // "How this plan builds your soil" and "What the satellite measures mean": the plain-language explanations the
 // Field Shift challenge asks for (nitrogen-fixing, cover, deep-rooting and drought-tolerant crops; NDVI,
 // evapotranspiration, soil moisture, frost risk, water balance).
@@ -10,7 +12,7 @@ import "../evidence.css";
 
 type Kind = "nitrogen" | "roots" | "drought" | "cover" | "pests" | "residue" | "bare";
 
-const KIND_LABEL: Record<Kind, { icon: string; title: string }> = {
+const KIND_LABEL: Record<Kind, { icon: string; title: TranslationKey }> = {
   nitrogen: { icon: "🌱", title: "Adds nitrogen" },
   roots: { icon: "🌾", title: "Deep roots" },
   drought: { icon: "☀️", title: "Handles drought" },
@@ -21,7 +23,14 @@ const KIND_LABEL: Record<Kind, { icon: string; title: string }> = {
 };
 
 /** What each crop does for the soil (agronomy basics, kept short). */
-const CROP_SOIL: Record<CropId, { kind: Kind; text: string }[]> = {
+const CROP_SOIL: Record<CropId, { kind: Kind; text: TranslationKey }[]> = {
+  sunflower_confection: [{ kind: "bare", text: "Experimental crop. Confirm a local market, harvest equipment and a field budget before planting; climate response parameters are approximate." }],
+  cotton: [{ kind: "bare", text: "Experimental crop. Confirm a local market, harvest equipment and a field budget before planting; climate response parameters are approximate." }],
+  sunflower: [{ kind: "bare", text: "Experimental crop. Confirm a local market, harvest equipment and a field budget before planting; climate response parameters are approximate." }],
+  corn_silage: [{ kind: "bare", text: "Forage harvest removes plant material. Confirm nutrient replacement, residue cover, forage quality and a local buyer; this prototype does not model feed safety or storage losses." }],
+  sorghum_silage: [{ kind: "bare", text: "Forage harvest removes plant material. Confirm nutrient replacement, residue cover, forage quality and a local buyer; this prototype does not model feed safety or storage losses." }],
+  triticale: [{ kind: "bare", text: "Forage harvest removes plant material. Confirm nutrient replacement, residue cover, forage quality and a local buyer; this prototype does not model feed safety or storage losses." }],
+  other_hay: [{ kind: "bare", text: "Forage harvest removes plant material. Confirm nutrient replacement, residue cover, forage quality and a local buyer; this prototype does not model feed safety or storage losses." }],
   soybean: [{ kind: "nitrogen", text: "Soybean is a legume: bacteria on its roots pull nitrogen from the air, so it needs no nitrogen fertilizer and leaves some for the next crop." }],
   alfalfa: [
     { kind: "nitrogen", text: "Alfalfa is a legume that fixes a lot of nitrogen; corn after alfalfa usually needs little or no added nitrogen." },
@@ -42,7 +51,7 @@ const CROP_SOIL: Record<CropId, { kind: Kind; text: string }[]> = {
   fallow: [{ kind: "bare", text: "A fallow season stores water for the next crop, but bare ground can blow or wash away and loses organic matter. Leaving crop residue standing helps." }],
 };
 
-const COVER_SOIL: Record<Exclude<CoverId, "none">, { kind: Kind; text: string }> = {
+const COVER_SOIL: Record<Exclude<CoverId, "none">, { kind: Kind; text: TranslationKey }> = {
   cereal_rye: { kind: "cover", text: "A cereal rye cover crop holds the soil over winter and soaks up nitrogen left in the ground so it doesn't wash away." },
   crimson_clover: { kind: "nitrogen", text: "A crimson clover cover crop is a legume: it covers the soil over winter and adds nitrogen for the next crop." },
   hairy_vetch: { kind: "nitrogen", text: "A hairy vetch cover crop is a legume that adds a lot of nitrogen, enough to cut fertilizer for the following corn." },
@@ -50,6 +59,7 @@ const COVER_SOIL: Record<Exclude<CoverId, "none">, { kind: Kind; text: string }>
 
 /** "How this plan builds your soil": only the points that apply to this plan's crops and cover crops. */
 export function SoilBuild({ plan }: { plan: RotationPlan }) {
+  const { t: tx, text: localize } = useI18n();
   const seen = new Set<string>();
   const items: { key: string; kind: Kind; text: string; crop?: CropId }[] = [];
   for (const y of plan.years) {
@@ -68,12 +78,12 @@ export function SoilBuild({ plan }: { plan: RotationPlan }) {
     }
   }
   const crops = new Set(plan.years.map((y) => y.crop).filter((c) => c !== "fallow"));
-  if (crops.size >= 2) items.push({ key: "variety", kind: "pests", text: `This plan has ${crops.size} different crops in 3 years. Pest effects depend on the pest, crop sequence, region and field history; diversity alone is not a promise of protection.` });
+  if (crops.size >= 2) items.push({ key: "variety", kind: "pests", text: tx("This plan has {count} different crops in 3 years. Pest effects depend on the pest, crop sequence, region and field history; diversity alone is not a promise of protection.", { count: crops.size }) });
   // Good things first, cautions last.
   items.sort((a, b) => Number(a.kind === "bare") - Number(b.kind === "bare"));
   return (
     <div className="sb-build">
-      <p className="wi-lead">Plain-language soil science behind this plan:</p>
+      <p className="wi-lead">{tx("Plain-language soil science behind this plan:")}</p>
       <ul>
         {items.map((it) => (
           <li key={it.key} className={it.kind === "bare" ? "warn" : ""}>
@@ -81,7 +91,7 @@ export function SoilBuild({ plan }: { plan: RotationPlan }) {
               {KIND_LABEL[it.kind].icon}
             </span>
             <span>
-              <b>{KIND_LABEL[it.kind].title}.</b> {it.text}
+              <b>{localize(KIND_LABEL[it.kind].title)}.</b> {localize(it.text)}
             </span>
             {it.crop && <span className="sb-cropdot" style={{ background: CROP_COLORS[it.crop] }} aria-hidden="true" />}
           </li>
@@ -93,6 +103,7 @@ export function SoilBuild({ plan }: { plan: RotationPlan }) {
 
 /** "What the satellite measures mean": the indicators named in the challenge, in plain words. */
 export function IndicatorGuide() {
+  const { language, text: localize } = useI18n();
   const rows = [
     { id: "ndvi", where: "NASA MODIS greenness map layer; availability and quality must be checked separately" },
     { id: "et", where: "Modeled demand from daily temperature; OpenET actual-ET estimates where available" },
@@ -108,8 +119,8 @@ export function IndicatorGuide() {
         <div key={r.id}>
           <dt><Definition term={r.id} /></dt>
           <dd>
-            {glossaryEntry(r.id).definition} {glossaryEntry(r.id).limit}
-            <small>{r.where}</small>
+            {glossaryEntry(r.id, language).definition} {glossaryEntry(r.id, language).limit}
+            <small>{localize(r.where)}</small>
           </dd>
         </div>
       ))}

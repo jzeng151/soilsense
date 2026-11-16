@@ -1,0 +1,16 @@
+.fertilizer-guide { grid-column: 1 / -1; min-width: 0; margin: .8rem 0; padding: .8rem; border: 1px solid var(--line, #d8d8ce); border-radius: .5rem; font-size: .9rem; }
+.fertilizer-guide summary { cursor: pointer; font-weight: 650; }
+.fertilizer-guide p { max-width: 70ch; margin: .65rem 0; }
+.fertilizer-disclaimer { font-weight: 600; }
+.fertilizer-scroll { max-width: 100%; overflow-x: auto; margin: .8rem 0; }
+.fertilizer-scroll:focus-visible, .fertilizer-guide summary:focus-visible { outline: 3px solid #30745b; outline-offset: 3px; }
+.fertilizer-guide table { border-collapse: collapse; width: 100%; min-width: 650px; font-size: .85rem; }
+.fertilizer-guide caption { text-align: left; padding: .5rem 0; }
+.fertilizer-guide th, .fertilizer-guide td { text-align: left; vertical-align: top; padding: .6rem; border-bottom: 1px solid var(--line, #d8d8ce); }
+.fertilizer-guide th:first-child { white-space: nowrap; }
+.fertilizer-guide small { display: block; font-size: .78rem; line-height: 1.4; margin-top: .2rem; white-space: normal; }
+.fertilizer-source { margin-bottom: 1rem; overflow-wrap: anywhere; }
+.fertilizer-source dl > div { display: flex; flex-wrap: wrap; gap: .5rem; }
+.fertilizer-source dd { margin-left: 0; }
+.fertilizer-source dt { font-weight: 600; }
+@media (max-width: 480px) { .fertilizer-guide { padding: .55rem; } .fertilizer-guide th, .fertilizer-guide td { padding: .4rem; } }

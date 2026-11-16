@@ -1,5 +1,9 @@
 // SoilSense Worker: JSON API for the dashboard, Twilio voice webhooks, and static dashboard assets.
 
+import { fields } from "./routes/fields";
+import { explore } from "./routes/explore";
+import { imerg } from "./imerg/routes";
+import { myFields } from "./routes/myfields";
 import { Hono } from "hono";
 import type { Env } from "./env";
 import { api } from "./routes/api";
@@ -28,6 +32,8 @@ app.use("*", async (c, next) => {
 });
 
 app.get("/healthz", (c) => c.json({ ok: true }));
+app.get("/api/ui/status", (c) => c.json({ exploreLanding: c.env.EXPLORE_LANDING === "on" }));
+app.route("/api/explore", explore);
 // WebSocket for Twilio ConversationRelay (the conversational phone agent).
 app.get("/voice-agent", (c) => handleAgentSocket(c.req.raw, c.env));
 app.route("/api/admin", admin);
@@ -35,6 +41,9 @@ app.route("/api/admin", admin);
 app.route("/api/live", live);
 // NASA POWER snapshot refresh (Workflow) status, evidence manifests and the admin-only trigger.
 app.route("/api/refresh", refresh);
+app.route("/api/imerg", imerg);
+app.route("/api/fields", fields);
+app.route("/api/fields", myFields);
 app.route("/api", api);
 app.route("/voice", voice);
 

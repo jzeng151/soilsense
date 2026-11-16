@@ -1,5 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useI18n } from "./i18n";
+import { useCallback, useEffect, useState, lazy, Suspense } from "react";
+import { landingRedirect } from "./components/explore/location";
+const ExplorePage = lazy(() => import('./pages/ExplorePage').then(m => ({ default: m.ExplorePage })));
+const DemoFarmsPage = lazy(() => import('./pages/DemoFarmsPage').then(m => ({ default: m.DemoFarmsPage })));
 import { App } from "./App";
+import { LanguageProvider } from "./i18n";
+import { HowItWorksPage } from "./pages/HowItWorksPage";
 import { DocsAdmin } from "./components/DocsAdmin";
 import type { UIMessage } from "ai";
 import { firstUserText, GUEST_ID, loadChats, newChatId, saveChats, titleFrom, type ScoutChat } from "./chats";
@@ -14,9 +20,12 @@ import { getMe, SIGNED_OUT_EVENT, signOut, type User } from "./auth";
 type WorkspaceRoute = Route | "admin/docs";
 const routeFromHash = (): WorkspaceRoute => {
   const h = window.location.hash;
+  if (h.startsWith("#/explore")) return "explore";
+  if (h === "#/demo") return "demo";
   if (h === "#/admin/docs") return "admin/docs";
   if (h.startsWith("#/scout")) return "scout";
   if (h.startsWith("#/sources")) return "sources";
+  if (h === "#/how-it-works") return "how-it-works";
   if (h.startsWith("#/live")) return "live";
   if (h.startsWith("#/settings")) return "settings";
   if (h.startsWith("#/signin")) return "signin";
@@ -45,7 +54,7 @@ export function Shell() {
   }, []);
 
   return (
-    <Workspace
+    <LanguageProvider><Workspace
       key={user?.id ?? GUEST_ID}
       user={user}
       onSignedIn={setUser}
@@ -53,32 +62,49 @@ export function Shell() {
         await signOut();
         setUser(null);
       }}
-    />
+    /></LanguageProvider>
   );
 }
 
 function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSignedIn: (u: User) => void; onSignOut: () => void }) {
+  const { t: tx } = useI18n();
   const [route, setRoute] = useState<WorkspaceRoute>(routeFromHash);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [exploreLanding, setExploreLanding] = useState(false);
+  useEffect(() => {
+    let active = true;
+    fetch('/api/ui/status').then(r => r.ok ? r.json() : null).then(status => {
+      if (!active) return;
+      const enabled = status?.exploreLanding === true;
+      setExploreLanding(enabled);
+      const redirect = landingRedirect(window.location.hash, enabled);
+      if (redirect) window.location.hash = redirect;
+    }).catch(() => {});
+    return () => { active = false; };
+  }, []);
   const ownerId = user?.id ?? GUEST_ID;
   const [chats, setChats] = useState<ScoutChat[]>(() => loadChats(ownerId));
   // Always points at a chat; a brand-new chat only enters the list once it has messages.
   const [activeId, setActiveId] = useState<string>(newChatId);
 
   useEffect(() => {
-    const onHash = () => setRoute(routeFromHash());
+    const onHash = () => {
+      const redirect = landingRedirect(window.location.hash, exploreLanding);
+      if (redirect) window.location.hash = redirect;
+      else setRoute(routeFromHash());
+    };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
-  }, []);
+  }, [exploreLanding]);
 
   useEffect(() => saveChats(ownerId, chats), [ownerId, chats]);
 
   const go = useCallback((r: Route) => {
     setRoute(r);
     setSidebarOpen(false);
-    const hash = r === "planner" ? "#/" : `#/${r}`;
+    const hash = r === "planner" ? (exploreLanding ? "#/planner" : "#/") : `#/${r}`;
     if (window.location.hash !== hash) window.location.hash = hash;
-  }, []);
+  }, [exploreLanding]);
 
   const saveMessages = useCallback((id: string, messages: UIMessage[]) => {
     if (!messages.length) return;
@@ -90,12 +116,13 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
   }, []);
 
   const active = chats.find((c) => c.id === activeId) ?? null;
+  if (route === 'explore' || route === 'demo') return <Suspense fallback={<main aria-busy="true">Soil Sense…</main>}>{route === 'explore' ? <ExplorePage/> : <DemoFarmsPage/>}</Suspense>;
 
   return (
     <div className={`shell route-${route}`}>
       {/* WCAG 2.4.1: let keyboard and screen-reader users jump past the sidebar. */}
       <a className="skip-link" href="#content" onClick={(e) => { e.preventDefault(); document.getElementById("content")?.focus(); }}>
-        Skip to main content
+        {tx("Skip to main content")}
       </a>
       <Sidebar
         route={route === "admin/docs" ? "planner" : route}
@@ -126,6 +153,8 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
           <ScoutPage key={activeId} chatId={activeId} initialMessages={active?.messages ?? []} onMessages={saveMessages} onMenu={() => setSidebarOpen(true)} />
         ) : route === "live" ? (
           <LivePage onMenu={() => setSidebarOpen(true)} />
+        ) : route === "how-it-works" ? (
+          <HowItWorksPage onMenu={() => setSidebarOpen(true)} />
         ) : route === "sources" ? (
           <SourcesPage onMenu={() => setSidebarOpen(true)} />
         ) : route === "settings" || route === "signin" ? (
@@ -142,7 +171,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
           )
         ) : (
           <>
-            <button type="button" className="sb-toggle" aria-label="Open sidebar" onClick={() => setSidebarOpen(true)}>
+            <button type="button" className="sb-toggle" aria-label={tx("Open sidebar")} onClick={() => setSidebarOpen(true)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4 7h16M4 12h16M4 17h16" />
               </svg>

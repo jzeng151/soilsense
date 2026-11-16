@@ -1,12 +1,24 @@
+import type { FieldBoundary } from "../../src/shared/fields";
+import { FieldBoundaryPicker, useBoundaryCatalog } from "./components/FieldBoundaryPicker";
+import { fieldPlanHistory, fieldPlanRequest, cdlToCropId, numberFields } from '../../src/shared/fields';
+import { FIELD_NAME_PREFIX } from './components/fieldLabels';
+import { FieldPlanHistory } from './components/FieldPlanHistory';
 import "./i18n.css";
-import { LanguageProvider, useI18n, translate, cropName } from "./i18n";
+import { factText } from "./i18n-facts";
+import { useI18n, translate, translateKnown, cropName } from "./i18n";
 import type { Language, TranslationKey } from "./i18n";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { CropId, FieldResponse, Goal, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
+import type { CropId, FieldResponse, Goal, PlanRequest, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
+import { MeasurementPanel, SoilComparison } from "./components/Measurements";
+import type { FarmerConstraints } from '../../src/shared/constraints';
+import { ConstraintsPanel, ConstraintSummary } from './components/ConstraintsPanel';
 import { GoalPicker } from "./components/GoalPicker";
+import { PricePanel, type PriceDraft } from "./components/PricePanel";
+import { PriceRobustnessCard } from "./components/PriceRobustnessCard";
+
 import { Glossary, Definition } from "./components/Glossary";
 import { askQuestion, fetchField, fetchPlan } from "./api";
-import { DataEvidence, DecisionNotice } from "./components/DataEvidence";
+import { DataEvidence, DecisionNotice, evidenceText } from "./components/DataEvidence";
 import { PlanAssumptions } from "./components/PlanAssumptions";
 import { DEMO_FARMS, MapPicker } from "./components/MapPicker";
 import { HarvestCheck, SatelliteNote } from "./components/HarvestCheck";
@@ -21,11 +33,14 @@ import { VegetationCard } from "./components/VegetationCard";
 
 import { CropTimingEvidence } from "./components/CropTimingEvidence";
 import { SmapCard } from "./components/SmapCard";
+import { SensorFitCard } from "./components/SensorFitCard";
 import { GraceWellsCard } from "./components/GraceWellsCard";
+import { FarmerConstraintEvidence } from "./components/FarmerConstraintEvidence";
 import { EconomicsCard } from "./components/EconomicsCard";
 import { HistoricalScenarios } from "./components/HistoricalScenarios";
 
 import { FieldWatchCard } from "./components/FieldWatchCard";
+import { MyFieldsPanel } from "./components/MyFieldsPanel";
 import { UsdmContext } from "./components/UsdmContext";
 import { WindScreenCard } from "./components/WindScreenCard";
 import { TrendChart, trendText, trendTone } from "./components/TrendChart";
@@ -135,6 +150,7 @@ function soilName(name: string | undefined): string | undefined {
 
 /** "Grow soybean in 2027, corn in 2028, then soybean in 2029." */
 function planSentence(p: RotationPlan, language: Language): string {
+  if (language === "ko") return `다음 순서를 권장합니다: ${p.years.map(y => `${y.year}년 ${cropName(y.crop, language)}${y.crop === "fallow" ? "" : " 재배"}`).join(", 이후 ")}.`;
   if (language === "es") {
     const parts = p.years.map((y) => y.crop === "fallow" ? `dejar la parcela en barbecho en ${y.year}` : `cultivar ${cropName(y.crop, language).toLowerCase()} en ${y.year}`);
     return `Recomendamos ${parts.slice(0, -1).join(", ")}${parts.length > 1 ? " y después " : ""}${parts.at(-1)}.`;
@@ -167,13 +183,22 @@ function Progress({ step, canGo, go }: { step: Step; canGo: (s: Step) => boolean
 }
 
 export function App() {
-  return <LanguageProvider><MainFlow /></LanguageProvider>;
+  return <MainFlow />;
 }
 
 function MainFlow() {
   const { language, setLanguage, t } = useI18n();
   const [step, setStep] = useState<Step>("field");
   const [point, setPoint] = useState<{ lat: number; lon: number } | null>(null);
+  const [selectedFields, setSelectedFields] = useState<FieldBoundary[]>([]);
+  const boundaryCatalog = useBoundaryCatalog(point);
+  const [explicitField, setExplicitField] = useState<FieldBoundary | null>(null);
+  const [fieldHistoryEdits, setFieldHistoryEdits] = useState<Record<string,(CropId|'')[]>>({});
+  const [nameStorageFailed,setNameStorageFailed]=useState(false);
+  const planningField = boundaryCatalog.enabled ? (explicitField ?? (selectedFields.length===1 ? selectedFields[0]! : null)) : null;
+  const planningValues = planningField ? (fieldHistoryEdits[planningField.id] ?? fieldPlanHistory(planningField).years.map(y=>cdlToCropId(y.cdlCode) ?? '')) : [];
+  const planningCrops = planningValues.filter((c):c is CropId=>Boolean(c));
+  const fieldHistoryValid = !planningField || planningCrops.length>0;
   const [focus, setFocus] = useState<{ lat: number; lon: number; zoom: number; key: number } | null>(null);
   const [zip, setZip] = useState("");
   const [zipMsg, setZipMsg] = useState<{ key: TranslationKey; values?: Record<string, string | number> } | null>(null);
@@ -183,11 +208,19 @@ function MainFlow() {
   const [guessed, setGuessed] = useState(false);
   const [water, setWater] = useState<WaterLevel>("rain");
   const [priority, setPriority] = useState<Priority>("balanced");
+  const [constraints, setConstraints] = useState<FarmerConstraints | undefined>();
+  const [constraintsValid, setConstraintsValid] = useState(true);
+  const changeConstraints = useCallback((value: FarmerConstraints | undefined, valid: boolean) => { setConstraints(value); setConstraintsValid(valid); }, []);
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [priceDraft, setPriceDraft] = useState<PriceDraft>({values:{},prices:{},valid:true});
+  const {prices,valid:pricesValid} = priceDraft;
   const [plan, setPlan] = useState<PlanResponse | null>(null);
   const [planLoading, setPlanLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [error, setError] = useState<TranslationKey | null>(null);
+  const [measurements, setMeasurements] = useState<Pick<PlanRequest, "soilTest" | "yieldRecords">>({});
+  const [measurementsValid, setMeasurementsValid] = useState(true);
+  const changeMeasurements = useCallback((value: Pick<PlanRequest, "soilTest" | "yieldRecords">, valid: boolean) => { setMeasurements(value); setMeasurementsValid(valid); }, []);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<{ q: string; a: string } | null>(null);
   const [asking, setAsking] = useState(false);
@@ -220,15 +253,40 @@ function MainFlow() {
       const g = guessThisYear(f);
       setThisYear(g);
       setGuessed(Boolean(g));
+      return true;
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
         setField(null);
         setError("We couldn't load your field. Try again or select another field.");
       }
+      return false;
     } finally {
       if (fieldAbort.current === ctrl) setFieldLoading(false);
     }
   }, []);
+
+  const pickPoint = useCallback((lat:number,lon:number) => {
+    // An explicit free-point/demo pick leaves field mode, preventing history/measurement mixups.
+    setSelectedFields([]);
+    setExplicitField(null);
+    return pick(lat,lon);
+  },[pick]);
+
+  const selectFields = (fields: FieldBoundary[]) => {
+    setSelectedFields(fields);
+    setExplicitField(null);
+    setPlan(null);
+    if (fields.length===1) void pick(fields[0]!.centroid.lat,fields[0]!.centroid.lon);
+  };
+  const renameField = (field:FieldBoundary,name:string) => {
+    try { if(name) localStorage.setItem(FIELD_NAME_PREFIX+field.id,name); else localStorage.removeItem(FIELD_NAME_PREFIX+field.id); }
+    catch { setNameStorageFailed(true); }
+    const generated=numberFields(boundaryCatalog.fields).find(f=>f.id===field.id)?.name;
+    const updated={...field,name:name || generated};
+    boundaryCatalog.setFields(prev=>prev.map(f=>f.id===field.id?updated:f));
+    setSelectedFields(prev=>prev.map(f=>f.id===field.id?updated:f));
+    setExplicitField(prev=>prev?.id===field.id?updated:prev);
+  };
 
   const findZip = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -260,7 +318,7 @@ function MainFlow() {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setFocus({ lat: pos.coords.latitude, lon: pos.coords.longitude, zoom: 14, key: Date.now() });
-        void pick(pos.coords.latitude, pos.coords.longitude);
+        void pickPoint(pos.coords.latitude, pos.coords.longitude);
       },
       () => setZipMsg({ key: "We couldn't get your location. Type a ZIP code or tap the map." }),
       { timeout: 10000 },
@@ -270,7 +328,7 @@ function MainFlow() {
   const lastMapped = useMemo(() => [...(field?.cropHistory.years ?? [])].reverse().find((y) => y.crop) ?? null, [field]);
 
   const run = useCallback(async (waterOverride?: WaterLevel) => {
-    if (!point || !thisYear) return;
+    if (!point || (!thisYear && !planningField) || !measurementsValid || !fieldHistoryValid || !constraintsValid || !pricesValid) return;
     const w = waterOverride ?? water;
     if (waterOverride) setWater(waterOverride);
     setPlanLoading(true);
@@ -284,9 +342,9 @@ function MainFlow() {
     planAbort.current = ctrl;
     const recentCrops: CropId[] = [];
     if (lastMapped?.crop && lastMapped.year < THIS_SEASON) recentCrops.push(lastMapped.crop);
-    recentCrops.push(thisYear);
+    if (thisYear) recentCrops.push(thisYear);
     try {
-      const res = await fetchPlan({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, goals, recentCrops, language }, ctrl.signal);
+      const res = await fetchPlan(fieldPlanRequest({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, goals, ...(constraints ? { constraints } : {}), recentCrops, language, ...measurements, ...(Object.keys(prices).length ? {prices} : {}), priceScenarios: true }, boundaryCatalog.enabled, planningField, planningCrops), ctrl.signal);
       setPlan(res);
       setAnswer(null);
     } catch (e) {
@@ -294,7 +352,7 @@ function MainFlow() {
     } finally {
       if (planAbort.current === ctrl) setPlanLoading(false);
     }
-  }, [point, thisYear, water, priority, goals, lastMapped, go, language]);
+  }, [point, thisYear, water, priority, goals, lastMapped, go, language, measurements, measurementsValid, constraints, constraintsValid, prices, pricesValid, boundaryCatalog.enabled, planningField, fieldHistoryValid, fieldHistoryEdits]);
 
   // Regenerate the server summary when switching languages on an existing result.
   useEffect(() => {
@@ -315,7 +373,8 @@ function MainFlow() {
     try {
       const best = plan.plans[0];
       const r = await askQuestion({
-        question,
+              language,
+              question,
         planLabel: best?.label ?? "",
         summary: plan.explanation.summary,
         facts: plan.facts
@@ -341,6 +400,7 @@ function MainFlow() {
 
   const startOver = () => {
     setPoint(null);
+    setSelectedFields([]);
     setField(null);
     setPlan(null);
     setThisYear("");
@@ -374,10 +434,11 @@ function MainFlow() {
           <button type="button" lang="en" aria-label="EN English" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>EN</button>
           <span aria-hidden="true"> / </span>
           <button type="button" lang="es" aria-label="ES Español" aria-pressed={language === "es"} onClick={() => setLanguage("es")}>ES</button>
+          <button type="button" lang="ko" aria-label="한국어" aria-pressed={language === "ko"} onClick={() => setLanguage("ko")}>한국어</button>
         </div>
       </header>
 
-      <main className="jr-main" ref={top} tabIndex={-1} aria-label="Crop rotation planner">
+      <main className="jr-main" ref={top} tabIndex={-1} aria-label={t("Crop rotation planner")}>
         <Progress step={step} canGo={canGo} go={go} />
         <Glossary />
 
@@ -411,8 +472,20 @@ function MainFlow() {
             </p>
 
             <p className="jr-tap">{t("Then tap your field on the map.")}</p>
-            <MapPicker point={point} onPick={pick} focus={focus} />
+            <MapPicker point={point} onPick={pickPoint} focus={focus}
+              boundaries={boundaryCatalog.enabled ? boundaryCatalog.fields : undefined}
+              selectedFields={boundaryCatalog.enabled ? selectedFields : undefined}
+              onSelectFields={boundaryCatalog.enabled ? selectFields : undefined} />
+            {boundaryCatalog.enabled && <FieldBoundaryPicker {...boundaryCatalog}
+              selected={selectedFields} onChange={selectFields}
+              onRename={renameField}
+              onUseCentroid={f => { setExplicitField(f); void pick(f.centroid.lat, f.centroid.lon).then(ok=>{if(ok) go("questions");}); }}
+              onShowArea={() => {
+                const area = boundaryCatalog.areas.find(a => a.id === boundaryCatalog.area);
+                if (area) setFocus({ lat: (area.bbox[1]+area.bbox[3])/2, lon: (area.bbox[0]+area.bbox[2])/2, zoom: 14, key: Date.now() });
+              }} />}
 
+            {nameStorageFailed && <p role="status">{t("Local storage unavailable; name lasts for this visit only.")}</p>}
             <p className="jr-examples">
               {t("No field handy? Try an example:")}{" "}
               {DEMO_FARMS.map((d) => (
@@ -422,7 +495,7 @@ function MainFlow() {
                   className="chip-btn"
                   onClick={() => {
                     setWater(d.irrigated ? "full" : "rain");
-                    void pick(d.lat, d.lon);
+                    void pickPoint(d.lat, d.lon);
                   }}
                 >
                   {DEMO_SHORT[d.name] ?? d.name}
@@ -431,6 +504,7 @@ function MainFlow() {
             </p>
 
             <FieldWatchCard />
+            <MyFieldsPanel fields={selectedFields} />
 
             {point && (
               <div className="jr-found" aria-live="polite">
@@ -482,7 +556,8 @@ function MainFlow() {
             <h1 id="s2" className="jr-title">{t("Three quick questions")}</h1>
             <p className="jr-lead">{place ? t("About your field in {place}.", { place }) : t("About your field.")}</p>
 
-            <fieldset className="jr-q">
+            {planningField && <FieldPlanHistory field={planningField} values={planningValues} onChange={values=>setFieldHistoryEdits(prev=>({...prev,[planningField.id]:values}))} />}
+            {!planningField && <fieldset className="jr-q">
               <legend>
                 <span className="jr-qn">1</span> {t("What did you grow in {year}?", { year: THIS_SEASON })}
               </legend>
@@ -505,13 +580,13 @@ function MainFlow() {
                   </button>
                 ))}
               </div>
-            </fieldset>
+            </fieldset>}
 
             <fieldset className="jr-q">
               <legend>
                 <span className="jr-qn">2</span> {t("How is it watered?")}
               </legend>
-              <p className="jr-note">{language === "es" ? t("Check your irrigation allocation; the model allowance is not measured pumping or a legal water right.") : <>Check your <Definition term="irrigation-allocation" />; the model allowance is not measured pumping or a legal water right.</>}</p>
+              <p className="jr-note">{language !== "en" ? t("Check your irrigation allocation; the model allowance is not measured pumping or a legal water right.") : <>Check your <Definition term="irrigation-allocation" />; the model allowance is not measured pumping or a legal water right.</>}</p>
               <div className="jr-tiles jr-tiles-3" role="group" aria-label={t("Water supply")}>
                 {(["rain", "limited", "full"] as WaterLevel[]).map((v) => (
                   <button key={v} type="button" role="button" aria-pressed={water === v} className={water === v ? "on" : ""} onClick={() => setWater(v)}>
@@ -528,7 +603,7 @@ function MainFlow() {
               <legend>
                 <span className="jr-qn">3</span> {t("What matters most to you?")}
               </legend>
-              <div className="jr-tiles jr-tiles-2" role="group" aria-label="Your priority">
+              <div className="jr-tiles jr-tiles-2" role="group" aria-label={t("Your priority")}>
                 {PRIORITIES.map((p) => (
                   <button key={p.id} type="button" aria-pressed={priority === p.id} className={priority === p.id ? "on" : ""} onClick={() => setPriority(p.id)}>
                     <b>{t(p.label)}</b>
@@ -539,13 +614,16 @@ function MainFlow() {
             </fieldset>
 
             <GoalPicker value={goals} onChange={setGoals} water={water} />
+            <ConstraintsPanel value={constraints} onChange={changeConstraints} />
+            <PricePanel value={priceDraft} onChange={setPriceDraft} />
+            {point && <MeasurementPanel key={`${point.lat},${point.lon}`} fieldKey={`${point.lat},${point.lon}`} soil={field.soil} onChange={changeMeasurements} />}
 
             <div className="jr-actions">
               <button type="button" className="ghost" onClick={() => go("field")}>
                 {t("← Back")}
               </button>
-              <button type="button" className="primary" disabled={!thisYear || planLoading} onClick={() => void run()}>
-                {thisYear ? t("Show my plan →") : t("Pick what you grew to continue")}
+              <button type="button" className="primary" disabled={(!thisYear && !planningField) || !fieldHistoryValid || planLoading || !measurementsValid || !constraintsValid || !pricesValid} onClick={() => void run()}>
+                {(thisYear || planningField) ? t("Show my plan →") : t("Pick what you grew to continue")}
               </button>
             </div>
           </section>
@@ -554,6 +632,7 @@ function MainFlow() {
         {/* ---------- Step 3: the plan ---------- */}
         {step === "plan" && (
           <section aria-live="polite">
+            {planningField && <FieldPlanHistory field={planningField} values={planningValues} used={plan?.request.recentCrops} onEdit={()=>go("questions")} />}
             {planLoading && (
               <div className="jr-card jr-loading">
                 <div className="jr-hero">
@@ -590,6 +669,7 @@ function MainFlow() {
               </div>
             )}
 
+            {plan && !planLoading && <ConstraintSummary report={plan.constraints} currentPractice={plan.currentPractice} />}
             {plan && !planLoading && !best && <div className="jr-card" role="status"><h1 className="jr-title">{t("No feasible rotation found")}</h1><DecisionNotice /><p>{t("Review your crop history, water assumptions and priorities. Missing evidence is not a zero score.")}</p><button type="button" className="ghost" onClick={() => go("questions")}>{t("Review inputs")}</button></div>}
 
             {plan && !planLoading && best && (
@@ -607,6 +687,7 @@ function MainFlow() {
                   <DecisionNotice />
                   <TopPlan plan={best} compareTo={plan.currentPractice} summary={plan.explanation.summary} />
                   <PlanAssumptions plan={best} water={plan.water ?? water} />
+                  <PriceRobustnessCard plan={plan} />
                   <BadYears plan={best} current={plan.currentPractice} />
                   {(plan.water ?? water) === "rain" && Math.max(...plan.plans.map((p) => p.avgNetReturnPerAcre)) < 15 && (
                     <p className="jr-tradeoff">
@@ -615,7 +696,7 @@ function MainFlow() {
                   )}
                   {tradeoff(best, plan.currentPractice, language) && <p className="jr-tradeoff">{tradeoff(best, plan.currentPractice, language)}</p>}
                   <p className="jr-context">
-                    {t("Based on:")} {thisYear && cropName(thisYear, language).toLowerCase()} ({THIS_SEASON}) · {t(waterText[plan.water ?? water].title).toLowerCase()} ·{" "}
+                    {t("Based on:")} {planningField ? plan.request.recentCrops?.map(c=>cropName(c,language)).join(" → ") : <>{thisYear && cropName(thisYear, language).toLowerCase()} ({THIS_SEASON})</>} · {t(waterText[plan.water ?? water].title).toLowerCase()} ·{" "}
                     {t(PRIORITIES.find((p) => p.id === priority)!.label).toLowerCase()}{" "}
                     <button type="button" className="link-btn" onClick={() => go("questions")}>
                       {t("Change")}
@@ -638,19 +719,21 @@ function MainFlow() {
                 )}
 
                 {/* stretch: data evidence */}
+                <SensorFitCard fields={selectedFields} plan={plan} />
                 <UsdmContext plan={plan} />
                 <WindScreenCard plan={plan} />
                 <EconomicsCard plan={plan} />
                 <VegetationCard plan={plan} />
                 <SmapCard plan={plan} />
                 <GraceWellsCard plan={plan} />
+                <FarmerConstraintEvidence key={`farmer-constraints:${plan.generatedAt}`} plans={plan.plans} current={plan.currentPractice} rainOnly={plan.water === "rain"} />
                 {/* /stretch: data evidence */}
 
                 <div className="jr-card">
                   <h2 className="jr-h2">{t("Why we suggest this")}</h2>
                   <ul className="reasons">
                     {topReasons(plan.facts).map((f) => (
-                      <li key={f.id + f.text}>{plain(f.text)}</li>
+                      <li key={f.id + f.text}>{factText(plain(f.text), language)}</li>
                     ))}
                   </ul>
                 </div>
@@ -684,6 +767,11 @@ function MainFlow() {
 
 
 
+                {(plan.request.soilTest || plan.request.yieldRecords?.length) && <div className="jr-card">
+                  <h2 className="jr-h2">{t("Your measurements in this plan")}</h2>
+                  {plan.request.soilTest && <SoilComparison soil={plan.soil} test={plan.request.soilTest} />}
+                  <ul className="reasons">{plan.facts.filter((f) => f.id.startsWith("farmer-")).map((f) => <li key={f.id}>{factText(f.text, language)}</li>)}</ul>
+                </div>}
                 <DataEvidence plan={plan} />
 
                 <details className="jr-more">
@@ -706,15 +794,15 @@ function MainFlow() {
                 <details className="jr-more">
                   <summary>{t("How the weather on your field has changed")}</summary>
                   <p className="hint">
-                    {plan.climate.firstYear}–{plan.climate.lastYear}, from NASA data: a <Definition term="regional-grid" />, not an individual field station.
+                    {plan.climate.firstYear}–{plan.climate.lastYear}, {t("from NASA data:")} <Definition term="regional-grid" />, {t("not an individual field station.")}
                   </p>
                   {changes.length > 0 ? (
                     <ul className="changes">
                       {changes.map((c) => (
                         <li key={c.id}>
                           <span className={`arrow arrow-${trendTone(c)}`}>{trendTone(c) === "up" ? "▲" : "▼"}</span>
-                          <b>{c.label}</b>
-                          <span>{trendText(c)}</span>
+                          <b>{translateKnown(language, c.label)}</b>
+                          <span>{trendText(c, language)}</span>
                         </li>
                       ))}
                     </ul>
@@ -745,7 +833,7 @@ function MainFlow() {
                   <summary>{t("All the reasons")} ({plan.facts.length})</summary>
                   <ul className="reasons">
                     {plan.facts.map((f) => (
-                      <li key={f.id + f.text}>{plain(f.text)}</li>
+                      <li key={f.id + f.text}>{factText(plain(f.text), language)}</li>
                     ))}
                   </ul>
                 </details>
@@ -782,13 +870,13 @@ function MainFlow() {
                         <a href={d.url} target="_blank" rel="noreferrer">
                           {d.name}
                         </a>{" "}
-                        — {d.usedFor}
+                        — {translateKnown(language, d.usedFor)}
                       </li>
                     ))}
                   </ul>
                   <ul>
                     {plan.assumptions.map((a) => (
-                      <li key={a}>{a}</li>
+                      <li key={a}>{evidenceText(a, language)}</li>
                     ))}
                   </ul>
                 </details>

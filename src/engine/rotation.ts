@@ -2,9 +2,13 @@
 // against trend-adjusted NASA weather history, soil, economics and farmer priority.
 
 import type { CoverId, CropId, Goal, PlanYear, Priority, RotationPlan, ScoreBreakdown, SoilProfile } from "../shared/types";
+import { constraintWater } from '../shared/constraintWater';
+import type { ConstraintCode, ConstraintIssue, ConstraintReport, FarmerConstraints } from '../shared/constraints';
+import { cropConstraintIssues, normalizeConstraints, sequenceConstraintIssues } from './constraints';
 import { clamp, round } from "../shared/units";
 import {
   coldDays,
+  createEt0Memo,
   type DailyClimate,
   degreeDaysAbove,
   et0HargreavesMm,
@@ -14,9 +18,13 @@ import {
   SPRING,
   type YearSeries,
 } from "./climate";
-import { ALL_CROPS, COVERS, CROPS, type CropDef, NITROGEN_PRICE_PER_LB, nitrogenNeed, rotationYieldFactor } from "./crops";
+import { ALL_CROPS, LEGACY_CROPS, COVERS, CROPS, type CropDef, NITROGEN_PRICE_PER_LB, nitrogenNeed, rotationYieldFactor } from "./crops";
+import { analyzePriceSensitivity } from "./priceScenarios";
+import type { PriceSensitivity } from "../shared/prices";
 import { createGoalScorer, selectedGoals } from "./goals";
 import { isSignificant, mannKendall } from "./stats";
+import { isExtraCrop, cropSpecies } from "../shared/extraCrops";
+import { expandedSequences } from "./expandedSearch";
 
 export const PRIORITY_WEIGHTS: Record<Priority, Pick<ScoreBreakdown, "climate" | "reliability" | "soil" | "profit">> = {
   profit: { climate: 0.25, reliability: 0.15, soil: 0.15, profit: 0.45 },
@@ -109,16 +117,17 @@ const FALL_ESTABLISHMENT_USE_MM = 90;
 /** A winter cover crop uses part of the water that would otherwise be stored. */
 const COVER_WATER_USE = 0.4;
 
-export function buildWaterContext(climate: DailyClimate, soil: SoilProfile, irrigated: boolean, allowanceMm = 0): WaterContext {
+export function buildWaterContext(climate: DailyClimate, soil: SoilProfile, irrigated: boolean, allowanceMm = 0, preparedEt0?: ReturnType<typeof createEt0Memo>): WaterContext {
   const monthRain = climate.years.map((ys) => {
     const m = new Array<number>(13).fill(0);
     for (const d of ys.days) m[d.month] = (m[d.month] ?? 0) + (d.prcp ?? 0);
     return m;
   });
   const lat = Number.isFinite(climate.gridCell.lat) ? climate.gridCell.lat : 40;
+  const et0 = preparedEt0 ?? createEt0Memo(lat);
   const monthEt0 = climate.years.map((ys) => {
     const m = new Array<number>(13).fill(0);
-    for (let k = 1; k <= 12; k++) m[k] = et0HargreavesMm(ys, { from: [k, 1], to: [k, 31] }, lat);
+    for (let k = 1; k <= 12; k++) m[k] = et0(ys, { from: [k, 1], to: [k, 31] });
     return m;
   });
   const recentFrom = climate.lastYear - 9;
@@ -191,13 +200,16 @@ export function soilSuitability(crop: CropDef, soil: SoilProfile): { factor: num
   return { factor, notes };
 }
 
+export type TrendMemo = Map<string, ReturnType<typeof trendAdjust>>;
+export type CropWeatherMemo = Map<CropId, { metrics: Metrics[]; need: number[] }>;
+
 export function evaluateCropClimate(
   climate: DailyClimate,
   soil: SoilProfile,
   irrigated: boolean,
   targetYear: number,
   /** adjustTrends: false keeps each year's weather exactly as it happened (used to check the model against real harvests). */
-  opts: { adjustTrends?: boolean } = {},
+  opts: { adjustTrends?: boolean; weatherMemo?: CropWeatherMemo; crops?: CropId[]; et0?: ReturnType<typeof createEt0Memo>; trendMemo?: TrendMemo } = {},
 ): Record<CropId, CropClimate> {
   const years = climate.years.map((y) => y.year);
   const recentFrom = climate.lastYear - 9;
@@ -209,7 +221,7 @@ export function evaluateCropClimate(
   const lat = Number.isFinite(climate.gridCell.lat) ? climate.gridCell.lat : 40;
 
   const out = {} as Record<CropId, CropClimate>;
-  for (const id of ALL_CROPS) {
+  for (const id of opts.crops ?? ALL_CROPS) {
     const c = CROPS[id];
     if (id === "fallow") {
       const ones = years.map(() => 1);
@@ -220,11 +232,24 @@ export function evaluateCropClimate(
       };
       continue;
     }
-    const m = climate.years.map((ys) => cropMetrics(ys, c));
+    let weather = opts.weatherMemo?.get(id);
+    if (!weather) {
+      weather = {
+        metrics: climate.years.map((ys) => cropMetrics(ys, c)),
+        need: climate.years.map((ys) => Math.max(1, c.kc * (opts.et0 ? opts.et0(ys, c.season) : et0HargreavesMm(ys, c.season, lat)))),
+      };
+      opts.weatherMemo?.set(id, weather);
+    }
+    const m = weather.metrics;
     const trends: MetricTrend[] = [];
     const adj = (name: string, vals: number[]) => {
       if (opts.adjustTrends === false) return vals;
-      const r = trendAdjust(years, vals, targetYear, name);
+      const key = `${name}:${targetYear}:${vals.join(",")}`;
+      let r = opts.trendMemo?.get(key);
+      if (!r) {
+        r = trendAdjust(years, vals, targetYear, name);
+        opts.trendMemo?.set(key, r);
+      }
       trends.push(r.trend);
       return r.adjusted;
     };
@@ -243,7 +268,7 @@ export function evaluateCropClimate(
     let reliableSum = 0;
     let stressed = 0;
     const yearly: CropClimate["yearly"] = { effRain: [], need: [], nonWater: [], nonWaterWorst: [], nonWaterWorstVal: [] };
-    const need = climate.years.map((ys) => Math.max(1, c.kc * et0HargreavesMm(ys, c.season, lat)));
+    const need = weather.need;
 
     years.forEach((_, i) => {
       const comps: [StressFactor, number][] = [];
@@ -307,6 +332,7 @@ export function evaluateCropClimate(
 // ---------------- Plan enumeration and scoring ----------------
 
 export interface EngineInput {
+  constraints?: FarmerConstraints;
   cropClimate: Record<CropId, CropClimate>;
   /** Recent crops on the field, oldest first; last = most recent season. */
   history: CropId[];
@@ -325,6 +351,7 @@ export interface EngineInput {
   water: WaterContext;
   /** Current prices (e.g. USDA NASS prices received), per crop unit; defaults from crops.ts otherwise. */
   prices?: Partial<Record<CropId, number>>;
+  priceScenarios?: boolean;
   /**
    * Quick search: rank every crop sequence without cover crops first, then try cover-crop variants only for the
    * best `quickSearch` sequences. Used for the "what if your water changes?" comparison, where only the best
@@ -346,7 +373,7 @@ interface RawPlan {
 }
 
 // Crops harvested early enough to sow winter wheat after them (sorghum: common in the Plains, with a small yield cost).
-const EARLY_HARVEST: CropId[] = ["soybean", "oats", "alfalfa", "sorghum", "fallow"];
+const EARLY_HARVEST: CropId[] = ["soybean", "oats", "alfalfa", "sorghum", "fallow", "corn_silage", "sorghum_silage", "triticale", "other_hay"];
 
 /** Plain-language reason a sequence breaks the engine's rotation rules, or null. */
 export function sequenceIssue(seq: CropId[], history: CropId[], firstYearWheatAllowed: boolean, startYear: number): string | null {
@@ -371,10 +398,17 @@ export function feasibleSequence(seq: CropId[], history: CropId[], firstYearWhea
     const idx = off + i;
     const crop = seq[i] as CropId;
     const prev = full[idx - 1] ?? null;
-    if (crop === "winter_wheat") {
+    if (crop === "winter_wheat" || crop === "triticale") {
       if (i === 0 && !firstYearWheatAllowed) return false;
       if (prev && !EARLY_HARVEST.includes(prev)) return false;
     }
+    // Sunflower: >=4-year return interval, K-State/IPM crop profile, Sclerotinia
+    // management (not universal disease protection). History retains the last 3 years.
+    if ((crop === "sunflower" || crop === "sunflower_confection") && full.slice(Math.max(0, idx - 3), idx).some(c => c === "sunflower" || c === "sunflower_confection")) return false;
+    // Grain and silage are the SAME species for the three-consecutive-year rule.
+    const species = cropSpecies;
+    if (isExtraCrop(crop) && species(crop) === species(full[idx-1]) && species(crop) === species(full[idx-2])) return false;
+    if ((crop === "corn" || crop === "sorghum") && [full[idx-1], full[idx-2]].some(c => c && isExtraCrop(c)) && species(crop) === species(full[idx-1]) && species(crop) === species(full[idx-2])) return false;
     // Never two fallow seasons in a row; no annual crop three seasons in a row.
     if (crop === "fallow" && prev === "fallow") return false;
     if (crop !== "alfalfa" && crop !== "fallow" && full[idx - 1] === crop && full[idx - 2] === crop) return false;
@@ -536,7 +570,23 @@ function spinUp(input: EngineInput): { storage: number[]; lastEnd: number } {
   return out;
 }
 
+const simulationMemo = new WeakMap<EngineInput, Map<string, SimulatedYear[]>>();
+
 function simulate(seq: CropId[], covers: CoverId[], input: EngineInput): SimulatedYear[] {
+  // The last cover is planted after the simulation ends. Before then, all non-empty
+  // covers consume the same recharge fraction, and full irrigation removes that effect.
+  // Costs, N credits and yield effects still use the exact cover in evaluate().
+  const key = seq.join(",") + (input.water.irrigated ? "" : `:${covers.slice(0, -1).map((c) => Number(c !== "none")).join("")}`);
+  let memo = simulationMemo.get(input);
+  if (!memo) simulationMemo.set(input, memo = new Map());
+  const hit = memo.get(key);
+  if (hit) return hit;
+  const result = simulateUncached(seq, covers, input);
+  memo.set(key, result);
+  return result;
+}
+
+function simulateUncached(seq: CropId[], covers: CoverId[], input: EngineInput): SimulatedYear[] {
   const ctx = input.water;
   const n = ctx.n;
   const start = spinUp(input);
@@ -577,7 +627,7 @@ function simulate(seq: CropId[], covers: CoverId[], input: EngineInput): Simulat
   });
 }
 
-function evaluate(seq: CropId[], covers: CoverId[], input: EngineInput): RawPlan {
+function evaluate(seq: CropId[], covers: CoverId[], input: EngineInput, prices = input.prices): RawPlan {
   const { cropClimate, history, planStartYear } = input;
   const full = [...history, ...seq];
   const offset = history.length;
@@ -623,7 +673,7 @@ function evaluate(seq: CropId[], covers: CoverId[], input: EngineInput): RawPlan
     // Pumping cost scales with the water actually pumped (energy, maintenance, labor).
     const irrigationCost = (s.pumpedMm / 25.4) * IRRIGATION_COST_PER_INCH;
     const cost = def.costPerAcre * costScale + irrigationCost + establishment + n * NITROGEN_PRICE_PER_LB + COVERS[coverAfter].costPerAcre;
-    const net = expectedYield * (input.prices?.[crop] ?? def.pricePerUnit) - cost;
+    const net = expectedYield * (prices?.[crop] ?? input.prices?.[crop] ?? def.pricePerUnit) - cost;
     return {
       year: planStartYear + i,
       crop,
@@ -657,10 +707,14 @@ function evaluate(seq: CropId[], covers: CoverId[], input: EngineInput): RawPlan
   };
 }
 
-function toPlan(raw: RawPlan, profitNorm: (v: number) => number, priority: Priority, id: string): RotationPlan {
+function priorityTotal(raw: RawPlan, profit: number, priority: Priority): number {
   const w = PRIORITY_WEIGHTS[priority];
+  return round(w.climate * raw.climate + w.reliability * raw.reliability + w.soil * raw.soil + w.profit * profit, 3);
+}
+
+function toPlan(raw: RawPlan, profitNorm: (v: number) => number, priority: Priority, id: string): RotationPlan {
   const profit = profitNorm(raw.avgNet);
-  const total = w.climate * raw.climate + w.reliability * raw.reliability + w.soil * raw.soil + w.profit * profit;
+  const total = priorityTotal(raw, profit, priority);
   const notes: string[] = [];
   raw.years.forEach((y, i) => {
     if (y.cover !== "none") {
@@ -720,17 +774,33 @@ export function currentPracticeSequence(history: CropId[], length = 3): CropId[]
 }
 
 export interface EngineResult {
+  constraints?: ConstraintReport;
+  priceSensitivity?: PriceSensitivity;
   plans: RotationPlan[];
   currentPractice: RotationPlan | null;
   evaluated: number;
 }
 
 export function runEngine(input: EngineInput, topN = 3): EngineResult {
-  const crops = input.crops?.length ? input.crops : ALL_CROPS.filter((c) => c !== "fallow");
-  let sequences = cartesian([crops, crops, crops]).filter((s) =>
+  const waterConstraint = constraintWater(input.constraints);
+  if (waterConstraint) input = { ...input, irrigated: false, water: { ...input.water, irrigated: false, allowanceMm: waterConstraint.seasonalCapInches * 25.4 } };
+  const crops = input.crops?.length ? input.crops : LEGACY_CROPS.filter((c) => c !== "fallow");
+  const legacy = crops.filter(c => !isExtraCrop(c));
+  let sequences = [...cartesian([legacy, legacy, legacy]), ...expandedSequences(crops)].filter((s) =>
     feasibleSequence(s, input.history, input.firstYearWheatAllowed),
   );
 
+  const constraints = normalizeConstraints(input.constraints);
+  const binding = new Set<ConstraintCode>();
+  const bindingIssues = new Map<string, ConstraintIssue>();
+  if (constraints) sequences = sequences.filter(seq => {
+    const issues = sequenceConstraintIssues(seq, input.history, constraints);
+    for (const issue of issues) {
+      binding.add(issue.constraint);
+      bindingIssues.set(`${issue.constraint}:${issue.crop ?? ""}:${issue.detail ?? ""}`, issue);
+    }
+    return !issues.length;
+  });
   const goals = selectedGoals(input.goals);
   // Goal-sensitive cover variants must not be pruned using the old base-only quick score.
   if (!goals.length && input.quickSearch && sequences.length > input.quickSearch) {
@@ -738,7 +808,7 @@ export function runEngine(input: EngineInput, topN = 3): EngineResult {
     const top = Math.max(...bare.map((r) => r.avgNet));
     const norm = (v: number) => clamp(1 - (top - v) / PROFIT_SCALE_PER_ACRE);
     const keep = bare
-      .map((r) => ({ seq: r.seq, total: toPlan(r, norm, input.priority, "q").scores.total }))
+      .map((r) => ({ seq: r.seq, total: priorityTotal(r, norm(r.avgNet), input.priority) }))
       .sort((a, b) => b.total - a.total)
       .slice(0, input.quickSearch)
       .map((x) => x.seq);
@@ -747,7 +817,7 @@ export function runEngine(input: EngineInput, topN = 3): EngineResult {
 
   const raws: RawPlan[] = [];
   for (const seq of sequences) {
-    const coverLists = seq.map((_, i) => coverOptions(seq, i));
+    const coverLists = seq.some(isExtraCrop) ? seq.map(() => ["none" as CoverId]) : seq.map((_, i) => coverOptions(seq, i));
     for (const covers of cartesian(coverLists)) raws.push(evaluate(seq, covers, input));
   }
 
@@ -763,16 +833,29 @@ export function runEngine(input: EngineInput, topN = 3): EngineResult {
     const plan = toPlan(raw, profitNorm, input.priority, id);
     return goals.length ? { ...plan, waterUseIn: raw.waterUseIn } : plan;
   };
-  const candidates = raws.map((raw) => basePlan(raw, raw.seq.join(">")));
+  // Without goals, compare cheap scalar scores first. Materializing notes, labels
+  // and response objects for every cover variant is wasted work. Goal normalization
+  // still sees every feasible candidate, including losing cover variants.
+  const candidates = goals.length ? raws.map((raw) => basePlan(raw, raw.seq.join(">"))) : [];
   const goalScore = createGoalScorer(candidates, goals, input.water.irrigated ? "full" : input.water.allowanceMm > 0 ? "limited" : "rain");
 
-  // Best cover choice per main-crop sequence, then the top sequences.
   const bestBySeq = new Map<string, { raw: RawPlan; plan: RotationPlan }>();
-  for (const [i, raw] of raws.entries()) {
-    const key = raw.seq.join(">");
-    const plan = goalScore(candidates[i]!);
-    const cur = bestBySeq.get(key);
-    if (!cur || plan.scores.total > cur.plan.scores.total) bestBySeq.set(key, { raw, plan });
+  if (!goals.length) {
+    const best = new Map<string, { raw: RawPlan; total: number }>();
+    for (const raw of raws) {
+      const key = raw.seq.join(">");
+      const total = priorityTotal(raw, profitNorm(raw.avgNet), input.priority);
+      const cur = best.get(key);
+      if (!cur || total > cur.total) best.set(key, { raw, total });
+    }
+    for (const [key, { raw }] of best) bestBySeq.set(key, { raw, plan: basePlan(raw, key) });
+  } else {
+    for (const [i, raw] of raws.entries()) {
+      const key = raw.seq.join(">");
+      const plan = goalScore(candidates[i]!);
+      const cur = bestBySeq.get(key);
+      if (!cur || plan.scores.total > cur.plan.scores.total) bestBySeq.set(key, { raw, plan });
+    }
   }
   const ranked = [...bestBySeq.values()].sort((a, b) => b.plan.scores.total - a.plan.scores.total);
   // Never recommend a crop that would be stressed in most years here, however good its average looks
@@ -791,7 +874,34 @@ export function runEngine(input: EngineInput, topN = 3): EngineResult {
     chosen.push(r);
     if (chosen.length === topN) break;
   }
+  // If all displayed options start with the same crop, replace only the final
+  // alternative with the highest-ranked different starting crop in the same
+  // dependability tier. Keep the true winner, scores, and rotation rules intact.
+  // This is a choice set, not a promise that these are consecutive score ranks.
+  if (chosen.length > 1 && chosen.every((r) => r.raw.seq[0] === chosen[0]!.raw.seq[0])) {
+    const retained = chosen.slice(0, -1);
+    const signatures = new Set(retained.map((r) => [...r.raw.seq].sort().join(",")));
+    const last = chosen[chosen.length - 1]!;
+    const alternative = pool.find((r) => r.raw.seq[0] !== chosen[0]!.raw.seq[0] &&
+      dependable(r) === dependable(last) && !signatures.has([...r.raw.seq].sort().join(",")));
+    if (alternative) chosen[chosen.length - 1] = {
+      ...alternative,
+      plan: { ...alternative.plan, notes: [...alternative.plan.notes, "Shown as a different first-crop alternative, not necessarily the next-highest score. Review its score and return against the top plan."] },
+    };
+  }
   const plans = chosen.map((r, i) => ({ ...r.plan, id: `plan-${i + 1}` }));
+  const sensitivityCandidates = input.priceScenarios ? [
+    ...chosen.map((r,i) => ({ id: `plan-${i+1}`, raw:r.raw })),
+    ...(baselineRaw ? [{id:"current",raw:baselineRaw}] : []),
+  ] : [];
+  const priceSensitivity = input.priceScenarios ? analyzePriceSensitivity(
+    sensitivityCandidates.map(c => ({id:c.id,years:c.raw.years})),
+    (id, prices) => {
+      const raw = sensitivityCandidates.find(c => c.id===id)!.raw;
+      // Reuse this exact input identity and water memo: no new weather simulation or search.
+      return evaluate(raw.seq,raw.covers,input,prices).avgNet;
+    },
+  ) : undefined;
 
   return {
     plans,
@@ -803,6 +913,17 @@ export function runEngine(input: EngineInput, topN = 3): EngineResult {
         })()
       : null,
     evaluated: raws.length,
+
+    ...(constraints ? { constraints: {
+      status: plans.length ? 'satisfied' as const : 'infeasible' as const,
+      ...(waterConstraint ? { water: waterConstraint } : {}),
+      binding: plans.length ? [] : [...binding].sort(),
+      ...(!plans.length ? { bindingIssues: [...bindingIssues.values()] } : {}),
+      excludedCrops: crops.map(crop => ({ crop, reasons: cropConstraintIssues(crop, constraints) })).filter(x => x.reasons.length),
+      currentPracticeViolations: baselineSeq ? sequenceConstraintIssues(baselineSeq, input.history, constraints) : [],
+      ...(!plans.length ? { message: `No rotation satisfies these constraints: ${[...binding].join(', ') || 'crop availability and rotation rules'}. No constraints were relaxed.` } : {}),
+    } } : {}),
+    ...(priceSensitivity ? {priceSensitivity} : {}),
   };
 }
 
@@ -836,21 +957,36 @@ export function makeReplay(
   irrigated: boolean,
   allowanceMm = 0,
   shared?: Record<CropId, CropClimate>,
+  sharedWater?: WaterContext,
 ): (crop: CropId, prevCrop: CropId) => ReplayYear[] {
-  const water = buildWaterContext(climate, soil, irrigated, allowanceMm);
+  const water = sharedWater ?? buildWaterContext(climate, soil, irrigated, allowanceMm);
   const cropClimate = shared ?? evaluateCropClimate(climate, soil, irrigated, climate.lastYear, { adjustTrends: false });
   const input: EngineInput = { cropClimate, water, history: [], priority: "balanced", planStartYear: 0, firstYearWheatAllowed: true };
-  return (crop, prevCrop) => replayPair(climate, water, input, crop, prevCrop);
+  // Completeness is a property of the weather, not of a crop pair. Scan daily
+  // records once instead of once per crop, comparison, drought replay and year.
+  const complete = climate.years.map((ys) =>
+    ys.days.length === (Date.UTC(ys.year + 1, 0, 1) - Date.UTC(ys.year, 0, 1)) / 86_400_000 &&
+    ys.days.every((d) => d.prcp !== null && d.tmax !== null && d.tmin !== null));
+  const valid = climate.years.map((_, i) => {
+    for (let k = Math.max(0, i - 2); k <= i; k++) {
+      if (!complete[k] || (k > Math.max(0, i - 2) && climate.years[k]!.year !== climate.years[k - 1]!.year + 1)) return false;
+    }
+    return true;
+  });
+  const memo = new Map<string, ReplayYear[]>();
+  return (crop, prevCrop) => {
+    const key = `${crop}:${prevCrop}`;
+    let result = memo.get(key);
+    if (!result) memo.set(key, result = replayPair(climate, water, input, crop, prevCrop, valid));
+    return result;
+  };
 }
 
-function replayPair(climate: DailyClimate, water: WaterContext, input: EngineInput, crop: CropId, prevCrop: CropId): ReplayYear[] {
+function replayPair(climate: DailyClimate, water: WaterContext, input: EngineInput, crop: CropId, prevCrop: CropId, valid: boolean[]): ReplayYear[] {
   const out: ReplayYear[] = [];
   for (let i = 0; i < water.n; i++) {
     // A missing year cannot be bridged by substituting a different calendar year for soil-water spinup.
-    const window = climate.years.slice(Math.max(0, i - 2), i + 1);
-    if (window.some((ys, k) => (k > 0 && ys.year !== window[k - 1]!.year + 1) ||
-      ys.days.length !== (Date.UTC(ys.year + 1, 0, 1) - Date.UTC(ys.year, 0, 1)) / 86_400_000 ||
-      ys.days.some((d) => d.prcp === null || d.tmax === null || d.tmin === null))) continue;
+    if (!valid[i]) continue;
     // Spin up through the two seasons before (crop → prevCrop → crop), using the real preceding years.
     const steps: [CropId, number][] = [];
     if (i >= 2) steps.push([crop, i - 2]);

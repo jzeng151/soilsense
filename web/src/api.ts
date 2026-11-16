@@ -14,6 +14,7 @@ export interface AdminDocument {
 }
 export interface AdminDocDetail {
   doc: AdminDocument;
+  provenance?: { sourceUrl: string; retrievedAt?: string | null; intakeMethod?: string | null } | null;
   versions: Record<string, unknown>[];
   chunks: { chunkId: string; start: number; end: number; text: string; status: ChunkStatus }[];
 }
@@ -32,10 +33,10 @@ export async function fetchDocs(token: string): Promise<{ docs: AdminDocument[] 
   return { docs: body.docs.map(adminDocument) };
 }
 export async function fetchDoc(docId: string, token: string): Promise<AdminDocDetail> {
-  const body = await handle<{ doc: AdminDocument | DocApiRow; versions: Record<string, unknown>[]; chunks: (AdminDocDetail["chunks"][number] | ChunkApiRow)[] }>(
+  const body = await handle<{ provenance?: AdminDocDetail["provenance"]; doc: AdminDocument | DocApiRow; versions: Record<string, unknown>[]; chunks: (AdminDocDetail["chunks"][number] | ChunkApiRow)[] }>(
     await fetch(`/api/docs/${encodeURIComponent(docId)}`, { headers: { Authorization: `Bearer ${token}` } }),
   );
-  return { doc: adminDocument(body.doc), versions: body.versions, chunks: body.chunks.map((chunk) => "chunkId" in chunk ? chunk : {
+  return { doc: adminDocument(body.doc), provenance: body.provenance, versions: body.versions, chunks: body.chunks.map((chunk) => "chunkId" in chunk ? chunk : {
     chunkId: chunk.chunk_id, start: chunk.start_offset, end: chunk.end_offset, text: chunk.text, status: chunk.status,
   }) };
 }
@@ -43,6 +44,9 @@ export async function reviewDoc(docId: string, decision: ReviewDecision, token: 
   return handle(await fetch(`/api/docs/${encodeURIComponent(docId)}/review`, {
     method: "POST", headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }, body: JSON.stringify(decision),
   }));
+}
+export async function addDocFromUrl(url: string, token: string): Promise<{ method: "direct-pdf" | "browser-rendering" | "html-fetch-fallback" }> {
+  return handle(await fetch("/api/docs/from-url", { method: "POST", headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }, body: JSON.stringify({ url }) }));
 }
 export async function uploadDoc(file: File, token: string): Promise<{ docId: string; key: string; status: "queued"; size: number; eTag?: string }> {
   const body = new FormData();
@@ -62,13 +66,13 @@ export async function fetchField(lat: number, lon: number, signal?: AbortSignal)
 
 export async function fetchPlan(req: PlanRequest, signal?: AbortSignal): Promise<PlanResponse> {
   const plan = await handle<PlanResponse>(
-    await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req), signal }),
+    await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...req, includeFertilizer: true }), signal }),
   );
   setLastPlan(plan);
   return plan;
 }
 
-export async function askQuestion(body: { question: string; planLabel: string; summary: string; facts: string[] }): Promise<{ answer: string; source: string }> {
+export async function askQuestion(body: { question: string; planLabel: string; summary: string; facts: string[]; language?: import("../../src/shared/language").Language }): Promise<{ answer: string; source: string }> {
   return handle(await fetch("/api/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }));
 }
 
@@ -83,7 +87,12 @@ export async function fetchSecondOpinion(countyFips: string, signal?: AbortSigna
 
 
 export async function fetchVegetation(lat: number, lon: number, year: number, signal?: AbortSignal): Promise<import("../../src/shared/types").ModisVegetation> {
-  return handle(await fetch(`/api/vegetation?lat=${lat}&lon=${lon}&year=${year}`, { signal }));
+  // ORNL may need several sequential requests. Do not leave the evidence card
+  // loading indefinitely: its caller renders an explicit unknown state on timeout.
+  const deadline = AbortSignal.timeout(90_000);
+  return handle(await fetch(`/api/vegetation?lat=${lat}&lon=${lon}&year=${year}`, {
+    signal: signal ? AbortSignal.any([signal, deadline]) : deadline,
+  }));
 }
 // ---- Grounded explanations (#7/#8): the latest plan response, so plan cards can ask for an explanation ----
 // of the exact comparison they show without App.tsx having to pass the request down.

@@ -1,10 +1,17 @@
 export interface Env {
+  /** Explore is never the default unless explicitly enabled at runtime. */
+  EXPLORE_LANDING?: string;
+  /** Experimental southwest Kansas crop portfolio; absent/off preserves the original engine. */
+  EXTRA_CROPS?: "on" | "off";
+  /** Optional public CSB fields and capability agents. Off unless explicitly "on". */
+  FIELDS_ENABLED?: string;
+  /** Earthdata bearer token: server-side only, never exposed in evidence URLs. */
   EARTHDATA_TOKEN?: string;
   ASSETS?: Fetcher;
   DB?: D1Database;
   AI?: Ai;
   AI_MODEL?: string;
-  /** Cloudflare AI Gateway id for Workers AI calls (default "default", auto-created on first request). */
+  /** Cloudflare AI Gateway id for every model/provider call (default "default", auto-created on first request). */
   AI_GATEWAY_ID?: string;
   /** Scout's model: a Workers AI model ("@cf/...") or a Gemini model; the other provider is the fallback. */
   SCOUT_MODEL?: string;
@@ -18,6 +25,8 @@ export interface Env {
   /** OpenET API key (https://etdata.org): measured field water use, used to check the water model. Optional. */
   OPENET_API_KEY?: string;
   PUBLIC_BASE_URL?: string;
+  /** Inline planning needs a paid CPU budget (or local Wrangler). Default: serve only prewarmed plans. */
+  PLAN_COMPUTE_MODE?: "inline" | "cache-only";
   PLAN_START_YEAR?: string;
   HISTORY_START_YEAR?: string;
   ADMIN_TOKEN?: string;
@@ -43,6 +52,8 @@ export interface Env {
   EVIDENCE?: R2Bucket;
   /** Document pipeline (docs/INGEST.md): uploads bucket soilsense-docs (optional). */
   DOCS?: R2Bucket;
+  /** Optional Browser Rendering for URL intake; absence uses local HTML-to-text. */
+  BROWSER?: Fetcher;
   /** Document pipeline queue (R2 event notifications land here); producer binding for retries (optional). */
   DOC_QUEUE?: Queue;
   /** Document pipeline Workflow (DocIngestWorkflow): extract -> chunk -> review -> embed -> upsert (optional). */

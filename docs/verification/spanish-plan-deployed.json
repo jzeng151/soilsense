@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-11-15T23:39:29.240Z",
+  "request": {
+    "lat": 38.1095,
+    "lon": -100.706,
+    "irrigated": true,
+    "priority": "balanced",
+    "language": "es"
+  },
+  "status": 200,
+  "generatedAt": "2026-11-15T23:39:27.629Z",
+  "planCount": 3,
+  "summary": "Revisé 35 años de datos climáticos de la NASA para su campo. Para un balance entre ganancia, suelo y riesgo, le sugiero: soja en 2027 con veza vellosa como cobertura invernal, luego maíz en 2028, luego soja en 2029. Confirme con su agente de extensión antes de comprar semilla."
+}

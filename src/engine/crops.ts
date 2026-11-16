@@ -12,14 +12,16 @@
 // https://agmanager.info/sites/default/files/wysiwyg/Soybean%20Cost-Return%20Budget%20in%20Northeast%20Kansas__Nov-20-2024.pdf
 // Published 2024-11-20, planning year 2025, fetched 2026-11-15. See docs/economics-sources.md.
 
+import type { EquipmentGroup, MarketOutlet } from "../shared/extraCrops";
 import type { CoverId, CropId } from "../shared/types";
 import type { Window } from "./climate";
+import { ADDITIONAL_CROPS } from "./additionalCrops";
 
 export interface CropDef {
   id: CropId;
   name: string;
   /** Crop family used for rotation diversity. */
-  family: "grass" | "legume";
+  family: "grass" | "legume" | "broadleaf";
   legume: boolean;
   perennial: boolean;
   /** Main water-use window (in the harvest year). */
@@ -71,6 +73,11 @@ export interface CropDef {
   coversAfter: CoverId[];
   /** Must the previous crop be harvested early (fall-seeded crop)? */
   fallSeeded: boolean;
+  /** Optional experimental guidance; windows/categories are approximate, not cultivar recommendations. */
+  plantingWindow?: Window;
+  harvestWindow?: Window;
+  droughtTolerance?: "moderate" | "high";
+  operations?: { outlet: MarketOutlet; equipment: EquipmentGroup };
 }
 
 export interface CoverDef {
@@ -85,6 +92,7 @@ export interface CoverDef {
 }
 
 export const CROPS: Record<CropId, CropDef> = {
+  ...ADDITIONAL_CROPS,
   corn: {
     id: "corn",
     name: "Corn",
@@ -323,7 +331,9 @@ export const COVERS: Record<CoverId, CoverDef> = {
   },
 };
 
-export const ALL_CROPS = Object.keys(CROPS) as CropId[];
+// Preserve original order: tie-breaking must not change when the feature is off.
+export const LEGACY_CROPS: CropId[] = ["corn", "soybean", "winter_wheat", "oats", "alfalfa", "sorghum", "fallow"];
+export const ALL_CROPS: CropId[] = [...LEGACY_CROPS, ...(Object.keys(ADDITIONAL_CROPS) as CropId[])];
 
 /** Nitrogen price, $/lb N (editable assumption). */
 export const NITROGEN_PRICE_PER_LB = 0.65;
@@ -359,6 +369,13 @@ export function rotationYieldFactor(crop: CropId, prev: CropId | null, prev2: Cr
       if (prev === "sorghum") return 0.9;
       if (prev === "soybean") return 1.05;
       return 1;
+    case "cotton":
+    case "corn_silage":
+    case "sorghum_silage":
+    case "sunflower":
+    case "sunflower_confection":
+    case "triticale":
+    case "other_hay":
     case "fallow":
       return 1;
   }

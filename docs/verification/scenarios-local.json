@@ -1,0 +1,797 @@
+{
+  "timestamp": "2026-11-15T23:35:23.726Z",
+  "base": "http://127.0.0.1:8792",
+  "plans": [
+    {
+      "name": "Iowa",
+      "body": {
+        "lat": 42.0563,
+        "lon": -93.495,
+        "irrigated": false,
+        "priority": "balanced"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "facts": 22,
+      "explanation": {
+        "summary": "NASA data for your field near Story County, IA shows frost-free season rising by about 5 days per decade, and that change is statistically real. Recommended for a balance of profit, soil and risk: Soybean → Corn → Soybean. Compared with continuing the current pattern (Corn → Soybean → Corn): estimated +$13/acre per year, 209 lb/acre less nitrogen over 3 years, and a soil-health score of 47 vs 48 out of 100.",
+        "speech": "NASA data for your field near Story County, IA shows frost-free season rising by about 5 days per decade, and that change is statistically real. Focusing on a balance of profit, soil and risk, I suggest soybean in 2027 with hairy vetch over winter, then corn in 2028, then soybean in 2029. It needs about 209 pounds per acre less nitrogen over three years than your current pattern. The cover crops protect your soil over winter. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean + Hairy vetch; 2028 Corn; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Iowa",
+      "body": {
+        "lat": 42.0563,
+        "lon": -93.495,
+        "irrigated": false,
+        "priority": "profit"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "facts": 21,
+      "explanation": {
+        "summary": "NASA data for your field near Story County, IA shows frost-free season rising by about 5 days per decade, and that change is statistically real. Recommended for profit: Soybean → Corn → Soybean. Compared with continuing the current pattern (Corn → Soybean → Corn): estimated +$21/acre per year, 145 lb/acre less nitrogen over 3 years, and a soil-health score of 36 vs 48 out of 100.",
+        "speech": "NASA data for your field near Story County, IA shows frost-free season rising by about 5 days per decade, and that change is statistically real. Focusing on profit, I suggest soybean in 2027, then corn in 2028, then soybean in 2029. It needs about 145 pounds per acre less nitrogen over three years than your current pattern. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean; 2028 Corn; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Iowa",
+      "body": {
+        "lat": 42.0563,
+        "lon": -93.495,
+        "irrigated": false,
+        "priority": "soil"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Oats → Corn → Soybean",
+      "facts": 23,
+      "explanation": {
+        "summary": "NASA data for your field near Story County, IA shows frost-free season rising by about 5 days per decade, and that change is statistically real. Recommended for soil health: Oats → Corn → Soybean. Compared with continuing the current pattern (Corn → Soybean → Corn): estimated −$112/acre per year, 109 lb/acre less nitrogen over 3 years, and a soil-health score of 96 vs 48 out of 100.",
+        "speech": "NASA data for your field near Story County, IA shows frost-free season rising by about 5 days per decade, and that change is statistically real. Focusing on soil health, I suggest oats in 2027 with crimson clover over winter, then corn in 2028 with cereal rye over winter, then soybean in 2029 with hairy vetch over winter. It needs about 109 pounds per acre less nitrogen over three years than your current pattern. The cover crops protect your soil over winter. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Oats + Crimson clover; 2028 Corn + Cereal rye; 2029 Soybean + Hairy vetch. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Iowa",
+      "body": {
+        "lat": 42.0563,
+        "lon": -93.495,
+        "irrigated": false,
+        "priority": "risk"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "facts": 21,
+      "explanation": {
+        "summary": "NASA data for your field near Story County, IA shows frost-free season rising by about 5 days per decade, and that change is statistically real. Recommended for lower risk: Soybean → Corn → Soybean. Compared with continuing the current pattern (Corn → Soybean → Corn): estimated +$21/acre per year, 145 lb/acre less nitrogen over 3 years, and a soil-health score of 36 vs 48 out of 100.",
+        "speech": "NASA data for your field near Story County, IA shows frost-free season rising by about 5 days per decade, and that change is statistically real. Focusing on lower risk, I suggest soybean in 2027, then corn in 2028, then soybean in 2029. It needs about 145 pounds per acre less nitrogen over three years than your current pattern. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean; 2028 Corn; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Illinois",
+      "body": {
+        "lat": 40.048,
+        "lon": -88.33,
+        "irrigated": false,
+        "priority": "balanced"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "facts": 22,
+      "explanation": {
+        "summary": "NASA data for your field near Champaign County, IL shows growing degree days (May–Sep) rising by about 93 °F·days per decade, and that change is statistically real. Recommended for a balance of profit, soil and risk: Soybean → Corn → Soybean. Compared with continuing the current pattern (Corn → Soybean → Corn): estimated +$24/acre per year, 206 lb/acre less nitrogen over 3 years, and a soil-health score of 47 vs 48 out of 100.",
+        "speech": "NASA data for your field near Champaign County, IL shows growing degree days rising by about 93 degree days per decade, and that change is statistically real. Focusing on a balance of profit, soil and risk, I suggest soybean in 2027 with hairy vetch over winter, then corn in 2028, then soybean in 2029. It needs about 206 pounds per acre less nitrogen over three years than your current pattern. The cover crops protect your soil over winter. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean + Hairy vetch; 2028 Corn; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Illinois",
+      "body": {
+        "lat": 40.048,
+        "lon": -88.33,
+        "irrigated": false,
+        "priority": "profit"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "facts": 22,
+      "explanation": {
+        "summary": "NASA data for your field near Champaign County, IL shows growing degree days (May–Sep) rising by about 93 °F·days per decade, and that change is statistically real. Recommended for profit: Soybean → Corn → Soybean. Compared with continuing the current pattern (Corn → Soybean → Corn): estimated +$24/acre per year, 206 lb/acre less nitrogen over 3 years, and a soil-health score of 47 vs 48 out of 100.",
+        "speech": "NASA data for your field near Champaign County, IL shows growing degree days rising by about 93 degree days per decade, and that change is statistically real. Focusing on profit, I suggest soybean in 2027 with hairy vetch over winter, then corn in 2028, then soybean in 2029. It needs about 206 pounds per acre less nitrogen over three years than your current pattern. The cover crops protect your soil over winter. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean + Hairy vetch; 2028 Corn; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Illinois",
+      "body": {
+        "lat": 40.048,
+        "lon": -88.33,
+        "irrigated": false,
+        "priority": "soil"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Corn → Soybean → Corn",
+      "facts": 21,
+      "explanation": {
+        "summary": "NASA data for your field near Champaign County, IL shows growing degree days (May–Sep) rising by about 93 °F·days per decade, and that change is statistically real. Recommended for soil health: Corn → Soybean → Corn. Compared with continuing the current pattern (Corn → Soybean → Corn): estimated −$33/acre per year, 62 lb/acre less nitrogen over 3 years, and a soil-health score of 75 vs 48 out of 100.",
+        "speech": "NASA data for your field near Champaign County, IL shows growing degree days rising by about 93 degree days per decade, and that change is statistically real. Focusing on soil health, I suggest corn in 2027 with cereal rye over winter, then soybean in 2028 with hairy vetch over winter, then corn in 2029 with cereal rye over winter. It needs about 62 pounds per acre less nitrogen over three years than your current pattern. The cover crops protect your soil over winter. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Corn + Cereal rye; 2028 Soybean + Hairy vetch; 2029 Corn + Cereal rye. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Illinois",
+      "body": {
+        "lat": 40.048,
+        "lon": -88.33,
+        "irrigated": false,
+        "priority": "risk"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "facts": 22,
+      "explanation": {
+        "summary": "NASA data for your field near Champaign County, IL shows growing degree days (May–Sep) rising by about 93 °F·days per decade, and that change is statistically real. Recommended for lower risk: Soybean → Corn → Soybean. Compared with continuing the current pattern (Corn → Soybean → Corn): estimated +$24/acre per year, 206 lb/acre less nitrogen over 3 years, and a soil-health score of 47 vs 48 out of 100.",
+        "speech": "NASA data for your field near Champaign County, IL shows growing degree days rising by about 93 degree days per decade, and that change is statistically real. Focusing on lower risk, I suggest soybean in 2027 with hairy vetch over winter, then corn in 2028, then soybean in 2029. It needs about 206 pounds per acre less nitrogen over three years than your current pattern. The cover crops protect your soil over winter. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean + Hairy vetch; 2028 Corn; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Kansas",
+      "body": {
+        "lat": 38.1095,
+        "lon": -100.706,
+        "irrigated": true,
+        "priority": "balanced"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "facts": 21,
+      "explanation": {
+        "summary": "NASA data for your field near Finney County, KS shows growing degree days (May–Sep) rising by about 68 °F·days per decade, and that change is statistically real. Recommended for a balance of profit, soil and risk: Soybean → Corn → Soybean. Compared with continuing the current pattern (Winter wheat → Corn → Winter wheat): estimated +$169/acre per year, 231 lb/acre less nitrogen over 3 years, and a soil-health score of 59 vs 48 out of 100.",
+        "speech": "NASA data for your field near Finney County, KS shows growing degree days rising by about 68 degree days per decade, and that change is statistically real. Focusing on a balance of profit, soil and risk, I suggest soybean in 2027 with hairy vetch over winter, then corn in 2028, then soybean in 2029. It needs about 231 pounds per acre less nitrogen over three years than your current pattern. The cover crops protect your soil over winter. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean + Hairy vetch; 2028 Corn; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Kansas",
+      "body": {
+        "lat": 38.1095,
+        "lon": -100.706,
+        "irrigated": true,
+        "priority": "profit"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "facts": 21,
+      "explanation": {
+        "summary": "NASA data for your field near Finney County, KS shows growing degree days (May–Sep) rising by about 68 °F·days per decade, and that change is statistically real. Recommended for profit: Soybean → Corn → Soybean. Compared with continuing the current pattern (Winter wheat → Corn → Winter wheat): estimated +$169/acre per year, 231 lb/acre less nitrogen over 3 years, and a soil-health score of 59 vs 48 out of 100.",
+        "speech": "NASA data for your field near Finney County, KS shows growing degree days rising by about 68 degree days per decade, and that change is statistically real. Focusing on profit, I suggest soybean in 2027 with hairy vetch over winter, then corn in 2028, then soybean in 2029. It needs about 231 pounds per acre less nitrogen over three years than your current pattern. The cover crops protect your soil over winter. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean + Hairy vetch; 2028 Corn; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Kansas",
+      "body": {
+        "lat": 38.1095,
+        "lon": -100.706,
+        "irrigated": true,
+        "priority": "soil"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "facts": 21,
+      "explanation": {
+        "summary": "NASA data for your field near Finney County, KS shows growing degree days (May–Sep) rising by about 68 °F·days per decade, and that change is statistically real. Recommended for soil health: Soybean → Corn → Soybean. Compared with continuing the current pattern (Winter wheat → Corn → Winter wheat): estimated +$136/acre per year, 231 lb/acre less nitrogen over 3 years, and a soil-health score of 78 vs 48 out of 100.",
+        "speech": "NASA data for your field near Finney County, KS shows growing degree days rising by about 68 degree days per decade, and that change is statistically real. Focusing on soil health, I suggest soybean in 2027 with hairy vetch over winter, then corn in 2028 with cereal rye over winter, then soybean in 2029 with hairy vetch over winter. It needs about 231 pounds per acre less nitrogen over three years than your current pattern. The cover crops protect your soil over winter. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean + Hairy vetch; 2028 Corn + Cereal rye; 2029 Soybean + Hairy vetch. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Kansas",
+      "body": {
+        "lat": 38.1095,
+        "lon": -100.706,
+        "irrigated": true,
+        "priority": "risk"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "facts": 21,
+      "explanation": {
+        "summary": "NASA data for your field near Finney County, KS shows growing degree days (May–Sep) rising by about 68 °F·days per decade, and that change is statistically real. Recommended for lower risk: Soybean → Corn → Soybean. Compared with continuing the current pattern (Winter wheat → Corn → Winter wheat): estimated +$169/acre per year, 231 lb/acre less nitrogen over 3 years, and a soil-health score of 59 vs 48 out of 100.",
+        "speech": "NASA data for your field near Finney County, KS shows growing degree days rising by about 68 degree days per decade, and that change is statistically real. Focusing on lower risk, I suggest soybean in 2027 with hairy vetch over winter, then corn in 2028, then soybean in 2029. It needs about 231 pounds per acre less nitrogen over three years than your current pattern. The cover crops protect your soil over winter. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean + Hairy vetch; 2028 Corn; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Nebraska",
+      "body": {
+        "lat": 40.73,
+        "lon": -96.55,
+        "irrigated": false,
+        "priority": "balanced"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "facts": 20,
+      "explanation": {
+        "summary": "NASA data for your field near Lancaster County, NE shows growing degree days (May–Sep) rising by about 95 °F·days per decade, and that change is statistically real. Recommended for a balance of profit, soil and risk: Soybean → Corn → Soybean. Compared with continuing the current pattern (Soybean → Corn → Soybean): estimated +$0/acre per year, 0 lb/acre less nitrogen over 3 years, and a soil-health score of 48 vs 48 out of 100.",
+        "speech": "NASA data for your field near Lancaster County, NE shows growing degree days rising by about 95 degree days per decade, and that change is statistically real. Focusing on a balance of profit, soil and risk, I suggest soybean in 2027, then corn in 2028, then soybean in 2029. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean; 2028 Corn; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Nebraska",
+      "body": {
+        "lat": 40.73,
+        "lon": -96.55,
+        "irrigated": false,
+        "priority": "profit"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "facts": 20,
+      "explanation": {
+        "summary": "NASA data for your field near Lancaster County, NE shows growing degree days (May–Sep) rising by about 95 °F·days per decade, and that change is statistically real. Recommended for profit: Soybean → Corn → Soybean. Compared with continuing the current pattern (Soybean → Corn → Soybean): estimated +$0/acre per year, 0 lb/acre less nitrogen over 3 years, and a soil-health score of 48 vs 48 out of 100.",
+        "speech": "NASA data for your field near Lancaster County, NE shows growing degree days rising by about 95 degree days per decade, and that change is statistically real. Focusing on profit, I suggest soybean in 2027, then corn in 2028, then soybean in 2029. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean; 2028 Corn; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Nebraska",
+      "body": {
+        "lat": 40.73,
+        "lon": -96.55,
+        "irrigated": false,
+        "priority": "soil"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Oats → Corn → Soybean",
+      "facts": 23,
+      "explanation": {
+        "summary": "NASA data for your field near Lancaster County, NE shows growing degree days (May–Sep) rising by about 95 °F·days per decade, and that change is statistically real. Recommended for soil health: Oats → Corn → Soybean. Compared with continuing the current pattern (Soybean → Corn → Soybean): estimated −$135/acre per year, 33 lb/acre more nitrogen over 3 years, and a soil-health score of 96 vs 48 out of 100.",
+        "speech": "NASA data for your field near Lancaster County, NE shows growing degree days rising by about 95 degree days per decade, and that change is statistically real. Focusing on soil health, I suggest oats in 2027 with crimson clover over winter, then corn in 2028 with cereal rye over winter, then soybean in 2029 with hairy vetch over winter. The cover crops protect your soil over winter. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Oats + Crimson clover; 2028 Corn + Cereal rye; 2029 Soybean + Hairy vetch. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "name": "Nebraska",
+      "body": {
+        "lat": 40.73,
+        "lon": -96.55,
+        "irrigated": false,
+        "priority": "risk"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Grain sorghum → Soybean",
+      "facts": 19,
+      "explanation": {
+        "summary": "NASA data for your field near Lancaster County, NE shows growing degree days (May–Sep) rising by about 95 °F·days per decade, and that change is statistically real. Recommended for lower risk: Soybean → Grain sorghum → Soybean. Compared with continuing the current pattern (Soybean → Corn → Soybean): estimated −$39/acre per year, 38 lb/acre less nitrogen over 3 years, and a soil-health score of 48 vs 48 out of 100.",
+        "speech": "NASA data for your field near Lancaster County, NE shows growing degree days rising by about 95 degree days per decade, and that change is statistically real. Focusing on lower risk, I suggest soybean in 2027, then grain sorghum in 2028, then soybean in 2029. It needs about 38 pounds per acre less nitrogen over three years than your current pattern. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean; 2028 Grain sorghum; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "body": {
+        "lat": 38.1095,
+        "lon": -100.706,
+        "water": "limited",
+        "priority": "balanced"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Winter wheat → Soybean",
+      "explanation": {
+        "summary": "NASA data for your field near Finney County, KS shows growing degree days (May–Sep) rising by about 68 °F·days per decade, and that change is statistically real. Recommended for a balance of profit, soil and risk: Soybean → Winter wheat → Soybean. Compared with continuing the current pattern (Winter wheat → Corn → Winter wheat): estimated +$127/acre per year, 182 lb/acre less nitrogen over 3 years, and a soil-health score of 58 vs 48 out of 100.",
+        "speech": "NASA data for your field near Finney County, KS shows growing degree days rising by about 68 degree days per decade, and that change is statistically real. Focusing on a balance of profit, soil and risk, I suggest soybean in 2027, then winter wheat in 2028, then soybean in 2029. It needs about 182 pounds per acre less nitrogen over three years than your current pattern. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean; 2028 Winter wheat; 2029 Soybean. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    },
+    {
+      "body": {
+        "lat": 38.1095,
+        "lon": -100.706,
+        "irrigated": true,
+        "priority": "balanced",
+        "language": "es"
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "explanation": {
+        "summary": "Revisé 35 años de datos climáticos de la NASA para su campo. Para un balance entre ganancia, suelo y riesgo, le sugiero: soja en 2027 con veza vellosa como cobertura invernal, luego maíz en 2028, luego soja en 2029. Confirme con su agente de extensión antes de comprar semilla.",
+        "speech": "Revisé 35 años de datos climáticos de la NASA para su campo. Para un balance entre ganancia, suelo y riesgo, le sugiero: soja en 2027 con veza vellosa como cobertura invernal, luego maíz en 2028, luego soja en 2029. Confirme con su agente de extensión antes de comprar semilla.",
+        "sms": "SoilSense: 2027 soja, 2028 maíz, 2029 soja. Basado en datos NASA 1991-2025. Confirme con su agente de extensión."
+      }
+    },
+    {
+      "body": {
+        "lat": 38.1095,
+        "lon": -100.706,
+        "irrigated": true,
+        "priority": "balanced",
+        "goals": [
+          "water_conservation",
+          "organic_matter"
+        ]
+      },
+      "status": 200,
+      "planCount": 3,
+      "top": "Soybean → Corn → Soybean",
+      "explanation": {
+        "summary": "NASA data for your field near Finney County, KS shows growing degree days (May–Sep) rising by about 68 °F·days per decade, and that change is statistically real. Recommended for a balance of profit, soil and risk: Soybean → Corn → Soybean. Compared with continuing the current pattern (Winter wheat → Corn → Winter wheat): estimated +$143/acre per year, 231 lb/acre less nitrogen over 3 years, and a soil-health score of 75 vs 48 out of 100.",
+        "speech": "NASA data for your field near Finney County, KS shows growing degree days rising by about 68 degree days per decade, and that change is statistically real. Focusing on a balance of profit, soil and risk, I suggest soybean in 2027 with hairy vetch over winter, then corn in 2028 with cereal rye over winter, then soybean in 2029 with cereal rye over winter. It needs about 231 pounds per acre less nitrogen over three years than your current pattern. The cover crops protect your soil over winter. Please check with your county extension agent before buying seed.",
+        "sms": "SoilSense plan: 2027 Soybean + Hairy vetch; 2028 Corn + Cereal rye; 2029 Soybean + Cereal rye. Based on NASA climate data 1991-2025. Check with your extension agent."
+      }
+    }
+  ],
+  "watchEnabled": {
+    "settings": {
+      "enabled": true,
+      "crop": "corn",
+      "version": 5,
+      "updatedAt": 1794785724369,
+      "weeklyScheduleId": "nxzxmcUC7",
+      "nextWeeklyAt": 1794837600000,
+      "windowScheduleId": "DfVNm5x5-",
+      "nextWindow": {
+        "crop": "corn",
+        "seasonYear": 2027,
+        "from": "2027-06-01",
+        "to": "2027-08-31",
+        "at": 1811858400000,
+        "source": "SoilSense crop defaults (src/engine/crops.ts, heat-sensitive window): approximate planning assumption, not an observed crop stage"
+      }
+    },
+    "schedule": "Mondays at 14:00 UTC (8:00 am CST / 9:00 am CDT)",
+    "scheduledJobs": 2,
+    "runs": []
+  },
+  "watchRestored": {
+    "settings": {
+      "enabled": false,
+      "crop": null,
+      "version": 6,
+      "updatedAt": 1794785724417,
+      "weeklyScheduleId": null,
+      "nextWeeklyAt": null,
+      "windowScheduleId": null,
+      "nextWindow": null
+    },
+    "schedule": "Mondays at 14:00 UTC (8:00 am CST / 9:00 am CDT)",
+    "scheduledJobs": 0,
+    "runs": []
+  },
+  "scheduled": {
+    "run": {
+      "runId": "finney-ks:jun-2022:2026-11-15T23:35:24.810Z",
+      "fieldId": "finney-ks",
+      "fieldName": "Finney County, KS",
+      "mode": "replay",
+      "replayId": "jun-2022",
+      "status": "pending",
+      "ruleVersion": 2,
+      "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st–30th, D1 = 11th–20th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+      "scheduledAt": 1794785724810,
+      "dueAt": 1794785769810,
+      "completedAt": null,
+      "headline": null,
+      "reasons": [],
+      "metrics": null,
+      "snapshot": null,
+      "sources": []
+    },
+    "created": true,
+    "message": "Check scheduled for 2026-11-15T23:36:09.810Z. You can close this page."
+  },
+  "duplicate": {
+    "status": 200,
+    "data": {
+      "run": {
+        "runId": "finney-ks:jun-2022:2026-11-15T23:35:24.810Z",
+        "fieldId": "finney-ks",
+        "fieldName": "Finney County, KS",
+        "mode": "replay",
+        "replayId": "jun-2022",
+        "status": "pending",
+        "ruleVersion": 2,
+        "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st–30th, D1 = 11th–20th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+        "scheduledAt": 1794785724810,
+        "dueAt": 1794785769810,
+        "completedAt": null,
+        "headline": null,
+        "reasons": [],
+        "metrics": null,
+        "snapshot": null,
+        "sources": []
+      },
+      "created": false,
+      "message": "A check for this field is already waiting. Showing that one."
+    }
+  },
+  "afterTabClosed": {
+    "runs": [
+      {
+        "runId": "finney-ks:jun-2022:2026-11-15T23:35:24.810Z",
+        "fieldId": "finney-ks",
+        "fieldName": "Finney County, KS",
+        "mode": "replay",
+        "replayId": "jun-2022",
+        "status": "dry",
+        "ruleVersion": 2,
+        "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st–30th, D1 = 11th–20th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+        "scheduledAt": 1794785724810,
+        "dueAt": 1794785769810,
+        "completedAt": 1794785769043,
+        "headline": "Historical replay: Dry spell starting: 0.37 in of rain in 14 days, drier than 97% of past years, and soil drier than usual (0th percentile)",
+        "reasons": [
+          {
+            "id": "rain14",
+            "text": "Rain Jun 14–Jun 27: 0.37 in, drier than 97% of the same two weeks in 1991–2021 (typical: 1.60 in).",
+            "source": "NASA POWER daily (PRECTOTCORR)"
+          },
+          {
+            "id": "balance14",
+            "text": "Water balance Jun 14–Jun 27 (context only): rain minus estimated crop water demand is −3.27 in (demand 3.64 in, FAO-56 Hargreaves).",
+            "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+          },
+          {
+            "id": "rootzone",
+            "text": "Root-zone soil wetness (7 days to Jun 27): 0th percentile for this time of year.",
+            "source": "NASA POWER daily (GWETROOT)"
+          }
+        ],
+        "metrics": {
+          "windowStart": "2022-06-14",
+          "dataThrough": "2022-06-27",
+          "rain14Mm": 9.5,
+          "normalRain14Mm": 40.6,
+          "rainPercentile": 3,
+          "et014Mm": 92.6,
+          "balance14Mm": -83.1,
+          "rootzoneDate": "2022-06-27",
+          "rootzoneWetness": 0.247,
+          "rootzonePercentile": 0,
+          "normalYears": 31,
+          "normalPeriod": "1991–2021",
+          "kansas": null
+        },
+        "snapshot": {
+          "label": "Historical replay",
+          "source": "NASA POWER daily (cached record 1991–2025), grid cell containing 38.1095, -100.706",
+          "comparisonYears": "1991–2021",
+          "windowStart": "2022-06-14",
+          "windowEnd": "2022-06-27",
+          "inputSha256": "84e190d19654433932da078b102a0015f7e04548dec9b687bdd2e22affde898c"
+        },
+        "sources": [
+          {
+            "name": "NASA POWER daily",
+            "url": "https://power.larc.nasa.gov/",
+            "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+          },
+          {
+            "name": "FAO-56 Hargreaves ET0",
+            "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+            "detail": "Crop water demand from daily temperature and latitude"
+          },
+          {
+            "name": "Kansas Crop Rotation Advice (team pipeline, V. Pisharody)",
+            "url": "https://pub-fe3948f31a9c462890b089ed5356c336.r2.dev/app_rotation_advice.json",
+            "detail": "Weekly drought outlook (unavailable for this run)"
+          }
+        ],
+        "researchNote": {
+          "status": "unavailable",
+          "passages": [],
+          "tags": [
+            "corn"
+          ],
+          "retrievedAt": null,
+          "corpusVersion": "soilsense-research-v1-2026-11-14",
+          "embedding": {
+            "id": "bge-base-en-v1.5/cls/768/v1",
+            "model": "@cf/baai/bge-base-en-v1.5",
+            "dimensions": 768,
+            "pooling": "cls"
+          },
+          "cropSource": "demo field configuration",
+          "template": "Research on corn in dry conditions (shown as context, not advice for this field):",
+          "query": "Research on corn during dry spells, drought and limited soil water.",
+          "reason": "research bindings not configured"
+        }
+      },
+      {
+        "runId": "finney-ks:jun-2022:2026-11-15T23:33:18.218Z",
+        "fieldId": "finney-ks",
+        "fieldName": "Finney County, KS",
+        "mode": "replay",
+        "replayId": "jun-2022",
+        "status": "dry",
+        "ruleVersion": 2,
+        "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st–30th, D1 = 11th–20th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+        "scheduledAt": 1794785598218,
+        "dueAt": 1794785643218,
+        "completedAt": 1794785643023,
+        "headline": "Historical replay: Dry spell starting: 0.37 in of rain in 14 days, drier than 97% of past years, and soil drier than usual (0th percentile)",
+        "reasons": [
+          {
+            "id": "rain14",
+            "text": "Rain Jun 14–Jun 27: 0.37 in, drier than 97% of the same two weeks in 1991–2021 (typical: 1.60 in).",
+            "source": "NASA POWER daily (PRECTOTCORR)"
+          },
+          {
+            "id": "balance14",
+            "text": "Water balance Jun 14–Jun 27 (context only): rain minus estimated crop water demand is −3.27 in (demand 3.64 in, FAO-56 Hargreaves).",
+            "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+          },
+          {
+            "id": "rootzone",
+            "text": "Root-zone soil wetness (7 days to Jun 27): 0th percentile for this time of year.",
+            "source": "NASA POWER daily (GWETROOT)"
+          }
+        ],
+        "metrics": {
+          "windowStart": "2022-06-14",
+          "dataThrough": "2022-06-27",
+          "rain14Mm": 9.5,
+          "normalRain14Mm": 40.6,
+          "rainPercentile": 3,
+          "et014Mm": 92.6,
+          "balance14Mm": -83.1,
+          "rootzoneDate": "2022-06-27",
+          "rootzoneWetness": 0.247,
+          "rootzonePercentile": 0,
+          "normalYears": 31,
+          "normalPeriod": "1991–2021",
+          "kansas": null
+        },
+        "snapshot": {
+          "label": "Historical replay",
+          "source": "NASA POWER daily (cached record 1991–2025), grid cell containing 38.1095, -100.706",
+          "comparisonYears": "1991–2021",
+          "windowStart": "2022-06-14",
+          "windowEnd": "2022-06-27",
+          "inputSha256": "84e190d19654433932da078b102a0015f7e04548dec9b687bdd2e22affde898c"
+        },
+        "sources": [
+          {
+            "name": "NASA POWER daily",
+            "url": "https://power.larc.nasa.gov/",
+            "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+          },
+          {
+            "name": "FAO-56 Hargreaves ET0",
+            "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+            "detail": "Crop water demand from daily temperature and latitude"
+          },
+          {
+            "name": "Kansas Crop Rotation Advice (team pipeline, V. Pisharody)",
+            "url": "https://pub-fe3948f31a9c462890b089ed5356c336.r2.dev/app_rotation_advice.json",
+            "detail": "Weekly drought outlook (unavailable for this run)"
+          }
+        ],
+        "researchNote": {
+          "status": "unavailable",
+          "passages": [],
+          "tags": [
+            "corn"
+          ],
+          "retrievedAt": null,
+          "corpusVersion": "soilsense-research-v1-2026-11-14",
+          "embedding": {
+            "id": "bge-base-en-v1.5/cls/768/v1",
+            "model": "@cf/baai/bge-base-en-v1.5",
+            "dimensions": 768,
+            "pooling": "cls"
+          },
+          "cropSource": "demo field configuration",
+          "template": "Research on corn in dry conditions (shown as context, not advice for this field):",
+          "query": "Research on corn during dry spells, drought and limited soil water.",
+          "reason": "research bindings not configured"
+        }
+      },
+      {
+        "runId": "finney-ks:jun-2022:2026-11-15T23:28:59.000Z",
+        "fieldId": "finney-ks",
+        "fieldName": "Finney County, KS",
+        "mode": "replay",
+        "replayId": "jun-2022",
+        "status": "dry",
+        "ruleVersion": 2,
+        "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st–30th, D1 = 11th–20th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+        "scheduledAt": 1794785339000,
+        "dueAt": 1794785384000,
+        "completedAt": 1794785384029,
+        "headline": "Historical replay: Dry spell starting: 0.37 in of rain in 14 days, drier than 97% of past years, and soil drier than usual (0th percentile)",
+        "reasons": [
+          {
+            "id": "rain14",
+            "text": "Rain Jun 14–Jun 27: 0.37 in, drier than 97% of the same two weeks in 1991–2021 (typical: 1.60 in).",
+            "source": "NASA POWER daily (PRECTOTCORR)"
+          },
+          {
+            "id": "balance14",
+            "text": "Water balance Jun 14–Jun 27 (context only): rain minus estimated crop water demand is −3.27 in (demand 3.64 in, FAO-56 Hargreaves).",
+            "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+          },
+          {
+            "id": "rootzone",
+            "text": "Root-zone soil wetness (7 days to Jun 27): 0th percentile for this time of year.",
+            "source": "NASA POWER daily (GWETROOT)"
+          }
+        ],
+        "metrics": {
+          "windowStart": "2022-06-14",
+          "dataThrough": "2022-06-27",
+          "rain14Mm": 9.5,
+          "normalRain14Mm": 40.6,
+          "rainPercentile": 3,
+          "et014Mm": 92.6,
+          "balance14Mm": -83.1,
+          "rootzoneDate": "2022-06-27",
+          "rootzoneWetness": 0.247,
+          "rootzonePercentile": 0,
+          "normalYears": 31,
+          "normalPeriod": "1991–2021",
+          "kansas": null
+        },
+        "snapshot": {
+          "label": "Historical replay",
+          "source": "NASA POWER daily (cached record 1991–2025), grid cell containing 38.1095, -100.706",
+          "comparisonYears": "1991–2021",
+          "windowStart": "2022-06-14",
+          "windowEnd": "2022-06-27",
+          "inputSha256": "84e190d19654433932da078b102a0015f7e04548dec9b687bdd2e22affde898c"
+        },
+        "sources": [
+          {
+            "name": "NASA POWER daily",
+            "url": "https://power.larc.nasa.gov/",
+            "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+          },
+          {
+            "name": "FAO-56 Hargreaves ET0",
+            "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+            "detail": "Crop water demand from daily temperature and latitude"
+          },
+          {
+            "name": "Kansas Crop Rotation Advice (team pipeline, V. Pisharody)",
+            "url": "https://pub-fe3948f31a9c462890b089ed5356c336.r2.dev/app_rotation_advice.json",
+            "detail": "Weekly drought outlook (unavailable for this run)"
+          }
+        ],
+        "researchNote": {
+          "status": "unavailable",
+          "passages": [],
+          "tags": [
+            "corn"
+          ],
+          "retrievedAt": null,
+          "corpusVersion": "soilsense-research-v1-2026-11-14",
+          "embedding": {
+            "id": "bge-base-en-v1.5/cls/768/v1",
+            "model": "@cf/baai/bge-base-en-v1.5",
+            "dimensions": 768,
+            "pooling": "cls"
+          },
+          "cropSource": "demo field configuration",
+          "template": "Research on corn in dry conditions (shown as context, not advice for this field):",
+          "query": "Research on corn during dry spells, drought and limited soil water.",
+          "reason": "research bindings not configured"
+        }
+      },
+      {
+        "runId": "finney-ks:jun-2022:2026-11-15T22:46:33.527Z",
+        "fieldId": "finney-ks",
+        "fieldName": "Finney County, KS",
+        "mode": "replay",
+        "replayId": "jun-2022",
+        "status": "dry",
+        "ruleVersion": 2,
+        "rule": "Dry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st–30th, D1 = 11th–20th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.",
+        "scheduledAt": 1794782793527,
+        "dueAt": 1794782838527,
+        "completedAt": 1794782838006,
+        "headline": "Historical replay: Dry spell starting: 0.37 in of rain in 14 days, drier than 97% of past years, and soil drier than usual (0th percentile)",
+        "reasons": [
+          {
+            "id": "rain14",
+            "text": "Rain Jun 14–Jun 27: 0.37 in, drier than 97% of the same two weeks in 1991–2021 (typical: 1.60 in).",
+            "source": "NASA POWER daily (PRECTOTCORR)"
+          },
+          {
+            "id": "balance14",
+            "text": "Water balance Jun 14–Jun 27 (context only): rain minus estimated crop water demand is −3.27 in (demand 3.64 in, FAO-56 Hargreaves).",
+            "source": "NASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0"
+          },
+          {
+            "id": "rootzone",
+            "text": "Root-zone soil wetness (7 days to Jun 27): 0th percentile for this time of year.",
+            "source": "NASA POWER daily (GWETROOT)"
+          }
+        ],
+        "metrics": {
+          "windowStart": "2022-06-14",
+          "dataThrough": "2022-06-27",
+          "rain14Mm": 9.5,
+          "normalRain14Mm": 40.6,
+          "rainPercentile": 3,
+          "et014Mm": 92.6,
+          "balance14Mm": -83.1,
+          "rootzoneDate": "2022-06-27",
+          "rootzoneWetness": 0.247,
+          "rootzonePercentile": 0,
+          "normalYears": 31,
+          "normalPeriod": "1991–2021",
+          "kansas": null
+        },
+        "snapshot": {
+          "label": "Historical replay",
+          "source": "NASA POWER daily (cached record 1991–2025), grid cell containing 38.1095, -100.706",
+          "comparisonYears": "1991–2021",
+          "windowStart": "2022-06-14",
+          "windowEnd": "2022-06-27",
+          "inputSha256": "84e190d19654433932da078b102a0015f7e04548dec9b687bdd2e22affde898c"
+        },
+        "sources": [
+          {
+            "name": "NASA POWER daily",
+            "url": "https://power.larc.nasa.gov/",
+            "detail": "Rain, max/min temperature and root-zone soil wetness: the last 60 days and 1991 to last year"
+          },
+          {
+            "name": "FAO-56 Hargreaves ET0",
+            "url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+            "detail": "Crop water demand from daily temperature and latitude"
+          },
+          {
+            "name": "Kansas Crop Rotation Advice (team pipeline, V. Pisharody)",
+            "url": "https://pub-fe3948f31a9c462890b089ed5356c336.r2.dev/app_rotation_advice.json",
+            "detail": "Weekly drought outlook (unavailable for this run)"
+          }
+        ],
+        "researchNote": {
+          "status": "unavailable",
+          "passages": [],
+          "tags": [
+            "corn"
+          ],
+          "retrievedAt": null,
+          "corpusVersion": "soilsense-research-v1-2026-11-14",
+          "embedding": {
+            "id": "bge-base-en-v1.5/cls/768/v1",
+            "model": "@cf/baai/bge-base-en-v1.5",
+            "dimensions": 768,
+            "pooling": "cls"
+          },
+          "cropSource": "demo field configuration",
+          "template": "Research on corn in dry conditions (shown as context, not advice for this field):",
+          "query": "Research on corn during dry spells, drought and limited soil water.",
+          "reason": "research bindings not configured"
+        }
+      }
+    ],
+    "now": 1794785775055
+  },
+  "reopenedText": "Field Watch\nRuns hourly on Cloudflare\n\nSoil Sense checks the demo farms in the background every hour, even when nobody has this page open. Last automatic check: never.\n\nNo checks yet. The first automatic check runs at 17 minutes past the hour, or run one now.\n\nRun check now\n\nDry spell: rain in the last 14 days and root-zone soil wetness are both at or below the 20th percentile for this time of year. Watch: either one is at or below the 30th percentile. Without soil data, low rain gives at most Watch. Cut-offs follow the U.S. Drought Monitor's percentile bands (D0 = 21st–30th, D1 = 11th–20th); they are demonstration settings, not agronomic standards. Water balance and the Kansas drought outlook are shown as context and do not change the status. Rule version 2.\n\nAsk this field's agent to check it\n\nEach farm has its own agent on Cloudflare (a Durable Object). It runs your check about 45 seconds from now and saves the result, so you can close this page and come back to it.\n\nFarm\nStory County, IA\nChampaign County, IL\nFinney County, KS\nLancaster County, NE\nCheck current conditions\nReplay Late June 2022\nWeekly watch for this farm\nCheck every week (Mondays at 14:00 UTC (8:00 am CST / 9:00 am CDT)) using only NASA data from the last 10 days\nCrop in this field this season\nNot confirmed\nCorn\nSoybean\nWinter wheat\nOats\nAlfalfa\nGrain sorghum\n\nWeekly checks are off (the default).\n\nDry spell\nHistorical replaynot current conditions\nDry spell starting: 0.37 in of rain in 14 days, drier than 97% of past years, and soil drier than usual (0th percentile)\ndone 6:36:09 PM\ndata 2022-06-14 to 2022-06-27\nResearch note · Research unavailable\n\nResearch on corn in dry conditions (shown as context, not advice for this field):\n\nNo matching research is available for this run. research bindings not configured\n\nCrop tags: Corn (demo field configuration) · Corpus soilsense-research-v1-2026-11-14\n\nRain Jun 14–Jun 27: 0.37 in, drier than 97% of the same two weeks in 1991–2021 (typical: 1.60 in).\nNASA POWER daily (PRECTOTCORR)\nWater balance Jun 14–Jun 27 (context only): rain minus estimated crop water demand is −3.27 in (demand 3.64 in, FAO-56 Hargreaves).\nNASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0\nRoot-zone soil wetness (7 days to Jun 27): 0th percentile for this time of year.\nNASA POWER daily (GWETROOT)\n\nRun finney-ks:jun-2022:2026-11-15T23:35:24.810Z · rule v2 · scheduled 6:35:24 PM · ran 6:36:09 PM on Cloudflare · compared with 1991–2021 · NASA POWER daily (cached record 1991–2025), grid cell containing 38.1095, -100.706 · input hash 84e190d19654\n\nDry spell\nHistorical replaynot current conditions\nDry spell starting: 0.37 in of rain in 14 days, drier than 97% of past years, and soil drier than usual (0th percentile)\ndone 6:34:03 PM\ndata 2022-06-14 to 2022-06-27\nResearch note · Research unavailable\n\nResearch on corn in dry conditions (shown as context, not advice for this field):\n\nNo matching research is available for this run. research bindings not configured\n\nCrop tags: Corn (demo field configuration) · Corpus soilsense-research-v1-2026-11-14\n\nRain Jun 14–Jun 27: 0.37 in, drier than 97% of the same two weeks in 1991–2021 (typical: 1.60 in).\nNASA POWER daily (PRECTOTCORR)\nWater balance Jun 14–Jun 27 (context only): rain minus estimated crop water demand is −3.27 in (demand 3.64 in, FAO-56 Hargreaves).\nNASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0\nRoot-zone soil wetness (7 days to Jun 27): 0th percentile for this time of year.\nNASA POWER daily (GWETROOT)\n\nRun finney-ks:jun-2022:2026-11-15T23:33:18.218Z · rule v2 · scheduled 6:33:18 PM · ran 6:34:03 PM on Cloudflare · compared with 1991–2021 · NASA POWER daily (cached record 1991–2025), grid cell containing 38.1095, -100.706 · input hash 84e190d19654\n\nDry spell\nHistorical replaynot current conditions\nDry spell starting: 0.37 in of rain in 14 days, drier than 97% of past years, and soil drier than usual (0th percentile)\ndone 6:29:44 PM\ndata 2022-06-14 to 2022-06-27\nResearch note · Research unavailable\n\nResearch on corn in dry conditions (shown as context, not advice for this field):\n\nNo matching research is available for this run. research bindings not configured\n\nCrop tags: Corn (demo field configuration) · Corpus soilsense-research-v1-2026-11-14\n\nRain Jun 14–Jun 27: 0.37 in, drier than 97% of the same two weeks in 1991–2021 (typical: 1.60 in).\nNASA POWER daily (PRECTOTCORR)\nWater balance Jun 14–Jun 27 (context only): rain minus estimated crop water demand is −3.27 in (demand 3.64 in, FAO-56 Hargreaves).\nNASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0\nRoot-zone soil wetness (7 days to Jun 27): 0th percentile for this time of year.\nNASA POWER daily (GWETROOT)\n\nRun finney-ks:jun-2022:2026-11-15T23:28:59.000Z · rule v2 · scheduled 6:28:59 PM · ran 6:29:44 PM on Cloudflare · compared with 1991–2021 · NASA POWER daily (cached record 1991–2025), grid cell containing 38.1095, -100.706 · input hash 84e190d19654\n\nDry spell\nHistorical replaynot current conditions\nDry spell starting: 0.37 in of rain in 14 days, drier than 97% of past years, and soil drier than usual (0th percentile)\ndone 5:47:18 PM\ndata 2022-06-14 to 2022-06-27\nResearch note · Research unavailable\n\nResearch on corn in dry conditions (shown as context, not advice for this field):\n\nNo matching research is available for this run. research bindings not configured\n\nCrop tags: Corn (demo field configuration) · Corpus soilsense-research-v1-2026-11-14\n\nRain Jun 14–Jun 27: 0.37 in, drier than 97% of the same two weeks in 1991–2021 (typical: 1.60 in).\nNASA POWER daily (PRECTOTCORR)\nWater balance Jun 14–Jun 27 (context only): rain minus estimated crop water demand is −3.27 in (demand 3.64 in, FAO-56 Hargreaves).\nNASA POWER daily (T2M_MAX, T2M_MIN) + FAO-56 Hargreaves ET0\nRoot-zone soil wetness (7 days to Jun 27): 0th percentile for this time of year.\nNASA POWER daily (GWETROOT)\n\nRun finney-ks:jun-2022:2026-11-15T22:46:33.527Z · rule v2 · scheduled 5:46:33 PM · ran 5:47:18 PM on Cloudflare · compared with 1991–2021 · NASA POWER daily (cached record 1991–2025), grid cell containing 38.1095, -100.706 · input hash 84e190d19654"
+}

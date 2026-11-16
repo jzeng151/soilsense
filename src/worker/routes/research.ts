@@ -13,6 +13,7 @@ import { CORPUS, CORPUS_VERSION, EMBEDDING, GENERATION, MAX_PASSAGES, MIN_SCORE,
 import { explainRotation, findRotation } from "../research/explain";
 import { buildVectors, EMBEDDING_INFO, researchFor, type AiLike, type VectorIndexLike } from "../research/retrieve";
 import { SAVED_BUNDLE } from "../research/saved";
+import { researchIngestionStatus } from "../research/readiness";
 import { makePlan, PLAN_ENGINE_VERSION } from "../service";
 import { validatePlanRequest } from "./api";
 
@@ -34,8 +35,10 @@ const deps = (env: Env) => ({
   gatewayId: env.AI_GATEWAY_ID ?? "default",
 });
 
-research.get("/status", (c) =>
-  c.json({
+research.get("/status", async (c) => {
+  c.header("Cache-Control", "no-store");
+  return c.json({
+    ingestion: await researchIngestionStatus(c.env.RESEARCH_INDEX, c.req.query("verify") === "true"),
     corpusVersion: CORPUS_VERSION,
     chunks: CORPUS.chunks.length,
     sources: CORPUS.sources.map((s) => ({ id: s.id, title: s.title, url: s.url, year: s.year })),
@@ -46,8 +49,8 @@ research.get("/status", (c) =>
     retrieval: { maxPassages: MAX_PASSAGES, minScore: MIN_SCORE },
     scoringVersion: PLAN_ENGINE_VERSION,
     savedEntries: SAVED_BUNDLE.entries.length,
-  }),
-);
+  });
+});
 
 research.get("/corpus", (c) => c.json(CORPUS));
 
@@ -91,7 +94,7 @@ research.post("/ingest", async (c) => {
   if (!adminOk(c.req.header("Authorization"), c.env.ADMIN_TOKEN)) return c.json({ error: "unauthorized" }, 401);
   const { ai, index, gatewayId } = deps(c.env);
   if (!ai || !index?.upsert) return c.json({ error: "AI and RESEARCH_INDEX bindings are required" }, 503);
-  const vectors = await buildVectors(ai, gatewayId);
+  const vectors = await buildVectors(ai, gatewayId, c.env.DB);
   const mutation = await index.upsert(vectors);
   return c.json({
     ok: true,

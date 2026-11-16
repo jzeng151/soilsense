@@ -7,6 +7,11 @@ import { runDocIngest, type DocStepRunner } from "../src/worker/ingest/workflow"
 import { getChunks, getDoc } from "../src/worker/ingest/store";
 import { DOCS_LAYOUT, REVIEW_EVENT, REVIEW_TIMEOUT, type ReviewDecision, type DocIngestParams } from "../src/shared/ingest";
 
+vi.mock("../src/worker/ingest/url-https", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../src/worker/ingest/url-https")>();
+  return { ...actual, pinnedHttps: (url: URL) => fetch(url.href) };
+});
+
 const ctx = { waitUntil() {}, passThroughOnException() {}, props: {} } as unknown as ExecutionContext;
 const approval: ReviewDecision = { decision: "approve", reviewer: "test reviewer", crops: ["corn", "cover"], source: { title: "Reviewer supplied title", url: "https://example.org/paper", publisher: "Test publisher", year: 2026, license: "CC BY 4.0", attribution: "Test author", applicability: "Test fixture, not agronomic evidence" } };
 const firstParagraph = "Cover crops protect soil during winter and improve water infiltration. ".repeat(19).trim();
@@ -28,18 +33,18 @@ let harnessId = 0;
 function harness() {
   const testIp = `192.0.2.${++harnessId}`;
   const DB = fakeD1();
-  const objects = new Map<string, { text: string; etag: string; type: string }>();
+  const objects = new Map<string, { text: string; etag: string; type: string; customMetadata?: Record<string, string> }>();
   let revision = 0;
   const DOCS = {
-    put: async (key: string, body: string | ArrayBuffer, options?: { httpMetadata?: { contentType?: string } }) => {
+    put: async (key: string, body: string | ArrayBuffer, options?: { httpMetadata?: { contentType?: string }; customMetadata?: Record<string, string> }) => {
       const text = typeof body === "string" ? body : new TextDecoder().decode(body);
-      const value = { text, etag: `etag-${++revision}`, type: options?.httpMetadata?.contentType ?? "text/plain" };
+      const value = { text, etag: `etag-${++revision}`, type: options?.httpMetadata?.contentType ?? "text/plain", customMetadata: options?.customMetadata };
       objects.set(key, value);
       return { key, etag: value.etag };
     },
     get: async (key: string) => {
       const o = objects.get(key);
-      return o ? { etag: o.etag, size: new TextEncoder().encode(o.text).byteLength, httpMetadata: { contentType: o.type }, text: async () => o.text, arrayBuffer: async () => new TextEncoder().encode(o.text).buffer } : null;
+      return o ? { customMetadata: o.customMetadata, etag: o.etag, size: new TextEncoder().encode(o.text).byteLength, httpMetadata: { contentType: o.type }, text: async () => o.text, arrayBuffer: async () => new TextEncoder().encode(o.text).buffer } : null;
     },
   };
   type Vector = { id: string; values: number[]; metadata: Record<string, string> };
@@ -101,6 +106,38 @@ function harness() {
 }
 
 describe("document pipeline public seams", () => {
+  it("requires the operator token before exposing document lists or review content", async () => {
+    const h = harness();
+    for (const path of ["", "/verification-nonexistent"]) {
+      expect((await h.request(path)).status).toBe(401);
+      expect((await h.request(path, { headers: { Authorization: "Bearer wrong-token" } })).status).toBe(401);
+    }
+    expect((await h.request("", { headers: h.auth })).status).toBe(200);
+    expect((await h.request("/verification-nonexistent", { headers: h.auth })).status).toBe(404);
+  });
+  it("carries URL intake provenance through the queue and pending manifest without approving metadata", async () => {
+    const h = harness();
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => url.startsWith("https://cloudflare-dns.com/")
+      ? Response.json({ Status: 0, Answer: [{ type: 1, data: "129.130.1.1" }] })
+      : new Response(`<main><p>${firstParagraph}</p></main>`, { headers: { "content-type": "text/html" } })));
+    try {
+      const response = await h.request("/from-url", { method: "POST", headers: { ...h.auth, "Content-Type": "application/json" }, body: JSON.stringify({ url: "https://www.ksu.edu/research" }) });
+      expect(response.status).toBe(202);
+      const uploaded = await response.json() as { key: string; eTag: string; docId: string };
+      const ack = vi.fn();
+      await app.queue({ messages: [{ body: { account: "test", bucket: "soilsense-docs", action: "PutObject", object: { key: uploaded.key, eTag: uploaded.eTag }, eventTime: "2026-11-15T12:00:00Z" }, ack, retry: vi.fn() }] } as unknown as MessageBatch, h.env);
+      expect(ack).toHaveBeenCalledOnce();
+      const { run } = await h.start();
+      const detail = await (await h.request(`/${uploaded.docId}`, { headers: h.auth })).json() as { provenance: unknown; doc: { title: string | null; status: string } };
+      expect(detail).toMatchObject({ provenance: { sourceUrl: "https://www.ksu.edu/research", intakeMethod: "html-fetch-fallback" }, doc: { title: null, status: "pending_review" } });
+      const manifest = [...h.objects.entries()].find(([key]) => key.startsWith("manifests/"))!;
+      expect(JSON.parse(manifest[1].text)).toMatchObject({ provenance: detail.provenance, source: null });
+      expect(h.AI.run).not.toHaveBeenCalled(); expect(h.vectors.size).toBe(0);
+      await h.review(uploaded.docId, { decision: "reject", reviewer: "test reviewer" });
+      expect(await run).toMatchObject({ outcome: "rejected" });
+      expect(JSON.parse(h.objects.get(manifest[0])!.text).provenance).toEqual(detail.provenance);
+    } finally { vi.unstubAllGlobals(); }
+  });
   it("uploads through R2 notification/queue, waits for review, then indexes exact sourced chunks", async () => {
     const h = harness();
     const uploaded = await h.upload(firstParagraph + "\n\n" + secondParagraph);
@@ -109,7 +146,7 @@ describe("document pipeline public seams", () => {
     expect(pending?.status).toBe("pending_review");
     expect(pending?.title).toBeNull();
     expect(h.vectors.size).toBe(0); expect(h.AI.run).not.toHaveBeenCalled();
-    const detail = await (await h.request(`/${uploaded.docId}`)).json() as { chunks: { text: string; start_offset: number; end_offset: number }[]; versions: unknown[] };
+    const detail = await (await h.request(`/${uploaded.docId}`, { headers: h.auth })).json() as { chunks: { text: string; start_offset: number; end_offset: number }[]; versions: unknown[] };
     expect(detail.versions).toHaveLength(1); expect(detail.chunks).toHaveLength(2);
     for (const c of detail.chunks) expect((firstParagraph + "\n\n" + secondParagraph).slice(c.start_offset,c.end_offset)).toBe(c.text);
     expect((await h.review(uploaded.docId, approval)).status).toBe(202);
@@ -120,10 +157,10 @@ describe("document pipeline public seams", () => {
       expect(v.metadata).toMatchObject({ corpus: "docs-v1", source_id: uploaded.docId, doc_sha256: pending!.latest_sha256 });
       expect(v.values).toHaveLength(768);
     }
-    expect(h.AI.run).toHaveBeenCalledWith("@cf/baai/bge-base-en-v1.5", { text: [firstParagraph], pooling: "cls" }, { gateway: { id: "test-gateway" } });
+    expect(h.AI.run).toHaveBeenCalledWith("@cf/baai/bge-base-en-v1.5", { text: [firstParagraph], pooling: "cls" }, expect.objectContaining({ gateway: expect.objectContaining({ id: "test-gateway", skipCache: false, cacheTtl: 86400 }) }));
     expect(await getDoc(h.DB, uploaded.docId)).toMatchObject({ status: "indexed", title: approval.source!.title, reviewer: approval.reviewer, crops_json: '["corn","cover"]' });
     expect(JSON.parse(h.objects.get(DOCS_LAYOUT.manifest(pending!.latest_sha256!, uploaded.docId))!.text)).toMatchObject({ status: "indexed", source: approval.source });
-    expect((await (await h.request("")).json() as { docs: unknown[] }).docs).toHaveLength(1);
+    expect((await (await h.request("", { headers: h.auth })).json() as { docs: unknown[] }).docs).toHaveLength(1);
 
     await h.upload(firstParagraph + "\n\n" + secondParagraph);
     expect(await runDocIngest(h.env, h.step(), h.params(), h.instanceId())).toMatchObject({ outcome: "unchanged" });
@@ -148,7 +185,7 @@ describe("document pipeline public seams", () => {
     for (const c of chunks) expect(plain.slice(c.start_offset, c.end_offset)).toBe(c.text);
     await h.review(uploaded.docId, approval);
     expect(await run).toMatchObject({ outcome: "indexed" });
-    expect(h.AI.run).toHaveBeenCalledWith("@cf/baai/bge-base-en-v1.5", { text: [plain.trim().replace(/\s+/g, " ")], pooling: "cls" }, { gateway: { id: "test-gateway" } });
+    expect(h.AI.run).toHaveBeenCalledWith("@cf/baai/bge-base-en-v1.5", { text: [plain.trim().replace(/\s+/g, " ")], pooling: "cls" }, expect.objectContaining({ gateway: expect.objectContaining({ id: "test-gateway", skipCache: false, cacheTtl: 86400 }) }));
   });
 
   it("isolates identical uploads under different keys while the older review is still pending", async () => {
@@ -165,7 +202,7 @@ describe("document pipeline public seams", () => {
     const nextDoc = (await getDoc(h.DB, next.docId))!;
     const nextKey = DOCS_LAYOUT.manifest(nextDoc.latest_sha256!, next.docId);
     const nextManifest = h.objects.get(nextKey)!.text;
-    expect((await h.request(`/${old.docId}`)).status).toBe(200); // legacy read fallback
+    expect((await h.request(`/${old.docId}`, { headers: h.auth })).status).toBe(200); // legacy read fallback
     const nextChunks = await getChunks(h.DB, next.docId);
     expect((await h.review(old.docId, { ...approval, excludeChunkIds: [nextChunks[0]!.chunk_id] })).status).toBe(400);
     await h.review(old.docId, { decision: "reject", reviewer: "reviewer" });
@@ -224,7 +261,7 @@ describe("document pipeline public seams", () => {
     for (const excludeChunkIds of [["doc-foreign:chunk"], [removed.chunk_id], "not-an-array", [123], [kept.chunk_id, kept.chunk_id]]) {
       expect((await h.review(uploaded.docId, { ...approval, excludeChunkIds })).status).toBe(400);
     }
-    const detail = await (await h.request(`/${uploaded.docId}`)).json() as { chunks: { chunk_id: string; start_offset: number; text: string }[] };
+    const detail = await (await h.request(`/${uploaded.docId}`, { headers: h.auth })).json() as { chunks: { chunk_id: string; start_offset: number; text: string }[] };
     expect(detail.chunks).toHaveLength(2);
     expect(detail.chunks.find((c) => c.chunk_id === kept.chunk_id)?.start_offset).toBe(thirdParagraph.length + 2);
     expect(detail.chunks.some((c) => c.chunk_id === removed.chunk_id)).toBe(false);

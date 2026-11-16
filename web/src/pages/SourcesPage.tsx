@@ -1,3 +1,6 @@
+import { useI18n } from "../i18n";
+import { pageTranslate } from "../i18n-pages";
+
 interface Source {
   name: string;
   org: string;
@@ -163,47 +166,49 @@ const BADGE: Record<NonNullable<Source["status"]>, string> = {
 };
 
 export function SourcesPage({ onMenu }: { onMenu: () => void }) {
+  const { language } = useI18n();
+  const t = (key: string) => pageTranslate(language, key);
   return (
-    <div className="app sources">
-      <button type="button" className="sb-toggle" aria-label="Open sidebar" onClick={onMenu}>
+    <div className="app sources" lang={language}>
+      <button type="button" className="sb-toggle" aria-label={t("Open sidebar")} onClick={onMenu}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 7h16M4 12h16M4 17h16" />
         </svg>
       </button>
       <main className="src-wrap">
         <header className="src-head">
-          <p className="eyebrow">Data sources</p>
-          <h1>Where our data comes from</h1>
-          <p className="intro-lead">Every plan is built from free, public data from NASA and the US government. Here is each source, what we take from it, and what it does in your plan.</p>
+          <p className="eyebrow">{t("Data sources")}</p>
+          <h1>{t("Where our data comes from")}</h1>
+          <p className="intro-lead">{t("Every plan is built from free, public data from NASA and the US government. Here is each source, what we take from it, and what it does in your plan.")}</p>
         </header>
 
         {GROUPS.map((g) => (
           <section key={g.title} className="src-group">
-            <h2>{g.title}</h2>
-            <p className="hint">{g.intro}</p>
+            <h2>{t(g.title)}</h2>
+            <p className="hint">{t(g.intro)}</p>
             <div className="src-grid">
               {g.sources.map((s) => (
                 <article key={s.name} className="src-card">
                   <div className="src-card-head">
                     <div>
-                      <h3>{s.name}</h3>
-                      <p className="src-org">{s.org}</p>
+                      <h3 lang="en">{s.name}</h3>
+                      <p className="src-org" lang={t(s.org) === s.org ? "en" : language}>{t(s.org)}</p>
                     </div>
-                    {s.status && <span className={`src-badge src-badge-${s.status}`}>{BADGE[s.status]}</span>}
+                    {s.status && <span className={`src-badge src-badge-${s.status}`}>{t(BADGE[s.status])}</span>}
                   </div>
-                  <p>{s.what}</p>
-                  <h4>Data we get</h4>
+                  <p>{t(s.what)}</p>
+                  <h4>{t("Data we get")}</h4>
                   <div className="chips">
                     {s.data.map((d) => (
                       <span key={d} className="chip src-chip">
-                        {d}
+                        {t(d)}
                       </span>
                     ))}
                   </div>
-                  <h4>What it does</h4>
-                  <p>{s.usedFor}</p>
+                  <h4>{t("What it does")}</h4>
+                  <p>{t(s.usedFor)}</p>
                   <a href={s.url} target="_blank" rel="noreferrer" className="src-link">
-                    Visit source ↗
+                    {t("Visit source ↗")}
                   </a>
                 </article>
               ))}

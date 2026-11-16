@@ -1,3 +1,4 @@
+import { LANGUAGE_LOCALES, type Language } from "../../../src/shared/language";
 import { translate, watchText, useI18n } from "../i18n";
 // Field Watch card: the latest background check for each demo farm. The checks run on Cloudflare
 // every hour (Cron Trigger) whether or not anyone has this page open; results come from D1.
@@ -43,7 +44,7 @@ interface Latest {
 
 const LABEL: Record<Status, string> = { ok: "OK", watch: "Watch", dry: "Dry spell", insufficient: "No data", error: "Error" };
 
-function ago(t: number | null, now: number, language: "en" | "es"): string {
+function ago(t: number | null, now: number, language: Language): string {
   if (!t) return translate(language, "never");
   const m = Math.round((now - t) / 60000);
   if (m < 1) return translate(language, "just now");
@@ -51,9 +52,9 @@ function ago(t: number | null, now: number, language: "en" | "es"): string {
   const h = Math.round(m / 60);
   return h < 24 ? translate(language, "{number} h ago", { number: h }) : translate(language, "{number} d ago", { number: Math.round(h / 24) });
 }
-function shortDay(iso: string | null, language: "en" | "es"): string {
+function shortDay(iso: string | null, language: Language): string {
   if (!iso) return "";
-  return new Date(`${iso}T00:00:00Z`).toLocaleDateString(language === "es" ? "es-US" : "en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString(LANGUAGE_LOCALES[language], { month: "short", day: "numeric", timeZone: "UTC" });
 }
 
 export function FieldWatchCard() {

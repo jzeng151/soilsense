@@ -33,6 +33,31 @@
 .jr-main { grid-template-columns: minmax(0, 1fr); }
 .jr-main > section { min-width: 0; }
 
+:root:lang(ko) {
+  --font-sans: "Malgun Gothic", "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
+  --font-display: var(--font-sans);
+}
+:lang(ko) body {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+:lang(ko) :is(h1, h2, h3, h4, h5, h6, p, li, dt, dd, summary, button, label) {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.translation-disclosure {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.4rem 1rem;
+  max-width: 100%;
+  color: var(--color-text-2);
+  background: var(--color-subtle);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 700px) {
   .topbar { flex-wrap: wrap; gap: 0.5rem; }
   .topbar .topbar-tag { flex-basis: 100%; order: 2; }

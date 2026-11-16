@@ -21,6 +21,7 @@ import {
   type UIMessageStreamWriter,
 } from "ai";
 import { Hono } from "hono";
+import { parseLanguage, responseLanguageInstruction, type Language } from "../../shared/language";
 
 import { z } from "zod";
 import { ALL_CROPS, COVERS, CROPS } from "../../engine/crops";
@@ -154,7 +155,7 @@ async function usageAnalytics(env: Env, days: number) {
 
 // ---------- Tools (AI SDK) ----------
 
-export function makeTools(env: Env, writer: UIMessageStreamWriter, research: ChatResearch, memory = new ChatFieldMemory(env)) {
+export function makeTools(env: Env, writer: UIMessageStreamWriter, research: ChatResearch, memory = new ChatFieldMemory(env), language: Language = "en") {
   const cited = new Set<string>();
   /** Emit each dataset a tool actually used as a source part (once per answer). */
   const cite = (toolName: string) => {
@@ -217,7 +218,7 @@ export function makeTools(env: Env, writer: UIMessageStreamWriter, research: Cha
       }),
       execute: async ({ lat, lon, irrigated, priority, recent_crops }) => {
         const c = coords(lat, lon);
-        const plan = await makePlan(env, { ...c, irrigated: irrigated === true, priority: priority ?? "balanced", recentCrops: recent_crops?.length ? recent_crops : undefined });
+        const plan = await makePlan(env, { ...c, irrigated: irrigated === true, priority: priority ?? "balanced", language, recentCrops: recent_crops?.length ? recent_crops : undefined });
         cite("build_rotation_plan");
         return compactPlan(plan);
       },
@@ -295,7 +296,7 @@ scout.post("/chat", async (c) => {
   if (scoutModels(c.env).length === 0) {
     return c.json({ error: "Sprout is not connected yet: add the Workers AI binding or set GEMINI_API_KEY." }, 503);
   }
-  let body: { messages?: UIMessage[] };
+  let body: { messages?: UIMessage[]; language?: unknown };
   try {
     body = await c.req.json();
   } catch {
@@ -318,12 +319,14 @@ scout.post("/chat", async (c) => {
       // Trust only tool results produced server-side this turn, never client-supplied tool history.
       const research = new ChatResearch({ ai: env.AI, index: env.RESEARCH_INDEX, db: env.DB, gatewayId: env.AI_GATEWAY_ID });
       const memory = new ChatFieldMemory(env);
-      const tools = makeTools(env, writer, research, memory);
+      const language = parseLanguage(body.language);
+      const tools = makeTools(env, writer, research, memory, language);
       const { stream, model } = await firstWorking(candidates, (m, signal) =>
         streamText({
           model: m.model,
           abortSignal: signal,
-          instructions: INSTRUCTIONS,
+          instructions: `${INSTRUCTIONS}
+${responseLanguageInstruction(language)}`,
           messages: modelMessages,
           tools,
           stopWhen: stepCountIs(MAX_STEPS),

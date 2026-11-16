@@ -24,6 +24,13 @@ const KIND_LABEL: Record<Kind, { icon: string; title: TranslationKey }> = {
 
 /** What each crop does for the soil (agronomy basics, kept short). */
 const CROP_SOIL: Record<CropId, { kind: Kind; text: TranslationKey }[]> = {
+  sunflower_confection: [{ kind: "bare", text: "Experimental crop. Confirm a local market, harvest equipment and a field budget before planting; climate response parameters are approximate." }],
+  cotton: [{ kind: "bare", text: "Experimental crop. Confirm a local market, harvest equipment and a field budget before planting; climate response parameters are approximate." }],
+  sunflower: [{ kind: "bare", text: "Experimental crop. Confirm a local market, harvest equipment and a field budget before planting; climate response parameters are approximate." }],
+  corn_silage: [{ kind: "bare", text: "Forage harvest removes plant material. Confirm nutrient replacement, residue cover, forage quality and a local buyer; this prototype does not model feed safety or storage losses." }],
+  sorghum_silage: [{ kind: "bare", text: "Forage harvest removes plant material. Confirm nutrient replacement, residue cover, forage quality and a local buyer; this prototype does not model feed safety or storage losses." }],
+  triticale: [{ kind: "bare", text: "Forage harvest removes plant material. Confirm nutrient replacement, residue cover, forage quality and a local buyer; this prototype does not model feed safety or storage losses." }],
+  other_hay: [{ kind: "bare", text: "Forage harvest removes plant material. Confirm nutrient replacement, residue cover, forage quality and a local buyer; this prototype does not model feed safety or storage losses." }],
   soybean: [{ kind: "nitrogen", text: "Soybean is a legume: bacteria on its roots pull nitrogen from the air, so it needs no nitrogen fertilizer and leaves some for the next crop." }],
   alfalfa: [
     { kind: "nitrogen", text: "Alfalfa is a legume that fixes a lot of nitrogen; corn after alfalfa usually needs little or no added nitrogen." },

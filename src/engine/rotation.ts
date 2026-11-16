@@ -5,6 +5,7 @@ import type { CoverId, CropId, Goal, PlanYear, Priority, RotationPlan, ScoreBrea
 import { clamp, round } from "../shared/units";
 import {
   coldDays,
+  createEt0Memo,
   type DailyClimate,
   degreeDaysAbove,
   et0HargreavesMm,
@@ -14,9 +15,11 @@ import {
   SPRING,
   type YearSeries,
 } from "./climate";
-import { ALL_CROPS, COVERS, CROPS, type CropDef, NITROGEN_PRICE_PER_LB, nitrogenNeed, rotationYieldFactor } from "./crops";
+import { ALL_CROPS, LEGACY_CROPS, COVERS, CROPS, type CropDef, NITROGEN_PRICE_PER_LB, nitrogenNeed, rotationYieldFactor } from "./crops";
 import { createGoalScorer, selectedGoals } from "./goals";
 import { isSignificant, mannKendall } from "./stats";
+import { isExtraCrop } from "../shared/extraCrops";
+import { expandedSequences } from "./expandedSearch";
 
 export const PRIORITY_WEIGHTS: Record<Priority, Pick<ScoreBreakdown, "climate" | "reliability" | "soil" | "profit">> = {
   profit: { climate: 0.25, reliability: 0.15, soil: 0.15, profit: 0.45 },
@@ -109,16 +112,17 @@ const FALL_ESTABLISHMENT_USE_MM = 90;
 /** A winter cover crop uses part of the water that would otherwise be stored. */
 const COVER_WATER_USE = 0.4;
 
-export function buildWaterContext(climate: DailyClimate, soil: SoilProfile, irrigated: boolean, allowanceMm = 0): WaterContext {
+export function buildWaterContext(climate: DailyClimate, soil: SoilProfile, irrigated: boolean, allowanceMm = 0, preparedEt0?: ReturnType<typeof createEt0Memo>): WaterContext {
   const monthRain = climate.years.map((ys) => {
     const m = new Array<number>(13).fill(0);
     for (const d of ys.days) m[d.month] = (m[d.month] ?? 0) + (d.prcp ?? 0);
     return m;
   });
   const lat = Number.isFinite(climate.gridCell.lat) ? climate.gridCell.lat : 40;
+  const et0 = preparedEt0 ?? createEt0Memo(lat);
   const monthEt0 = climate.years.map((ys) => {
     const m = new Array<number>(13).fill(0);
-    for (let k = 1; k <= 12; k++) m[k] = et0HargreavesMm(ys, { from: [k, 1], to: [k, 31] }, lat);
+    for (let k = 1; k <= 12; k++) m[k] = et0(ys, { from: [k, 1], to: [k, 31] });
     return m;
   });
   const recentFrom = climate.lastYear - 9;
@@ -191,6 +195,7 @@ export function soilSuitability(crop: CropDef, soil: SoilProfile): { factor: num
   return { factor, notes };
 }
 
+export type TrendMemo = Map<string, ReturnType<typeof trendAdjust>>;
 export type CropWeatherMemo = Map<CropId, { metrics: Metrics[]; need: number[] }>;
 
 export function evaluateCropClimate(
@@ -199,7 +204,7 @@ export function evaluateCropClimate(
   irrigated: boolean,
   targetYear: number,
   /** adjustTrends: false keeps each year's weather exactly as it happened (used to check the model against real harvests). */
-  opts: { adjustTrends?: boolean; weatherMemo?: CropWeatherMemo } = {},
+  opts: { adjustTrends?: boolean; weatherMemo?: CropWeatherMemo; crops?: CropId[]; et0?: ReturnType<typeof createEt0Memo>; trendMemo?: TrendMemo } = {},
 ): Record<CropId, CropClimate> {
   const years = climate.years.map((y) => y.year);
   const recentFrom = climate.lastYear - 9;
@@ -211,7 +216,7 @@ export function evaluateCropClimate(
   const lat = Number.isFinite(climate.gridCell.lat) ? climate.gridCell.lat : 40;
 
   const out = {} as Record<CropId, CropClimate>;
-  for (const id of ALL_CROPS) {
+  for (const id of opts.crops ?? ALL_CROPS) {
     const c = CROPS[id];
     if (id === "fallow") {
       const ones = years.map(() => 1);
@@ -226,7 +231,7 @@ export function evaluateCropClimate(
     if (!weather) {
       weather = {
         metrics: climate.years.map((ys) => cropMetrics(ys, c)),
-        need: climate.years.map((ys) => Math.max(1, c.kc * et0HargreavesMm(ys, c.season, lat))),
+        need: climate.years.map((ys) => Math.max(1, c.kc * (opts.et0 ? opts.et0(ys, c.season) : et0HargreavesMm(ys, c.season, lat)))),
       };
       opts.weatherMemo?.set(id, weather);
     }
@@ -234,7 +239,12 @@ export function evaluateCropClimate(
     const trends: MetricTrend[] = [];
     const adj = (name: string, vals: number[]) => {
       if (opts.adjustTrends === false) return vals;
-      const r = trendAdjust(years, vals, targetYear, name);
+      const key = `${name}:${targetYear}:${vals.join(",")}`;
+      let r = opts.trendMemo?.get(key);
+      if (!r) {
+        r = trendAdjust(years, vals, targetYear, name);
+        opts.trendMemo?.set(key, r);
+      }
       trends.push(r.trend);
       return r.adjusted;
     };
@@ -356,7 +366,7 @@ interface RawPlan {
 }
 
 // Crops harvested early enough to sow winter wheat after them (sorghum: common in the Plains, with a small yield cost).
-const EARLY_HARVEST: CropId[] = ["soybean", "oats", "alfalfa", "sorghum", "fallow"];
+const EARLY_HARVEST: CropId[] = ["soybean", "oats", "alfalfa", "sorghum", "fallow", "corn_silage", "sorghum_silage", "triticale", "other_hay"];
 
 /** Plain-language reason a sequence breaks the engine's rotation rules, or null. */
 export function sequenceIssue(seq: CropId[], history: CropId[], firstYearWheatAllowed: boolean, startYear: number): string | null {
@@ -381,10 +391,17 @@ export function feasibleSequence(seq: CropId[], history: CropId[], firstYearWhea
     const idx = off + i;
     const crop = seq[i] as CropId;
     const prev = full[idx - 1] ?? null;
-    if (crop === "winter_wheat") {
+    if (crop === "winter_wheat" || crop === "triticale") {
       if (i === 0 && !firstYearWheatAllowed) return false;
       if (prev && !EARLY_HARVEST.includes(prev)) return false;
     }
+    // Sunflower: >=4-year return interval, K-State/IPM crop profile, Sclerotinia
+    // management (not universal disease protection). History retains the last 3 years.
+    if ((crop === "sunflower" || crop === "sunflower_confection") && full.slice(Math.max(0, idx - 3), idx).some(c => c === "sunflower" || c === "sunflower_confection")) return false;
+    // Grain and silage are the SAME species for the three-consecutive-year rule.
+    const species = (c: CropId | undefined) => c === "corn_silage" ? "corn" : c === "sorghum_silage" || c === "other_hay" ? "sorghum" : c;
+    if (isExtraCrop(crop) && species(crop) === species(full[idx-1]) && species(crop) === species(full[idx-2])) return false;
+    if ((crop === "corn" || crop === "sorghum") && [full[idx-1], full[idx-2]].some(c => c && isExtraCrop(c)) && species(crop) === species(full[idx-1]) && species(crop) === species(full[idx-2])) return false;
     // Never two fallow seasons in a row; no annual crop three seasons in a row.
     if (crop === "fallow" && prev === "fallow") return false;
     if (crop !== "alfalfa" && crop !== "fallow" && full[idx - 1] === crop && full[idx - 2] === crop) return false;
@@ -756,8 +773,9 @@ export interface EngineResult {
 }
 
 export function runEngine(input: EngineInput, topN = 3): EngineResult {
-  const crops = input.crops?.length ? input.crops : ALL_CROPS.filter((c) => c !== "fallow");
-  let sequences = cartesian([crops, crops, crops]).filter((s) =>
+  const crops = input.crops?.length ? input.crops : LEGACY_CROPS.filter((c) => c !== "fallow");
+  const legacy = crops.filter(c => !isExtraCrop(c));
+  let sequences = [...cartesian([legacy, legacy, legacy]), ...expandedSequences(crops)].filter((s) =>
     feasibleSequence(s, input.history, input.firstYearWheatAllowed),
   );
 
@@ -777,7 +795,7 @@ export function runEngine(input: EngineInput, topN = 3): EngineResult {
 
   const raws: RawPlan[] = [];
   for (const seq of sequences) {
-    const coverLists = seq.map((_, i) => coverOptions(seq, i));
+    const coverLists = seq.some(isExtraCrop) ? seq.map(() => ["none" as CoverId]) : seq.map((_, i) => coverOptions(seq, i));
     for (const covers of cartesian(coverLists)) raws.push(evaluate(seq, covers, input));
   }
 

@@ -33,6 +33,9 @@ export const CROP_ES: Record<CropId, string> = {
   alfalfa: "alfalfa",
   sorghum: "sorgo de grano",
   fallow: "barbecho (sin cultivo)",
+  sunflower_confection: "girasol confitero",
+  cotton: "algodón americano", corn_silage: "maíz para ensilaje", sorghum_silage: "sorgo forrajero para ensilaje",
+  sunflower: "girasol oleaginoso", triticale: "triticale (heno forrajero)", other_hay: "heno anual (sin alfalfa)",
 };
 
 /** Make text easy for a text-to-speech voice: no symbols, units spelled out, no statistics jargon in brackets. */

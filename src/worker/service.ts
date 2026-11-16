@@ -56,6 +56,8 @@ export interface PlanSourceEvent {
 }
 
 export interface PlanOpts {
+  /** Internal engine mode for cache identity; makePlan takes the actual mode from Env. */
+  extraCrops?: boolean;
   placeName?: string;
   skipCropHistory?: boolean;
   now?: Date;
@@ -77,6 +79,7 @@ export function planCacheKey(request: PlanRequest, opts: PlanOpts = {}, now = ne
   const water = request.water ?? (request.irrigated ? "full" : "rain");
   return [
     `plan:${PLAN_ENGINE_VERSION}`,
+    ...(opts.extraCrops ? ["extra-crops=v1"] : []),
     request.lat.toFixed(4),
     request.lon.toFixed(4),
     water,
@@ -103,7 +106,7 @@ export async function makePlan(
     if (!inline) throw new PlanNotReady();
     return makePlanFresh(env, request, opts);
   }
-  const key = planCacheKey(request, opts);
+  const key = planCacheKey(request, { ...opts, extraCrops: env.EXTRA_CROPS === "on" });
   const t0 = Date.now();
   try {
     const { value, cache } = await cached(env.DB, key, 6 * 3600, async () => {
@@ -171,7 +174,7 @@ async function makePlanFresh(
   // Weather: average of NASA POWER and NASA Daymet when Daymet answered; NASA POWER alone otherwise.
   const climate = daymet ? mergeDaymet(powerClimate, daymet).climate : powerClimate;
   const [nass, losses, openEt] = await Promise.all([
-    timed("nass", getNassData(env.DB, env.NASS_API_KEY, county, now.getUTCFullYear())),
+    timed("nass", getNassData(env.DB, env.NASS_API_KEY, county, now.getUTCFullYear(), env.EXTRA_CROPS === "on")),
     timed("rma", getCountyLosses(env.ASSETS, county)),
     // OpenET only helps where we know what grew; skip it for phone calls without crop history.
     cropHistory.years.length ? timed("openet", getOpenEt(env.DB, env.OPENET_API_KEY, request.lat, request.lon, years.historyEnd)) : Promise.resolve(null),
@@ -179,6 +182,7 @@ async function makePlanFresh(
   if (meta) meta.complete = county !== null && (!env.NASS_API_KEY || nass !== null);
   const tEngine = Date.now();
   const plan = buildPlan({
+    extraCrops: env.EXTRA_CROPS === "on",
     request,
     climate,
     soil,

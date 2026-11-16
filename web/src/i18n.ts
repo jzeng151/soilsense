@@ -2,10 +2,12 @@ import { createContext, createElement, useContext, useEffect, useState } from "r
 import type { ReactNode } from "react";
 import type { CropId } from "../../src/shared/types";
 import { cardMessages } from "./i18n-cards";
+import { extraCropMessages } from "./i18n-extra-crops";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
   ...cardMessages,
+  ...extraCropMessages,
   "District outlook (next ~4 weeks, team's Kansas model)": "Perspectiva del distrito (próximas ~4 semanas, modelo de Kansas del equipo)",
   "drought likely to continue.": "es probable que la sequía continúe.",
   "possible drought onset (low confidence).": "posible inicio de sequía (baja confianza).",
@@ -321,6 +323,8 @@ export function useI18n() {
   return { ...context, t: (key: TranslationKey, values?: Record<string, string | number>) => translate(context.language, key, values), text: (value: string | null | undefined) => translateKnown(context.language, value ?? "") };
 }
 export const cropKeys: Record<CropId, TranslationKey> = {
+  sunflower_confection: "Confection sunflower",
+  cotton: "Upland cotton", corn_silage: "Corn silage", sorghum_silage: "Forage sorghum silage", sunflower: "Oilseed sunflower", triticale: "Triticale (forage hay)", other_hay: "Annual forage hay (non-alfalfa)",
   corn: "Corn", soybean: "Soybean", winter_wheat: "Winter wheat", oats: "Oats", alfalfa: "Alfalfa / hay", sorghum: "Grain sorghum", fallow: "Fallow (no crop)",
 };
 export function cropName(crop: CropId, language: Language): string { return translate(language, cropKeys[crop]); }

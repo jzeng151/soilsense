@@ -1,5 +1,9 @@
 # Operator warming the deployed demo
 
+## Automatic refresh (cron)
+
+The `*/5 * * * *` cron runs `refreshImergEvidence` (`src/worker/imerg/refresh.ts`) when the deployment has `EARTHDATA_TOKEN` and D1. Each run refreshes **at most one** window: the missing or soonest-expiring Late window ending on a demo field's current Field Watch data-through day, refreshed once it is within 30 minutes of expiry so public GETs do not fall into a gap. Final July 1–14, 2022 windows are filled only when no Late window is due. One window per run keeps a cold fetch (~30 Earthdata + 1 POWER subrequest) within the Workers Free per-invocation budget. A failed window is skipped for 15 minutes (`imerg-refresh-failed:*` cache row) so one outage cannot starve the other fields. Results are logged as `{"msg":"imerg refresh",...}`. The manual commands below remain for first-time warming, verification and deployments without the cron.
+
 Read-only investigation found **no `imerg-comparison:` rows in deployed D1**, not merely expired rows. Local warming does not populate deployed D1. No migration or new secret is indicated with the existing ADMIN_TOKEN and EARTHDATA_TOKEN.
 
 **Operator-only remote writes; not executed during this investigation.** Substitute the literal `ADMIN_TOKEN_VALUE` locally, never in a PR/chat. The commands below are templates; apply your normal operator precautions against putting a real secret in shell history/process listings. Each cold field can take minutes. Requests are sequential, bounded to 1800 seconds, with no automatic POST retries. A timeout may retain validated per-day progress; rerun deliberately and still verify the exact public GET.

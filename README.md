@@ -82,7 +82,7 @@ These are wired in [wrangler.jsonc](wrangler.jsonc) and exercised by code, not a
 | Vectorize / `RESEARCH_INDEX` | Reviewed research and scoped public-demo memory retrieval. Optional for ranking; research/memory return unavailable without it. |
 | Workers AI / `AI` | Embeddings, generated explanations/chat and PDF-to-text conversion. Optional for deterministic plans; PDF extraction/indexing need their AI path. |
 | AI Gateway, through `AI` | Shared model routing, bounded fallbacks and metadata-only instrumentation; `AI_GATEWAY_ID` defaults to `default`. This uses the AI binding, not a separate fictitious Gateway binding. [Operations](docs/AI-GATEWAY.md). |
-| Cron Triggers | `17 * * * *`: hourly Field Watch → D1. `43 5 * * *`: daily POWER refresh Workflow. These are separate from the agent's weekly/crop-window schedules. |
+| Cron Triggers | `17 * * * *`: hourly Field Watch → D1. `43 5 * * *`: daily POWER refresh Workflow. `*/5 * * * *`: refreshes at most one demo IMERG comparison window before its cache expires (needs `EARTHDATA_TOKEN`; see [IMERG demo warming](docs/imerg-demo-warm.md)). These are separate from the agent's weekly/crop-window schedules. |
 | Rate Limiting / `SCOUT_LIMITER` | Public Sprout request limit, 20/IP/minute, alongside application limits; not an account-wide spending guarantee. |
 
 **Browser Rendering is not enabled in the committed config.** URL intake has optional rendering code, but the `BROWSER` binding is commented out; HTML fetch/parser fallback is the configured path. It is not counted as a used sponsor product. Managed AI Search, Hyperdrive and a live Tiger Cloud integration are not claimed.

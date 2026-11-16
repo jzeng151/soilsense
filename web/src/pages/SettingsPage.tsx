@@ -1,4 +1,5 @@
 import { useI18n } from "../i18n";
+import { LANGUAGE_LOCALES, type Language } from "../../../src/shared/language";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AIUsagePanel } from "../components/AIUsagePanel";
 import { notifySignedOut } from "../auth";
@@ -89,7 +90,7 @@ async function adminFetch<T>(token: string, path: string, init: RequestInit = {}
   return body as T;
 }
 
-const fmtWhen = (ms: number) => new Date(ms).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+const fmtWhen = (ms: number, language: Language) => new Date(ms).toLocaleString(LANGUAGE_LOCALES[language], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 const fmtSecs = (ms: number | null) => (ms === null ? "" : `${(ms / 1000).toFixed(1)} s`);
 
 /** Friendly names for tools in the call transcript. */
@@ -518,7 +519,7 @@ function LiveDemoBlock({ token, onAuthError }: { token: string; onAuthError: (ms
 }
 
 function ActivityTab({ token, onAuthError }: { token: string; onAuthError: (msg?: string) => void }) {
-  const { t: tx } = useI18n();
+  const { t: tx, language } = useI18n();
   const [calls, setCalls] = useState<CallRow[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [events, setEvents] = useState<CallEvent[] | null>(null);
@@ -576,7 +577,7 @@ function ActivityTab({ token, onAuthError }: { token: string; onAuthError: (msg?
             <li key={c.callSid}>
               <button type="button" className={selected === c.callSid ? "on" : ""} onClick={() => setSelected(c.callSid)}>
                 <span className="st-call-when">
-                  {fmtWhen(c.startedAt)}
+                  {fmtWhen(c.startedAt, language)}
                   {c.problems > 0 && <span className="st-warn-dot" title={tx("Something went wrong on this call")} />}
                 </span>
                 <span className="st-call-where">{c.place ?? tx("No location")}</span>

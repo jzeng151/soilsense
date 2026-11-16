@@ -39,7 +39,7 @@ function Flow({ index, language }: { index: number; language: Language }) {
 }
 
 export function HowItWorksPage({ onMenu }: { onMenu: () => void }) {
-  const { language, setLanguage } = useI18n();
+  const { language, setLanguage, t } = useI18n();
   const text = (value: Record<Language, string>) => value[language];
   return <div className="app hiw">
     <button type="button" className="sb-toggle" aria-label={text(copy.menu)} onClick={onMenu}>
@@ -47,9 +47,10 @@ export function HowItWorksPage({ onMenu }: { onMenu: () => void }) {
     </button>
     <main className="hiw-wrap">
       <header className="hiw-head">
-        <div className="hiw-language" role="group" aria-label={language === "en" ? "Language" : "Idioma"}>
+        <div className="hiw-language" role="group" aria-label={t("Language")}>
           <button type="button" lang="en" aria-label="English" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>English</button>
           <button type="button" lang="es" aria-label="Español" aria-pressed={language === "es"} onClick={() => setLanguage("es")}>Español</button>
+          <button type="button" lang="ko" aria-label="한국어" aria-pressed={language === "ko"} onClick={() => setLanguage("ko")}>한국어</button>
         </div>
         <p className="eyebrow">SoilSense · NASA Space Apps 2026</p>
         <h1>{text(copy.title)}</h1>

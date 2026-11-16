@@ -89,3 +89,19 @@ PR #70 / `feat/38-rotation-constraints` explores a read-only preview over existi
 - Full-response default snapshots cover all 12 Finney water/priority cases.
 - EN/ES component tests exercise native crop checkboxes and label associations.
 - Local benchmark: `PLAN_CAPTURE_DIR=<public captures> PLAN_BENCH_OUTPUT=<report.json> npx vitest run test/plan-engine-benchmark.test.ts`. Measurements are local process CPU/wall time, **not Cloudflare billed CPU**. Warm samples omit each scenario's first run. Before/after results are documented in the PR.
+
+### Recorded local evidence
+
+- [`evidence/constraints-cpu.json`](evidence/constraints-cpu.json): Node v24.20.0 on Windows, original 32-scenario benchmark before d0e175f versus after 8329e5b. Warm median CPU 31 → 31 ms; separate-run wall median 24.75 → 28.06 ms (concurrent host activity was uncontrolled).
+- [`evidence/constraints-cpu-paired.json`](evidence/constraints-cpu-paired.json): independent standalone ESM bundles of the baseline and new engine, same process and inputs, alternating order, 4 warmups + 8 measured repetitions for each of 32 scenarios. **Every complete serialized response matches**, not only the winners. Median wall 22.48 → 22.43 ms; mean process CPU 27.06 → 26.96 ms (coarse Windows median CPU 30 → 31 ms). The paired control does not show a material default-path regression; these local measurements cannot guarantee any Cloudflare CPU tier.
+- Standalone constrained Finney capture, 5 warmups + 20 repetitions: baseline median CPU/wall 31/30.78 ms; unavailable row planter 16/16.91 ms; require corn at most once 16/19.87 ms. Constrained pruning reduces simulation work.
+- [`evidence/constraints-a11y.json`](evidence/constraints-a11y.json): axe-core 4.14.0 against real production build a5622f7 / Chrome 145, 3 scoped panel/result states in EN/ES at 375/320 px, **0 selected-rule violations and 0 incomplete results**. Explicit WCAG 2 A/AA + 2.1 A/AA tags; not whole-app certification. Native Tab/Space/Tab/Shift+Tab verified summary → corn checkbox → toggle → soybean → corn. No horizontal overflow at document client widths 360 and 305 px (classic scrollbars consume 15 px).
+- Real local Worker, public Finney lookup (not a mocked API): require/exclude corn showed the infeasible notice and current corn → soybean → corn comparison, in EN and ES. A 3-inch allocation with 500 gpm / 125 acres / 100 days / 20 hours displayed `500 × 60 × 20 × 100 ÷ (27,154 × 125) = 17.68`; all three returned recommendations included corn and pumped at most 3 inches in every year. Allocation 31 returned HTTP 400; the form also marked it invalid and disabled planning.
+
+`benchmark-constraints.ts` bundles with esbuild (`--bundle --platform=node --format=esm`) and accepts capture directory + output JSON. For a paired default comparison, bundle `src/engine/plan.ts` at the old and new revisions to `constraints-baseline-engine.mjs` / `constraints-current-engine.mjs` alongside the four public capture files, then run:
+
+```sh
+node scripts/benchmark-constraints-paired.mjs <native-capture-and-bundle-directory> <output.json>
+```
+
+The scripts perform no network calls and bypass the Worker response cache. The 32-scenario paired test asserts complete response equality before recording successful output. Public capture provenance remains the existing benchmark's; model outputs are not measured future yields.

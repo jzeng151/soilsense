@@ -1,3 +1,4 @@
+import { EXTRA_CROP_IDS } from '../../../src/shared/extraCrops';
 import { useId, useState } from 'react';
 import type { CropId, RotationPlan } from '../../../src/shared/types';
 import { EQUIPMENT_GROUPS, MARKET_OUTLETS, type ConstraintCode, type ConstraintIssue, type ConstraintReport, type EquipmentGroup, type FarmerConstraints, type MarketOutlet } from '../../../src/shared/constraints';
@@ -6,8 +7,8 @@ import { constraintWater, WELL_CONVERSION_SOURCE } from '../../../src/shared/con
 import { cropName, useI18n, type TranslationKey } from '../i18n';
 import './constraints.css';
 
-const CROPS: CropId[] = ['corn', 'soybean', 'winter_wheat', 'oats', 'alfalfa', 'sorghum', 'fallow'];
-const EQUIPMENT: Record<EquipmentGroup, TranslationKey> = { row_crop_planter: 'Row-crop planter', grain_drill: 'Grain drill', hay_equipment: 'Hay equipment', cotton_stripper: 'Cotton stripper' };
+const CROPS: CropId[] = ['corn', 'soybean', 'winter_wheat', 'oats', 'alfalfa', 'sorghum', 'fallow', ...EXTRA_CROP_IDS];
+const EQUIPMENT: Record<EquipmentGroup, TranslationKey> = { row_crop_planter: 'Row-crop planter', grain_drill: 'Grain drill', hay_equipment: 'Hay equipment', cotton_stripper: 'Cotton stripper', forage_harvester: 'Forage harvester', grain_combine: 'Grain combine' };
 const MARKETS: Record<MarketOutlet, TranslationKey> = { grain_elevator: 'Grain elevator', feedlot_dairy: 'Feedlot / dairy / hay buyer', cotton_gin: 'Cotton gin', oilseed_buyer: 'Oilseed buyer' };
 const REASONS: Record<ConstraintCode, TranslationKey> = {
  excludeCrops: 'Excluded by your crop choice', mustInclude: 'Required crop is missing', maxCornYears: 'Exceeds your maximum corn years', noSameCropBackToBack: 'Repeats a crop in consecutive years', unavailableEquipment: 'Needs unavailable equipment', marketOutlets: 'No selected market outlet',

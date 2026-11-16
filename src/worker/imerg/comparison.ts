@@ -1,5 +1,6 @@
 import type { Env } from "../env";
 import { cached } from "../lib/cache";
+import { imergTtlSeconds } from "./cache-policy";
 import { retrieveSubset, shift, days, TIME_NOTE, type Subset, type Stream } from "./client";
 export interface Comparison {
   state: "available";
@@ -21,7 +22,7 @@ export function compare(imerg: Subset, power: Comparison["power"]): Comparison {
 export const comparisonKey = (field: string, end: string, stream: Stream) => `imerg-comparison:V07:qa1:${stream}:${field}:${end}`;
 export async function warmComparison(env: Env, f: { id: string; lat: number; lon: number }, end: string, stream: Stream): Promise<Comparison> {
   const start = shift(end, -13), dates = days(start, end);
-  const { value } = await cached(env.DB, comparisonKey(f.id, end, stream), stream === "final" ? 30 * 86400 : 3600, async () => {
+  const { value } = await cached(env.DB, comparisonKey(f.id, end, stream), imergTtlSeconds(stream), async () => {
     const imerg = await retrieveSubset(env, f.lat, f.lon, start, end, stream);
     const q = new URLSearchParams({ parameters: "PRECTOTCORR", community: "AG", latitude: String(f.lat), longitude: String(f.lon), start: start.replaceAll("-", ""), end: end.replaceAll("-", ""), format: "JSON", "time-standard": "LST" });
     const sourceUrl = `https://power.larc.nasa.gov/api/temporal/daily/point?${q}`;

@@ -4,7 +4,7 @@
 import { CDL_NAMES, CDL_TO_CROP } from "../../engine/crops";
 import type { CropHistory, CropHistoryYear } from "../../shared/types";
 import { cached, DAY_SECONDS } from "../lib/cache";
-import { fetchWithRetry } from "../lib/http";
+import { csbCropHistory } from "./cdl-csb";
 import { toConusAlbers } from "./albers";
 
 const SOURCE = "USDA NASS Cropland Data Layer (30 m)";
@@ -30,17 +30,18 @@ export async function getCropHistory(
 ): Promise<CropHistory> {
   const { x, y } = toConusAlbers(lat, lon);
   const key = `cdl:v2:${lat.toFixed(5)}:${lon.toFixed(5)}:${lastYear}:${yearsBack}`;
-  const failedAt = recentFailures.get("service") ?? 0;
-  if (Date.now() - failedAt < FAILURE_TTL_MS) return unavailable();
   try {
     const { value } = await cached(db, key, 180 * DAY_SECONDS, async () => {
+      // Healthy caches win over outage suppression; a failed point cannot poison other fields.
+      const failedAt = recentFailures.get(key);
+      if (failedAt !== undefined && Date.now() - failedAt < FAILURE_TTL_MS) throw new Error("CDL point retry cooldown");
+      recentFailures.delete(key);
       const years = Array.from({ length: yearsBack }, (_, i) => lastYear - yearsBack + 1 + i);
       const results = await Promise.all(
         years.map(async (year): Promise<CropHistoryYear | null> => {
           try {
             const url = `https://nassgeodata.gmu.edu/axis2/services/CDLService/GetCDLValue?year=${year}&x=${x.toFixed(2)}&y=${y.toFixed(2)}`;
-            const res = await fetchWithRetry(url, { service: "USDA CropScape", timeoutMs: 8000, retries: 1 });
-            const parsed = parseCdlValue(await res.text());
+            const parsed = parseCdlValue(await cdlText(url));
             if (!parsed) return null;
             return { year, cdlCode: parsed.code, cdlName: parsed.name, crop: CDL_TO_CROP[parsed.code] ?? null };
           } catch {
@@ -49,10 +50,14 @@ export async function getCropHistory(
         }),
       );
       const found = results.filter((r): r is CropHistoryYear => r !== null);
-      if (found.length === 0) throw new Error("no CDL years returned");
+      if (found.length === 0) {
+        if (recentFailures.size >= 200) recentFailures.delete(recentFailures.keys().next().value!);
+        recentFailures.set(key, Date.now());
+        throw new Error("no CDL years returned");
+      }
       const history = { available: true, source: SOURCE, years: found } satisfies CropHistory;
-      // The service is slow at times: a mostly-failed lookup is used now but not cached, so the next request retries.
-      if (found.length < Math.ceil(years.length * 0.6)) throw new PartialHistory(history);
+      // Never persist missing years for 180 days. Partial live observations remain usable, but retry next time.
+      if (found.length < years.length) throw new PartialHistory({ ...history, note: `Partial live CDL history: ${found.length} of ${years.length} requested years returned. Missing years are unknown; retry to retrieve them.` });
       return history;
     }).catch((err: unknown) => {
       if (err instanceof PartialHistory) return { value: err.history, cache: "miss" as const };
@@ -64,8 +69,7 @@ export async function getCropHistory(
     return value;
   } catch (err) {
     console.warn(JSON.stringify({ msg: "CDL lookup failed", err: String(err) }));
-    recentFailures.set("service", Date.now());
-    return unavailable();
+    return csbCropHistory(lat, lon, lastYear, yearsBack) ?? unavailable();
   }
 }
 
@@ -82,4 +86,21 @@ function unavailable(): CropHistory {
     years: [],
     note: "Satellite crop history is unavailable right now. Tell us your last two crops instead.",
   };
+}
+
+/** Bound the entire body, not only headers. One retry, at most 40 seconds for a cold year. */
+async function cdlText(url: string): Promise<string> {
+  for (let attempt = 0; ; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 20_000);
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) throw new Error(`CropScape HTTP ${response.status}`);
+      return await response.text();
+    } catch (error) {
+      if (attempt === 1) throw error;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
 }

@@ -14,6 +14,7 @@
 // blend irrigated and rain-fed fields and would make rain-fed crops look far better than they are.
 
 import type { CropId } from "../shared/types";
+import { isExtraCrop } from "../shared/extraCrops";
 
 type Yields = Partial<Record<CropId, number>>;
 
@@ -56,9 +57,13 @@ export const DEFAULT_STATE = "IA";
 /** Grain sorghum has thin local markets outside these states, so it is not offered elsewhere. */
 const SORGHUM_STATES = new Set(["KS", "TX", "NE", "OK", "CO", "SD", "MO", "AR", "LA", "MS", "NM", "GA", "AL"]);
 
-export function availableCrops(stateCode: string | undefined, all: CropId[]): { crops: CropId[]; notes: string[] } {
+// USDA 2022 Census counties in Kansas ASD 30. This is a coarse market screen,
+// NOT a buyer contract or hauling-distance guarantee; gin verified at Moscow (Stevens).
+const SOUTHWEST_KS = new Set(["20025", "20055", "20057", "20067", "20069", "20075", "20081", "20083", "20093", "20119", "20129", "20175", "20187", "20189"]);
+export function availableCrops(stateCode: string | undefined, all: CropId[], opts: { extraCrops?: boolean; countyFips?: string } = {}): { crops: CropId[]; notes: string[] } {
   const notes: string[] = [];
-  let crops = all.filter((c) => c !== "fallow");
+  let crops = all.filter((c) => c !== "fallow" && (!isExtraCrop(c) || (opts.extraCrops === true && stateCode === "KS" && SOUTHWEST_KS.has(opts.countyFips ?? ""))));
+  if (crops.some(isExtraCrop)) notes.push("Experimental southwest Kansas crops: confirm a local buyer, hauling, harvest equipment and a field budget before planting. Cotton requires a gin (verified Moscow, KS); forage/silage require a livestock buyer. Non-alfalfa hay represents annual forage, not conversion of native grassland.");
   if (!stateCode || !SORGHUM_STATES.has(stateCode)) {
     crops = crops.filter((c) => c !== "sorghum");
     notes.push("Grain sorghum is left out because local markets for it are limited in this state.");

@@ -117,7 +117,9 @@ describe("factual field memory", () => {
       await writeFieldMemory(h.env, watchMemory(run));
       const result = await retrieveLive({ ai: h.ai, index: h.index }, [...CORPUS.chunks[0]!.crops], "dry weather");
       expect(result.passages).toEqual([]);
-      expect(h.index.query).toHaveBeenLastCalledWith(expect.any(Array), expect.objectContaining({ namespace: "" }));
+      const options = h.index.query.mock.lastCall![1]!;
+      expect(options).not.toHaveProperty("namespace");
+      expect(options.filter).toEqual(expect.objectContaining({ corpus: expect.objectContaining({ $in: expect.any(Array) }) }));
     } finally { h.sqlite.close(); }
   });
   it("logs demo plan memory under its original plan-log id, with resolvable source links", async () => {

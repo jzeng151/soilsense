@@ -1,5 +1,10 @@
 import * as maplibregl from "maplibre-gl";
 import type { GeoJSONSource, Map as GLMap } from "maplibre-gl";
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?url";
+
+// MapLibre v6 resolves its worker next to its own module by default, which a bundled build does not ship.
+// Point it at the worker file Vite emits so GeoJSON sources (ZIP outline, field outlines) load.
+maplibregl.setWorkerUrl(maplibreWorkerUrl);
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef } from "react";
 import type { FieldBoundary } from "../../../../src/shared/fields";

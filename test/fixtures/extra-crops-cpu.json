@@ -1,0 +1,362 @@
+{
+  "baselineRevision": "57b35d2a2f7d57409cd1baa632cd725710cbcf49",
+  "node": "v24.20.0",
+  "method": "Standalone esbuild ESM bundles; synchronous uncached buildPlan on fixed public Finney fixture, balanced priority, rain/full. Two alternating baseline/on pairs; each process 20 warmups then 100 measured calls in ten batches. Samples are per-call means over ten calls. Source parsing excluded; no cross-request weather cache. Shared Windows host; process CPU includes GC/V8 threads and coarse counters, not Cloudflare billed CPU.",
+  "repetitionsPerModeAndWater": 200,
+  "rows": [
+    {
+      "irrigated": false,
+      "before": {
+        "cpuMs": 42.655,
+        "wallMs": 33.621477500000005
+      },
+      "extraCropsOn": {
+        "cpuMs": 49.54,
+        "wallMs": 38.9141965
+      },
+      "cpuChangePct": 16.141132340874442,
+      "wallChangePct": 15.742077367063946,
+      "beforeSamples": [
+        {
+          "wallMs": 42.238340000000015,
+          "cpuMs": 43.8
+        },
+        {
+          "wallMs": 33.35872000000002,
+          "cpuMs": 32.8
+        },
+        {
+          "wallMs": 36.9511,
+          "cpuMs": 51.5
+        },
+        {
+          "wallMs": 34.22329,
+          "cpuMs": 40.7
+        },
+        {
+          "wallMs": 29.8587,
+          "cpuMs": 29.7
+        },
+        {
+          "wallMs": 32.37902000000004,
+          "cpuMs": 40.6
+        },
+        {
+          "wallMs": 36.08253,
+          "cpuMs": 48.4
+        },
+        {
+          "wallMs": 32.869749999999975,
+          "cpuMs": 48.4
+        },
+        {
+          "wallMs": 31.626620000000003,
+          "cpuMs": 36
+        },
+        {
+          "wallMs": 29.753499999999985,
+          "cpuMs": 35.9
+        },
+        {
+          "wallMs": 36.700480000000006,
+          "cpuMs": 45.3
+        },
+        {
+          "wallMs": 37.20304000000001,
+          "cpuMs": 51.5
+        },
+        {
+          "wallMs": 34.757459999999995,
+          "cpuMs": 56.4
+        },
+        {
+          "wallMs": 29.606240000000025,
+          "cpuMs": 37.4
+        },
+        {
+          "wallMs": 32.523289999999996,
+          "cpuMs": 35.9
+        },
+        {
+          "wallMs": 35.15527999999999,
+          "cpuMs": 48.5
+        },
+        {
+          "wallMs": 32.442100000000025,
+          "cpuMs": 50
+        },
+        {
+          "wallMs": 28.95711000000001,
+          "cpuMs": 39
+        },
+        {
+          "wallMs": 30.133719999999993,
+          "cpuMs": 37.6
+        },
+        {
+          "wallMs": 35.60925999999999,
+          "cpuMs": 43.7
+        }
+      ],
+      "afterSamples": [
+        {
+          "wallMs": 37.921980000000005,
+          "cpuMs": 56.3
+        },
+        {
+          "wallMs": 37.25739000000001,
+          "cpuMs": 34.3
+        },
+        {
+          "wallMs": 34.156060000000004,
+          "cpuMs": 39.1
+        },
+        {
+          "wallMs": 32.283770000000004,
+          "cpuMs": 34.4
+        },
+        {
+          "wallMs": 34.35509999999999,
+          "cpuMs": 39.1
+        },
+        {
+          "wallMs": 37.36700999999998,
+          "cpuMs": 59.3
+        },
+        {
+          "wallMs": 35.44551999999999,
+          "cpuMs": 51.6
+        },
+        {
+          "wallMs": 31.650289999999995,
+          "cpuMs": 31.3
+        },
+        {
+          "wallMs": 32.22030999999997,
+          "cpuMs": 42.2
+        },
+        {
+          "wallMs": 30.83733000000002,
+          "cpuMs": 39
+        },
+        {
+          "wallMs": 43.10762999999999,
+          "cpuMs": 57.9
+        },
+        {
+          "wallMs": 46.727700000000006,
+          "cpuMs": 65.5
+        },
+        {
+          "wallMs": 40.99234000000001,
+          "cpuMs": 43.9
+        },
+        {
+          "wallMs": 44.27496999999998,
+          "cpuMs": 53
+        },
+        {
+          "wallMs": 46.055830000000014,
+          "cpuMs": 57.9
+        },
+        {
+          "wallMs": 50.176790000000025,
+          "cpuMs": 54.6
+        },
+        {
+          "wallMs": 44.06751000000004,
+          "cpuMs": 65.7
+        },
+        {
+          "wallMs": 39.098499999999966,
+          "cpuMs": 53.1
+        },
+        {
+          "wallMs": 40.33685999999998,
+          "cpuMs": 56.2
+        },
+        {
+          "wallMs": 39.95104000000001,
+          "cpuMs": 56.4
+        }
+      ]
+    },
+    {
+      "irrigated": true,
+      "before": {
+        "cpuMs": 29.060000000000002,
+        "wallMs": 27.032309500000025
+      },
+      "extraCropsOn": {
+        "cpuMs": 32.815,
+        "wallMs": 30.503203499999994
+      },
+      "cpuChangePct": 12.921541637990352,
+      "wallChangePct": 12.839798242173739,
+      "beforeSamples": [
+        {
+          "wallMs": 32.391390000000044,
+          "cpuMs": 48.4
+        },
+        {
+          "wallMs": 23.55758000000005,
+          "cpuMs": 26.6
+        },
+        {
+          "wallMs": 21.753450000000065,
+          "cpuMs": 23.4
+        },
+        {
+          "wallMs": 28.479290000000038,
+          "cpuMs": 28.1
+        },
+        {
+          "wallMs": 32.10367000000006,
+          "cpuMs": 40.7
+        },
+        {
+          "wallMs": 28.333210000000054,
+          "cpuMs": 31.2
+        },
+        {
+          "wallMs": 26.43185999999996,
+          "cpuMs": 28.1
+        },
+        {
+          "wallMs": 23.941620000000057,
+          "cpuMs": 23.5
+        },
+        {
+          "wallMs": 24.102900000000044,
+          "cpuMs": 25
+        },
+        {
+          "wallMs": 25.94193000000005,
+          "cpuMs": 26.6
+        },
+        {
+          "wallMs": 26.24381999999996,
+          "cpuMs": 25
+        },
+        {
+          "wallMs": 26.28780999999999,
+          "cpuMs": 28.1
+        },
+        {
+          "wallMs": 30.922559999999976,
+          "cpuMs": 32.8
+        },
+        {
+          "wallMs": 25.80165999999999,
+          "cpuMs": 26.6
+        },
+        {
+          "wallMs": 26.855770000000028,
+          "cpuMs": 31.3
+        },
+        {
+          "wallMs": 27.952670000000033,
+          "cpuMs": 29.6
+        },
+        {
+          "wallMs": 29.446579999999994,
+          "cpuMs": 28.1
+        },
+        {
+          "wallMs": 27.601320000000033,
+          "cpuMs": 26.6
+        },
+        {
+          "wallMs": 27.45526,
+          "cpuMs": 26.5
+        },
+        {
+          "wallMs": 25.041840000000047,
+          "cpuMs": 25
+        }
+      ],
+      "afterSamples": [
+        {
+          "wallMs": 28.944729999999982,
+          "cpuMs": 31.3
+        },
+        {
+          "wallMs": 26.228809999999974,
+          "cpuMs": 29.7
+        },
+        {
+          "wallMs": 28.180180000000018,
+          "cpuMs": 34.3
+        },
+        {
+          "wallMs": 29.121330000000036,
+          "cpuMs": 34.4
+        },
+        {
+          "wallMs": 29.02416000000003,
+          "cpuMs": 31.2
+        },
+        {
+          "wallMs": 25.446270000000005,
+          "cpuMs": 25.1
+        },
+        {
+          "wallMs": 24.073059999999987,
+          "cpuMs": 28.1
+        },
+        {
+          "wallMs": 25.26858000000002,
+          "cpuMs": 26.6
+        },
+        {
+          "wallMs": 24.01640000000007,
+          "cpuMs": 28.1
+        },
+        {
+          "wallMs": 25.39790000000003,
+          "cpuMs": 25
+        },
+        {
+          "wallMs": 34.470739999999935,
+          "cpuMs": 37.5
+        },
+        {
+          "wallMs": 30.13144000000002,
+          "cpuMs": 32.7
+        },
+        {
+          "wallMs": 30.37448999999997,
+          "cpuMs": 34.4
+        },
+        {
+          "wallMs": 51.02305999999999,
+          "cpuMs": 62.6
+        },
+        {
+          "wallMs": 37.17462999999998,
+          "cpuMs": 35.9
+        },
+        {
+          "wallMs": 37.772140000000036,
+          "cpuMs": 37.5
+        },
+        {
+          "wallMs": 31.252809999999954,
+          "cpuMs": 29.6
+        },
+        {
+          "wallMs": 32.84055000000008,
+          "cpuMs": 32.8
+        },
+        {
+          "wallMs": 31.48859999999986,
+          "cpuMs": 29.7
+        },
+        {
+          "wallMs": 27.834189999999943,
+          "cpuMs": 29.8
+        }
+      ]
+    }
+  ]
+}

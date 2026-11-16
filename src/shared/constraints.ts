@@ -1,6 +1,6 @@
 import type { CropId } from './types';
 
-export const EQUIPMENT_GROUPS = ['row_crop_planter', 'grain_drill', 'hay_equipment', 'cotton_stripper'] as const;
+export const EQUIPMENT_GROUPS = ['row_crop_planter', 'grain_drill', 'hay_equipment', 'cotton_stripper', 'forage_harvester', 'grain_combine'] as const;
 export type EquipmentGroup = typeof EQUIPMENT_GROUPS[number];
 export const MARKET_OUTLETS = ['grain_elevator', 'feedlot_dairy', 'cotton_gin', 'oilseed_buyer'] as const;
 export type MarketOutlet = typeof MARKET_OUTLETS[number];

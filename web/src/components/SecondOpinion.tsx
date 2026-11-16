@@ -12,6 +12,8 @@ import { CROP_COLORS } from "./PlanCard";
 import "../evidence.css";
 
 const SHORT: Record<CropId, string> = {
+  sunflower_confection: "Confection sunflower",
+  cotton: "Upland cotton", corn_silage: "Corn silage", sorghum_silage: "Forage sorghum silage", sunflower: "Oilseed sunflower", triticale: "Triticale (forage hay)", other_hay: "Annual forage hay (non-alfalfa)",
   corn: "Corn",
   soybean: "Soybean",
   winter_wheat: "Wheat",

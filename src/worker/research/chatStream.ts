@@ -1,9 +1,10 @@
 import type { UIMessageChunk } from "ai";
 import { ChatResearch } from "./chat";
 import type { ChatFieldMemory } from "../fieldMemory";
+import type { FertilizerEvidence } from "../fertilizerFacts";
 
 /** Finish-time enforcement: source links and quote cards are generated only from returned passages. */
-export function checkedCitationStream(stream: ReadableStream<UIMessageChunk>, research: ChatResearch, memory?: ChatFieldMemory): ReadableStream<UIMessageChunk> {
+export function checkedCitationStream(stream: ReadableStream<UIMessageChunk>, research: ChatResearch, memory?: ChatFieldMemory, fertilizer?: FertilizerEvidence): ReadableStream<UIMessageChunk> {
   let answer = "";
   return stream.pipeThrough(new TransformStream<UIMessageChunk, UIMessageChunk>({
     transform(part, controller) {
@@ -13,7 +14,8 @@ export function checkedCitationStream(stream: ReadableStream<UIMessageChunk>, re
       if (part.type === "finish") {
         const checked = research.validate(answer);
         const history = memory?.validate(answer) ?? { valid: [], records: [], invalid: [...new Set([...answer.matchAll(/\[(F\d+)\]/g)].map(m => m[1]!))] };
-        const invalid = [...checked.invalid, ...history.invalid];
+        const guideline = fertilizer?.validate(answer) ?? { facts: [], invalid: [...new Set([...answer.matchAll(/\[(G\d+)\]/g)].map(m => m[1]!))] };
+        const invalid = [...checked.invalid, ...history.invalid, ...guideline.invalid];
         if (invalid.length) {
           console.warn(JSON.stringify({ msg: "scout invalid research citations", ids: invalid }));
           const id = "citation-warning";
@@ -26,6 +28,9 @@ export function checkedCitationStream(stream: ReadableStream<UIMessageChunk>, re
         }
         for (const record of history.records) {
           controller.enqueue({ type: "source-url", sourceId: record.citationId, url: record.sourceUrl, title: `[${record.citationId}] ${record.field_id} ${record.kind} (${record.date}) — historical record` });
+        }
+        for (const fact of guideline.facts) {
+          controller.enqueue({ type: "source-url", sourceId: fact.citationId, url: fact.url, title: `[${fact.citationId}] ${fact.source} — guideline, not a prescription` });
         }
         if (memory) controller.enqueue({ type: "data-field-memory-citations", data: { records: history.records, invalid: history.invalid } });
         controller.enqueue({ type: "data-research-citations", data: { passages: checked.passages, invalid: checked.invalid } });

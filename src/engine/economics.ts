@@ -1,7 +1,7 @@
 // Sourced reference budgets are kept separate from the weather-driven ranking model.
 // All transcribed values verified in official PDFs on 2026-11-15; see docs/economics-sources.md.
 import type { CropId } from "../shared/types";
-import { ALL_CROPS, CROPS } from "./crops";
+import { ALL_CROPS, LEGACY_CROPS, CROPS } from "./crops";
 import { AVERAGE_TO_POTENTIAL, PLAINS_POTENTIAL, STATE_YIELDS, statePotential } from "./regions";
 
 export interface EconomicValue {
@@ -50,15 +50,15 @@ function approximate(value: number, units: string, region: string, treatment: st
   // A null source is deliberate: a broadly relevant extension homepage is NOT evidence for a number.
   return { value, units, region, treatment, status: "approximate default", year: null, sourceUrl: null, published: null, retrievedAt: null, attribution: null, locator: null };
 }
-export function assumptionAudit(state?: string) {
+export function assumptionAudit(state?: string, extraCrops = false) {
   const potential = statePotential(state);
   const known = Boolean(state && (PLAINS_POTENTIAL[state] || STATE_YIELDS[state]));
   const region = known ? state! : "IA (Iowa fallback)";
   const mode = state && PLAINS_POTENTIAL[state] ? "Approximate irrigated-practice potential" : `Approximate state average × ${AVERAGE_TO_POTENTIAL} (demonstration conversion, not observed potential)`;
   return {
     regionNote: known ? `${region}: ${mode}` : `No configured state table: Iowa fallback; ${mode}`,
-    crops: ALL_CROPS.map(crop => ({ crop, name: CROPS[crop].name,
-      price: approximate(CROPS[crop].pricePerUnit, crop === "alfalfa" ? "$/short ton" : crop === "fallow" ? "not applicable (no product)" : "$/bu", "US prototype (not regionalized)", "Unspecified practice; live NASS prices may override"),
+    crops: (extraCrops ? ALL_CROPS : LEGACY_CROPS).map(crop => ({ crop, name: CROPS[crop].name,
+      price: approximate(CROPS[crop].pricePerUnit, CROPS[crop].yieldUnit.startsWith("tons") ? "$/short ton" : CROPS[crop].yieldUnit.startsWith("lb") ? "$/lb" : crop === "fallow" ? "not applicable (no product)" : "$/bu", "US prototype (not regionalized)", "Unspecified practice; live NASS prices may override"),
       cost: approximate(CROPS[crop].costPerAcre, "$/acre", "US prototype (not regionalized)", "Base direct cost excluding nitrogen and land; yield-scaled in engine, not a complete budget"),
       baseYield: approximate(CROPS[crop].baseYield, CROPS[crop].yieldUnit || "not applicable (no crop)", "US prototype", "Unspecified planning yield; not a measured yield or a documented trial"),
       potential: approximate(potential[crop] ?? CROPS[crop].baseYield, CROPS[crop].yieldUnit || "not applicable (no crop)", region, potential[crop] === undefined ? "Crop-level fallback, not a regional estimate" : mode),

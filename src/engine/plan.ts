@@ -6,13 +6,15 @@ import { validateConstraints } from '../shared/validateConstraints';
 import { constraintWater } from '../shared/constraintWater';
 import { validatePrices } from "../shared/prices";
 import { effectiveSoil, validateMeasurements } from "../shared/measurements";
-import { buildIndicators, type DailyClimate } from "./climate";
+import { buildIndicators, createEt0Memo, type DailyClimate } from "./climate";
 import { buildExplanation, buildFacts, CROP_ES } from "./explain";
-import { ALL_CROPS, CROPS } from "./crops";
+import { ALL_CROPS, LEGACY_CROPS, CROPS } from "./crops";
 import { availableCrops, FALLOW_MAX_ANNUAL_RAIN_MM, statePotential } from "./regions";
 import { buildDroughtReplays } from "./droughtReplay";
 import { planAdvice } from "./pestNotes";
-import { buildWaterContext, type CropWeatherMemo, evaluateCropClimate, LIMITED_IRRIGATION_MM, makeReplay, meanAnnualRainMm, runEngine } from "./rotation";
+import { isExtraCrop } from "../shared/extraCrops";
+import { EXPANSION_SEARCH_NOTE } from "./expandedSearch";
+import { buildWaterContext, type CropWeatherMemo, type TrendMemo, evaluateCropClimate, LIMITED_IRRIGATION_MM, makeReplay, meanAnnualRainMm, runEngine } from "./rotation";
 import { usdaInputs, type RecentYield, type ValidationSeries } from "./usda";
 import { checkWaterUse, validateCrop, type YieldRecord } from "./validate";
 
@@ -48,6 +50,8 @@ export const ASSUMPTIONS = [
 ];
 
 export interface PlanInputs {
+  /** Experimental regional crop expansion. Default off; Worker EXTRA_CROPS=on only. */
+  extraCrops?: boolean;
   request: PlanRequest;
   climate: DailyClimate;
   soil: SoilProfile;
@@ -129,7 +133,8 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   const wheatDeadline = new Date(Date.UTC(planStartYear - 1, 9, 15));
   const firstYearWheatAllowed = now.getTime() < wheatDeadline.getTime();
 
-  const waterBase = buildWaterContext(climate, soil, false);
+  const et0 = createEt0Memo(Number.isFinite(climate.gridCell.lat) ? climate.gridCell.lat : 40);
+  const waterBase = buildWaterContext(climate, soil, false, 0, et0);
   const waterMemo = new Map<WaterLevel, ReturnType<typeof buildWaterContext>>();
   const waterFor = (w: WaterLevel) => {
     let ctx = waterMemo.get(w);
@@ -138,19 +143,21 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   };
   const annualRain = meanAnnualRainMm(waterBase);
   const dryRegion = annualRain < FALLOW_MAX_ANNUAL_RAIN_MM;
-  const region = availableCrops(county?.stateCode, ALL_CROPS);
+  const region = availableCrops(county?.stateCode, ALL_CROPS, { extraCrops: inputs.extraCrops, countyFips: county?.countyFips });
+  const climateCrops = [...new Set([...LEGACY_CROPS, ...region.crops, ...history])];
   const prices = inputs.nass?.prices ?? {};
   const priceMap = { ...Object.fromEntries(Object.entries(prices).map(([c, p]) => [c, p!.price])), ...priceInput.prices } as Partial<Record<CropId, number>>;
 
   // Weather work is shared: the crop climate depends only on full irrigation (canopy cooling) and on
   // whether trends are applied, so compute each variant once per plan.
   const weatherMemo: CropWeatherMemo = new Map();
+  const trendMemo: TrendMemo = new Map();
   const ccMemo = new Map<string, ReturnType<typeof evaluateCropClimate>>();
   const cropClimateFor = (full: boolean, adjust: boolean) => {
     const key = `${full}:${adjust}`;
     let cc = ccMemo.get(key);
     if (!cc) {
-      cc = evaluateCropClimate(climate, soil, full, adjust ? targetYear : climate.lastYear, { adjustTrends: adjust, weatherMemo });
+      cc = evaluateCropClimate(climate, soil, full, adjust ? targetYear : climate.lastYear, { adjustTrends: adjust, weatherMemo, crops: climateCrops, et0, trendMemo });
       ccMemo.set(key, cc);
     }
     return cc;
@@ -202,7 +209,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     // potential = county average ÷ the share of potential the model says recent weather allowed.
     const yieldOverrides: Partial<Record<CropId, number>> = { ...table };
     for (const [c, rec] of Object.entries(recentYields) as [CropId, RecentYield][]) {
-      if (c === "fallow") continue;
+      if (c === "fallow" || !region.crops.includes(c)) continue;
       const base = table[c] ?? CROPS[c].baseYield;
       const frac = Math.max(0.25, calFrac(c));
       yieldOverrides[c] = Math.round(Math.min(POTENTIAL_BOUNDS[1] * base, Math.max(POTENTIAL_BOUNDS[0] * base, rec.value / frac)) * 10) / 10;
@@ -333,7 +340,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
 
   for (const c of main.calibrations) {
     const es = request.language === "es";
-    const unit = c.crop === "alfalfa" ? "US short tons/acre" : "bu/acre";
+    const unit = CROPS[c.crop].yieldUnit.startsWith("tons") ? "US short tons/acre" : CROPS[c.crop].yieldUnit;
     facts.push({ id: `farmer-yield-${c.crop}`, kind: "agronomy", source: es ? "Rendimientos del agricultor (sin verificar); calibración SoilSense" : "Farmer-entered harvest records (unverified); SoilSense local calibration",
       text: es
         ? `Calibrado con tus ${c.count} años de rendimientos de ${CROP_ES[c.crop]} (${c.years.join(", ")}), promedio ${c.average.toFixed(1)} ${unit}. Potencial regional ${c.before.toFixed(1)} → ${c.after.toFixed(1)}: ajuste del 50% hacia promedio ÷ fracción climática ${c.fraction.toFixed(3)}, limitado al 60–115% del valor estatal. ${c.fallback} años fuera del historial usan la fracción de los últimos 10 años. Se supone el mismo riego y cultivo anterior típico; no es una validación independiente.`
@@ -397,6 +404,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       : explanation,
     assumptions: [
       ...ASSUMPTIONS,
+      ...(region.crops.some(isExtraCrop) ? [EXPANSION_SEARCH_NOTE] : []),
       ...(plans[0]?.scores.goals?.length ? ["Optional farmer goals add at most +0.1 total to the unchanged priority score, shared equally between the selected goals. Metrics are min–max normalized across feasible candidate plans before choosing covers; ties earn no bonus. Feasibility and crop-reliability gates still take precedence. Water uses simulated pumping (rain-only: main-crop water use); N uses lower fertilizer after credits (70%) and legume seasons (30%); erosion and organic matter use explicit rotation proxies, not measured outcomes. Forage-market bonus requires that goal; hay economics are unchanged."] : []),
       ...region.notes,
       ...(waterCap ? [`Farmer-entered seasonal irrigation cap: ${waterCap.seasonalCapInches.toFixed(2)} inches per planned year; overrides the selected water mode for both recommendations and current-practice comparison. Gross water is treated as available to roots; application losses and peak-day capacity are not modeled. Pumping costs about $8 per inch per acre.`] : [`Water: ${WATER_WORDS[level]}.${level === "limited" ? " Limited irrigation covers the crop's shortfall first, up to about 10 inches a season, as in K-State's Tribune limited-irrigation trial; stored soil water covers the rest." : ""} Pumping costs about $8 per inch of water per acre.`]),

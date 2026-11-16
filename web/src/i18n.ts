@@ -6,6 +6,7 @@ import { fieldMessages } from "./i18n-fields";
 import { cardMessages } from "./i18n-cards";
 import { assistantMessages } from "./i18n-assistant";
 import { constraintMessages } from './i18n-constraints';
+import { extraCropMessages } from "./i18n-extra-crops";
 import { korean } from "./i18n-ko";
 import { LANGUAGES, parseLanguage, type Language } from "../../src/shared/language";
 export type { Language } from "../../src/shared/language";
@@ -19,6 +20,7 @@ export const messages = {
   ...constraintMessages,
   ...fieldMessages,
   ...cardMessages,
+  ...extraCropMessages,
   ...priceMessages,
   ...myFieldsMessages,
   "District outlook (next ~4 weeks, team's Kansas model)": "Perspectiva del distrito (próximas ~4 semanas, modelo de Kansas del equipo)",
@@ -337,6 +339,8 @@ export function useI18n() {
   return { ...context, t: (key: TranslationKey, values?: Record<string, string | number>) => translate(context.language, key, values), text: (value: string | null | undefined) => translateKnown(context.language, value ?? "") };
 }
 export const cropKeys: Record<CropId, TranslationKey> = {
+  sunflower_confection: "Confection sunflower",
+  cotton: "Upland cotton", corn_silage: "Corn silage", sorghum_silage: "Forage sorghum silage", sunflower: "Oilseed sunflower", triticale: "Triticale (forage hay)", other_hay: "Annual forage hay (non-alfalfa)",
   corn: "Corn", soybean: "Soybean", winter_wheat: "Winter wheat", oats: "Oats", alfalfa: "Alfalfa / hay", sorghum: "Grain sorghum", fallow: "Fallow (no crop)",
 };
 export function cropName(crop: CropId, language: Language): string { return translate(language, cropKeys[crop]); }

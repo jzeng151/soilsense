@@ -3,6 +3,8 @@ export interface Env {
   PLAN_PREWARM?: Workflow<Record<string, never>>;
   /** Explore is never the default unless explicitly enabled at runtime. */
   EXPLORE_LANDING?: string;
+  /** Experimental southwest Kansas crop portfolio; absent/off preserves the original engine. */
+  EXTRA_CROPS?: "on" | "off";
   /** Optional public CSB fields and capability agents. Off unless explicitly "on". */
   FIELDS_ENABLED?: string;
   /** Earthdata bearer token: server-side only, never exposed in evidence URLs. */

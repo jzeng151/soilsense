@@ -1,6 +1,6 @@
 import type { CropId } from "./types";
 
-/** Farmer prices in $/bu, or $/US short ton for hay. Fallow has no saleable product. */
+/** Farmer prices in the crop product unit: $/bu, $/US short ton (fresh silage or dry hay), or $/lb lint/seed. Fallow has no saleable product. */
 export type FarmerPrices = Partial<Record<CropId, number>>;
 export const PRICE_SCENARIO_VERSION = "ks-2016-2025-v1";
 export interface PriceSensitivity {
@@ -11,11 +11,13 @@ export interface PriceSensitivity {
   varyingCrops: CropId[];
   /** No historical series: held at the request's price or default, not invented. */
   fixedPriceCrops: CropId[];
+  /** Null means no complete sourced historical series for this new product. */
+  fixedPriceSources?: Partial<Record<CropId, null>>;
   /** All tied highest-net candidates count as best; these counts need not sum to N. */
   plans: { planId: string; bestCount: number; minNetPerAcre: number; maxNetPerAcre: number }[];
 }
 /** Bounded, sorted representation; adding crops requires adding them to this list. */
-export const PRICE_CROPS: CropId[] = ["alfalfa", "corn", "oats", "sorghum", "soybean", "winter_wheat"];
+export const PRICE_CROPS: CropId[] = ["alfalfa", "corn", "oats", "sorghum", "soybean", "winter_wheat", "cotton", "corn_silage", "sorghum_silage", "sunflower", "sunflower_confection", "triticale", "other_hay"].sort() as CropId[];
 export const MAX_FARMER_PRICE = 10000;
 export function validatePrices(b: Record<string, unknown>): { prices?: FarmerPrices; priceScenarios?: boolean } | string {
   const out: { prices?: FarmerPrices; priceScenarios?: boolean } = {};

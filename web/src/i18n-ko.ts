@@ -1,5 +1,7 @@
 /** Korean copy keyed by the complete English UI text. */
 export const korean: Partial<Record<string, string>> = {
+  "This conversation belongs to an earlier field plan. Start a new chat to ask about the current plan.": "이 대화는 이전 재배 계획에 관한 것입니다. 현재 계획에 대해 질문하려면 새 대화를 시작하세요.",
+  "Build a rotation in Explore before asking about this field.": "이 필지에 대해 질문하기 전에 탐색에서 윤작 계획을 만드세요.",
   "Your crop prices (optional)": "내 작물 가격(선택 사항)",
   "Leave blanks for USDA prices or approximate defaults. Prices change profit scoring and net returns, not weather or yields.": "비워 두면 USDA 가격 또는 대략적인 기본값을 사용합니다. 가격은 수익성 점수와 순수익에 영향을 주며 기상이나 수확량은 바꾸지 않습니다.",
   "$/bu": "$/bu",

@@ -88,7 +88,7 @@ export function FieldAssistantContent({ context, sharedPlan, onClose, className 
       <div><h2>{t("Sprout")}</h2><p>{t("Your AI field advisor")}</p></div>
       <details open={menu} className="fa-menu" onToggle={e => setMenu(e.currentTarget.open)} onKeyDown={e => { if (e.key === "Escape") { setMenu(false); menuRef.current?.focus(); } }}>
         <summary ref={menuRef} aria-label={t("Assistant options")}><span aria-hidden="true">•••</span></summary>
-        <div><button type="button" onClick={clearChat}>{t("Clear chat")}</button><a href="#/scout">{t("Open full chat")}</a></div>
+        <div><button type="button" onClick={clearChat}>{t("Clear chat")}</button><a href="#/scout" onClick={() => setMenu(false)}>{t("Open full chat")}</a></div>
       </details>
       {onClose && <button type="button" className="fa-icon" onClick={onClose} aria-label={t("Close assistant")}>×</button>}
     </header>

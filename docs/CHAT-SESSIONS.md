@@ -1,6 +1,8 @@
 # Sprout chat sessions
 
-Explore's assistant and `#/scout` consume one account-scoped `ScoutSessionProvider` above the route split in `Shell`. Only that provider owns AI SDK `useChat`. Opening the full view, returning to Explore, closing the panel, and lazy-loading a view do not stop or replay a request. Changing the selected location updates context for the next turn without deleting the conversation or interrupting the current reply.
+Explore's assistant and `#/scout` consume one account-scoped `ScoutSessionProvider` above the route split in `Shell`. Only that provider owns AI SDK `useChat`. Opening the full view, returning to Explore, closing the panel, and lazy-loading a view do not stop or replay a request. Explore stays mounted but hidden while another route is open, retaining the selected location/field, exact planner result and tab. A bare Explore navigation returns to that field rather than clearing it.
+
+Changing/invalidation of the field plan is different from navigation: it cancels the old response, archives that conversation in Recent chats, and starts an empty session for the new context. Reopened conversations with a different context fingerprint are marked as earlier-plan history and cannot send/regenerate against the new plan. When the controlled `sharedPlan` is null, neither view may send or regenerate. Equivalent same-plan snapshots do not cancel a stream. The latest planner request (water/priority/etc.) is included in transport context.
 
 The transport adds the latest selected location and exact available client plan snapshot to the outgoing user turn, without putting that context into the visible user bubble. The full page uses the same transport and therefore keeps field context after leaving Explore. Language is read at send/retry time rather than captured when the session was created. Server tools remain the source of truth; a client plan is context, not a verified measurement.
 
@@ -25,7 +27,7 @@ A browser reload closes the network stream. The latest received message snapshot
 
 ## Verification
 
-- `npx vitest run web/src/ScoutSession.test.ts web/src/ScoutSession.persistence.test.ts web/src/components/assistant/FieldAssistantPanel.test.ts web/src/Shell.explore.test.ts`
+- `npx vitest run web/src/ScoutSession.test.ts web/src/ScoutSession.persistence.test.ts web/src/ScoutSession.context.test.ts web/src/ScoutSession.plans.test.ts web/src/components/assistant/FieldAssistantPanel.test.ts web/src/components/assistant/FieldAssistantSharedPlan.test.ts web/src/Shell.explore.test.ts`
 - `npm run typecheck`
 - `npm run build`
 - `node scripts/chat-sync-smoke.mjs`
@@ -34,4 +36,4 @@ The smoke launches an ephemeral static server on **127.0.0.1:8832** serving the 
 
 ## Stacked integration
 
-This branch is based on `feat/explore-chrome`, not on the coordinator's uncommitted Field Watch integration. When combining changes in `FieldAssistantContent.tsx`, retain the coordinator's exact `sharedPlan` selection and its no-fetch-when-defined guard. Retain this branch's `useScoutSession` consumer, context publication effect and shared `clearChat`; do not restore a view-owned `useChat` or an unmount `stop` effect. Keep `ScoutSessionProvider` above **every** route in `Shell`. No changes to shared `ScoutMessage` or LLM prompts are required.
+This branch incorporates coordinator integration through `86591c7` on `feat/explore-chrome`, including Field Watch, controlled `sharedPlan`, and explicit active-field selection. The exact `sharedPlan` selection, no-fetch-when-defined guard, and controlled-null send guard remain intact. Keep this branch's `useScoutSession` consumer, context publication effect and shared `clearChat`; do not restore a view-owned `useChat` or an unmount `stop` effect. Keep `ScoutSessionProvider` above **every** route in `Shell`. Response-polish PR #128 is intentionally not merged; its rendering/privacy changes are independent. When combining later, preserve its pending labels in ScoutPage/FieldAssistantContent while keeping this session plumbing. No changes to shared `ScoutMessage` or LLM prompts are required.

@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
 const plan = JSON.parse(await readFile('test/fixtures/plan-finney-default-rain.json', 'utf8'));
-plan.facts.unshift({ text: 'Browser fixture soil fact', source: 'Smoke fixture' });
+plan.facts.unshift({ id: 'smoke-fixture', text: 'Browser fixture soil fact', source: 'Smoke fixture' });
 let requests = [];
 let live;
 const event = (res, e) => res.write(`data: ${JSON.stringify(e)}\n\n`);
@@ -56,8 +56,8 @@ try {
     await page.getByRole('heading', { name: 'Three quick questions' }).waitFor();
     await page.getByRole('group', { name: 'Crop grown this season' }).getByRole('button', { name: 'Corn', exact: true }).click();
     await page.getByRole('group', { name: 'Water supply' }).getByRole('button').last().click();
-    await page.getByRole('button', { name: 'Show my plan', exact: true }).click();
-    await page.locator('.jr-answer').waitFor();
+    await page.getByRole('button', { name: 'Show my plan' }).click();
+    await page.locator('.jr-answer').waitFor({ timeout: 10000 }).catch(async error => { console.error(await page.locator('body').innerText(), errors); throw error; });
     await page.getByRole('button', { name: 'Sprout', exact: true }).click();
   }
   await page.goto(`http://127.0.0.1:8832/${explore}`);
@@ -81,6 +81,7 @@ try {
   await page.locator('.fa-thread').getByText('Smoke partial completed in full chat', { exact: true }).waitFor();
   assert.equal(requests.length, 1, 'return to Explore sends no model request');
   await page.getByLabel('Assistant options').click(); await page.getByRole('link', { name: 'Open full chat' }).click();
+  await page.locator('.sc-thread').waitFor();
   assert.equal(await page.locator('.sb-chats li').count(), 1, 'one Recent chat');
   await page.getByLabel('Message Sprout').fill('Follow-up from full chat');
   await Promise.all([page.waitForResponse(r => r.url().endsWith('/api/scout/chat')), page.getByRole('button', { name: 'Send', exact: true }).click()]);
@@ -114,6 +115,7 @@ try {
   assert.equal(await page.locator('.fa-turn').count(), 0, 'Clear during stream persists on reload');
   assert.equal(requests.length, 3, 'three explicit sends, no navigation/reload requests');
   await page.getByLabel('Assistant options').click(); await page.getByRole('link', { name: 'Open full chat' }).click();
+  await page.locator('.sc-hero').waitFor();
   assert.equal(await page.locator('.sb-chats li').count(), 0, 'Clear removes Recent history too');
   assert.deepEqual(errors, [], 'no uncaught browser errors');
   console.log(JSON.stringify({ result: 'PASS', chatRequests: requests.length, checks: ['live Explore → Scout handoff exactly once', 'return to Explore during stream', 'full-page field plan context', 'reload without replay', 'Recent chats', 'new/open/delete', 'clear during stream without resurrection', 'matching menu styles', 'no page errors'], persistence: 'browser localStorage only; fixture server does not save transcripts' }, null, 2));

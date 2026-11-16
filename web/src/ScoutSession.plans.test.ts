@@ -41,5 +41,7 @@ it("keeps a same-plan stream, cancels on invalidation, archives old answers and 
     await click(4); await click(5); expect(host.textContent).toContain("archived-plan"); expect(host.textContent).toContain("Old plan partial answer");
     await click(0); await click(3); expect(fetcher).toHaveBeenCalledTimes(1);
     await click(6); await click(0); expect(fetcher).toHaveBeenCalledTimes(2);
+    await click(1); expect(signal?.aborted).toBe(true); // B → A replacement, without a null transition.
+    expect(loadChats("guest")).toHaveLength(2);
   } finally { await act(async () => root.unmount()); host.remove(); vi.unstubAllGlobals(); localStorage.clear(); }
 });

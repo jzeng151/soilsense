@@ -1,0 +1,478 @@
+{
+  "base": "http://127.0.0.1:8809",
+  "axe": "4.14.0",
+  "scans": [
+    {
+      "language": "en",
+      "width": 1440,
+      "state": "globe",
+      "errors": [],
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            [
+              ".explore-intro > span"
+            ],
+            [
+              "h1"
+            ],
+            [
+              ".explore-card-brand"
+            ],
+            [
+              "h2"
+            ],
+            [
+              "p"
+            ],
+            [
+              "label"
+            ],
+            [
+              "button[type=\"submit\"]"
+            ],
+            [
+              ".explore-locate-text"
+            ],
+            [
+              "button[aria-label=\"Zoom out\"]"
+            ],
+            [
+              "button[aria-label=\"Use my location\"]"
+            ],
+            [
+              "button[aria-label=\"Stop globe rotation\"]"
+            ]
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": [
+            [
+              "button[type=\"submit\"]"
+            ],
+            [
+              "button[aria-label=\"Zoom in\"]"
+            ],
+            [
+              "button[aria-label=\"Zoom out\"]"
+            ],
+            [
+              "button[aria-label=\"Use my location\"]"
+            ],
+            [
+              "button[aria-label=\"Stop globe rotation\"]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "width": 1440,
+      "state": "map",
+      "errors": [],
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            [
+              ".explore-location-chip > span"
+            ],
+            [
+              "button[aria-label=\"Zoom out\"]"
+            ],
+            [
+              "button[aria-label=\"Use my location\"]"
+            ]
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": [
+            [
+              "button[aria-label=\"Zoom in\"]"
+            ],
+            [
+              "button[aria-label=\"Zoom out\"]"
+            ],
+            [
+              "button[aria-label=\"Use my location\"]"
+            ],
+            [
+              "summary[aria-label=\"Assistant options\"]"
+            ],
+            [
+              ".fa-icon"
+            ],
+            [
+              ".fa-send"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "width": 375,
+      "state": "globe",
+      "errors": [],
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            [
+              ".explore-intro > span"
+            ],
+            [
+              "h1"
+            ],
+            [
+              ".explore-card-brand"
+            ],
+            [
+              "h2"
+            ],
+            [
+              "p"
+            ],
+            [
+              "label"
+            ],
+            [
+              "button[type=\"submit\"]"
+            ],
+            [
+              ".explore-locate-text"
+            ],
+            [
+              "button[aria-label=\"Zoom out\"]"
+            ],
+            [
+              "button[aria-label=\"Use my location\"]"
+            ],
+            [
+              "button[aria-label=\"Stop globe rotation\"]"
+            ],
+            [
+              "button[aria-controls=\"explore-layer-menu\"]"
+            ]
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": [
+            [
+              "button[type=\"submit\"]"
+            ],
+            [
+              "button[aria-label=\"Zoom in\"]"
+            ],
+            [
+              "button[aria-label=\"Zoom out\"]"
+            ],
+            [
+              "button[aria-label=\"Use my location\"]"
+            ],
+            [
+              "button[aria-label=\"Stop globe rotation\"]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "width": 375,
+      "state": "map",
+      "errors": [],
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            [
+              ".maplibregl-ctrl-scale"
+            ],
+            [
+              ".explore-location-chip > span"
+            ],
+            [
+              "button[aria-label=\"Zoom out\"]"
+            ],
+            [
+              "button[aria-label=\"Use my location\"]"
+            ]
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": [
+            [
+              "button[aria-label=\"Zoom in\"]"
+            ],
+            [
+              "button[aria-label=\"Zoom out\"]"
+            ],
+            [
+              "button[aria-label=\"Use my location\"]"
+            ],
+            [
+              "summary[aria-label=\"Assistant options\"]"
+            ],
+            [
+              ".fa-icon"
+            ],
+            [
+              ".fa-send"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "language": "es",
+      "width": 1440,
+      "state": "globe",
+      "errors": [],
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            [
+              ".explore-intro > span"
+            ],
+            [
+              "h1"
+            ],
+            [
+              ".explore-card-brand"
+            ],
+            [
+              "h2"
+            ],
+            [
+              "p"
+            ],
+            [
+              "label"
+            ],
+            [
+              "button[type=\"submit\"]"
+            ],
+            [
+              ".explore-locate-text"
+            ],
+            [
+              "button[aria-label=\"Alejar\"]"
+            ],
+            [
+              "button[aria-label=\"Usar mi ubicación\"]"
+            ],
+            [
+              "button[aria-label=\"Detener rotación del globo\"]"
+            ]
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": [
+            [
+              "button[type=\"submit\"]"
+            ],
+            [
+              "button[aria-label=\"Acercar\"]"
+            ],
+            [
+              "button[aria-label=\"Alejar\"]"
+            ],
+            [
+              "button[aria-label=\"Usar mi ubicación\"]"
+            ],
+            [
+              "button[aria-label=\"Detener rotación del globo\"]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "language": "es",
+      "width": 1440,
+      "state": "map",
+      "errors": [],
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            [
+              ".explore-location-chip > span"
+            ],
+            [
+              "button[aria-label=\"Alejar\"]"
+            ],
+            [
+              "button[aria-label=\"Usar mi ubicación\"]"
+            ]
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": [
+            [
+              "button[aria-label=\"Acercar\"]"
+            ],
+            [
+              "button[aria-label=\"Alejar\"]"
+            ],
+            [
+              "button[aria-label=\"Usar mi ubicación\"]"
+            ],
+            [
+              "summary[aria-label=\"Opciones del asistente\"]"
+            ],
+            [
+              ".fa-icon"
+            ],
+            [
+              ".fa-send"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "language": "es",
+      "width": 375,
+      "state": "globe",
+      "errors": [],
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            [
+              ".explore-intro > span"
+            ],
+            [
+              "h1"
+            ],
+            [
+              ".explore-card-brand"
+            ],
+            [
+              "h2"
+            ],
+            [
+              "p"
+            ],
+            [
+              "label"
+            ],
+            [
+              "button[type=\"submit\"]"
+            ],
+            [
+              ".explore-locate-text"
+            ],
+            [
+              "button[aria-label=\"Alejar\"]"
+            ],
+            [
+              "button[aria-label=\"Usar mi ubicación\"]"
+            ],
+            [
+              "button[aria-label=\"Detener rotación del globo\"]"
+            ],
+            [
+              "button[aria-controls=\"explore-layer-menu\"]"
+            ]
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": [
+            [
+              "button[type=\"submit\"]"
+            ],
+            [
+              "button[aria-label=\"Acercar\"]"
+            ],
+            [
+              "button[aria-label=\"Alejar\"]"
+            ],
+            [
+              "button[aria-label=\"Usar mi ubicación\"]"
+            ],
+            [
+              "button[aria-label=\"Detener rotación del globo\"]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "language": "es",
+      "width": 375,
+      "state": "map",
+      "errors": [],
+      "overflow": false,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            [
+              ".maplibregl-ctrl-scale"
+            ],
+            [
+              ".explore-location-chip > span"
+            ],
+            [
+              "button[aria-label=\"Alejar\"]"
+            ],
+            [
+              "button[aria-label=\"Usar mi ubicación\"]"
+            ]
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodes": [
+            [
+              "button[aria-label=\"Acercar\"]"
+            ],
+            [
+              "button[aria-label=\"Alejar\"]"
+            ],
+            [
+              "button[aria-label=\"Usar mi ubicación\"]"
+            ],
+            [
+              "summary[aria-label=\"Opciones del asistente\"]"
+            ],
+            [
+              ".fa-icon"
+            ],
+            [
+              ".fa-send"
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

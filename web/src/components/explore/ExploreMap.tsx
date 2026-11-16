@@ -22,6 +22,8 @@ export function ExploreMap(props: Props) {
       }, layers:[{id:'earth',type:'raster',source:'nasa'},{id:'usgs',type:'raster',source:'usgs',minzoom:8,paint:{'raster-opacity':['interpolate',['linear'],['zoom'],8,0,10,1]}},{id:'modis',type:'raster',source:'modis',layout:{visibility:'none'},minzoom:3}] } });
     } catch { latest.current.onError(); return; }
     map.current = m;
+    const resize = new ResizeObserver(() => m.resize());
+    resize.observe(el.current);
     m.addControl(new maplibregl.ScaleControl({unit:'imperial'}),'bottom-left');
     m.on('error', e => { if (e.error?.message?.includes('WebGL')) latest.current.onError(); });
     m.on('load', () => {
@@ -41,23 +43,24 @@ export function ExploreMap(props: Props) {
     });
     const stop = () => latest.current.onInteract();
     m.on('mousedown',stop); m.on('touchstart',stop); m.on('wheel',stop); m.on('keydown',stop);
-    let frame: number, last=0;
-    const animate = (time:number) => {
-      if(last && latest.current.rotating && !latest.current.location && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !m.isMoving()) m.jumpTo({center:[m.getCenter().lng+(time-last)*0.0015,m.getCenter().lat]});
-      last=time; frame=requestAnimationFrame(animate);
-    };
-    frame=requestAnimationFrame(animate);
-    return () => { cancelAnimationFrame(frame); latest.current.onReady(null); m.remove(); map.current=null; };
+    let longitude = -95;
+    const spin = window.setInterval(() => {
+      if (latest.current.rotating && !latest.current.location && m.loaded() && !m.isMoving() && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        longitude += 3;
+        m.easeTo({center:[longitude,30],duration:2000,easing:t=>t});
+      }
+    }, 2200);
+    return () => { resize.disconnect(); clearInterval(spin); latest.current.onReady(null); m.remove(); map.current=null; };
   }, []);
+  useEffect(() => { if(!props.rotating && !props.location) map.current?.stop(); },[props.rotating]);
   useEffect(() => {
     const m=map.current; if(!m) return;
     const apply=() => {
       const p=props.location;
-      const camera=p?{center:[p.lon,p.lat] as [number,number],zoom:p.zip?12:14,padding:{top:0,bottom:0,left:0,right:0}}:{center:[-95,30] as [number,number],zoom:1.3,padding:{top:0,bottom:0,left:0,right:0}};
+      const camera=p?{center:[p.lon,p.lat] as [number,number],zoom:p.zip?12:14,padding:{top:0,bottom:0,left:0,right:0}}:{center:[-95,30] as [number,number],zoom:window.innerWidth>700?2.3:1.6,padding:{top:0,bottom:window.innerWidth>700?0:240,left:0,right:window.innerWidth>700?400:0}};
       if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) m.jumpTo(camera); else m.flyTo({...camera,duration:2400,essential:false});
     };
-    if(m.isStyleLoaded()) apply(); else m.once('load',apply);
-    return()=>{m.off('load',apply);};
+    apply();
   },[props.location]);
   useEffect(() => {
     const m=map.current; if(!m) return;
@@ -70,7 +73,7 @@ export function ExploreMap(props: Props) {
       m.setLayoutProperty('usgs','visibility',props.imagery==='usgs'?'visible':'none');
       m.setLayoutProperty('modis','visibility',props.imagery==='modis'?'visible':'none');
     };
-    if(m.isStyleLoaded())apply();else m.once('load',apply);
+    if(m.getSource('fields'))apply();else m.once('load',apply);
     return()=>{m.off('load',apply);};
   },[props.fields,props.selected,props.showFields,props.boundary,props.showBoundary,props.imagery]);
   useEffect(()=>{const m=map.current;if(!m||!props.location)return;const p=props.location;const marker=new maplibregl.Marker({color:getComputedStyle(el.current!).getPropertyValue('--color-cta').trim()}).setLngLat([p.lon,p.lat]).addTo(m);return()=>{marker.remove();};},[props.location]);

@@ -41,8 +41,8 @@ comes from the 2022–23 drought.
 
 **Credentials.** Claude was not given credentials to use, and none are in this record. Two exposures are recorded in
 the logs: an Earthdata Login token was pasted into the chat once (part 1, entry 30), and a weak database password was
-visible in a screenshot (part 2, entry 42). Claude did not use, store or copy either. Per the logs, Varun was advised
-to revoke the pasted token and created a new one, and he replaced the password the same day.
+visible in a screenshot (part 2, entry 42). Claude did not use, store or copy either. Varun has confirmed that he revoked the pasted
+token and created a new one; per the logs, he replaced the password the same day.
 
 **AI-content rule.** An early log entry said no AI-specific Space Apps rule had been found. That was incomplete; see
 the correction in [README.md](README.md#corrections) and the team's [docs/SUBMISSION.md](../../docs/SUBMISSION.md).

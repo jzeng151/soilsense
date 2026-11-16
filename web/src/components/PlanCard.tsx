@@ -3,6 +3,7 @@ import { useI18n, cropName, coverNames } from "../i18n";
 import { Definition } from "./Glossary";
 import type { CropId, RotationPlan } from "../../../src/shared/types";
 import { PlanExplanation } from "./PlanExplanation";
+import { FertilizerGuide } from "./FertilizerGuide";
 
 // Crop colors live in tokens.css (--crop-*); these are CSS values for style props.
 export const CROP_COLORS: Record<CropId, string> = {
@@ -77,6 +78,7 @@ export function TopPlan({ plan, compareTo, summary }: { plan: RotationPlan; comp
         </div>
       </dl>
       <GoalScore plan={plan} />
+      <FertilizerGuide fertilizer={plan.fertilizer} />
       {language === "es" && summary ? <section className="px"><h3 className="px-title">{t("In short")}</h3><p className="px-narrative">{summary}</p></section> : <PlanExplanation rotation={plan} />}
     </article>
   );
@@ -103,6 +105,7 @@ export function PlanRow({ plan, title, compareTo, muted }: { plan: RotationPlan;
         {delta !== null && <DeltaTag delta={delta} />}
       </span>
       <GoalScore plan={plan} />
+      <FertilizerGuide fertilizer={plan.fertilizer} />
     </li>
   );
 }

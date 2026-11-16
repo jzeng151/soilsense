@@ -3,10 +3,12 @@ import type { FarmerYield, PlanRequest, SoilProfile, SoilTest } from "../../../s
 import { TEXTURE_AWC, validateMeasurements } from "../../../src/shared/measurements";
 import { cropName, useI18n, type TranslationKey } from "../i18n";
 import "./measurements.css";
+import { FERTILIZER_FIELDS } from "../../../src/shared/fertilizer-inputs";
+import { fertilizerText } from "../i18n-fertilizer";
 
 type Measurements = Pick<PlanRequest, "soilTest" | "yieldRecords">;
 type Row = { crop: FarmerYield["crop"]; year: string; value: string };
-type Draft = { ph: string; organicMatterPct: string; awc: string; texture: string; rows: Row[] };
+type Draft = { ph: string; organicMatterPct: string; awc: string; texture: string; rows: Row[]; fertilizer?: Record<string, string> };
 const empty = (): Draft => ({ ph: "", organicMatterPct: "", awc: "", texture: "", rows: [] });
 const crops: FarmerYield["crop"][] = ["corn", "soybean", "winter_wheat", "oats", "alfalfa", "sorghum"];
 const textures: Record<NonNullable<SoilTest["texture"]>, TranslationKey> = { sand: "Sand", sandy_loam: "Sandy loam", loam: "Loam", silt_loam: "Silt loam", clay_loam: "Clay loam", clay: "Clay" };
@@ -22,6 +24,7 @@ function load(fieldKey: string): Draft {
     if (!d || typeof d !== "object") return empty();
     const v = d as Draft;
     if (![v.ph, v.organicMatterPct, v.awc, v.texture].every((s) => typeof s === "string" && s.length <= 40) || !Array.isArray(v.rows) || v.rows.length > 30) return empty();
+    if (v.fertilizer && (typeof v.fertilizer !== "object" || !Object.values(v.fertilizer).every(s => typeof s === "string" && s.length <= 40))) return empty();
     if (!v.rows.every((r) => r && crops.includes(r.crop) && typeof r.year === "string" && r.year.length <= 10 && typeof r.value === "string" && r.value.length <= 40)) return empty();
     return v;
   } catch { return empty(); }
@@ -29,7 +32,7 @@ function load(fieldKey: string): Draft {
 function parse(d: Draft): Measurements | string {
   if (d.rows.some((r) => !r.year.trim() || !r.value.trim())) return "incomplete";
   return validateMeasurements({
-    soilTest: { ...Object.fromEntries(fields.filter((f) => d[f.key].trim()).map((f) => [f.key, Number(d[f.key])])), ...(d.texture ? { texture: d.texture } : {}) },
+    soilTest: { ...Object.fromEntries(FERTILIZER_FIELDS.filter(f => d.fertilizer?.[f.key]?.trim()).map(f => [f.key, Number(d.fertilizer![f.key])])), ...(d.fertilizer?.nApplication ? { nApplication: d.fertilizer.nApplication } : {}), ...(d.fertilizer?.pkProgram ? { pkProgram: d.fertilizer.pkProgram } : {}), ...Object.fromEntries(fields.filter((f) => d[f.key].trim()).map((f) => [f.key, Number(d[f.key])])), ...(d.texture ? { texture: d.texture } : {}) },
     yieldRecords: d.rows.map((r) => ({ crop: r.crop, year: Number(r.year), value: Number(r.value), unit: r.crop === "alfalfa" ? "tons/acre" : "bu/acre" })),
   });
 }
@@ -37,6 +40,7 @@ function parse(d: Draft): Measurements | string {
 /** Mount with key=fieldKey so switching fields never carries another field's edits across. */
 export function MeasurementPanel({ fieldKey, soil, onChange }: { fieldKey: string; soil: SoilProfile; onChange: (measurements: Measurements, valid: boolean) => void }) {
   const { t, language } = useI18n();
+  const ft = (key: string) => fertilizerText(key, language);
   const id = useId();
   const [draft, setDraft] = useState(() => load(fieldKey));
   const [storageFailed, setStorageFailed] = useState(false);
@@ -70,6 +74,18 @@ export function MeasurementPanel({ fieldKey, soil, onChange }: { fieldKey: strin
       <p id={`${id}-soil-help`} className="hint">{t("Water capacity uses cm/cm (same number as in/in), not total inches. A measured value wins over texture. Texture gives an approximate model value, not a lab result.")}</p>
       <p className="hint">{t("Organic matter is shown as soil evidence; the model does not infer yield or water changes from it.")}</p>
       <SoilComparison soil={soil} test={invalid ? undefined : parsed.soilTest} />
+      <fieldset><legend>{ft("Fertilizer inputs (optional)")}</legend>
+        <p>{ft("Leave lab values blank if not tested. P/K will show soil test needed and crop removal, not a guessed rate.")}</p>
+        <div className="measurement-inputs">{FERTILIZER_FIELDS.map(f => <label key={f.key}>{ft(f.label)}
+          <input type="number" name={f.key} min={f.min} max={f.max} step="any" inputMode="decimal" value={draft.fertilizer?.[f.key] ?? ""} onChange={e => setDraft(d => ({ ...d, fertilizer: { ...d.fertilizer, [f.key]: e.target.value } }))} aria-invalid={invalid || undefined} aria-describedby={invalid ? `${id}-error` : undefined} />
+        </label>)}</div>
+        <label>{ft("N application method")}<select value={draft.fertilizer?.nApplication ?? ""} onChange={e => setDraft(d => ({ ...d, fertilizer: { ...d.fertilizer, nApplication: e.target.value } }))}>
+          <option value="">{ft("Broadcast / fall preplant (default)")}</option><option value="injected-or-split">{ft("Injected or split")}</option>
+        </select></label>
+        <label>{ft("P/K program")}<select value={draft.fertilizer?.pkProgram ?? ""} onChange={e => setDraft(d => ({ ...d, fertilizer: { ...d.fertilizer, pkProgram: e.target.value } }))}>
+          <option value="">{ft("Sufficiency (default)")}</option><option value="build-maintenance">{ft("Build-maintenance (4 years)")}</option>
+        </select></label>
+      </fieldset>
     </fieldset>
     <fieldset aria-describedby={`${id}-yield-help`}>
       <legend>{t("Past yields")}</legend>

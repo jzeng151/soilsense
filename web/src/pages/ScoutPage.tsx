@@ -1,10 +1,9 @@
 import { useI18n } from "../i18n";
 import { LANGUAGE_LOCALES } from "../../../src/shared/language";
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, type UIMessage } from "ai";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useScoutSession } from "../ScoutSession";
+import { useEffect, useRef, useState } from "react";
 import { scoutStatus } from "../api";
-import { authFetch } from "../auth";
+
 import { ScoutMessage } from "../components/ScoutMessage";
 import { detectLang } from "../lang";
 import { LogoMark } from "../components/Logo";
@@ -79,16 +78,13 @@ type SpeechRec = {
 };
 
 interface Props {
-  chatId: string;
-  initialMessages: UIMessage[];
-  onMessages: (id: string, messages: UIMessage[]) => void;
+
   onMenu: () => void;
 }
 
-export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props) {
+export function ScoutPage({ onMenu }: Props) {
   const { t: tx, text: localize, language } = useI18n();
-  const transport = useMemo(() => new DefaultChatTransport({ api: "/api/scout/chat", fetch: authFetch, body: { language } }), [language]);
-  const { messages, sendMessage, status, error, stop, regenerate, clearError } = useChat({ id: chatId, messages: initialMessages, transport });
+  const { messages, sendMessage, status, error, stop, regenerate, clearError } = useScoutSession();
   const [input, setInput] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [listening, setListening] = useState(false);
@@ -110,15 +106,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
     inputRef.current?.focus();
   }, []);
 
-  // Persist when a turn starts and when it settles (not on every streamed token).
-  const lastSaved = useRef("");
-  useEffect(() => {
-    if (status === "streaming") return;
-    const sig = `${messages.length}:${status}`;
-    if (sig === lastSaved.current) return;
-    lastSaved.current = sig;
-    onMessages(chatId, messages);
-  }, [messages, status, chatId, onMessages]);
+
 
   const toBottom = (smooth = false) => {
     const el = scrollRef.current;

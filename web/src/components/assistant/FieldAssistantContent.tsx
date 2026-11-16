@@ -1,6 +1,5 @@
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
-import { useEffect, useMemo, useRef, useState, type JSX } from "react";
+import { useScoutSession } from "../../ScoutSession";
+import { useEffect, useRef, useState, type JSX } from "react";
 import type { PlanResponse } from "../../../../src/shared/types";
 import { FERTILIZER_SUGGESTION } from "../../../../src/engine/fertilizerProducts";
 import { authFetch } from "../../auth";
@@ -11,9 +10,10 @@ import type { FieldAssistantPanelProps } from "./FieldAssistantPanel";
 import "./field-assistant.css";
 
 const SUGGESTIONS = ["Why is this rotation recommended?", "How does limited irrigation change the plan?", "What are the soil and climate limits here?", FERTILIZER_SUGGESTION] as const;
-export function FieldAssistantContent({ context, onClose, className = "" }: FieldAssistantPanelProps): JSX.Element {
+export function FieldAssistantContent({ context, sharedPlan, onClose, className = "" }: FieldAssistantPanelProps): JSX.Element {
   const { t, language } = useI18n();
-  const [plan, setPlan] = useState<PlanResponse | null>(null);
+  const [fetchedPlan, setPlan] = useState<PlanResponse | null>(null);
+  const plan = sharedPlan !== undefined ? sharedPlan : fetchedPlan;
   const [loading, setLoading] = useState(!!context);
   const [planError, setPlanError] = useState("");
   const [attempt, setAttempt] = useState(0);
@@ -21,7 +21,7 @@ export function FieldAssistantContent({ context, onClose, className = "" }: Fiel
   const [statusFailed, setStatusFailed] = useState(false);
   const [input, setInput] = useState("");
   const [menu, setMenu] = useState(false);
-  const [httpError, setHttpError] = useState(0);
+
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const menuRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -29,13 +29,9 @@ export function FieldAssistantContent({ context, onClose, className = "" }: Fiel
   const [jump, setJump] = useState(false);
   const timestamps = useRef(new Map<string, string>());
   const [loadedAt, setLoadedAt] = useState<string | null>(null);
-  // Scout accepts UI messages, not a context body. Enrich the outgoing user turn only;
-  // server tools remain the source of truth, and displayed bubbles stay readable.
-  const transport = useMemo(() => new DefaultChatTransport({ api: "/api/scout/chat",
-    fetch: async (url, options) => { const res = await authFetch(url, options); setHttpError(res.ok ? 0 : res.status); return res; },
-    prepareSendMessagesRequest: ({ messages, body }) => ({ body: { ...body, messages: messages.map((m, i) => i !== messages.length - 1 ? m : { ...m, parts: [...m.parts, { type: "text", text: `\n\nSelected location and client plan context (verify claims with data tools; field ids are memory lookup identifiers, not current measurements):\n${JSON.stringify({ location: context, defaults: { irrigated: false, priority: "balanced" }, plan: plan ? { generatedAt: plan.generatedAt, summary: plan.explanation.summary, facts: plan.facts, assumptions: plan.assumptions, topRotation: plan.plans[0]?.years.map(y => ({ year: y.year, crop: y.cropName })) } : null })}\nReply in ${language === "es" ? "Spanish" : "English"}.` }] }) } }),
-  }), [context, plan, language]);
-  const { messages, sendMessage, status, error, stop, clearError, setMessages, regenerate } = useChat({ transport });
+  const { messages, sendMessage, status, error, stop, clearError, clearChat: clearSession, regenerate, setFieldContext, httpError } = useScoutSession();
+  useEffect(() => { if (context) setFieldContext({ location: context, plan }); }, [context, plan, setFieldContext]);
+
   const busy = status === "submitted" || status === "streaming";
   const canSend = !!context && !loading && configured === true && !busy;
   useEffect(() => {
@@ -48,6 +44,7 @@ export function FieldAssistantContent({ context, onClose, className = "" }: Fiel
     return () => ctrl.abort();
   }, [attempt]);
   useEffect(() => {
+    if (sharedPlan !== undefined) { setLoading(false); setPlanError(""); return; }
     if (!context) return;
     const ctrl = new AbortController(); setLoading(true); setPlanError("");
     // Do not use fetchPlan's global last-plan store: Explore must not replace the planner plan.
@@ -61,19 +58,18 @@ export function FieldAssistantContent({ context, onClose, className = "" }: Fiel
       .finally(() => { if (!ctrl.signal.aborted) setLoading(false); });
     return () => ctrl.abort();
     // Location changes remount this component. Translation helpers are unstable dependencies.
-  }, [attempt, language]);
-  useEffect(() => () => { void stop(); }, [stop]);
+  }, [attempt, language, sharedPlan]);
   useEffect(() => {
     for (const m of messages) if (!timestamps.current.has(m.id)) timestamps.current.set(m.id, new Date().toISOString());
     const el = scrollRef.current; if (el && pinned.current && messages.length) el.scrollTop = el.scrollHeight;
   }, [messages, status, plan]);
   function send(value: string) {
     if (!value.trim() || !canSend) return;
-    clearError(); setHttpError(0); setInput(""); pinned.current = true; setJump(false);
+    clearError(); setInput(""); pinned.current = true; setJump(false);
     void sendMessage({ text: value.trim() }); inputRef.current?.focus();
   }
   function clearChat() {
-    void stop(); setMessages([]); clearError(); setHttpError(0); timestamps.current.clear(); setMenu(false); inputRef.current?.focus();
+    clearSession(); timestamps.current.clear(); setMenu(false); inputRef.current?.focus();
   }
   function time(iso: string | null | undefined) {
     return iso ? <time dateTime={iso}>{new Date(iso).toLocaleTimeString(language === "es" ? "es-US" : "en-US", { hour: "numeric", minute: "2-digit" })}</time> : null;
@@ -113,7 +109,7 @@ export function FieldAssistantContent({ context, onClose, className = "" }: Fiel
         </div>)}
         {status === "submitted" && <p role="status">{t("Sprout is checking the NASA data…")}</p>}
       </div>
-      {error && <div role="alert" className="fa-notice"><p>{errorMessage}</p><button type="button" disabled={busy || httpError === 503} onClick={() => { clearError(); setHttpError(0); void regenerate(); }}>{t("Try again")}</button></div>}
+      {error && <div role="alert" className="fa-notice"><p>{errorMessage}</p><button type="button" disabled={busy || httpError === 503} onClick={() => { clearError(); void regenerate(); }}>{t("Try again")}</button></div>}
       {context && !messages.length && <section className="fa-suggestions"><h3>{t("Try asking about")}</h3>{SUGGESTIONS.map(s => <button type="button" key={s} disabled={!canSend} onClick={() => send(t(s))}>{t(s)}<span aria-hidden="true"> ↗</span></button>)}</section>}
     </div>
     <footer className="fa-footer">{jump && <button type="button" className="fa-jump" onClick={() => { pinned.current = true; setJump(false); if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }}>{t("Scroll to latest")}</button>}

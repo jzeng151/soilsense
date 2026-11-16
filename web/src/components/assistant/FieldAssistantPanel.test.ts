@@ -18,6 +18,7 @@ function streamResponse() {
 let host: HTMLDivElement;
 let root: Root;
 beforeEach(() => {
+  localStorage.clear();
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   host = document.createElement("div"); document.body.append(host); root = createRoot(host);
 });
@@ -74,7 +75,7 @@ it("shows a localized rate-limit error without discarding the plan", async () =>
   expect(host.querySelector(".fa-rotation")?.textContent).toContain("Oats");
 });
 
-it("reports plan failure with retry and removes prior conversation on a new location", async () => {
+it("reports plan failure with retry and keeps the shared conversation on a new location", async () => {
   let fail = true;
   vi.stubGlobal("fetch", vi.fn(async (url: RequestInfo | URL) => String(url).endsWith("/status") ? Response.json({ configured: true }) : String(url) === "/api/plan" ? fail ? Response.json({ error: "upstream unavailable" }, { status: 503 }) : Response.json(planFixture) : streamResponse()));
   await act(async () => root.render(createElement(FieldAssistantPanel, { context: location })));
@@ -83,7 +84,7 @@ it("reports plan failure with retry and removes prior conversation on a new loca
   await act(async () => button("Why is this rotation").click()); await settle();
   expect(host.textContent).toContain("Fixture streamed answer");
   await act(async () => root.render(createElement(FieldAssistantPanel, { context: { label: "Other field", lat: 40, lon: -100 } })));
-  await settle(); expect(host.textContent).not.toContain("Fixture streamed answer"); expect(host.textContent).toContain("Other field");
+  await settle(); expect(host.textContent).toContain("Fixture streamed answer"); expect(host.textContent).toContain("Other field");
 });
 
 it("submits Enter, preserves Shift+Enter, and keeps the outgoing user bubble clean", async () => {

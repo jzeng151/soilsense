@@ -7,8 +7,8 @@ import { App } from "./App";
 import { LanguageProvider } from "./i18n";
 import { HowItWorksPage } from "./pages/HowItWorksPage";
 import { DocsAdmin } from "./components/DocsAdmin";
-import type { UIMessage } from "ai";
-import { firstUserText, GUEST_ID, loadChats, newChatId, saveChats, titleFrom, type ScoutChat } from "./chats";
+import { ScoutSessionProvider, useScoutSession } from "./ScoutSession";
+import { GUEST_ID } from "./chats";
 import { Sidebar, type Route } from "./components/Sidebar";
 import { ScoutPage } from "./pages/ScoutPage";
 import { SettingsPage } from "./pages/SettingsPage";
@@ -54,7 +54,7 @@ export function Shell() {
   }, []);
 
   return (
-    <LanguageProvider><Workspace
+    <LanguageProvider><ScoutSessionProvider ownerId={user?.id ?? GUEST_ID}><Workspace
       key={user?.id ?? GUEST_ID}
       user={user}
       onSignedIn={setUser}
@@ -62,7 +62,7 @@ export function Shell() {
         await signOut();
         setUser(null);
       }}
-    /></LanguageProvider>
+    /></ScoutSessionProvider></LanguageProvider>
   );
 }
 
@@ -82,10 +82,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
     }).catch(() => {});
     return () => { active = false; };
   }, []);
-  const ownerId = user?.id ?? GUEST_ID;
-  const [chats, setChats] = useState<ScoutChat[]>(() => loadChats(ownerId));
-  // Always points at a chat; a brand-new chat only enters the list once it has messages.
-  const [activeId, setActiveId] = useState<string>(newChatId);
+  const { chats, activeId, newChat, openChat, deleteChat } = useScoutSession();
 
   useEffect(() => {
     const onHash = () => {
@@ -97,7 +94,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
     return () => window.removeEventListener("hashchange", onHash);
   }, [exploreLanding]);
 
-  useEffect(() => saveChats(ownerId, chats), [ownerId, chats]);
+
 
   const go = useCallback((r: Route) => {
     setRoute(r);
@@ -106,16 +103,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
     if (window.location.hash !== hash) window.location.hash = hash;
   }, [exploreLanding]);
 
-  const saveMessages = useCallback((id: string, messages: UIMessage[]) => {
-    if (!messages.length) return;
-    setChats((prev) => {
-      const old = prev.find((x) => x.id === id);
-      const chat: ScoutChat = { id, title: old?.title ?? titleFrom(firstUserText(messages)), messages, updatedAt: Date.now() };
-      return [chat, ...prev.filter((x) => x.id !== id)];
-    });
-  }, []);
 
-  const active = chats.find((c) => c.id === activeId) ?? null;
   if (route === 'explore' || route === 'demo') return <Suspense fallback={<main aria-busy="true">Soil Sense…</main>}>{route === 'explore' ? <ExplorePage/> : <DemoFarmsPage/>}</Suspense>;
 
   return (
@@ -134,23 +122,20 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
         activeChatId={activeId}
         onNavigate={go}
         onNewChat={() => {
-          setActiveId(newChatId());
+          newChat();
           go("scout");
         }}
         onOpenChat={(id) => {
-          setActiveId(id);
+          openChat(id);
           go("scout");
         }}
-        onDeleteChat={(id) => {
-          setChats((prev) => prev.filter((c) => c.id !== id));
-          if (id === activeId) setActiveId(newChatId());
-        }}
+        onDeleteChat={deleteChat}
       />
       <div className="shell-main" id="content" tabIndex={-1}>
         {route === "admin/docs" ? (
           <DocsAdmin />
         ) : route === "scout" ? (
-          <ScoutPage key={activeId} chatId={activeId} initialMessages={active?.messages ?? []} onMessages={saveMessages} onMenu={() => setSidebarOpen(true)} />
+          <ScoutPage key={activeId} onMenu={() => setSidebarOpen(true)} />
         ) : route === "live" ? (
           <LivePage onMenu={() => setSidebarOpen(true)} />
         ) : route === "how-it-works" ? (

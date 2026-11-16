@@ -15,7 +15,7 @@
 .fa-menu > summary { width: 44px; display: grid; place-items: center; border: 1px solid var(--color-input-border); border-radius: var(--radius-md); cursor: pointer; list-style: none; }
 .fa-menu summary::-webkit-details-marker { display: none; }
 .fa-menu > div { position: absolute; right: 0; top: 50px; min-width: 190px; padding: 8px; display: grid; gap: 8px; background: var(--color-bg); border: 1px solid var(--color-input-border); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); }
-.fa-menu a { display: flex; align-items: center; padding: 8px; }
+.fa-menu a, .fa-menu button { display: flex; align-items: center; justify-content: center; padding: 8px 12px; min-height: 44px; color: var(--color-text); background: var(--color-subtle); border: 1px solid var(--color-input-border); border-radius: var(--radius-md); text-decoration: none; }
 .fa-scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 22px 18px; overscroll-behavior: contain; scrollbar-gutter: stable; }
 .fa-greeting, .fa-turn { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 20px; }
 .fa-greeting > div, .fa-turn-content { min-width: 0; flex: 1; }

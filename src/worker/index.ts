@@ -3,6 +3,7 @@
 import { fields } from "./routes/fields";
 import { explore } from "./routes/explore";
 import { imerg } from "./imerg/routes";
+import { myFields } from "./routes/myfields";
 import { Hono } from "hono";
 import type { Env } from "./env";
 import { api } from "./routes/api";
@@ -42,6 +43,7 @@ app.route("/api/live", live);
 app.route("/api/refresh", refresh);
 app.route("/api/imerg", imerg);
 app.route("/api/fields", fields);
+app.route("/api/fields", myFields);
 app.route("/api", api);
 app.route("/voice", voice);
 

@@ -1,0 +1,431 @@
+{
+  "date": "2026-11-16T01:46:05.722Z",
+  "browser": "159.0.8154.6",
+  "axe": "4.14.0",
+  "scope": "Temporary isolated preview using built app assets and real local /api/plan; offline AI unavailable",
+  "evidence": [
+    {
+      "width": 1440,
+      "expanded": false,
+      "overflow": {
+        "client": 1440,
+        "scroll": 1440
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "tags": [
+            "cat.semantics",
+            "wcag21a",
+            "wcag253",
+            "EN-301-549",
+            "EN-9.2.5.3",
+            "RGAAv4",
+            "RGAA-6.1.5"
+          ],
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+          "nodes": [
+            {
+              "any": [
+                {
+                  "id": "label-content-name-mismatch",
+                  "data": null,
+                  "relatedNodes": [],
+                  "impact": "serious",
+                  "message": "Unable to determine if the visible text is part of the accessible name"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<summary aria-label=\"Assistant options\"><span aria-hidden=\"true\">•••</span></summary>",
+              "target": [
+                "summary[aria-label=\"Assistant options\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+            },
+            {
+              "any": [
+                {
+                  "id": "label-content-name-mismatch",
+                  "data": null,
+                  "relatedNodes": [],
+                  "impact": "serious",
+                  "message": "Unable to determine if the visible text is part of the accessible name"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<button type=\"button\" class=\"fa-icon\" aria-label=\"Close assistant\">×</button>",
+              "target": [
+                ".fa-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+            },
+            {
+              "any": [
+                {
+                  "id": "label-content-name-mismatch",
+                  "data": null,
+                  "relatedNodes": [],
+                  "impact": "serious",
+                  "message": "Unable to determine if the visible text is part of the accessible name"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<button type=\"submit\" class=\"fa-send\" aria-label=\"Send\" disabled=\"\">↑</button>",
+              "target": [
+                ".fa-send"
+              ],
+              "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "passes": [
+        "aria-allowed-attr",
+        "aria-conditional-attr",
+        "aria-deprecated-role",
+        "aria-hidden-focus",
+        "aria-prohibited-attr",
+        "aria-required-attr",
+        "aria-roles",
+        "aria-valid-attr-value",
+        "aria-valid-attr",
+        "button-name",
+        "color-contrast",
+        "form-field-multiple-labels",
+        "label",
+        "list",
+        "listitem",
+        "nested-interactive",
+        "summary-name"
+      ]
+    },
+    {
+      "width": 1440,
+      "expanded": true,
+      "overflow": {
+        "client": 1440,
+        "scroll": 1440
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "tags": [
+            "cat.semantics",
+            "wcag21a",
+            "wcag253",
+            "EN-301-549",
+            "EN-9.2.5.3",
+            "RGAAv4",
+            "RGAA-6.1.5"
+          ],
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+          "nodes": [
+            {
+              "any": [
+                {
+                  "id": "label-content-name-mismatch",
+                  "data": null,
+                  "relatedNodes": [],
+                  "impact": "serious",
+                  "message": "Unable to determine if the visible text is part of the accessible name"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<summary aria-label=\"Assistant options\"><span aria-hidden=\"true\">•••</span></summary>",
+              "target": [
+                "summary[aria-label=\"Assistant options\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+            },
+            {
+              "any": [
+                {
+                  "id": "label-content-name-mismatch",
+                  "data": null,
+                  "relatedNodes": [],
+                  "impact": "serious",
+                  "message": "Unable to determine if the visible text is part of the accessible name"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<button type=\"button\" class=\"fa-icon\" aria-label=\"Close assistant\">×</button>",
+              "target": [
+                ".fa-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+            },
+            {
+              "any": [
+                {
+                  "id": "label-content-name-mismatch",
+                  "data": null,
+                  "relatedNodes": [],
+                  "impact": "serious",
+                  "message": "Unable to determine if the visible text is part of the accessible name"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<button type=\"submit\" class=\"fa-send\" aria-label=\"Send\" disabled=\"\">↑</button>",
+              "target": [
+                ".fa-send"
+              ],
+              "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "passes": [
+        "aria-allowed-attr",
+        "aria-conditional-attr",
+        "aria-deprecated-role",
+        "aria-hidden-focus",
+        "aria-prohibited-attr",
+        "aria-required-attr",
+        "aria-roles",
+        "aria-valid-attr-value",
+        "aria-valid-attr",
+        "button-name",
+        "color-contrast",
+        "form-field-multiple-labels",
+        "label",
+        "list",
+        "listitem",
+        "nested-interactive",
+        "scrollable-region-focusable",
+        "summary-name"
+      ]
+    },
+    {
+      "width": 375,
+      "expanded": false,
+      "overflow": {
+        "client": 375,
+        "scroll": 375
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "tags": [
+            "cat.semantics",
+            "wcag21a",
+            "wcag253",
+            "EN-301-549",
+            "EN-9.2.5.3",
+            "RGAAv4",
+            "RGAA-6.1.5"
+          ],
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+          "nodes": [
+            {
+              "any": [
+                {
+                  "id": "label-content-name-mismatch",
+                  "data": null,
+                  "relatedNodes": [],
+                  "impact": "serious",
+                  "message": "Unable to determine if the visible text is part of the accessible name"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<summary aria-label=\"Assistant options\"><span aria-hidden=\"true\">•••</span></summary>",
+              "target": [
+                "summary[aria-label=\"Assistant options\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+            },
+            {
+              "any": [
+                {
+                  "id": "label-content-name-mismatch",
+                  "data": null,
+                  "relatedNodes": [],
+                  "impact": "serious",
+                  "message": "Unable to determine if the visible text is part of the accessible name"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<button type=\"button\" class=\"fa-icon\" aria-label=\"Close assistant\">×</button>",
+              "target": [
+                ".fa-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+            },
+            {
+              "any": [
+                {
+                  "id": "label-content-name-mismatch",
+                  "data": null,
+                  "relatedNodes": [],
+                  "impact": "serious",
+                  "message": "Unable to determine if the visible text is part of the accessible name"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<button type=\"submit\" class=\"fa-send\" aria-label=\"Send\" disabled=\"\">↑</button>",
+              "target": [
+                ".fa-send"
+              ],
+              "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "passes": [
+        "aria-allowed-attr",
+        "aria-conditional-attr",
+        "aria-deprecated-role",
+        "aria-hidden-focus",
+        "aria-prohibited-attr",
+        "aria-required-attr",
+        "aria-roles",
+        "aria-valid-attr-value",
+        "aria-valid-attr",
+        "button-name",
+        "color-contrast",
+        "form-field-multiple-labels",
+        "label",
+        "list",
+        "listitem",
+        "nested-interactive",
+        "scrollable-region-focusable",
+        "summary-name"
+      ]
+    },
+    {
+      "width": 375,
+      "expanded": true,
+      "overflow": {
+        "client": 375,
+        "scroll": 375
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "tags": [
+            "cat.semantics",
+            "wcag21a",
+            "wcag253",
+            "EN-301-549",
+            "EN-9.2.5.3",
+            "RGAAv4",
+            "RGAA-6.1.5"
+          ],
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+          "nodes": [
+            {
+              "any": [
+                {
+                  "id": "label-content-name-mismatch",
+                  "data": null,
+                  "relatedNodes": [],
+                  "impact": "serious",
+                  "message": "Unable to determine if the visible text is part of the accessible name"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<summary aria-label=\"Assistant options\"><span aria-hidden=\"true\">•••</span></summary>",
+              "target": [
+                "summary[aria-label=\"Assistant options\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+            },
+            {
+              "any": [
+                {
+                  "id": "label-content-name-mismatch",
+                  "data": null,
+                  "relatedNodes": [],
+                  "impact": "serious",
+                  "message": "Unable to determine if the visible text is part of the accessible name"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<button type=\"button\" class=\"fa-icon\" aria-label=\"Close assistant\">×</button>",
+              "target": [
+                ".fa-icon"
+              ],
+              "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+            },
+            {
+              "any": [
+                {
+                  "id": "label-content-name-mismatch",
+                  "data": null,
+                  "relatedNodes": [],
+                  "impact": "serious",
+                  "message": "Unable to determine if the visible text is part of the accessible name"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<button type=\"submit\" class=\"fa-send\" aria-label=\"Send\" disabled=\"\">↑</button>",
+              "target": [
+                ".fa-send"
+              ],
+              "failureSummary": "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "passes": [
+        "aria-allowed-attr",
+        "aria-conditional-attr",
+        "aria-deprecated-role",
+        "aria-hidden-focus",
+        "aria-prohibited-attr",
+        "aria-required-attr",
+        "aria-roles",
+        "aria-valid-attr-value",
+        "aria-valid-attr",
+        "button-name",
+        "color-contrast",
+        "form-field-multiple-labels",
+        "label",
+        "list",
+        "listitem",
+        "nested-interactive",
+        "scrollable-region-focusable",
+        "summary-name"
+      ]
+    }
+  ]
+}

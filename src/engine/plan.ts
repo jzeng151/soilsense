@@ -2,12 +2,9 @@
 // so the whole engine is unit-testable with fixtures.
 
 import type { CountyInfo, CountyLosses, CropHistory, CropId, CropValidation, DroughtReplay, EtMonth, NassData, PlanRequest, PlanResponse, SoilProfile, WaterCheck, WaterLevel, WaterOption } from "../shared/types";
-
-import { validatePrices } from "../shared/prices";
-
 import { validateConstraints } from '../shared/validateConstraints';
 import { constraintWater } from '../shared/constraintWater';
-
+import { validatePrices } from "../shared/prices";
 import { effectiveSoil, validateMeasurements } from "../shared/measurements";
 import { buildIndicators, createEt0Memo, type DailyClimate } from "./climate";
 import { buildExplanation, buildFacts, CROP_ES } from "./explain";
@@ -193,7 +190,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
 
   /** Everything that depends on how much water the field gets. */
   const plansFor = (w: WaterLevel, quick = false) => {
-    const cap = constraintWater(request.constraints);
+    const cap = waterCap;
     const full = w === "full" && !cap;
     const allowance = cap ? cap.seasonalCapInches * 25.4 : w === "limited" ? LIMITED_IRRIGATION_MM : 0;
     const cropClimate = cropClimateFor(full, true);

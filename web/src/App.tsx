@@ -326,7 +326,7 @@ function MainFlow() {
   const lastMapped = useMemo(() => [...(field?.cropHistory.years ?? [])].reverse().find((y) => y.crop) ?? null, [field]);
 
   const run = useCallback(async (waterOverride?: WaterLevel) => {
-    if (!point || (!thisYear && !planningField) || !measurementsValid || !fieldHistoryValid || !pricesValid || !constraintsValid) return;
+    if (!point || (!thisYear && !planningField) || !measurementsValid || !fieldHistoryValid || !constraintsValid || !pricesValid) return;
     const w = waterOverride ?? water;
     if (waterOverride) setWater(waterOverride);
     setPlanLoading(true);
@@ -350,7 +350,7 @@ function MainFlow() {
     } finally {
       if (planAbort.current === ctrl) setPlanLoading(false);
     }
-  }, [point, thisYear, water, priority, goals, lastMapped, go, language, measurements, measurementsValid, prices, pricesValid, constraints, constraintsValid, boundaryCatalog.enabled, planningField, fieldHistoryValid, fieldHistoryEdits]);
+  }, [point, thisYear, water, priority, goals, lastMapped, go, language, measurements, measurementsValid, constraints, constraintsValid, prices, pricesValid, boundaryCatalog.enabled, planningField, fieldHistoryValid, fieldHistoryEdits]);
 
   // Regenerate the server summary when switching languages on an existing result.
   useEffect(() => {
@@ -610,15 +610,15 @@ function MainFlow() {
             </fieldset>
 
             <GoalPicker value={goals} onChange={setGoals} water={water} />
-            <PricePanel value={priceDraft} onChange={setPriceDraft} />
             <ConstraintsPanel value={constraints} onChange={changeConstraints} />
+            <PricePanel value={priceDraft} onChange={setPriceDraft} />
             {point && <MeasurementPanel key={`${point.lat},${point.lon}`} fieldKey={`${point.lat},${point.lon}`} soil={field.soil} onChange={changeMeasurements} />}
 
             <div className="jr-actions">
               <button type="button" className="ghost" onClick={() => go("field")}>
                 {t("← Back")}
               </button>
-              <button type="button" className="primary" disabled={(!thisYear && !planningField) || !fieldHistoryValid || planLoading || !measurementsValid || !pricesValid || !constraintsValid} onClick={() => void run()}>
+              <button type="button" className="primary" disabled={(!thisYear && !planningField) || !fieldHistoryValid || planLoading || !measurementsValid || !constraintsValid || !pricesValid} onClick={() => void run()}>
                 {(thisYear || planningField) ? t("Show my plan →") : t("Pick what you grew to continue")}
               </button>
             </div>

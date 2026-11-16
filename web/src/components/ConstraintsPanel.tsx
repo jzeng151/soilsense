@@ -73,11 +73,11 @@ export function ConstraintsPanel({ value, onChange }: { value?: FarmerConstraint
 export function ConstraintSummary({ report, currentPractice }: { report?: ConstraintReport; currentPractice: RotationPlan | null }) {
  const { t, language } = useI18n();
  if (!report) return null;
- const issue = (i: ConstraintIssue) => `${i.crop ? cropName(i.crop, language) + ': ' : ''}${t(REASONS[i.constraint])}${i.detail && i.constraint === 'unavailableEquipment' ? ` (${t(EQUIPMENT[i.detail as EquipmentGroup])})` : ''}`;
+ const issue = (i: ConstraintIssue) => `${i.crop ? cropName(i.crop, language) + ': ' : ''}${t(REASONS[i.constraint])}${i.detail && i.constraint === 'unavailableEquipment' ? ` (${t(EQUIPMENT[i.detail as EquipmentGroup])})` : i.constraint === 'maxCornYears' ? ` (${i.detail})` : ''}`;
  return <section className="jr-card farm-constraints" aria-label={t('Your farm constraints')}>
   <h2>{t(report.status === 'infeasible' ? 'No rotation satisfies these constraints.' : 'Your farm constraints')}</h2>
   <p>{t(report.status === 'infeasible' ? 'No limits were relaxed. Review the limits below and try again.' : 'These limits were applied before scoring every rotation.')}</p>
-  {report.status === 'infeasible' && <><p>{t('Constraints rejecting otherwise feasible rotations (not a minimal conflict set):')}</p><ul>{report.binding.map(code => <li key={code}>{t(REASONS[code])}</li>)}</ul></>}
+  {report.status === 'infeasible' && <><p>{t('Constraints rejecting otherwise feasible rotations (not a minimal conflict set):')}</p><ul>{(report.bindingIssues ?? report.binding.map(constraint => ({ constraint }))).map((i, n) => <li key={n}>{issue(i)}</li>)}</ul></>}
   {!!report.excludedCrops.length && <><h3>{t('Why crops were excluded')}</h3><ul>{report.excludedCrops.map(x => <li key={x.crop}>{x.reasons.map(issue).join('; ')}</li>)}</ul></>}
   {report.water && <><p>{t('Seasonal irrigation cap: {inches} inches per planned year.', { inches: report.water.seasonalCapInches.toFixed(2) })}</p>{report.water.wellCapInches !== undefined && <p>{t('Gross seasonal inches = gpm × 60 × hours/day × days ÷ (27,154 × acres). The smaller of allocation and well capacity applies. Losses and peak-day delivery are not modeled.')} <a href={report.water.source}>{t('K-State water conversion')}</a></p>}</>}
   {report.water?.formula && <p><code>{report.water.formula}</code></p>}

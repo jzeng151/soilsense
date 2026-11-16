@@ -1,0 +1,90 @@
+{
+  "recordedAt": "2026-11-16T01:43:36.676647+00:00",
+  "builtRevision": "a5622f7800ebc25b6f70cf92f3758e90bb881540",
+  "baseURL": "http://127.0.0.1:8805",
+  "browser": "HeadlessChrome/145.0.0.0 Windows x64",
+  "scope": "Constraints panel/result card only; not whole-app conformance certification",
+  "tags": [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa"
+  ],
+  "keyboard": {
+    "summaryTab": "corn exclusion checkbox",
+    "space": "checked corn exclusion",
+    "tab": "soybean exclusion checkbox",
+    "shiftTab": "corn exclusion checkbox"
+  },
+  "scans": [
+    {
+      "language": "en",
+      "viewportWidth": 375,
+      "state": "expanded crop constraints",
+      "version": "4.14.0",
+      "violations": [],
+      "incomplete": [],
+      "passes": [
+        "aria-allowed-attr",
+        "aria-conditional-attr",
+        "aria-prohibited-attr",
+        "aria-valid-attr-value",
+        "aria-valid-attr",
+        "button-name",
+        "color-contrast",
+        "duplicate-id-aria",
+        "form-field-multiple-labels",
+        "label",
+        "link-in-text-block",
+        "link-name",
+        "nested-interactive",
+        "summary-name"
+      ]
+    },
+    {
+      "language": "es",
+      "viewportWidth": 375,
+      "state": "real infeasible result; require/exclude corn",
+      "version": "4.14.0",
+      "violations": [],
+      "incomplete": [],
+      "passes": [
+        "aria-allowed-attr",
+        "aria-conditional-attr",
+        "aria-prohibited-attr",
+        "aria-valid-attr-value",
+        "aria-valid-attr",
+        "color-contrast",
+        "list",
+        "listitem"
+      ]
+    },
+    {
+      "language": "es",
+      "viewportWidth": 320,
+      "state": "expanded well fields; explicit 500 gpm, 125 acres, 100 days, 20 hours/day; 3 inch allocation",
+      "version": "4.14.0",
+      "violations": [],
+      "incomplete": [],
+      "passes": [
+        "aria-allowed-attr",
+        "aria-conditional-attr",
+        "aria-deprecated-role",
+        "aria-prohibited-attr",
+        "aria-required-attr",
+        "aria-roles",
+        "aria-valid-attr-value",
+        "aria-valid-attr",
+        "button-name",
+        "color-contrast",
+        "duplicate-id-aria",
+        "form-field-multiple-labels",
+        "label",
+        "link-in-text-block",
+        "link-name",
+        "nested-interactive",
+        "summary-name"
+      ]
+    }
+  ]
+}

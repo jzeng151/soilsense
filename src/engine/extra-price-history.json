@@ -1,0 +1,30 @@
+{
+  "id": "ks-extra-2016-2025-v1",
+  "retrievedAt": "2026-11-16T02:02:48.120264+00:00",
+  "attribution": "USDA NASS Quick Stats",
+  "note": "Exact product Kansas marketing-year annual prices only. Incomplete or suppressed series remain fixed, not interpolated.",
+  "records": [],
+  "probes": [
+    {
+      "crop": "cotton",
+      "query": "https://quickstats.nass.usda.gov/api/api_GET/?source_desc=SURVEY&sector_desc=CROPS&group_desc=FIELD+CROPS&statisticcat_desc=PRICE+RECEIVED&agg_level_desc=STATE&state_alpha=KS&freq_desc=ANNUAL&year__GE=2016&year__LE=2025&short_desc=COTTON%2C+UPLAND+-+PRICE+RECEIVED%2C+MEASURED+IN+%24+%2F+LB&domain_desc=TOTAL&format=JSON",
+      "rawSha256": "f0b4177d031b81b3a2d4cb8a231a4380d527554d23721c1ed8f6fe94c53d130e",
+      "rowCount": 10,
+      "complete": false
+    },
+    {
+      "crop": "sunflower",
+      "query": "https://quickstats.nass.usda.gov/api/api_GET/?source_desc=SURVEY&sector_desc=CROPS&group_desc=FIELD+CROPS&statisticcat_desc=PRICE+RECEIVED&agg_level_desc=STATE&state_alpha=KS&freq_desc=ANNUAL&year__GE=2016&year__LE=2025&short_desc=SUNFLOWER%2C+OIL+TYPE+-+PRICE+RECEIVED%2C+MEASURED+IN+%24+%2F+CWT&domain_desc=TOTAL&format=JSON",
+      "rawSha256": "76a7838aeec21979abab3d819ec5c39f0126bdb856601c4e55741f6fa73c15a4",
+      "rowCount": 10,
+      "complete": false
+    },
+    {
+      "crop": "sunflower_confection",
+      "query": "https://quickstats.nass.usda.gov/api/api_GET/?source_desc=SURVEY&sector_desc=CROPS&group_desc=FIELD+CROPS&statisticcat_desc=PRICE+RECEIVED&agg_level_desc=STATE&state_alpha=KS&freq_desc=ANNUAL&year__GE=2016&year__LE=2025&short_desc=SUNFLOWER%2C+NON-OIL+TYPE+-+PRICE+RECEIVED%2C+MEASURED+IN+%24+%2F+CWT&domain_desc=TOTAL&format=JSON",
+      "rawSha256": "db173ad285a10cc69e5c6332aac002696883313c83bf742d8a69fa20c2558d72",
+      "rowCount": 10,
+      "complete": false
+    }
+  ]
+}

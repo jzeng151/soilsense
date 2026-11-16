@@ -2,6 +2,9 @@
 // against trend-adjusted NASA weather history, soil, economics and farmer priority.
 
 import type { CoverId, CropId, Goal, PlanYear, Priority, RotationPlan, ScoreBreakdown, SoilProfile } from "../shared/types";
+import { constraintWater } from '../shared/constraintWater';
+import type { ConstraintCode, ConstraintIssue, ConstraintReport, FarmerConstraints } from '../shared/constraints';
+import { cropConstraintIssues, normalizeConstraints, sequenceConstraintIssues } from './constraints';
 import { clamp, round } from "../shared/units";
 import {
   coldDays,
@@ -327,10 +330,6 @@ export function evaluateCropClimate(
 }
 
 // ---------------- Plan enumeration and scoring ----------------
-
-import { constraintWater } from '../shared/constraintWater';
-import type { ConstraintReport, FarmerConstraints } from '../shared/constraints';
-import { cropConstraintIssues, normalizeConstraints, sequenceConstraintIssues } from './constraints';
 
 export interface EngineInput {
   constraints?: FarmerConstraints;
@@ -775,8 +774,8 @@ export function currentPracticeSequence(history: CropId[], length = 3): CropId[]
 }
 
 export interface EngineResult {
-  priceSensitivity?: PriceSensitivity;
   constraints?: ConstraintReport;
+  priceSensitivity?: PriceSensitivity;
   plans: RotationPlan[];
   currentPractice: RotationPlan | null;
   evaluated: number;
@@ -792,10 +791,14 @@ export function runEngine(input: EngineInput, topN = 3): EngineResult {
   );
 
   const constraints = normalizeConstraints(input.constraints);
-  const binding = new Set<import('../shared/constraints').ConstraintCode>();
+  const binding = new Set<ConstraintCode>();
+  const bindingIssues = new Map<string, ConstraintIssue>();
   if (constraints) sequences = sequences.filter(seq => {
     const issues = sequenceConstraintIssues(seq, input.history, constraints);
-    for (const issue of issues) binding.add(issue.constraint);
+    for (const issue of issues) {
+      binding.add(issue.constraint);
+      bindingIssues.set(`${issue.constraint}:${issue.crop ?? ""}:${issue.detail ?? ""}`, issue);
+    }
     return !issues.length;
   });
   const goals = selectedGoals(input.goals);
@@ -911,17 +914,16 @@ export function runEngine(input: EngineInput, topN = 3): EngineResult {
       : null,
     evaluated: raws.length,
 
-    ...(priceSensitivity ? {priceSensitivity} : {}),
-
     ...(constraints ? { constraints: {
       status: plans.length ? 'satisfied' as const : 'infeasible' as const,
       ...(waterConstraint ? { water: waterConstraint } : {}),
       binding: plans.length ? [] : [...binding].sort(),
+      ...(!plans.length ? { bindingIssues: [...bindingIssues.values()] } : {}),
       excludedCrops: crops.map(crop => ({ crop, reasons: cropConstraintIssues(crop, constraints) })).filter(x => x.reasons.length),
       currentPracticeViolations: baselineSeq ? sequenceConstraintIssues(baselineSeq, input.history, constraints) : [],
       ...(!plans.length ? { message: `No rotation satisfies these constraints: ${[...binding].join(', ') || 'crop availability and rotation rules'}. No constraints were relaxed.` } : {}),
     } } : {}),
-
+    ...(priceSensitivity ? {priceSensitivity} : {}),
   };
 }
 

@@ -182,11 +182,19 @@ function Progress({ step, canGo, go }: { step: Step; canGo: (s: Step) => boolean
   );
 }
 
-export function App() {
-  return <MainFlow />;
+export interface PlannerWorkspaceProps {
+  initialLocation?: { lat: number; lon: number };
+  initialField?: FieldBoundary;
+  embedded?: boolean;
+  onPlanChange?: (plan: PlanResponse | null) => void;
+  onChooseLocation?: () => void;
+}
+export function App(props: PlannerWorkspaceProps = {}) {
+  return <MainFlow {...props} />;
 }
 
-function MainFlow() {
+function MainFlow({ initialLocation, initialField, embedded = false, onPlanChange, onChooseLocation }: PlannerWorkspaceProps) {
+  const MainTag = embedded ? "section" : "main";
   const { language, setLanguage, t } = useI18n();
   const [step, setStep] = useState<Step>("field");
   const [point, setPoint] = useState<{ lat: number; lon: number } | null>(null);
@@ -229,12 +237,13 @@ function MainFlow() {
   const top = useRef<HTMLDivElement>(null);
 
   const go = useCallback((s: Step) => {
+    if (embedded && s === "field" && onChooseLocation) { onChooseLocation(); return; }
     setStep(s);
     requestAnimationFrame(() => {
       top.current?.focus({ preventScroll: true });
       top.current?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
     });
-  }, []);
+  }, [embedded, onChooseLocation]);
 
   const pick = useCallback(async (lat: number, lon: number) => {
     const p = { lat: Math.round(lat * 1e5) / 1e5, lon: Math.round(lon * 1e5) / 1e5 };
@@ -264,6 +273,22 @@ function MainFlow() {
       if (fieldAbort.current === ctrl) setFieldLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (!initialLocation) return;
+    let active = true;
+    setExplicitField(initialField ?? null);
+    setSelectedFields(initialField ? [initialField] : []);
+    void pick(initialLocation.lat, initialLocation.lon).then(ok => {
+      if (active && ok) go("questions");
+    });
+    return () => { active = false; fieldAbort.current?.abort(); planAbort.current?.abort(); };
+  }, [initialLocation?.lat, initialLocation?.lon, initialField?.id, pick, go]);
+
+  useEffect(() => { onPlanChange?.(plan); }, [plan, onPlanChange]);
+  useEffect(() => {
+    setPlan(null);
+  }, [water, priority, constraints, goals, prices, measurements, thisYear, planningField?.id, fieldHistoryEdits]);
 
   const pickPoint = useCallback((lat:number,lon:number) => {
     // An explicit free-point/demo pick leaves field mode, preventing history/measurement mixups.
@@ -438,7 +463,7 @@ function MainFlow() {
         </div>
       </header>
 
-      <main className="jr-main" ref={top} tabIndex={-1} aria-label={t("Crop rotation planner")}>
+      <MainTag className="jr-main" ref={top} tabIndex={-1} aria-label={t("Crop rotation planner")}>
         <Progress step={step} canGo={canGo} go={go} />
         <Glossary />
 
@@ -503,7 +528,7 @@ function MainFlow() {
               ))}
             </p>
 
-            <FieldWatchCard />
+            {!embedded && <FieldWatchCard />}
             <MyFieldsPanel fields={selectedFields} />
 
             {point && (
@@ -890,7 +915,7 @@ function MainFlow() {
             )}
           </section>
         )}
-      </main>
+      </MainTag>
       <footer className="foot">{t("Soil Sense · A crop consultant in every farmer's pocket · Data from NASA and USDA")}</footer>
     </div>
   );

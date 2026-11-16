@@ -1,4 +1,6 @@
 export const assistantMessages = {
+  "This conversation belongs to an earlier field plan. Start a new chat to ask about the current plan.": "Esta conversación pertenece a un plan anterior. Inicia una conversación nueva para preguntar sobre el plan actual.",
+  "Build a rotation in Explore before asking about this field.": "Crea una rotación en Explorar antes de preguntar sobre esta parcela.",
   "Details": "Detalles",
   "You": "Tú",
   "Sprout": "Sprout",

@@ -84,22 +84,21 @@ async function json(page, path) {
 try {
   await smoke('landing-language', async page => {
     await visit(page);
-    await page.locator('.map.leaflet-container').waitFor();
+    await page.locator('.explore-rail').waitFor();
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
-    // One language switcher per view: the planner header owns it; the sidebar copy is hidden on this route.
-    assert.equal(await page.getByRole('group', { name: 'Language', exact: true }).count(), 1, 'Exactly one language switcher on the planner');
-    await page.locator('#content').getByRole('button', { name: 'ES Español', exact: true }).click();
+    await page.locator('.explore-rail .er-code').click();
     await until(async () => await page.locator('html').getAttribute('lang') === 'es', 'Spanish html lang');
-    await page.getByText('Hola, soy Sprout', { exact: true }).waitFor();
-    await page.locator('#content').getByRole('button', { name: 'EN English', exact: true }).click();
+    await page.getByRole('heading', { name: '¿Cuál es tu código postal?' }).waitFor();
+    await page.locator('.explore-rail .er-code').click(); // Korean
+    await page.locator('.explore-rail .er-code').click(); // English
     await until(async () => await page.locator('html').getAttribute('lang') === 'en', 'English html lang');
-    await page.getByText("Hi, I'm Sprout", { exact: true }).waitFor();
   });
 
   await smoke('kansas-plan', async (page, result) => {
-    await visit(page);
-    await page.getByRole('button', { name: 'Kansas', exact: true }).click();
-    await page.getByRole('button', { name: 'Yes, this is my field' }).click({ timeout: 120_000 });
+    await page.goto(new URL('#/explore?lat=38.1095&lon=-100.706&label=Finney', base).href);
+    await page.getByRole('heading', { name: 'Three quick questions' }).waitFor({ timeout: 120_000 });
+    await page.getByRole('group', { name: 'Crop grown this season' }).getByRole('button', { name: 'Corn', exact: true }).click();
+    await page.getByRole('group', { name: 'Water supply' }).getByRole('button').last().click();
     await page.getByRole('button', { name: 'Show my plan' }).click();
     await page.locator('.jr-answer').waitFor({ timeout: 180_000 });
     assert((await page.locator('.jr-answer h1').innerText()).trim(), 'Plan headline is empty');

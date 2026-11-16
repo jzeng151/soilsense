@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState, lazy, Suspense } from "react";
 import { landingRedirect } from "./components/explore/location";
 const ExplorePage = lazy(() => import('./pages/ExplorePage').then(m => ({ default: m.ExplorePage })));
 const DemoFarmsPage = lazy(() => import('./pages/DemoFarmsPage').then(m => ({ default: m.DemoFarmsPage })));
-import { App } from "./App";
+import { FieldWatchPage } from "./pages/FieldWatchPage";
 import { LanguageProvider } from "./i18n";
 import { HowItWorksPage } from "./pages/HowItWorksPage";
 import { DocsAdmin } from "./components/DocsAdmin";
@@ -20,6 +20,7 @@ import { getMe, SIGNED_OUT_EVENT, signOut, type User } from "./auth";
 type WorkspaceRoute = Route | "admin/docs";
 const routeFromHash = (): WorkspaceRoute => {
   const h = window.location.hash;
+  if (h === "#/field-watch" || h === "#/planner") return "planner";
   if (h.startsWith("#/explore")) return "explore";
   if (h === "#/demo") return "demo";
   if (h === "#/admin/docs") return "admin/docs";
@@ -69,6 +70,8 @@ export function Shell() {
 function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSignedIn: (u: User) => void; onSignOut: () => void }) {
   const { t: tx } = useI18n();
   const [route, setRoute] = useState<WorkspaceRoute>(routeFromHash);
+  const [exploreVisited, setExploreVisited] = useState(route === "explore");
+  useEffect(() => { if (route === "explore") setExploreVisited(true); }, [route]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [exploreLanding, setExploreLanding] = useState(false);
   useEffect(() => {
@@ -99,14 +102,18 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
   const go = useCallback((r: Route) => {
     setRoute(r);
     setSidebarOpen(false);
-    const hash = r === "planner" ? (exploreLanding ? "#/planner" : "#/") : `#/${r}`;
+    const hash = r === "planner" ? "#/field-watch" : `#/${r}`;
     if (window.location.hash !== hash) window.location.hash = hash;
   }, [exploreLanding]);
 
 
-  if (route === 'explore' || route === 'demo') return <Suspense fallback={<main aria-busy="true">Soil Sense…</main>}>{route === 'explore' ? <ExplorePage/> : <DemoFarmsPage/>}</Suspense>;
-
   return (
+    <>
+    {/* Keep the selected field, exact plan and active tab when opening full chat. */}
+    {(exploreVisited || route === "explore") && <div hidden={route !== "explore"}>
+      <Suspense fallback={<main aria-busy="true">Soil Sense…</main>}><ExplorePage active={route === "explore"} /></Suspense>
+    </div>}
+    {route === "demo" ? <Suspense fallback={<main aria-busy="true">Soil Sense…</main>}><DemoFarmsPage /></Suspense> : route === "explore" ? null : (
     <div className={`shell route-${route}`}>
       {/* WCAG 2.4.1: let keyboard and screen-reader users jump past the sidebar. */}
       <a className="skip-link" href="#content" onClick={(e) => { e.preventDefault(); document.getElementById("content")?.focus(); }}>
@@ -161,10 +168,12 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
                 <path d="M4 7h16M4 12h16M4 17h16" />
               </svg>
             </button>
-            <App />
+            <FieldWatchPage />
           </>
         )}
       </div>
     </div>
+    )}
+    </>
   );
 }

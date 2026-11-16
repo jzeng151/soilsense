@@ -29,7 +29,7 @@ it("reads changed language and field context on the next turn without resetting 
     expect(payloads[0]?.language).toBe("en"); expect(JSON.stringify(payloads[0])).toContain("Ames");
     await click(1); await click(2);
     expect(payloads[1]?.language).toBe("es"); expect(JSON.stringify(payloads[1])).toContain("field-b"); expect(JSON.stringify(payloads[1])).not.toContain("Ames");
-    expect(payloads[1]?.messages).toHaveLength(2);
+    expect(payloads[1]?.messages).toHaveLength(1);
     expect(host.textContent).not.toContain("Selected location and client plan context"); expect(fetcher).toHaveBeenCalledTimes(2);
   } finally { await act(async () => root.unmount()); host.remove(); vi.unstubAllGlobals(); localStorage.clear(); }
 });

@@ -6,7 +6,8 @@ import { resolve, extname } from 'node:path';
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
-const plan = { generatedAt: '2026-11-15T00:00:00Z', explanation: { summary: 'Browser fixture plan' }, facts: [{ text: 'Browser fixture soil fact', source: 'Fixture' }], assumptions: ['Rain-fed fixture'], plans: [{ years: [{ year: 2027, crop: 'oats', cropName: 'Oats' }] }] };
+const plan = JSON.parse(await readFile('test/fixtures/plan-finney-default-rain.json', 'utf8'));
+plan.facts.unshift({ text: 'Browser fixture soil fact', source: 'Smoke fixture' });
 let requests = [];
 let live;
 const event = (res, e) => res.write(`data: ${JSON.stringify(e)}\n\n`);
@@ -28,8 +29,12 @@ const server = createServer(async (req, res) => {
   if (url.pathname === '/api/auth/me') return json({ user: null });
   if (url.pathname === '/api/scout/status') return json({ configured: true, model: 'fixture', research: 'available' });
   if (url.pathname === '/api/ui/status') return json({ exploreLanding: true });
-  if (url.pathname === '/api/plan') return json(plan);
+  if (url.pathname === '/api/plan') {
+    let body = ''; for await (const chunk of req) body += chunk;
+    return json({ ...plan, request: { ...plan.request, ...JSON.parse(body) } });
+  }
   if (url.pathname === '/api/fields') return json({ fields: [] });
+  if (url.pathname === '/api/field') return json({ lat: plan.location.lat, lon: plan.location.lon, county: plan.location.county, soil: plan.soil, cropHistory: plan.cropHistory });
   if (url.pathname.startsWith('/api/')) return json({ error: 'Smoke fixture: unsupported endpoint' }, 404);
   try {
     const path = resolve('dist/web', '.' + (url.pathname === '/' ? '/index.html' : url.pathname));
@@ -46,8 +51,17 @@ try {
   const errors = []; page.on('pageerror', e => errors.push(e.message));
   // Avoid network-dependent map tiles. The actual Explore + assistant + Shell are built code.
   await page.route(/https?:\/\/(?!127\.0\.0\.1)/, route => route.abort());
-  const explore = '#/explore?lat=42.03&lon=-93.62&label=Ames';
+  const explore = '#/explore?lat=38.1095&lon=-100.706&label=Finney';
+  async function buildPlan() {
+    await page.getByRole('heading', { name: 'Three quick questions' }).waitFor();
+    await page.getByRole('group', { name: 'Crop grown this season' }).getByRole('button', { name: 'Corn', exact: true }).click();
+    await page.getByRole('group', { name: 'Water supply' }).getByRole('button').last().click();
+    await page.getByRole('button', { name: 'Show my plan', exact: true }).click();
+    await page.locator('.jr-answer').waitFor();
+    await page.getByRole('button', { name: 'Sprout', exact: true }).click();
+  }
   await page.goto(`http://127.0.0.1:8832/${explore}`);
+  await buildPlan();
   await page.getByRole('button', { name: 'Why is this rotation recommended?' }).click();
   await page.locator('.fa-thread').getByText('Smoke partial', { exact: true }).waitFor();
   await page.getByLabel('Assistant options').click();
@@ -60,7 +74,7 @@ try {
   await page.locator('.sc-thread').getByText('Smoke partial', { exact: true }).waitFor();
   assert.equal(requests.length, 1, 'navigation sends no second LLM request');
   await page.getByRole('button', { name: 'Stop', exact: true }).waitFor();
-  await page.evaluate(hash => { location.hash = hash; }, explore);
+  await page.locator('.sb-nav').getByRole('link', { name: 'Explore', exact: true }).click();
   await page.locator('.fa-thread').getByText('Smoke partial', { exact: true }).waitFor();
   await page.getByRole('button', { name: 'Stop', exact: true }).waitFor();
   finish(' completed in full chat');
@@ -87,6 +101,7 @@ try {
   await page.reload(); await page.getByRole('heading', { name: "Hi, I'm Sprout. What's growing on your field?" }).waitFor();
   assert.equal(await page.locator('.sb-chats li').count(), 0, 'Delete persists on reload');
   await page.evaluate(hash => { location.hash = hash; }, explore);
+  await buildPlan();
   await page.getByRole('button', { name: 'Why is this rotation recommended?' }).click();
   await page.locator('.fa-thread').getByText('Smoke partial', { exact: true }).waitFor();
   await page.getByLabel('Assistant options').click(); await page.getByRole('button', { name: 'Clear chat', exact: true }).click();
@@ -94,6 +109,7 @@ try {
   // Finishing a cancelled server response must not resurrect the deleted client conversation.
   finish(' must never reappear');
   await page.reload();
+  await buildPlan();
   await page.getByRole('button', { name: 'Why is this rotation recommended?' }).waitFor();
   assert.equal(await page.locator('.fa-turn').count(), 0, 'Clear during stream persists on reload');
   assert.equal(requests.length, 3, 'three explicit sends, no navigation/reload requests');

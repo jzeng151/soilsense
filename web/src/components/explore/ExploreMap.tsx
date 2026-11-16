@@ -16,6 +16,7 @@ export const MODIS_TILES =
 export const USGS_TILES =
   "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}";
 interface Props {
+  panelMode?: "plan" | "chat" | "closed";
   location: ExploreLocation | null;
   imagery: "usgs" | "modis";
   fields: FieldBoundary[];
@@ -226,7 +227,7 @@ export function ExploreMap(props: Props) {
             center: [p.lon, p.lat] as [number, number],
             zoom: p.zip ? 12 : 14,
             // Keep the field centred in the map area left visible by the floating rail and Sprout panel.
-            padding: window.innerWidth > 700 ? { top: 0, bottom: 0, left: 76, right: 416 } : { top: 0, bottom: 0, left: 56, right: 0 },
+            padding: window.innerWidth > 700 ? { top: 0, bottom: 0, left: 76, right: props.panelMode === "closed" ? 0 : Math.min(window.innerWidth - 176, props.panelMode === "plan" ? 792 : 416) } : { top: 0, bottom: 0, left: 56, right: 0 },
           }
         : {
             center: [-95, 30] as [number, number],
@@ -247,7 +248,7 @@ export function ExploreMap(props: Props) {
     const onBreakpoint = () => { if (!props.location) apply(false); };
     breakpoint.addEventListener('change', onBreakpoint);
     return () => breakpoint.removeEventListener('change', onBreakpoint);
-  }, [props.location]);
+  }, [props.location, props.panelMode]);
   useEffect(() => {
     const m = map.current;
     if (!m) return;

@@ -12,8 +12,8 @@ import "./field-assistant.css";
 const SUGGESTIONS = ["Why is this rotation recommended?", "How does limited irrigation change the plan?", "What are the soil and climate limits here?", FERTILIZER_SUGGESTION] as const;
 export function FieldAssistantContent({ context, sharedPlan, onClose, className = "" }: FieldAssistantPanelProps): JSX.Element {
   const { t, language } = useI18n();
-  const [fetchedPlan, setPlan] = useState<PlanResponse | null>(null);
-  const plan = sharedPlan !== undefined ? sharedPlan : fetchedPlan;
+  const [localPlan, setPlan] = useState<PlanResponse | null>(null);
+  const plan = sharedPlan !== undefined ? sharedPlan : localPlan;
   const [loading, setLoading] = useState(!!context);
   const [planError, setPlanError] = useState("");
   const [attempt, setAttempt] = useState(0);
@@ -29,11 +29,10 @@ export function FieldAssistantContent({ context, sharedPlan, onClose, className 
   const [jump, setJump] = useState(false);
   const timestamps = useRef(new Map<string, string>());
   const [loadedAt, setLoadedAt] = useState<string | null>(null);
-  const { messages, sendMessage, status, error, stop, clearError, clearChat: clearSession, regenerate, setFieldContext, httpError } = useScoutSession();
-  useEffect(() => { if (context) setFieldContext({ location: context, plan }); }, [context, plan, setFieldContext]);
-
+  const { messages, sendMessage, status, error, stop, clearError, clearChat: clearSession, regenerate, setFieldContext, httpError, blockedReason } = useScoutSession();
+  useEffect(() => { if (context) setFieldContext({ location: context, plan, requiresPlan: sharedPlan !== undefined }); }, [context, plan, sharedPlan, setFieldContext]);
   const busy = status === "submitted" || status === "streaming";
-  const canSend = !!context && !loading && configured === true && !busy;
+  const canSend = !!context && (sharedPlan === undefined || !!sharedPlan) && !loading && configured === true && !busy && !blockedReason;
   useEffect(() => {
     const ctrl = new AbortController(); setStatusFailed(false);
     authFetch("/api/scout/status", { signal: ctrl.signal }).then(async res => {
@@ -59,6 +58,7 @@ export function FieldAssistantContent({ context, sharedPlan, onClose, className 
     return () => ctrl.abort();
     // Location changes remount this component. Translation helpers are unstable dependencies.
   }, [attempt, language, sharedPlan]);
+
   useEffect(() => {
     for (const m of messages) if (!timestamps.current.has(m.id)) timestamps.current.set(m.id, new Date().toISOString());
     const el = scrollRef.current; if (el && pinned.current && messages.length) el.scrollTop = el.scrollHeight;
@@ -98,7 +98,7 @@ export function FieldAssistantContent({ context, sharedPlan, onClose, className 
       </div></div>
       {planError && <div role="alert" className="fa-notice"><p>{t("Could not load the plan. Please try again.")}</p><details><summary>{t("Details")}</summary>{planError}</details><button type="button" onClick={() => setAttempt(n => n + 1)}>{t("Try again")}</button></div>}
       {context && <div role="status" className="fa-status">{configured === false ? t("AI is unavailable. Your rotation and plan facts are still available below.") : statusFailed ? t("Could not check AI availability. Try again.") : configured === null ? t("Checking AI availability…") : ""}{statusFailed && <button type="button" onClick={() => setAttempt(n => n + 1)}>{t("Try again")}</button>}</div>}
-      {plan && <section className="fa-plan" aria-label={t("Top rotation")}><h3>{t("Top rotation")}</h3><p className="fa-defaults">{t("Rain-fed · Balanced priority · Model estimate, not a guarantee")}</p>
+      {plan && <section className="fa-plan" aria-label={t("Top rotation")}><h3>{t("Top rotation")}</h3><p className="fa-defaults">{sharedPlan !== undefined ? `${plan.request.water ?? (plan.request.irrigated ? "full" : "rain")} · ${plan.request.priority}` : t("Rain-fed · Balanced priority · Model estimate, not a guarantee")}</p>
         <ol className="fa-rotation">{plan.plans[0]?.years.map(y => <li key={y.year} className={`fa-crop fa-crop-${y.crop}`}><small>{y.year}</small><strong>{cropName(y.crop, language)}</strong></li>)}</ol>
         <details><summary>{t("Plan facts and assumptions")}</summary><p>{plan.explanation.summary}</p><ul>{plan.facts.map((f, i) => <li key={i}>{f.text} <small>({f.source})</small></li>)}</ul><ul>{plan.assumptions.map((a, i) => <li key={i}>{a}</li>)}</ul></details>
       </section>}
@@ -109,12 +109,13 @@ export function FieldAssistantContent({ context, sharedPlan, onClose, className 
         </div>)}
         {status === "submitted" && <p role="status">{t("Sprout is checking the NASA data…")}</p>}
       </div>
-      {error && <div role="alert" className="fa-notice"><p>{errorMessage}</p><button type="button" disabled={busy || httpError === 503} onClick={() => { clearError(); void regenerate(); }}>{t("Try again")}</button></div>}
+      {blockedReason === "archived-plan" && <p role="status">{t("This conversation belongs to an earlier field plan. Start a new chat to ask about the current plan.")}</p>}
+      {error && <div role="alert" className="fa-notice"><p>{errorMessage}</p><button type="button" disabled={busy || httpError === 503 || !!blockedReason} onClick={() => { clearError(); void regenerate(); }}>{t("Try again")}</button></div>}
       {context && !messages.length && <section className="fa-suggestions"><h3>{t("Try asking about")}</h3>{SUGGESTIONS.map(s => <button type="button" key={s} disabled={!canSend} onClick={() => send(t(s))}>{t(s)}<span aria-hidden="true"> ↗</span></button>)}</section>}
     </div>
     <footer className="fa-footer">{jump && <button type="button" className="fa-jump" onClick={() => { pinned.current = true; setJump(false); if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }}>{t("Scroll to latest")}</button>}
       <form className="fa-composer" onSubmit={e => { e.preventDefault(); send(input); }}>
-        <textarea ref={inputRef} rows={2} maxLength={4000} value={input} disabled={!context || loading || configured !== true} aria-label={t("Ask a question about your fields…")} placeholder={t("Ask a question about your fields…")} onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); send(input); } }} />
+        <textarea ref={inputRef} rows={2} maxLength={4000} value={input} disabled={!context || (sharedPlan !== undefined && !sharedPlan) || loading || configured !== true} aria-label={t("Ask a question about your fields…")} placeholder={t("Ask a question about your fields…")} onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); send(input); } }} />
         {busy ? <button type="button" className="fa-send" aria-label={t("Stop")} onClick={() => void stop()}>■</button> : <button type="submit" className="fa-send" aria-label={t("Send")} disabled={!canSend || !input.trim()}>↑</button>}
       </form><p className="fa-disclaimer">{t("Sprout can make mistakes. Check the numbers in your plan before acting on them.")}</p>
     </footer>

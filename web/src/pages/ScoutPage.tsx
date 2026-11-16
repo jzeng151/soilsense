@@ -84,7 +84,7 @@ interface Props {
 
 export function ScoutPage({ onMenu }: Props) {
   const { t: tx, text: localize, language } = useI18n();
-  const { messages, sendMessage, status, error, stop, regenerate, clearError } = useScoutSession();
+  const { messages, sendMessage, status, error, stop, regenerate, clearError, blockedReason } = useScoutSession();
   const [input, setInput] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [listening, setListening] = useState(false);
@@ -147,7 +147,7 @@ export function ScoutPage({ onMenu }: Props) {
 
   const send = (text: string) => {
     const q = text.trim();
-    if (!q || busy) return;
+    if (!q || busy || blockedReason) return;
     clearError();
     pinned.current = true;
     setShowJump(false);
@@ -219,6 +219,7 @@ export function ScoutPage({ onMenu }: Props) {
         placeholder={tx("Ask Sprout about your field")}
         aria-label={tx("Message Sprout")}
         maxLength={4000}
+        disabled={!!blockedReason}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
@@ -245,7 +246,7 @@ export function ScoutPage({ onMenu }: Props) {
           </svg>
         </button>
       ) : (
-        <button type="submit" className="sc-send" aria-label={tx("Send")} disabled={!input.trim()}>
+        <button type="submit" className="sc-send" aria-label={tx("Send")} disabled={!input.trim() || !!blockedReason}>
           {input.trim() ? (
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 19V5M5 12l7-7 7 7" />
@@ -278,6 +279,7 @@ export function ScoutPage({ onMenu }: Props) {
       </header>
 
       {model?.research === "unavailable" && <p className="sc-research-state" role="status">{tx("Research unavailable: retrieval bindings are not configured. No research citations can be verified until search is available.")}</p>}
+      {blockedReason && <p role="status">{tx(blockedReason === "plan-required" ? "Build a rotation in Explore before asking about this field." : "This conversation belongs to an earlier field plan. Start a new chat to ask about the current plan.")}</p>}
 
       {empty ? (
         <div className="sc-hero">
@@ -322,7 +324,7 @@ export function ScoutPage({ onMenu }: Props) {
             {error && (
               <div className="sc-msg sc-bot sc-err">
                 <p>{localize(errorText(error))}</p>
-                <button type="button" className="sc-retry" onClick={() => void regenerate()}>{tx("Try again")}</button>
+                <button type="button" className="sc-retry" disabled={!!blockedReason} onClick={() => void regenerate()}>{tx("Try again")}</button>
               </div>
             )}
           </div>

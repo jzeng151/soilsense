@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import type { Map as GLMap } from "maplibre-gl";
 import { ExploreRail } from "../components/explore/ExploreRail";
 import { ExploreMap } from "../components/explore/ExploreMap";
@@ -9,14 +9,19 @@ import {
 import { LogoMark } from "../components/Logo";
 import { useI18n } from "../i18n";
 import type { FieldBoundary } from "../../../src/shared/fields";
+import { App } from "../App";
+import { MyFieldsPanel } from "../components/MyFieldsPanel";
+import type { PlanResponse } from "../../../src/shared/types";
 import "./explore.css";
+import "./field-workspace.css";
+import "./explore-sky.css";
 // U2 owns this implementation; never duplicate the assistant here.
 const Assistant = lazy(() =>
   import("../components/assistant/FieldAssistantPanel").then((m) => ({
     default: m.FieldAssistantPanel,
   })),
 );
-export function ExplorePage() {
+export function ExplorePage({ active = true }: { active?: boolean } = {}) {
   const { t } = useI18n();
   const [location, setLocation] = useState<ExploreLocation | null>(() =>
     locationFromHash(window.location.hash),
@@ -39,14 +44,21 @@ export function ExplorePage() {
     [fieldsUnavailable, setFieldsUnavailable] = useState(false);
   const [assistantOpen, setAssistantOpen] = useState(true),
     [mapFailed, setMapFailed] = useState(false);
+  const [workspaceTab, setWorkspaceTab] = useState<"plan" | "chat">("plan");
+  const [sharedPlan, setSharedPlan] = useState<PlanResponse | null>(null);
+  const activeField = selected.length === 1 ? fields.find(f => f.id === selected[0]) : undefined;
+  const target = activeField ? activeField.centroid : location;
+  const sessionKey = `${location?.lat}:${location?.lon}:${activeField?.id ?? "point"}`;
+  useEffect(() => { setSharedPlan(null); setWorkspaceTab("plan"); }, [sessionKey]);
   const map = useRef<GLMap | null>(null),
     zipInput = useRef<HTMLInputElement>(null),
     lookup = useRef(0);
   useEffect(() => {
     const f = () => {
+      if (!window.location.hash.startsWith("#/explore")) return;
       const p = locationFromHash(window.location.hash);
-      setLocation(p);
-      setSelected([]);
+      // A bare Explore navigation returns to the existing field, not a blank globe.
+      if (p) setLocation(previous => previous?.lat === p.lat && previous?.lon === p.lon ? previous : p);
     };
     window.addEventListener("hashchange", f);
     return () => window.removeEventListener("hashchange", f);
@@ -93,6 +105,7 @@ export function ExplorePage() {
         });
     return () => c.abort();
   }, [location]);
+  const chooseLocation = useCallback(() => { setEditing(true); setAssistantOpen(false); }, []);
   function choose(p: ExploreLocation) {
     setLocation(p);
     setEditing(false);
@@ -185,13 +198,14 @@ export function ExplorePage() {
   );
   return (
     <main
-      id="content"
+      id={active ? "content" : undefined}
       tabIndex={-1}
       className={`explore-page ${location ? "has-location" : "is-globe"} ${assistantOpen ? "assistant-open" : ""}`}
     >
       <ExploreRail onLayers={() => setLayers((v) => !v)} />
       <div className="explore-map-area">
         <ExploreMap
+          panelMode={assistantOpen ? workspaceTab : "closed"}
           location={location}
           imagery={imagery}
           fields={fields}
@@ -390,16 +404,32 @@ export function ExplorePage() {
           </button>
         )}
       </div>
-      {location && assistantOpen && (
-        <aside className="explore-assistant">
-          <Suspense fallback={<p>{t("Sprout loading…")}</p>}>
-            <Assistant
-              context={{ ...location, selectedFieldIds: selected }}
-              onClose={() => setAssistantOpen(false)}
-            />
-          </Suspense>
+      {location && (
+        <aside className={`explore-assistant explore-workspace ${workspaceTab === "plan" ? "is-planning" : ""}`} hidden={!assistantOpen} aria-label={t("Field workspace")}>
+          <div className="workspace-tabs" role="group" aria-label={t("Field workspace")}>
+            <button type="button" aria-pressed={workspaceTab === "plan"} onClick={() => setWorkspaceTab("plan")}>{t("Rotation options")}</button>
+            <button type="button" aria-pressed={workspaceTab === "chat"} onClick={() => setWorkspaceTab("chat")}>Sprout</button>
+            <button type="button" onClick={() => setAssistantOpen(false)} aria-label={t("Close assistant")}>×</button>
+          </div>
+          <div className="workspace-planner" hidden={workspaceTab !== "plan"}>
+            <App key={sessionKey} embedded initialLocation={target ?? undefined} initialField={activeField} onPlanChange={setSharedPlan} onChooseLocation={chooseLocation} />
+            <MyFieldsPanel fields={fields.filter(f => selected.includes(f.id))} />
+          </div>
+          <div className="workspace-chat" hidden={workspaceTab !== "chat"}>
+            {!sharedPlan && <p role="status" className="workspace-plan-notice">{t("Build a rotation in Rotation options first. Sprout will use that exact plan and your settings.")}</p>}
+            <Suspense fallback={<p>{t("Sprout loading…")}</p>}>
+              <Assistant key={sessionKey} sharedPlan={sharedPlan}
+                context={{ ...location, ...(target ?? {}), label: activeField?.name || location.label, selectedFieldIds: selected }}
+              />
+            </Suspense>
+          </div>
         </aside>
       )}
+      {!location && <p className="explore-sky-credit">
+        <a href="https://www.eso.org/public/images/eso0932a/" target="_blank" rel="noreferrer">ESO/S. Brunier</a>
+        {" · "}<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>
+        {" · "}{t("Cropped to fit; darkened")}
+      </p>}
     </main>
   );
 }

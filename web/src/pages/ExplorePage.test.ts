@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { LanguageProvider, LANGUAGE_STORAGE_KEY } from '../i18n';
 import { ExplorePage } from './ExplorePage';
+vi.mock('../App',()=>({App:()=>createElement('div',{'data-testid':'planner-inputs'},'Planner inputs')}));
 vi.mock('../components/explore/ExploreMap',()=>({ExploreMap:()=>createElement('div',{'data-testid':'map'})}));
 vi.mock('../components/assistant/FieldAssistantPanel',()=>({FieldAssistantPanel:({context}:{context:{label:string}})=>createElement('div',{'data-testid':'assistant'},context.label)}));
 Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true});
@@ -16,6 +17,9 @@ it.each(['en','es'] as const)('renders the ZIP entry and labeled map controls in
     await act(async()=>root.render(createElement(LanguageProvider,null,createElement(ExplorePage))));
     expect(el.querySelector('h2')?.textContent).toBe(language==='es'?'¿Cuál es tu código postal?':"What's your ZIP code?");
     expect(el.querySelector('input')?.getAttribute('inputmode')).toBe('numeric');
+    expect(el.querySelector('.explore-sky-credit a')?.textContent).toBe('ESO/S. Brunier');
+    expect(el.querySelector('.explore-sky-credit a')?.getAttribute('href')).toBe('https://www.eso.org/public/images/eso0932a/');
+    expect(el.querySelector('.explore-sky-credit a[href="https://creativecommons.org/licenses/by/4.0/"]')).not.toBeNull();
     expect(el.querySelector('button[aria-label="'+(language==='es'?'Acercar':'Zoom in')+'"]')).not.toBeNull();
     await act(async()=>el.querySelector('form')!.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true})));
     expect(fetcher).not.toHaveBeenCalled();

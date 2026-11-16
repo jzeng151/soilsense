@@ -1,0 +1,6 @@
+.sensor-fit { min-width: 0; }
+.sensor-fit table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: .85rem; }
+.sensor-fit caption { text-align: left; font-weight: 700; padding: .6rem 0; }
+.sensor-fit th, .sensor-fit td { padding: .5rem .3rem; text-align: left; vertical-align: top; overflow-wrap: anywhere; border-bottom: 1px solid #adb8ad; }
+.sensor-fit small { display: block; font-size: .8rem; margin-top: .25rem; }
+@media(max-width: 400px) { .sensor-fit th, .sensor-fit td { padding: .4rem .15rem; } }

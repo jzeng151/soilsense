@@ -1,4 +1,5 @@
 import "./i18n.css";
+import { factText } from "./i18n-facts";
 import { useI18n, translate, translateKnown, cropName } from "./i18n";
 import type { Language, TranslationKey } from "./i18n";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -136,6 +137,7 @@ function soilName(name: string | undefined): string | undefined {
 
 /** "Grow soybean in 2027, corn in 2028, then soybean in 2029." */
 function planSentence(p: RotationPlan, language: Language): string {
+  if (language === "ko") return `다음 순서를 권장합니다: ${p.years.map(y => `${y.year}년 ${cropName(y.crop, language)}${y.crop === "fallow" ? "" : " 재배"}`).join(", 이후 ")}.`;
   if (language === "es") {
     const parts = p.years.map((y) => y.crop === "fallow" ? `dejar la parcela en barbecho en ${y.year}` : `cultivar ${cropName(y.crop, language).toLowerCase()} en ${y.year}`);
     return `Recomendamos ${parts.slice(0, -1).join(", ")}${parts.length > 1 ? " y después " : ""}${parts.at(-1)}.`;
@@ -319,7 +321,8 @@ function MainFlow() {
     try {
       const best = plan.plans[0];
       const r = await askQuestion({
-        question,
+              language,
+              question,
         planLabel: best?.label ?? "",
         summary: plan.explanation.summary,
         facts: plan.facts
@@ -378,6 +381,7 @@ function MainFlow() {
           <button type="button" lang="en" aria-label="EN English" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>EN</button>
           <span aria-hidden="true"> / </span>
           <button type="button" lang="es" aria-label="ES Español" aria-pressed={language === "es"} onClick={() => setLanguage("es")}>ES</button>
+          <button type="button" lang="ko" aria-label="한국어" aria-pressed={language === "ko"} onClick={() => setLanguage("ko")}>한국어</button>
         </div>
       </header>
 
@@ -515,7 +519,7 @@ function MainFlow() {
               <legend>
                 <span className="jr-qn">2</span> {t("How is it watered?")}
               </legend>
-              <p className="jr-note">{language === "es" ? t("Check your irrigation allocation; the model allowance is not measured pumping or a legal water right.") : <>Check your <Definition term="irrigation-allocation" />; the model allowance is not measured pumping or a legal water right.</>}</p>
+              <p className="jr-note">{language !== "en" ? t("Check your irrigation allocation; the model allowance is not measured pumping or a legal water right.") : <>Check your <Definition term="irrigation-allocation" />; the model allowance is not measured pumping or a legal water right.</>}</p>
               <div className="jr-tiles jr-tiles-3" role="group" aria-label={t("Water supply")}>
                 {(["rain", "limited", "full"] as WaterLevel[]).map((v) => (
                   <button key={v} type="button" role="button" aria-pressed={water === v} className={water === v ? "on" : ""} onClick={() => setWater(v)}>
@@ -655,7 +659,7 @@ function MainFlow() {
                   <h2 className="jr-h2">{t("Why we suggest this")}</h2>
                   <ul className="reasons">
                     {topReasons(plan.facts).map((f) => (
-                      <li key={f.id + f.text}>{plain(f.text)}</li>
+                      <li key={f.id + f.text}>{factText(plain(f.text), language)}</li>
                     ))}
                   </ul>
                 </div>
@@ -755,7 +759,7 @@ function MainFlow() {
                   <summary>{t("All the reasons")} ({plan.facts.length})</summary>
                   <ul className="reasons">
                     {plan.facts.map((f) => (
-                      <li key={f.id + f.text}>{plain(f.text)}</li>
+                      <li key={f.id + f.text}>{factText(plain(f.text), language)}</li>
                     ))}
                   </ul>
                 </details>

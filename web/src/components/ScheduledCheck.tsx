@@ -1,3 +1,4 @@
+import { LANGUAGE_LOCALES, type Language } from "../../../src/shared/language";
 import { watchText, useI18n } from "../i18n";
 // Scheduled check by a field's own Cloudflare Agent (Durable Object): the visitor asks for a check, the agent
 // runs it about 45 s later on Cloudflare whether or not this page is open, and the result is saved there.
@@ -50,8 +51,8 @@ const CROP_NAME: Record<string, string> = { corn: "Corn", soybean: "Soybean", wi
 const MODE_LABEL: Record<AgentRun["mode"], string> = { live: "Current conditions", replay: "Historical replay", weekly: "Weekly check", window: "Crop window opened" };
 
 const LABEL: Record<Status, string> = { pending: "Scheduled", ok: "OK", watch: "Watch", dry: "Dry spell", insufficient: "No data", inactive: "Off season", error: "Error" };
-const fmtDay = (t: number, language: "en" | "es") => new Date(t).toLocaleString(language === "es" ? "es-US" : "en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
-const fmtTime = (t: number, language: "en" | "es") => new Date(t).toLocaleTimeString(language === "es" ? "es-US" : "en-US", { hour: "numeric", minute: "2-digit", second: "2-digit" });
+const fmtDay = (t: number, language: Language) => new Date(t).toLocaleString(LANGUAGE_LOCALES[language], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
+const fmtTime = (t: number, language: Language) => new Date(t).toLocaleTimeString(LANGUAGE_LOCALES[language], { hour: "numeric", minute: "2-digit", second: "2-digit" });
 
 export function ScheduledCheck() {
   const { t: tx, text: localize, language } = useI18n();

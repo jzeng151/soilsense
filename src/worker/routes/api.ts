@@ -1,3 +1,4 @@
+import { parseLanguage, responseLanguageInstruction } from "../../shared/language";
 import { generateAI, type AiRunner } from "../lib/ai";
 import { Hono, type Handler, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
@@ -104,7 +105,7 @@ export function validatePlanRequest(body: unknown): PlanRequest | string {
     if (new Set(b.goals).size !== b.goals.length) return "goals must be distinct";
     goals = b.goals as Goal[];
   }
-  const language = b.language === "es" ? "es" : "en";
+  const language = parseLanguage(b.language);
   // Water beyond rain: "rain" | "limited" | "full". Older clients send only `irrigated`.
   if (b.water !== undefined && b.water !== "rain" && b.water !== "limited" && b.water !== "full") return 'water must be "rain", "limited" or "full"';
   const water = (b.water as "rain" | "limited" | "full" | undefined) ?? (b.irrigated === true ? "full" : "rain");
@@ -229,6 +230,7 @@ api.post("/plan", async (c) => {
 
 // ---- "Ask about this plan": answers grounded only in the plan's own facts. ----
 interface AskBody {
+  language?: unknown;
   question?: string;
   planLabel?: string;
   facts?: string[];
@@ -261,7 +263,7 @@ api.post("/ask", async (c) => {
     try {
       const system =
         "You are SoilSense, a farm rotation assistant. Answer the farmer's question in 2-4 plain sentences using ONLY the facts provided. " +
-        "If the facts do not answer it, say so and suggest asking their county extension agent. Never invent numbers, prices, or guarantees. Use US units.";
+        "If the facts do not answer it, say so and suggest asking their county extension agent. Never invent numbers, prices, or guarantees. Use US units. " + responseLanguageInstruction(parseLanguage(body.language));
       const user = `Recommended plan: ${String(body.planLabel ?? "").slice(0, 200)}\nSummary: ${String(body.summary ?? "").slice(0, 800)}\nFacts:\n- ${facts.join("\n- ")}\n\nQuestion: ${question}`;
       // Routed through Cloudflare AI Gateway (logs, analytics, caching). "default" is created automatically on first use.
       const out = (await generateAI(c.env.AI as unknown as AiRunner,
@@ -274,7 +276,7 @@ api.post("/ask", async (c) => {
       console.warn(JSON.stringify({ msg: "workers ai failed", err: String(err) }));
     }
   }
-  return c.json({ answer: fallbackAnswer(question, facts), source: "facts" });
+  return c.json({ answer: parseLanguage(body.language) === "ko" ? "지금은 AI 답변을 제공할 수 없습니다. 위 계획의 근거와 수치를 확인하고 지역 농업기술 보급 담당자나 농업 전문가에게 문의하세요." : fallbackAnswer(question, facts), source: "facts" });
 });
 
 api.get("/logs", async (c) => {

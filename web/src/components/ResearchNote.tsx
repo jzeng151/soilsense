@@ -13,7 +13,7 @@ export function ResearchNote({ note }: { note?: FieldResearchNote }) {
   return (
     <section aria-label={tx("Cited research note")} style={{ minWidth: 0, overflowWrap: "anywhere", marginBlock: "1rem" }}>
       <h5 style={{ marginBlock: "0.5rem" }}>{tx("Research note ·")}{" "}{localize(STATUS[note.status])}</h5>
-      <p>{language === "es" && note.template.startsWith("Research on ") ? tx("Research on {crops} in dry conditions (shown as context, not advice for this field):", { crops: note.tags.map(tag => cropText(tag, language).toLowerCase()).join(", ") }) : localize(note.template)}</p>
+      <p>{language !== "en" && note.template.startsWith("Research on ") ? tx("Research on {crops} in dry conditions (shown as context, not advice for this field):", { crops: note.tags.map(tag => cropText(tag, language).toLowerCase()).join(", ") }) : localize(note.template)}</p>
       {note.passages.length === 0 ? (
         <p>{tx("No matching research is available for this run.")}{" "}{localize(note.reason)}</p>
       ) : note.passages.slice(0, 2).map((p) => (

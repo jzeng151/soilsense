@@ -15,6 +15,7 @@ import type { PlanResponse } from "../../../src/shared/types";
 import "./explore.css";
 import "./field-workspace.css";
 import "./explore-sky.css";
+import "./explore-location-dialog.css";
 // U2 owns this implementation; never duplicate the assistant here.
 const Assistant = lazy(() =>
   import("../components/assistant/FieldAssistantPanel").then((m) => ({
@@ -107,7 +108,17 @@ export function ExplorePage() {
         });
     return () => c.abort();
   }, [location]);
-  const chooseLocation = useCallback(() => { setEditing(true); setAssistantOpen(false); }, []);
+  const locationDialog = useRef<HTMLDialogElement>(null);
+  const locationTrigger = useRef<HTMLButtonElement>(null);
+  const LocationCard = location ? "dialog" : "section";
+  useEffect(() => {
+    if (!editing || !locationDialog.current) return;
+    const dialog = locationDialog.current;
+    dialog.showModal();
+    zipInput.current?.focus();
+    return () => { dialog.close(); locationTrigger.current?.focus(); };
+  }, [editing]);
+  const chooseLocation = useCallback(() => { setEditing(true); }, []);
   function choose(p: ExploreLocation) {
     setLocation(p);
     setEditing(false);
@@ -237,9 +248,18 @@ export function ExplorePage() {
           </div>
         )}
         {(!location || editing) && (
-          <section
-            className="explore-location-card theme-canopy"
+          <LocationCard
+            ref={location ? locationDialog : undefined}
+            className={`explore-location-card theme-canopy ${location ? "explore-location-dialog" : ""}`}
             aria-label={t("Change location")}
+            onCancel={event => { event.preventDefault(); setEditing(false); }}
+            onKeyDown={event => {
+              if (!location || event.key !== "Tab") return;
+              const controls = [...event.currentTarget.querySelectorAll<HTMLElement>('input:not(:disabled), button:not(:disabled), select:not(:disabled), a[href], textarea:not(:disabled)')].filter(el => el.getClientRects().length > 0);
+              const first = controls[0], last = controls[controls.length - 1];
+              if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+              else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+            }}
           >
             <div className="explore-card-brand">
               <LogoMark size={38} /> Soil Sense
@@ -256,10 +276,11 @@ export function ExplorePage() {
                 {t("Cancel")}
               </button>
             )}
-          </section>
+          </LocationCard>
         )}
         {location && (
           <button
+            ref={locationTrigger}
             className="explore-location-chip theme-canopy"
             type="button"
             aria-expanded={editing}

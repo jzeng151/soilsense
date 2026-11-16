@@ -484,7 +484,11 @@ function MainFlow({ initialLocation, initialField, embedded = false, onPlanChang
         <Glossary />
 
         {/* ---------- Step 1: find the field ---------- */}
-        {step === "field" && (
+        {embedded && initialLocation && step === "field" && <div className="jr-card" role="status">
+          <p>{error ? t(error) : t("Looking up your field…")}</p>
+          {error && <button type="button" onClick={() => void pick(initialLocation.lat, initialLocation.lon).then(ok => { if (ok) go("questions"); })}>{t("Try again")}</button>}
+        </div>}
+        {step === "field" && (!embedded || !initialLocation) && (
           <section className="jr-card" aria-labelledby="s1">
             <div className="jr-hero">
               <Sprout mood="hello" width={96} />

@@ -1,4 +1,4 @@
-import { cropText, useI18n } from "../i18n";
+import { watchCropName, useI18n } from "../i18n";
 import type { FieldResearchNote } from "../../../src/shared/fieldResearch";
 
 const STATUS: Record<FieldResearchNote["status"], string> = {
@@ -13,7 +13,7 @@ export function ResearchNote({ note }: { note?: FieldResearchNote }) {
   return (
     <section aria-label={tx("Cited research note")} style={{ minWidth: 0, overflowWrap: "anywhere", marginBlock: "1rem" }}>
       <h5 style={{ marginBlock: "0.5rem" }}>{tx("Research note ·")}{" "}{localize(STATUS[note.status])}</h5>
-      <p>{language !== "en" && note.template.startsWith("Research on ") ? tx("Research on {crops} in dry conditions (shown as context, not advice for this field):", { crops: note.tags.map(tag => cropText(tag, language).toLowerCase()).join(", ") }) : localize(note.template)}</p>
+      <p>{note.template.startsWith("Research on ") ? tx("Research on {crops} in dry conditions (shown as context, not advice for this field):", { crops: note.tags.map(tag => watchCropName(tag, language)).join(", ") }) : localize(note.template)}</p>
       {note.passages.length === 0 ? (
         <p>{tx("No matching research is available for this run.")}{" "}{localize(note.reason)}</p>
       ) : note.passages.slice(0, 2).map((p) => (
@@ -26,7 +26,7 @@ export function ResearchNote({ note }: { note?: FieldResearchNote }) {
           </figcaption>
         </figure>
       ))}
-      <p className="fw-meta">{tx("Crop tags:")}{" "}{note.tags.map(tag => cropText(tag, language)).join(", ") || "none"}{note.cropSource && <> ({localize(note.cropSource)})</>}
+      <p className="fw-meta">{tx("Crop tags:")}{" "}{note.tags.map(tag => watchCropName(tag, language)).join(", ") || "none"}{note.cropSource && <> ({localize(note.cropSource)})</>}
         {note.retrievedAt && <>{" "}{tx("· Retrieved")}{" "}{note.retrievedAt}</>}
         {" "}{tx("· Corpus")}{" "}{note.corpusVersion}
       </p>

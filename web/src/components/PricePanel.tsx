@@ -1,3 +1,4 @@
+import { cropYieldUnit } from "../../../src/shared/extraCrops";
 import { useId } from "react";
 import type { CropId } from "../../../src/shared/types";
 import { MAX_FARMER_PRICE, PRICE_CROPS, type FarmerPrices } from "../../../src/shared/prices";
@@ -26,7 +27,7 @@ export function PricePanel({ value, onChange }: { value: PriceDraft; onChange: (
     <summary>{t("Your crop prices (optional)")}</summary>
     <p id={`${id}-help`}>{t("Leave blanks for USDA prices or approximate defaults. Prices change profit scoring and net returns, not weather or yields.")}</p>
     <div className="price-inputs">{PRICE_CROPS.map(crop => <label key={crop} htmlFor={`${id}-${crop}`}>
-      <span>{cropName(crop,language)} · {t(crop==="alfalfa" ? "$/US short ton" : "$/bu")}</span>
+      <span>{cropName(crop,language)} · {t(cropYieldUnit(crop)==="tons/acre" ? "$/US short ton" : cropYieldUnit(crop)==="lb/acre" ? "$/lb" : "$/bu")}</span>
       <input id={`${id}-${crop}`} type="text" inputMode="decimal" value={values[crop]??""} aria-describedby={`${id}-help ${id}-error`} aria-invalid={!valid || undefined} maxLength={16} onChange={e=>change({...values,[crop]:e.target.value})}/>
     </label>)}</div>
     <p id={`${id}-error`} role={!valid ? "alert" : undefined}>{!valid && t("Enter prices from 0 to 10000; no currency symbols.")}</p>

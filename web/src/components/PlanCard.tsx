@@ -1,3 +1,4 @@
+import { EXTRA_CROP_ICONS, isExtraCrop } from "../../../src/shared/extraCrops";
 import { GoalScore } from "./GoalPicker";
 import { useI18n, cropName, coverNames } from "../i18n";
 import { Definition } from "./Glossary";
@@ -18,6 +19,8 @@ function coverName(year: RotationPlan["years"][number], language: Language): str
 
 // Crop colors live in tokens.css (--crop-*); these are CSS values for style props.
 export const CROP_COLORS: Record<CropId, string> = {
+  sunflower_confection: "#b98a26",
+  cotton: "#9c8ebc", corn_silage: "#9a9e35", sorghum_silage: "#b77c4a", sunflower: "#d6a523", triticale: "#6d9961", other_hay: "#82a456",
   corn: "var(--crop-corn)",
   soybean: "var(--crop-soybean)",
   winter_wheat: "var(--crop-winter-wheat)",
@@ -46,7 +49,7 @@ function DeltaTag({ delta }: { delta: number }) {
 function YearEconomics({ year }: { year: PlanYear }) {
   const { t } = useI18n();
   return <dl className="year-economics">
-    <div><dt>{t("Expected yield")}</dt><dd>{year.crop==="fallow" ? t("No harvest") : `${year.expectedYield} ${t(year.yieldUnit.startsWith("tons") ? "US short tons/acre" : "bu/acre")}`}</dd></div>
+    <div><dt>{t("Expected yield")}</dt><dd>{year.crop==="fallow" ? t("No harvest") : `${year.expectedYield} ${t(year.yieldUnit.startsWith("tons") ? "US short tons/acre" : year.yieldUnit.startsWith("lb") ? "lb/acre" : "bu/acre")}`}</dd></div>
     <div><dt>{t("Net $/acre")}</dt><dd>{money(year.netReturnPerAcre)}</dd></div>
   </dl>;
 }
@@ -62,7 +65,7 @@ export function TopPlan({ plan, compareTo, summary }: { plan: RotationPlan; comp
         {plan.years.map((y) => (
           <li key={y.year} style={{ ["--crop" as string]: CROP_COLORS[y.crop] }}>
             <span className="years-year">{y.year}</span>
-            <span className="years-crop">{cropName(y.crop, language)}</span>
+            <span className="years-crop">{isExtraCrop(y.crop) && <span aria-hidden="true">{EXTRA_CROP_ICONS[y.crop]} </span>}{cropName(y.crop, language)}</span>
             <YearEconomics year={y} />
             <span className="years-cover">{y.cover === "none" ? t("No cover crop") : t("+ {cover} over winter", { cover: coverName(y, language) })}</span>
           </li>

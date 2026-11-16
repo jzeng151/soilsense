@@ -1,6 +1,7 @@
 import type { CropId, RotationPlan } from "../shared/types";
 import { PRICE_SCENARIO_VERSION, type FarmerPrices, type PriceSensitivity } from "../shared/prices";
 import history from "./price-history.json";
+import extraHistory from "./extra-price-history.json";
 
 /** Paired marketing-year observations preserve cross-crop price relationships. No Cartesian extremes. */
 export const HISTORICAL_PRICE_SCENARIOS: { year: number; prices: FarmerPrices }[] = Array.from({length:10}, (_,i) => {
@@ -40,6 +41,7 @@ export function analyzePriceSensitivity(
     source:`USDA NASS Quick Stats; Kansas marketing-year prices received, 2016–2025; snapshot ${PRICE_SCENARIO_VERSION} (docs/PRICES.md)`,
     scenarioYears:HISTORICAL_PRICE_SCENARIOS.map(s=>s.year),
     varyingCrops:crops.filter(c=>covered.has(c)), fixedPriceCrops:crops.filter(c=>!covered.has(c)),
+    ...(crops.some(c=>Object.hasOwn(extraHistory.fixedPriceSources,c)) ? { fixedPriceSources: Object.fromEntries(crops.filter(c=>!covered.has(c) && Object.hasOwn(extraHistory.fixedPriceSources,c)).map(c=>[c,null])) } : {}),
     plans:rows.map(r=>({...r,minNetPerAcre:Math.round(r.minNetPerAcre),maxNetPerAcre:Math.round(r.maxNetPerAcre)})),
   };
 }

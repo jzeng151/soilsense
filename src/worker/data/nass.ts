@@ -7,7 +7,7 @@
 //   3. state prices received, monthly, last ~2 years
 //   4. national prices received, monthly (fallback where a state has no price for a crop)
 
-import { ALL_CROPS, CROPS } from "../../engine/crops";
+import { ALL_CROPS, LEGACY_CROPS, CROPS } from "../../engine/crops";
 import type { CountyInfo, CropId, CropPrice, NassData, PracticeSeries } from "../../shared/types";
 import { cached, DAY_SECONDS } from "../lib/cache";
 import { fetchWithRetry, UpstreamError } from "../lib/http";
@@ -43,9 +43,9 @@ const num = (v: string): number => Number(String(v).replace(/,/g, ""));
 /** "CORN, GRAIN - YIELD, …" → "CORN, GRAIN, NON-IRRIGATED - YIELD, …" */
 const withPractice = (shortDesc: string, practice: "IRRIGATED" | "NON-IRRIGATED") => shortDesc.replace(" - YIELD", `, ${practice} - YIELD`);
 
-function toSeries(rows: Row[]): Partial<Record<CropId, PracticeSeries>> {
+function toSeries(rows: Row[], extraCrops = false): Partial<Record<CropId, PracticeSeries>> {
   const out: Partial<Record<CropId, PracticeSeries>> = {};
-  for (const crop of ALL_CROPS) {
+  for (const crop of extraCrops ? ALL_CROPS : LEGACY_CROPS) {
     const desc = CROPS[crop].nassUnitFilter;
     if (!desc) continue;
     const pick = (d: string) =>
@@ -75,12 +75,17 @@ const PRICE_SERIES: Partial<Record<CropId, { desc: string; factor: number }[]>> 
   // Sorghum is priced per hundredweight; a bushel is 56 lb.
   sorghum: [{ desc: "SORGHUM, GRAIN - PRICE RECEIVED, MEASURED IN $ / CWT", factor: 0.56 }],
 };
+const EXTRA_PRICE_SERIES: Partial<Record<CropId, { desc: string; factor: number }[]>> = {
+  cotton: [{ desc: "COTTON, UPLAND - PRICE RECEIVED, MEASURED IN $ / LB", factor: 1 }],
+  sunflower: [{ desc: "SUNFLOWER, OIL TYPE - PRICE RECEIVED, MEASURED IN $ / CWT", factor: 0.01 }],
+  // No generic other-hay price for annual forage, nor grain prices for silage.
+};
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
 /** Average of the latest 12 monthly prices (at least 3), per crop. */
-export function pricesFrom(rows: Row[], level: "state" | "national"): Partial<Record<CropId, CropPrice>> {
+export function pricesFrom(rows: Row[], level: "state" | "national", extraCrops = false): Partial<Record<CropId, CropPrice>> {
   const out: Partial<Record<CropId, CropPrice>> = {};
-  for (const [crop, options] of Object.entries(PRICE_SERIES) as [CropId, { desc: string; factor: number }[]][]) {
+  for (const [crop, options] of Object.entries(extraCrops ? { ...PRICE_SERIES, ...EXTRA_PRICE_SERIES } : PRICE_SERIES) as [CropId, { desc: string; factor: number }[]][]) {
     for (const { desc, factor } of options) {
       const pts = rows
         .filter((r) => r.short_desc === desc && MONTHS.includes(r.reference_period_desc ?? ""))
@@ -94,7 +99,7 @@ export function pricesFrom(rows: Row[], level: "state" | "national"): Partial<Re
       const month = MONTHS[latest % 12]!;
       out[crop] = {
         price: Math.round((pts.reduce((a, p) => a + p.v, 0) / pts.length) * 100) / 100,
-        unit: CROPS[crop].yieldUnit.startsWith("tons") ? "$/ton" : "$/bu",
+        unit: CROPS[crop].yieldUnit.startsWith("tons") ? "$/ton" : CROPS[crop].yieldUnit.startsWith("lb") ? "$/lb" : "$/bu",
         months: pts.length,
         through: `${month.charAt(0)}${month.slice(1).toLowerCase()} ${Math.floor(latest / 12)}`,
         level,
@@ -106,7 +111,7 @@ export function pricesFrom(rows: Row[], level: "state" | "national"): Partial<Re
 }
 
 /** Everything SoilSense uses from NASS for one county. Never throws: missing parts come back empty. */
-export async function getNassData(db: D1Database | undefined, apiKey: string | undefined, county: CountyInfo | null, currentYear: number): Promise<NassData | null> {
+export async function getNassData(db: D1Database | undefined, apiKey: string | undefined, county: CountyInfo | null, currentYear: number, extraCrops = false): Promise<NassData | null> {
   if (!apiKey || !county) return null;
   const stateFips = county.countyFips.slice(0, 2);
   const countyAnsi = county.countyFips.slice(2);
@@ -136,10 +141,10 @@ export async function getNassData(db: D1Database | undefined, apiKey: string | u
   ]);
 
   return {
-    county: toSeries(countyRows),
-    district: toSeries(districtRows),
+    county: toSeries(countyRows, extraCrops),
+    district: toSeries(districtRows, extraCrops),
     districtName: districtName ? titleCase(districtName) : null,
-    prices: { ...pricesFrom(nationalRows, "national"), ...pricesFrom(stateRows, "state") },
+    prices: { ...pricesFrom(nationalRows, "national", extraCrops), ...pricesFrom(stateRows, "state", extraCrops) },
     errors,
   };
 }

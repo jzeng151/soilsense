@@ -4,7 +4,7 @@ export type { FarmerConstraints } from './constraints';
 import type { FertilizerInputs, PlanFertilizer } from "./fertilizer";
 
 /** "fallow" = no crop for a season (weed control only) so the soil stores water; offered only on dry rain-fed fields. */
-export type CropId = "corn" | "soybean" | "winter_wheat" | "oats" | "alfalfa" | "sorghum" | "fallow";
+export type CropId = "corn" | "soybean" | "winter_wheat" | "oats" | "alfalfa" | "sorghum" | "fallow" | "cotton" | "corn_silage" | "sorghum_silage" | "sunflower" | "triticale" | "other_hay" | "sunflower_confection";
 export type CoverId = "none" | "cereal_rye" | "crimson_clover" | "hairy_vetch";
 export type Priority = "profit" | "soil" | "risk" | "balanced";
 /** Optional preferences, independent of the four unchanged priority weightings. */
@@ -186,7 +186,7 @@ export interface FarmerYield {
   year: number;
   value: number;
   /** Grain in bu/acre; alfalfa hay in US short tons/acre. */
-  unit: "bu/acre" | "tons/acre";
+  unit: "bu/acre" | "tons/acre" | "lb/acre";
 }
 
 export interface PlanRequest {
@@ -195,6 +195,7 @@ export interface PlanRequest {
   prices?: Partial<Record<CropId, number>>;
   /** Sensitivity over historical price scenarios for selected plans only, not a forecast. */
   priceScenarios?: boolean;
+
   soilTest?: SoilTest;
   yieldRecords?: FarmerYield[];
   lat: number;

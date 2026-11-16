@@ -177,14 +177,14 @@ api.post("/plan/cache", async (c) => {
   if (!c.env.DB) return c.json({ error: "Durable plan cache unavailable" }, 503);
   const text = await c.req.text();
   if (text.length > 256_000) return c.json({ error: "Plan import exceeds 256 KB" }, 413);
-  let payload: { engineVersion?: string; plan?: PlanResponse; options?: { placeName?: string; skipCropHistory?: boolean } };
+  let payload: { engineVersion?: string; extraCrops?: boolean; plan?: PlanResponse; options?: { placeName?: string; skipCropHistory?: boolean } };
   try { payload = JSON.parse(text); } catch { return c.json({ error: "Invalid JSON" }, 400); }
   const plan = payload?.plan;
   const req = validatePlanRequest(plan?.request);
   const now = new Date();
   const generated = Date.parse(plan?.generatedAt ?? "");
   const age = now.getTime() - generated;
-  if (payload?.engineVersion !== PLAN_ENGINE_VERSION || typeof req === "string" || !plan ||
+  if (Boolean(payload?.extraCrops) !== (c.env.EXTRA_CROPS === "on") || payload?.engineVersion !== PLAN_ENGINE_VERSION || typeof req === "string" || !plan ||
     hasMeasurements(req) || !Number.isFinite(generated) || age < -300_000 || age >= 6 * 3600_000 ||
     plan.generatedAt.slice(0, 10) !== now.toISOString().slice(0, 10) ||
     !Array.isArray(plan.plans) || !plan.plans.length || plan.plans.length > 3 ||
@@ -198,7 +198,7 @@ api.post("/plan/cache", async (c) => {
   if (options && (typeof options !== "object" ||
     (options.placeName !== undefined && (typeof options.placeName !== "string" || options.placeName.length > 200)) ||
     (options.skipCropHistory !== undefined && typeof options.skipCropHistory !== "boolean"))) return c.json({ error: "Invalid cache options" }, 400);
-  const key = planCacheKey(req, options, now);
+  const key = planCacheKey(req, { ...options, extraCrops: c.env.EXTRA_CROPS === "on" }, now);
   try {
     await putCached(c.env.DB, key, Math.min(6 * 3600, Math.floor((6 * 3600_000 - age) / 1000)), plan);
     return c.json({ stored: true, key });

@@ -34,9 +34,12 @@ export const CROP_ES: Record<CropId, string> = {
   alfalfa: "alfalfa",
   sorghum: "sorgo de grano",
   fallow: "barbecho (sin cultivo)",
+  sunflower_confection: "girasol confitero",
+  cotton: "algodón americano", corn_silage: "maíz para ensilaje", sorghum_silage: "sorgo forrajero para ensilaje",
+  sunflower: "girasol oleaginoso", triticale: "triticale (heno forrajero)", other_hay: "heno anual (sin alfalfa)",
 };
 
-const CROP_KO: Record<CropId, string> = {
+const CROP_KO: Partial<Record<CropId, string>> = {
   corn: "옥수수",
   soybean: "대두",
   winter_wheat: "겨울밀",
@@ -241,7 +244,7 @@ function planSentenceEs(plan: RotationPlan): string {
 
 function planSentenceKo(plan: RotationPlan): string {
   const covers = { cereal_rye: "호밀", crimson_clover: "크림슨클로버", hairy_vetch: "헤어리베치", none: "" };
-  return plan.years.map((y) => `${y.year}년 ${CROP_KO[y.crop]}${y.cover !== "none" ? `, 겨울철 피복작물로 ${covers[y.cover]} 재배` : ""}`).join(" → ");
+  return plan.years.map((y) => `${y.year}년 ${CROP_KO[y.crop] ?? y.cropName}${y.cover !== "none" ? `, 겨울철 피복작물로 ${covers[y.cover]} 재배` : ""}`).join(" → ");
 }
 
 export function buildExplanation(args: {

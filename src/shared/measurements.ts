@@ -1,3 +1,4 @@
+import { cropYieldUnit, EXTRA_CROP_IDS } from "./extraCrops";
 import type { FarmerYield, PlanRequest, SoilProfile, SoilTest } from "./types";
 import { validateFertilizerInputs } from "./fertilizer-inputs";
 
@@ -37,18 +38,20 @@ export function validateMeasurements(b: Record<string, unknown>, currentYear = n
     const counts = new Map<string, number>();
     const records: FarmerYield[] = [];
     for (const r of b.yieldRecords) {
-      if (!object(r) || typeof r.crop !== "string" || !["corn", "soybean", "winter_wheat", "oats", "alfalfa", "sorghum"].includes(r.crop)) return "unknown yield crop";
-      const hay = r.crop === "alfalfa";
-      if (r.unit !== (hay ? "tons/acre" : "bu/acre")) return "Use bu/acre for grain or US short tons/acre for alfalfa";
+      if (!object(r) || typeof r.crop !== "string" || !["corn", "soybean", "winter_wheat", "oats", "alfalfa", "sorghum", ...EXTRA_CROP_IDS].includes(r.crop)) return "unknown yield crop";
+      const unit = cropYieldUnit(r.crop as FarmerYield["crop"]);
+      const hay = unit === "tons/acre";
+      const maxYield = hay ? (r.crop === "alfalfa" ? 30 : 60) : unit === "lb/acre" ? 10000 : 1000;
+      if (r.unit !== unit) return "Use bu/acre for grain or US short tons/acre for alfalfa";
       if (!finiteRange(r.year, 1900, currentYear - 1) || !Number.isInteger(r.year)) return "Yield year must be a past calendar year (1900 or later)";
-      if (!finiteRange(r.value, 0, hay ? 30 : 1000)) return `Yield must be from 0 to ${hay ? 30 : 1000}`;
+      if (!finiteRange(r.value, 0, maxYield)) return `Yield must be from 0 to ${maxYield}`;
       const key = `${r.crop}:${r.year}`;
       if (seen.has(key)) return "Only one yield per crop and year";
       seen.add(key);
       const count = (counts.get(String(r.crop)) ?? 0) + 1;
       if (count > 5) return "Enter at most 5 years per crop";
       counts.set(String(r.crop), count);
-      records.push({ crop: r.crop as FarmerYield["crop"], year: r.year as number, value: r.value as number, unit: hay ? "tons/acre" : "bu/acre" });
+      records.push({ crop: r.crop as FarmerYield["crop"], year: r.year as number, value: r.value as number, unit });
     }
     if (records.length) result.yieldRecords = records;
   }

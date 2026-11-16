@@ -64,7 +64,7 @@ export function FieldAssistantContent({ context, onClose, className = "" }: Fiel
   useEffect(() => () => { void stop(); }, [stop]);
   useEffect(() => {
     for (const m of messages) if (!timestamps.current.has(m.id)) timestamps.current.set(m.id, new Date().toISOString());
-    const el = scrollRef.current; if (el && pinned.current) el.scrollTop = el.scrollHeight;
+    const el = scrollRef.current; if (el && pinned.current && messages.length) el.scrollTop = el.scrollHeight;
   }, [messages, status, plan]);
   function send(value: string) {
     if (!value.trim() || !canSend) return;

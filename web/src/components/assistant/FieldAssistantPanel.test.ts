@@ -86,6 +86,27 @@ it("reports plan failure with retry and removes prior conversation on a new loca
   await settle(); expect(host.textContent).not.toContain("Fixture streamed answer"); expect(host.textContent).toContain("Other field");
 });
 
+it("submits Enter, preserves Shift+Enter, and keeps the outgoing user bubble clean", async () => {
+  let requests = 0;
+  vi.stubGlobal("fetch", vi.fn(async (url: RequestInfo | URL) => {
+    if (String(url).endsWith("/status")) return Response.json({ configured: true });
+    if (String(url) === "/api/plan") return Response.json(planFixture);
+    requests++; return streamResponse();
+  }));
+  await act(async () => root.render(createElement(FieldAssistantPanel, { context: location })));
+  await settle();
+  const input = host.querySelector("textarea")!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value")!.set!.call(input, "Question about water");
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  await act(async () => input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", shiftKey: true, bubbles: true, cancelable: true })));
+  expect(requests).toBe(0);
+  await act(async () => input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true })));
+  await settle(); expect(requests).toBe(1);
+  expect(host.querySelector(".fa-user-bubble")?.textContent).toBe("Question about water");
+});
+
 it("uses Spanish for controls and crop names and exposes the close action", async () => {
   localStorage.setItem("soilsense.language", "es"); const close = vi.fn();
   vi.stubGlobal("fetch", vi.fn(async (url: RequestInfo | URL) => String(url).endsWith("/status") ? Response.json({ configured: false }) : Response.json(planFixture)));

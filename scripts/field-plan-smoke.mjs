@@ -17,6 +17,7 @@ try {
     if(language==='es')await page.getByRole('button',{name:'ES Español',exact:true}).click();
     await card.locator('details').first().locator('summary').click();await card.locator('input[type=checkbox]').nth(index).check();
     await card.locator('ul>li').first().waitFor();
+    assert.equal(await card.locator('input[type=checkbox]').count(),63,'fringe centroid must retain the Finney catalog');
     assert.match(await card.locator('ul>li strong').first().innerText(),language==='es'?/^Parcela \d+/ : /^Field \d+/);
     await card.screenshot({path:path.join(out,`selection-${language}-${width}.png`)});
     await card.getByRole('button',{name:language==='es'?'Planificar esta parcela':'Plan this field',exact:true}).click();

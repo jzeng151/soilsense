@@ -39,7 +39,7 @@ The mapping is deliberately small and centralized in `cdlToCropId`, using the [U
 
 All other codes are unknown for this plan, including double-crop classes (e.g. 26, 225, 236), noncrop land cover and non-modeled crops. They are not guessed, split, or collapsed to a modeled crop. An EN/ES note lists each dropped year's original source label and CDL code. If every recent crop is unknown (or the sequence is absent), generation is disabled until the farmer supplies at least one modeled crop; this prevents the engine's empty-override fallback from silently substituting point-based history.
 
-The questions view replaces its single-current-season crop question with chronological history controls for the targeted CSB field. Corrections are visit-local, retained separately by CSB id, and disclosed as corrected in this browser. The plan view identifies the field/acreage/id, exact history used, and source: **USDA Crop Sequence Boundaries 2018–2025, satellite-derived, not farmer-reported; edit if wrong.** Its correction action returns to the history controls. With the flag off, the original point/current-season workflow and request payload are unchanged, irrespective of stored field labels.
+The questions view replaces its single-current-season crop question with chronological history controls for the targeted CSB field. Corrections are visit-local, retained separately by CSB id, and disclosed as corrected in this browser. The plan view identifies the field/acreage/id, exact history used, and source: **USDA Crop Sequence Boundaries 2018–2025, satellite-derived, not farmer-reported; edit if wrong.** Its correction action returns to the history controls. An explicit free-point map, demo or geolocation pick clears the outline selection and exits field-history mode, preventing a different point's measurements from being mixed with the selected field. With the flag off, the original point/current-season workflow and request payload are unchanged, irrespective of stored field labels.
 
 ## What the data is / is not
 
@@ -73,6 +73,16 @@ Reproduce with `python scripts/csb-subset.py` (Python stdlib only, network requi
 `fieldGeometry.ts` computes spherical geodesic area using mean Earth radius 6,371,008.8 m and 4,046.8564224 m²/acre, subtracts holes independently of winding, and uses a local equirectangular area-weighted centroid. These local-field helpers are not intended for antimeridian/polar polygons. All 221 derived acreages agree with source `CSBACRES` within 0.3%; source acreage uses its native projected/geodetic convention, so exact equality is not expected. Shared-edge tests tolerate 1e-8 degrees (~1 mm), handle split segments and reject corner-only contact; roads/gaps are deliberately not adjacency.
 
 ## Built-app verification
+
+### Field-plan wiring
+
+`node scripts/field-plan-smoke.mjs <scratch-output-dir>` checks the real built offline Worker on **8808**, without intercepting or fabricating API responses. It runs four independent Chromium contexts: EN/ES × 1280/375 px. Each selects a Finney outline, verifies friendly labels and retained 63-field catalog (including a centroid outside the query box), opens its history controls, inspects the actual `/api/plan` POST, and checks the returned plan's dated history and source notice. Screenshots are `selection-<lang>-<width>.png`, `plan-history-<lang>-<width>.png`, and `plan-<lang>-<width>.png`; full posted payloads and layout checks are saved in `report.json`.
+
+Verified field `csb:201825006142555` (`Field 3`, 9.1 ac): exact posted centroid `38.124638054906086, -100.69952797699568`, `recentCrops: ["corn", "corn", "winter_wheat"]`, displayed as 2023 → 2024 → 2025 in both languages. All four states had zero page errors and no whole-page horizontal overflow. These checks are functional/layout checks, not an accessibility certification. The prior boundary-only axe results below remain scoped to that prior revision.
+
+Unit/UI tests cover the mapping table, source-year ordering/window, unknown and double-crop omission, shared EN/ES labels, stable numbering, local name persistence, corrections, separate multi-field plans, free-point exit from field mode, all-unknown blocking, and exact original request payload with the flag disabled. `npm run typecheck`, `npm test` (631 passed, 14 skipped), and `npm run build` passed after merging the then-current `origin/next`; the build retains its existing large-chunk warning. Some pre-existing App language tests emit localhost:3000 connection-refused diagnostics while still passing.
+
+### Original boundary-only verification
 
 At source revision `4a7853fc4effc63f9ed7b1e6df84b1511dc682b4` (clean worktree), `node scripts/csb-smoke.mjs <scratch-output-dir>` exercised the real built Worker on 8801 without mocking API responses:
 

@@ -11,16 +11,17 @@ export function FieldPlanHistory({field,values,onChange,used,onEdit}:{field:Fiel
   const source=fieldPlanHistory(field);
   const years=source.years.length?source.years:[{year:2025,cdlCode:0,crop:''}];
   const corrected=values.some((v,i)=>v!==(cdlToCropId(source.years[i]?.cdlCode ?? 0) ?? ''));
+  const usedYears=years.filter((_,i)=>values[i]);
   return <section className="jr-card" data-field-plan={field.id} style={{overflowWrap:'anywhere',minWidth:0}}>
     <h2>{t('Planning for: {field} ({acres} ac)',{field:fieldName(field,language),acres:field.areaAcres.toFixed(1)})}</h2>
     <small>{field.id}</small>
     <p>{t('USDA Crop Sequence Boundaries 2018–2025, satellite-derived, not farmer-reported; edit if wrong.')}</p>
     {source.dropped.length>0 && <p role="note">{t('Unknown or unmodeled crops omitted: {crops}',{crops:source.dropped.map(y=>`${y.year}: ${language==='es'?(csbCropSpanish[y.cdlCode] ?? y.crop):y.crop} (CDL ${y.cdlCode})`).join('; ')})}</p>}
     <h3>{t('Crop history used (oldest first)')}</h3>
-    {used?<p data-history-used>{values.flatMap((c,i)=>c?[`${years[i]?.year ?? ''}: ${cropName(c,language)}`]:[]).join(' → ')}</p>:<ol>{years.map((y,i)=><li key={y.year}>
+    {used?<p data-history-used>{used.map((c,i)=>`${usedYears[i]?.year ?? ''}: ${cropName(c,language)}`).join(' → ')}</p>:<ol>{years.map((y,i)=><li key={y.year}>
       <label>{y.year}{' '}{onChange?<select aria-label={`${t('Correct crop history')} ${y.year}`} value={values[i] ?? ''} onChange={e=>{const next=[...values];next[i]=e.target.value as CropId|'';onChange(next);}}>
         <option value="">{t('Not used / unknown')}</option>{CROPS.map(c=><option key={c} value={c}>{cropName(c,language)}</option>)}
-      </select>:cropName(values[i] as CropId,language)}</label>
+      </select>:(values[i]?cropName(values[i] as CropId,language):t('Not used / unknown'))}</label>
     </li>)}</ol>}
     {corrected && <p>{t('History corrected in this browser.')}</p>}
     {onEdit && <button type="button" onClick={onEdit}>{t('Correct crop history')}</button>}

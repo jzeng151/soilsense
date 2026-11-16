@@ -52,6 +52,12 @@ it('persists renamed fields by CSB id and restores the friendly label on reload'
   await act(async()=>root.unmount());root=createRoot(el);await mount();
   expect(el.textContent).toContain('North pivot · 9.1 ac');expect(el.textContent).toContain('csb:a');
 });
+it('an explicit demo point pick exits field mode instead of mixing its history with another location',async()=>{
+  await select(0);await click('Kansas');await click('Yes, this is my field →');
+  expect(el.querySelector('[data-field-plan]')).toBeNull();
+  await click('Corn');await click('Show my plan →');
+  expect(fetchPlan).toHaveBeenLastCalledWith(expect.objectContaining({lat:38.1095,lon:-100.706,recentCrops:['corn','corn']}),expect.any(AbortSignal));
+});
 it('requires a correction instead of silently falling back when every recent crop is unknown',async()=>{
   await act(async()=>root.unmount());root=createRoot(el);
   const original=fields[0]!.cropSequence;

@@ -252,6 +252,13 @@ function MainFlow() {
     }
   }, []);
 
+  const pickPoint = useCallback((lat:number,lon:number) => {
+    // An explicit free-point/demo pick leaves field mode, preventing history/measurement mixups.
+    setSelectedFields([]);
+    setExplicitField(null);
+    return pick(lat,lon);
+  },[pick]);
+
   const selectFields = (fields: FieldBoundary[]) => {
     setSelectedFields(fields);
     setExplicitField(null);
@@ -298,7 +305,7 @@ function MainFlow() {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setFocus({ lat: pos.coords.latitude, lon: pos.coords.longitude, zoom: 14, key: Date.now() });
-        void pick(pos.coords.latitude, pos.coords.longitude);
+        void pickPoint(pos.coords.latitude, pos.coords.longitude);
       },
       () => setZipMsg({ key: "We couldn't get your location. Type a ZIP code or tap the map." }),
       { timeout: 10000 },
@@ -450,7 +457,7 @@ function MainFlow() {
             </p>
 
             <p className="jr-tap">{t("Then tap your field on the map.")}</p>
-            <MapPicker point={point} onPick={pick} focus={focus}
+            <MapPicker point={point} onPick={pickPoint} focus={focus}
               boundaries={boundaryCatalog.enabled ? boundaryCatalog.fields : undefined}
               selectedFields={boundaryCatalog.enabled ? selectedFields : undefined}
               onSelectFields={boundaryCatalog.enabled ? selectFields : undefined} />
@@ -473,7 +480,7 @@ function MainFlow() {
                   className="chip-btn"
                   onClick={() => {
                     setWater(d.irrigated ? "full" : "rain");
-                    void pick(d.lat, d.lon);
+                    void pickPoint(d.lat, d.lon);
                   }}
                 >
                   {DEMO_SHORT[d.name] ?? d.name}

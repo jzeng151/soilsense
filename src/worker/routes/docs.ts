@@ -37,8 +37,8 @@ function adminOk(header: string | undefined, token: string | undefined): boolean
   return diff === 0;
 }
 export const docs = new Hono<{ Bindings: Env }>();
-// Protect mutations independently of any optional dashboard sign-in gate.
-docs.on("POST", ["/upload", "/from-url", "/:docId/review"], async (c, next) => {
+// Lists and review chunks are operator-only too: pending uploads are not public research.
+docs.use("*", async (c, next) => {
   if (!c.env.ADMIN_TOKEN) return c.json({ error: "Set ADMIN_TOKEN first" }, 403);
   if (!adminOk(c.req.header("Authorization"), c.env.ADMIN_TOKEN)) return c.json({ error: "unauthorized" }, 401);
   return next();

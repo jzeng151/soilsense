@@ -1,0 +1,511 @@
+{
+  "docs": [
+    "ACCESSIBILITY.md",
+    "AI-GATEWAY.md",
+    "CHAT_CITATIONS.md",
+    "CROP-TIMING.md",
+    "E2E.md",
+    "economics-sources.md",
+    "farmer-goals.md",
+    "farmer-measurements.md",
+    "FIELDWATCH-OUTLOOK.md",
+    "FIELD_MEMORY.md",
+    "grace-wells-evidence.md",
+    "HISTORICAL-SCENARIOS.md",
+    "HOW-IT-WORKS.md",
+    "imerg-access.md",
+    "INGEST.md",
+    "MODIS.md",
+    "NASS-VERIFICATION.md",
+    "RESEARCH.md",
+    "smap-evidence.md",
+    "VALIDATION.md",
+    "VERIFICATION.md"
+  ],
+  "routes": [
+    {
+      "path": "src/worker/routes/admin.ts",
+      "declarations": [
+        {
+          "line": 31,
+          "declaration": "admin.use(\"*\", async (c, next) => {"
+        },
+        {
+          "line": 42,
+          "declaration": "admin.get(\"/ai-usage\", async (c) => {"
+        },
+        {
+          "line": 49,
+          "declaration": "admin.get(\"/check\", (c) => c.json({ ok: true }));"
+        },
+        {
+          "line": 51,
+          "declaration": "admin.get(\"/voice-agent\", async (c) => {"
+        },
+        {
+          "line": 72,
+          "declaration": "admin.put(\"/voice-agent\", async (c) => {"
+        },
+        {
+          "line": 94,
+          "declaration": "admin.post(\"/voice-agent/reset\", async (c) => {"
+        },
+        {
+          "line": 104,
+          "declaration": "admin.get(\"/calls\", async (c) => {"
+        },
+        {
+          "line": 143,
+          "declaration": "admin.get(\"/calls/:sid\", async (c) => {"
+        },
+        {
+          "line": 158,
+          "declaration": "admin.get(\"/live-demo\", async (c) => c.json({ on: await isLiveDemoOn(c.env.DB), available: Boolean(c.env.LIVE_ROOM) }));"
+        },
+        {
+          "line": 160,
+          "declaration": "admin.put(\"/live-demo\", async (c) => {"
+        },
+        {
+          "line": 173,
+          "declaration": "admin.post(\"/live-demo/clear\", async (c) => {"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/api.ts",
+      "declarations": [
+        {
+          "line": 39,
+          "declaration": "api.use(\"*\", async (c, next) => {"
+        },
+        {
+          "line": 50,
+          "declaration": "api.route(\"/auth\", auth);"
+        },
+        {
+          "line": 51,
+          "declaration": "api.route(\"/docs\", docs);"
+        },
+        {
+          "line": 120,
+          "declaration": "api.get(\"/health\", (c) => c.json({ ok: true, service: \"soilsense\", db: Boolean(c.env.DB), ai: Boolean(c.env.AI), twilio: Boolean(c.env.TWILIO_AUTH_TOKEN) }));"
+        },
+        {
+          "line": 122,
+          "declaration": "api.get(\"/field\", async (c) => {"
+        },
+        {
+          "line": 135,
+          "declaration": "api.get(\"/second-opinion\", async (c) => {"
+        },
+        {
+          "line": 145,
+          "declaration": "api.get(\"/field-memory/:field/:vector\", async (c) => {"
+        },
+        {
+          "line": 157,
+          "declaration": "api.post(\"/plan\", async (c) => {"
+        },
+        {
+          "line": 198,
+          "declaration": "api.post(\"/ask\", async (c) => {"
+        },
+        {
+          "line": 229,
+          "declaration": "api.get(\"/logs\", async (c) => {"
+        },
+        {
+          "line": 242,
+          "declaration": "api.route(\"/scout\", scout);"
+        },
+        {
+          "line": 244,
+          "declaration": "api.route(\"/fieldwatch\", fieldWatch);"
+        },
+        {
+          "line": 256,
+          "declaration": "api.get(\"/vegetation\", vegetation);"
+        },
+        {
+          "line": 257,
+          "declaration": "api.post(\"/vegetation/prefetch\", async (c, next) => {"
+        },
+        {
+          "line": 263,
+          "declaration": "api.route(\"/research\", research);"
+        },
+        {
+          "line": 264,
+          "declaration": "api.route(\"/crop-timing\", cropTiming);"
+        },
+        {
+          "line": 267,
+          "declaration": "api.route(\"/usdm\", usdm);"
+        },
+        {
+          "line": 270,
+          "declaration": "api.route(\"/wind-screen\", windScreen);"
+        },
+        {
+          "line": 273,
+          "declaration": "api.get(\"/economics-assumptions\", async (c) => {"
+        },
+        {
+          "line": 280,
+          "declaration": "api.route(\"/historical-scenarios\", historicalScenarios);"
+        },
+        {
+          "line": 281,
+          "declaration": "api.route(\"/smap\", smap);"
+        },
+        {
+          "line": 283,
+          "declaration": "api.route(\"/groundwater\", groundwater);"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/auth.ts",
+      "declarations": [
+        {
+          "line": 44,
+          "declaration": "auth.use(\"*\", async (c, next) => {"
+        },
+        {
+          "line": 61,
+          "declaration": "auth.post(\"/signup\", async (c) => {"
+        },
+        {
+          "line": 84,
+          "declaration": "auth.post(\"/login\", async (c) => {"
+        },
+        {
+          "line": 105,
+          "declaration": "auth.post(\"/logout\", async (c) => {"
+        },
+        {
+          "line": 112,
+          "declaration": "auth.get(\"/me\", async (c) => {"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/cropTiming.ts",
+      "declarations": [
+        {
+          "line": 9,
+          "declaration": "cropTiming.get(\"/\", async c => {"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/docs.ts",
+      "declarations": [
+        {
+          "line": 41,
+          "declaration": "docs.use(\"*\", async (c, next) => {"
+        },
+        {
+          "line": 46,
+          "declaration": "docs.post(\"/upload\", bodyLimit({ maxSize: 10 * 1024 * 1024, onError: (c) => c.json({ error: \"Upload exceeds 10 MB\" }, 413) }), async (c) => {"
+        },
+        {
+          "line": 64,
+          "declaration": "docs.post(\"/from-url\", bodyLimit({ maxSize: 4096 }), async (c) => {"
+        },
+        {
+          "line": 76,
+          "declaration": "docs.get(\"/\", async (c) => {"
+        },
+        {
+          "line": 81,
+          "declaration": "docs.get(\"/:docId\", async (c) => {"
+        },
+        {
+          "line": 97,
+          "declaration": "docs.post(\"/:docId/review\", bodyLimit({ maxSize: 32 * 1024 }), async (c) => {"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/fieldwatch.ts",
+      "declarations": [
+        {
+          "line": 29,
+          "declaration": "fieldWatch.use(\"*\", async (c, next) => {"
+        },
+        {
+          "line": 41,
+          "declaration": "fieldWatch.get(\"/latest\", async (c) => {"
+        },
+        {
+          "line": 52,
+          "declaration": "fieldWatch.get(\"/runs\", async (c) => {"
+        },
+        {
+          "line": 66,
+          "declaration": "fieldWatch.post(\"/run\", async (c) => {"
+        },
+        {
+          "line": 93,
+          "declaration": "fieldWatch.get(\"/agent/options\", (c) =>"
+        },
+        {
+          "line": 104,
+          "declaration": "fieldWatch.post(\"/agent/:field/check\", async (c) => {"
+        },
+        {
+          "line": 125,
+          "declaration": "fieldWatch.get(\"/agent/:field/runs\", async (c) => {"
+        },
+        {
+          "line": 134,
+          "declaration": "fieldWatch.get(\"/agent/:field/watch\", async (c) => {"
+        },
+        {
+          "line": 141,
+          "declaration": "fieldWatch.put(\"/agent/:field/watch\", async (c) => {"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/groundwater.ts",
+      "declarations": [
+        {
+          "line": 5,
+          "declaration": "groundwater.get(\"/\",async c=>{"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/historicalScenarios.ts",
+      "declarations": [
+        {
+          "line": 7,
+          "declaration": "historicalScenarios.get(\"/\",async c=>{"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/live.ts",
+      "declarations": [
+        {
+          "line": 10,
+          "declaration": "live.use(\"*\", async (c, next) => {"
+        },
+        {
+          "line": 15,
+          "declaration": "live.get(\"/status\", async (c) => c.json({ demo: await isLiveDemoOn(c.env.DB), available: Boolean(c.env.LIVE_ROOM), phone: formatUsPhone(c.env.TWILIO_FROM_NUMBER) }));"
+        },
+        {
+          "line": 24,
+          "declaration": "live.get(\"/ws\", async (c) => {"
+        },
+        {
+          "line": 32,
+          "declaration": "live.get(\"/events\", async (c) => {"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/refresh.ts",
+      "declarations": [
+        {
+          "line": 26,
+          "declaration": "refresh.use(\"*\", async (c, next) => {"
+        },
+        {
+          "line": 31,
+          "declaration": "refresh.get(\"/status\", async (c) => {"
+        },
+        {
+          "line": 55,
+          "declaration": "refresh.get(\"/snapshots/:id\", async (c) => {"
+        },
+        {
+          "line": 73,
+          "declaration": "refresh.get(\"/snapshots/:id/bundle\", async (c) => {"
+        },
+        {
+          "line": 85,
+          "declaration": "refresh.post(\"/run\", async (c) => {"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/research.ts",
+      "declarations": [
+        {
+          "line": 37,
+          "declaration": "research.get(\"/status\", (c) =>"
+        },
+        {
+          "line": 52,
+          "declaration": "research.get(\"/corpus\", (c) => c.json(CORPUS));"
+        },
+        {
+          "line": 54,
+          "declaration": "research.post(\"/query\", async (c) => {"
+        },
+        {
+          "line": 63,
+          "declaration": "research.post(\"/explain\", async (c) => {"
+        },
+        {
+          "line": 89,
+          "declaration": "research.post(\"/ingest\", async (c) => {"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/scout.ts",
+      "declarations": [
+        {
+          "line": 285,
+          "declaration": "scout.get(\"/status\", (c) => {"
+        },
+        {
+          "line": 290,
+          "declaration": "scout.post(\"/chat\", async (c) => {"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/smap.ts",
+      "declarations": [
+        {
+          "line": 5,
+          "declaration": "smap.get(\"/catalog\", async c => c.json(await discoverSmap(c.env)));"
+        },
+        {
+          "line": 6,
+          "declaration": "smap.get(\"/\",async c=>{"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/usdm.ts",
+      "declarations": [
+        {
+          "line": 15,
+          "declaration": "usdm.get(\"/category\", async (c) => {"
+        },
+        {
+          "line": 26,
+          "declaration": "usdm.get(\"/timeline\", async (c) => {"
+        },
+        {
+          "line": 37,
+          "declaration": "usdm.get(\"/replay\", async (c) => {"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/voice.ts",
+      "declarations": [
+        {
+          "line": 110,
+          "declaration": "voice.use(\"*\", async (c, next) => {"
+        },
+        {
+          "line": 169,
+          "declaration": "voice.post(\"/incoming\", async (c) => {"
+        },
+        {
+          "line": 177,
+          "declaration": "voice.post(\"/ivr\", (c) => ivrStart(c));"
+        },
+        {
+          "line": 179,
+          "declaration": "voice.post(\"/agent-done\", (c) => {"
+        },
+        {
+          "line": 205,
+          "declaration": "voice.post(\"/lang\", (c) => {"
+        },
+        {
+          "line": 213,
+          "declaration": "voice.post(\"/zip\", async (c) => {"
+        },
+        {
+          "line": 237,
+          "declaration": "voice.post(\"/crop\", (c) => {"
+        },
+        {
+          "line": 248,
+          "declaration": "voice.post(\"/irrigation\", (c) => {"
+        },
+        {
+          "line": 259,
+          "declaration": "voice.post(\"/priority\", (c) => {"
+        },
+        {
+          "line": 304,
+          "declaration": "voice.post(\"/plan\", async (c) => {"
+        },
+        {
+          "line": 319,
+          "declaration": "voice.post(\"/menu\", async (c) => {"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/routes/windScreen.ts",
+      "declarations": [
+        {
+          "line": 38,
+          "declaration": "windScreen.post(\"/\", async (c) => {"
+        }
+      ]
+    },
+    {
+      "path": "src/worker/imerg/routes.ts",
+      "declarations": [
+        {
+          "line": 8,
+          "declaration": "imerg.get(\"/comparison/:field\", async (c) => {"
+        },
+        {
+          "line": 19,
+          "declaration": "imerg.post(\"/warm/:field\", async (c) => {"
+        }
+      ]
+    }
+  ],
+  "components": [
+    "AIUsagePanel.tsx",
+    "CropTimingEvidence.tsx",
+    "DataEvidence.tsx",
+    "DistrictOutlook.tsx",
+    "DocsAdmin.tsx",
+    "EconomicsCard.tsx",
+    "FieldWatchCard.tsx",
+    "Glossary.tsx",
+    "GoalPicker.tsx",
+    "GraceWellsCard.tsx",
+    "HarvestCheck.tsx",
+    "HistoricalScenarios.tsx",
+    "ImergNote.tsx",
+    "Logo.tsx",
+    "MapPicker.tsx",
+    "Markdown.tsx",
+    "Measurements.tsx",
+    "PlanAssumptions.tsx",
+    "PlanCard.tsx",
+    "PlanExplanation.tsx",
+    "ResearchNote.tsx",
+    "ScheduledCheck.tsx",
+    "ScoutMessage.tsx",
+    "SecondOpinion.tsx",
+    "Sidebar.tsx",
+    "SmapCard.tsx",
+    "SoilBuild.tsx",
+    "Sprout.tsx",
+    "TrendChart.tsx",
+    "UsdmContext.tsx",
+    "VegetationCard.tsx",
+    "WhatIf.tsx",
+    "WindScreenCard.tsx"
+  ]
+}

@@ -13,7 +13,8 @@
 
 :root {
   /* ---------- Brand palette (raw values, from the kit) ---------- */
-  --sprout-green: #2f7a3e; /* buttons, growth */
+  --sprout-green: #2f7a3e; /* buttons, growth (fills; white text 5.3) */
+  --sprout-ink: #2c723a;   /* same hue, darkened for green TEXT: ≥5.0:1 on cream/white/subtle/leaf-wash (was 4.5 on subtle) */
   --canopy: #1f5a3a;       /* headers, trust */
   --topsoil: #6b4226;      /* earth, grounding */
   --harvest-gold: #f2b134; /* fills only, brown text on it */
@@ -73,7 +74,7 @@
   --color-heading: var(--canopy);  /* headlines on cream */
   --color-eyebrow: var(--topsoil); /* uppercase eyebrows on cream */
 
-  --color-primary: var(--sprout-green);  /* links, selected states (4.9:1 on cream) */
+  --color-primary: var(--sprout-ink);    /* links, selected states (5.5:1 on cream, 5.0 on subtle) */
   --color-primary-soft: var(--leaf-wash);
   --color-primary-border: #b9d9ab;
   --color-on-primary: #ffffff;           /* white on Sprout Green 5.3 */
@@ -86,7 +87,7 @@
   --color-data: var(--orbit-blue);       /* NASA / satellite data */
   --color-on-data: #ffffff;              /* white on Orbit Blue 8.4 */
 
-  --color-success: var(--sprout-green);
+  --color-success: var(--sprout-ink);    /* text on leaf-wash 5.1:1 (was 4.56) */
   --color-success-soft: var(--leaf-wash);
   --color-warning: var(--topsoil);       /* text; the chip itself is gold-tinted */
   --color-warning-soft: #fde9bd;
@@ -129,14 +130,14 @@
   --color-surface: var(--canopy);
   --color-subtle: #2a6b47;
   --color-border: #3a7a55;
-  --color-border-strong: #4c8a66;
+  --color-border-strong: #7bb794;   /* panel/card edges 3.5:1 on Canopy (was #4c8a66, 2.0) so green panels do not blend in */
   --color-text: var(--field-cream);     /* cream on Canopy 7.5 */
   --color-text-2: var(--canopy-mist);
-  --color-muted: #b9d3b6;
-  --color-faint: #b3d0af;           /* 4.9:1 on Canopy (WCAG 1.4.3) */
+  --color-muted: #dae8d9;           /* 6.4:1 on Canopy, 5.0 on subtle (was #b9d3b6, 3.97 on subtle) */
+  --color-faint: #d4e4d2;           /* 6.1:1 on Canopy, 4.8 on subtle (was #b3d0af, 3.8 on subtle) */
   --color-input-border: #b3d0af;
   --color-heading: var(--field-cream);
-  --color-primary: var(--light-gold);   /* light gold on Canopy 5.3 */
+  --color-primary: #ffd47a;             /* light gold, lightened: 5.8:1 on Canopy, 4.5 on subtle (was 4.15) */
   --color-primary-soft: #2e7350;
   --color-primary-border: #4c8a66;
   --color-on-primary: var(--soil-brown);

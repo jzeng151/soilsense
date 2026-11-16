@@ -1,5 +1,12 @@
 /** Korean copy keyed by the complete English UI text. */
 export const korean: Partial<Record<string, string>> = {
+
+  "Answer stopped early. Ask Sprout to continue.": "답변이 중간에 멈췄습니다. Sprout에게 계속해 달라고 요청하세요.",
+  "Source unavailable ({id})": "출처를 확인할 수 없음 ({id})",
+
+  "This conversation belongs to an earlier field plan. Start a new chat to ask about the current plan.": "이 대화는 이전 재배 계획에 관한 것입니다. 현재 계획에 대해 질문하려면 새 대화를 시작하세요.",
+  "Build a rotation in Explore before asking about this field.": "이 필지에 대해 질문하기 전에 탐색에서 윤작 계획을 만드세요.",
+
   "Your crop prices (optional)": "내 작물 가격(선택 사항)",
   "Leave blanks for USDA prices or approximate defaults. Prices change profit scoring and net returns, not weather or yields.": "비워 두면 USDA 가격 또는 대략적인 기본값을 사용합니다. 가격은 수익성 점수와 순수익에 영향을 주며 기상이나 수확량은 바꾸지 않습니다.",
   "$/bu": "$/bu",
@@ -823,6 +830,14 @@ export const korean: Partial<Record<string, string>> = {
   "Close navigation": "메뉴 닫기",
   "New chat": "새 대화",
   "Rotation planner": "윤작 계획",
+  "Field Watch": "Field Watch",
+  "Cropped to fit; darkened": "화면에 맞게 자르고 어둡게 조정함",
+  "Field to plan": "계획할 포장",
+  "Choose one selected field": "선택한 포장 중 하나를 고르세요",
+  "Field workspace": "포장 작업 공간",
+  "Rotation options": "윤작 선택지",
+  "Build a rotation in Rotation options first. Sprout will use that exact plan and your settings.": "먼저 윤작 선택지에서 계획을 만드세요. Sprout은 같은 계획과 설정을 사용합니다.",
+  "Monitor saved fields, review recent checks and manage automatic watches. Plan crop rotations in Explore.": "저장된 포장을 관찰하고 최근 점검과 자동 모니터링을 관리하세요. 윤작 계획은 탐색에서 만드세요.",
   "AI": "AI",
   "Live call": "실시간 통화",
   "Settings": "설정",
@@ -1464,4 +1479,11 @@ export const korean: Partial<Record<string, string>> = {
   "Delete and forget": "삭제하고 저장 정보 지우기",
   "Keep field": "포장 유지",
   "acres": "acres",
+  "Sprout": "Sprout",
+  "Your AI field advisor": "AI 영농 조언자",
+  "Open Sprout": "Sprout 열기",
+  "Close Sprout": "Sprout 닫기",
+  "Sprout loading…": "Sprout 불러오는 중…",
+  "Satellite imagery and Sprout, your AI field advisor, grounded in real data.": "실제 데이터에 기반한 위성 영상과 AI 영농 조언자 Sprout.",
+  "Map unavailable. ZIP lookup and Sprout still work.": "지도를 사용할 수 없습니다. 우편번호 검색과 Sprout는 계속 사용할 수 있습니다.",
 };

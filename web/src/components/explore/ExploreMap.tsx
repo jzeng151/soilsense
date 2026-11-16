@@ -16,6 +16,7 @@ export const MODIS_TILES =
 export const USGS_TILES =
   "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}";
 interface Props {
+  panelMode?: "plan" | "chat" | "closed";
   location: ExploreLocation | null;
   imagery: "usgs" | "modis";
   fields: FieldBoundary[];
@@ -120,6 +121,10 @@ export function ExploreMap(props: Props) {
       if (e.error?.message?.includes("WebGL")) latest.current.onError();
     });
     m.on("load", () => {
+      // Phones: start the compact attribution collapsed (MapLibre opens it) so it does not cover the
+      // ZIP card or assistant controls; the 24×24 info toggle still exposes the full credits.
+      const attrib = el.current?.querySelector(".maplibregl-ctrl-attrib.maplibregl-compact");
+      if (attrib && window.matchMedia("(max-width: 700px)").matches) attrib.classList.remove("maplibregl-compact-show");
       const css = getComputedStyle(el.current!);
       const line = css.getPropertyValue("--color-on-data").trim() || "white";
       const selected = css.getPropertyValue("--color-accent").trim();
@@ -221,7 +226,8 @@ export function ExploreMap(props: Props) {
         ? {
             center: [p.lon, p.lat] as [number, number],
             zoom: p.zip ? 12 : 14,
-            padding: { top: 0, bottom: 0, left: 0, right: 0 },
+            // Keep the field centred in the map area left visible by the floating rail and Sprout panel.
+            padding: window.innerWidth > 700 ? { top: 0, bottom: 0, left: 76, right: props.panelMode === "closed" ? 0 : Math.min(window.innerWidth - 176, props.panelMode === "plan" ? 792 : 416) } : { top: 0, bottom: 0, left: 56, right: 0 },
           }
         : {
             center: [-95, 30] as [number, number],
@@ -242,7 +248,7 @@ export function ExploreMap(props: Props) {
     const onBreakpoint = () => { if (!props.location) apply(false); };
     breakpoint.addEventListener('change', onBreakpoint);
     return () => breakpoint.removeEventListener('change', onBreakpoint);
-  }, [props.location]);
+  }, [props.location, props.panelMode]);
   useEffect(() => {
     const m = map.current;
     if (!m) return;

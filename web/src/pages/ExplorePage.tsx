@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import type { Map as GLMap } from "maplibre-gl";
 import { ExploreRail } from "../components/explore/ExploreRail";
 import { ExploreMap } from "../components/explore/ExploreMap";
@@ -9,14 +9,20 @@ import {
 import { LogoMark } from "../components/Logo";
 import { useI18n } from "../i18n";
 import type { FieldBoundary } from "../../../src/shared/fields";
+import { App } from "../App";
+import { MyFieldsPanel } from "../components/MyFieldsPanel";
+import type { PlanResponse } from "../../../src/shared/types";
 import "./explore.css";
+import "./field-workspace.css";
+import "./explore-sky.css";
+import "./explore-location-dialog.css";
 // U2 owns this implementation; never duplicate the assistant here.
 const Assistant = lazy(() =>
   import("../components/assistant/FieldAssistantPanel").then((m) => ({
     default: m.FieldAssistantPanel,
   })),
 );
-export function ExplorePage() {
+export function ExplorePage({ active = true }: { active?: boolean } = {}) {
   const { t } = useI18n();
   const [location, setLocation] = useState<ExploreLocation | null>(() =>
     locationFromHash(window.location.hash),
@@ -39,14 +45,24 @@ export function ExplorePage() {
     [fieldsUnavailable, setFieldsUnavailable] = useState(false);
   const [assistantOpen, setAssistantOpen] = useState(true),
     [mapFailed, setMapFailed] = useState(false);
+  const [workspaceTab, setWorkspaceTab] = useState<"plan" | "chat">("plan");
+  const [sharedPlan, setSharedPlan] = useState<PlanResponse | null>(null);
+  const [planningFieldId, setPlanningFieldId] = useState("");
+  const activeId = selected.length === 1 ? selected[0] : selected.includes(planningFieldId) ? planningFieldId : undefined;
+  const activeField = fields.find(f => f.id === activeId);
+  const needsPlanningField = selected.length > 0 && !activeField;
+  const target = activeField ? activeField.centroid : location;
+  const sessionKey = `${location?.lat}:${location?.lon}:${needsPlanningField ? "choose-field" : activeField?.id ?? "point"}`;
+  useEffect(() => { setSharedPlan(null); setWorkspaceTab("plan"); }, [sessionKey]);
   const map = useRef<GLMap | null>(null),
     zipInput = useRef<HTMLInputElement>(null),
     lookup = useRef(0);
   useEffect(() => {
     const f = () => {
+      if (!window.location.hash.startsWith("#/explore")) return;
       const p = locationFromHash(window.location.hash);
-      setLocation(p);
-      setSelected([]);
+      // A bare Explore navigation returns to the existing field, not a blank globe.
+      if (p) setLocation(previous => previous?.lat === p.lat && previous?.lon === p.lon ? previous : p);
     };
     window.addEventListener("hashchange", f);
     return () => window.removeEventListener("hashchange", f);
@@ -93,6 +109,17 @@ export function ExplorePage() {
         });
     return () => c.abort();
   }, [location]);
+  const locationDialog = useRef<HTMLDialogElement>(null);
+  const locationTrigger = useRef<HTMLButtonElement>(null);
+  const LocationCard = location ? "dialog" : "section";
+  useEffect(() => {
+    if (!editing || !locationDialog.current) return;
+    const dialog = locationDialog.current;
+    dialog.showModal();
+    zipInput.current?.focus();
+    return () => { dialog.close(); locationTrigger.current?.focus(); };
+  }, [editing]);
+  const chooseLocation = useCallback(() => { setEditing(true); }, []);
   function choose(p: ExploreLocation) {
     setLocation(p);
     setEditing(false);
@@ -185,13 +212,14 @@ export function ExplorePage() {
   );
   return (
     <main
-      id="content"
+      id={active ? "content" : undefined}
       tabIndex={-1}
       className={`explore-page ${location ? "has-location" : "is-globe"} ${assistantOpen ? "assistant-open" : ""}`}
     >
       <ExploreRail onLayers={() => setLayers((v) => !v)} />
       <div className="explore-map-area">
         <ExploreMap
+          panelMode={assistantOpen ? workspaceTab : "closed"}
           location={location}
           imagery={imagery}
           fields={fields}
@@ -212,6 +240,8 @@ export function ExplorePage() {
           onError={() => setMapFailed(true)}
           label={t(location ? "Satellite map" : "NASA globe")}
         />
+        {/* One h1 per view (WCAG 1.3.1/2.4.6): the visible intro heading disappears once a place is chosen. */}
+        {location && <h1 className="sr-only">{t("Explore")}: {location.label}</h1>}
         {!location && (
           <div className="explore-intro">
             <span>SOIL SENSE / {t("Explore")}</span>
@@ -219,9 +249,18 @@ export function ExplorePage() {
           </div>
         )}
         {(!location || editing) && (
-          <section
-            className="explore-location-card theme-canopy"
+          <LocationCard
+            ref={location ? locationDialog : undefined}
+            className={`explore-location-card theme-canopy ${location ? "explore-location-dialog" : ""}`}
             aria-label={t("Change location")}
+            onCancel={event => { event.preventDefault(); setEditing(false); }}
+            onKeyDown={event => {
+              if (!location || event.key !== "Tab") return;
+              const controls = [...event.currentTarget.querySelectorAll<HTMLElement>('input:not(:disabled), button:not(:disabled), select:not(:disabled), a[href], textarea:not(:disabled)')].filter(el => el.getClientRects().length > 0);
+              const first = controls[0], last = controls[controls.length - 1];
+              if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+              else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+            }}
           >
             <div className="explore-card-brand">
               <LogoMark size={38} /> Soil Sense
@@ -229,7 +268,7 @@ export function ExplorePage() {
             <h2>{t("What's your ZIP code?")}</h2>
             <p>
               {t(
-                "Satellite imagery and a field assistant, grounded in real data.",
+                "Satellite imagery and Sprout, your AI field advisor, grounded in real data.",
               )}
             </p>
             {zipForm}
@@ -238,10 +277,11 @@ export function ExplorePage() {
                 {t("Cancel")}
               </button>
             )}
-          </section>
+          </LocationCard>
         )}
         {location && (
           <button
+            ref={locationTrigger}
             className="explore-location-chip theme-canopy"
             type="button"
             aria-expanded={editing}
@@ -289,7 +329,7 @@ export function ExplorePage() {
           <p role="status" className="explore-status">
             {message ||
               t(
-                "Map unavailable. ZIP lookup and the field assistant still work.",
+                "Map unavailable. ZIP lookup and Sprout still work.",
               )}
           </p>
         )}
@@ -376,29 +416,50 @@ export function ExplorePage() {
             </section>
           )}
         </div>
-        {location && (
+        {/* Only offered while Sprout is closed; the open panel has its own close button. */}
+        {location && !assistantOpen && (
           <button
             type="button"
             className="explore-assistant-toggle theme-canopy"
-            aria-expanded={assistantOpen}
-            onClick={() => setAssistantOpen((v) => !v)}
+            aria-expanded={false}
+            onClick={() => setAssistantOpen(true)}
           >
-            {t(
-              assistantOpen ? "Close field assistant" : "Open field assistant",
-            )}
+            {t("Open Sprout")}
           </button>
         )}
       </div>
-      {location && assistantOpen && (
-        <aside className="explore-assistant theme-canopy">
-          <Suspense fallback={<p>{t("Field assistant loading…")}</p>}>
-            <Assistant
-              context={{ ...location, selectedFieldIds: selected }}
-              onClose={() => setAssistantOpen(false)}
-            />
-          </Suspense>
+      {location && (
+        <aside className={`explore-assistant explore-workspace ${workspaceTab === "plan" ? "is-planning" : ""}`} hidden={!assistantOpen} aria-label={t("Field workspace")}>
+          <div className="workspace-tabs" role="group" aria-label={t("Field workspace")}>
+            <button type="button" aria-pressed={workspaceTab === "plan"} onClick={() => setWorkspaceTab("plan")}>{t("Rotation options")}</button>
+            <button type="button" aria-pressed={workspaceTab === "chat"} onClick={() => setWorkspaceTab("chat")}>Sprout</button>
+            <button type="button" onClick={() => setAssistantOpen(false)} aria-label={t("Close assistant")}>×</button>
+          </div>
+          <div className="workspace-planner" hidden={workspaceTab !== "plan"}>
+            {selected.length > 1 && <label className="workspace-plan-notice">{t("Field to plan")}
+              <select value={activeField?.id ?? ""} onChange={e => setPlanningFieldId(e.target.value)}>
+                <option value="">{t("Choose one selected field")}</option>
+                {fields.filter(f => selected.includes(f.id)).map(f => <option key={f.id} value={f.id}>{f.name || f.id}</option>)}
+              </select>
+            </label>}
+            {!needsPlanningField && <App key={sessionKey} embedded initialLocation={target ?? undefined} initialField={activeField} onPlanChange={setSharedPlan} onChooseLocation={chooseLocation} />}
+            <MyFieldsPanel fields={fields.filter(f => selected.includes(f.id))} />
+          </div>
+          <div className="workspace-chat" hidden={workspaceTab !== "chat"}>
+            {!sharedPlan && <p role="status" className="workspace-plan-notice">{t("Build a rotation in Rotation options first. Sprout will use that exact plan and your settings.")}</p>}
+            <Suspense fallback={<p>{t("Sprout loading…")}</p>}>
+              <Assistant key={`${sessionKey}:${sharedPlan && !needsPlanningField ? JSON.stringify([sharedPlan.generatedAt, sharedPlan.request]) : "unplanned"}`} sharedPlan={needsPlanningField ? null : sharedPlan}
+                context={{ ...location, ...(target ?? {}), label: activeField?.name || location.label, selectedFieldIds: activeField ? [activeField.id] : [] }}
+              />
+            </Suspense>
+          </div>
         </aside>
       )}
+      {!location && <p className="explore-sky-credit">
+        <a href="https://www.eso.org/public/images/eso0932a/" target="_blank" rel="noreferrer">ESO/S. Brunier</a>
+        {" · "}<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>
+        {" · "}{t("Cropped to fit; darkened")}
+      </p>}
     </main>
   );
 }

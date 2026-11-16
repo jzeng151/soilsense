@@ -32,7 +32,7 @@ app.use("*", async (c, next) => {
 });
 
 app.get("/healthz", (c) => c.json({ ok: true }));
-app.get("/api/ui/status", (c) => c.json({ exploreLanding: c.env.EXPLORE_LANDING === "on" }));
+app.get("/api/ui/status", (c) => c.json({ exploreLanding: c.env.EXPLORE_LANDING !== "off" }));
 app.route("/api/explore", explore);
 // WebSocket for Twilio ConversationRelay (the conversational phone agent).
 app.get("/voice-agent", (c) => handleAgentSocket(c.req.raw, c.env));

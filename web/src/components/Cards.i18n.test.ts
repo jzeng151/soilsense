@@ -210,7 +210,8 @@ describe("Spanish plan and evidence cards", () => {
     await render(group(h(ResearchNote, { note }), h(ScoutMessage, { message: { id: "m1", role: "assistant", parts: [{ type: "reasoning", text: "Original model reasoning." }, { type: "text", text: "Original model output about corn." }] }, streaming: false })));
     expect(container.textContent).toContain("Nota de investigación · Investigación consultada");
     expect(container.textContent).toContain("Sorgo de grano, Trigo de invierno");
-    expect(container.textContent).toContain("Proceso de razonamiento");
+    expect(container.textContent).not.toContain("Proceso de razonamiento");
+    expect(container.textContent).not.toContain("Original model reasoning.");
     expect(container.textContent).toContain("Verbatim English research quotation.");
     expect(container.textContent).toContain("Original model output about corn.");
   });
@@ -235,7 +236,7 @@ describe("Spanish plan and evidence cards", () => {
     const settings = { greeting: "Existing English agent greeting", instructions: "Existing operator instructions", tools: { find_location: { enabled: true, description: "Existing tool prompt" } }, languages: { autoDetect: true, enabled: ["en", "es"] } };
     vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ settings, defaults: settings, status: { database: true, gemini: true, twilio: true, mode: "gemini-live", model: "Gemini" }, tools: [{ name: "find_location", title: "Find location", about: "Turns a spoken or typed ZIP code into a town, state and map point (Zippopotam.us).", required: true }], languages: [{ code: "en", name: "English", native: "English" }, { code: "es", name: "Spanish", native: "Español" }], limits: { greeting: 500, instructions: 5000 }, lockedRules: "Original rules", updatedAt: null }))));
     await render(group(h(Sidebar, { route: "settings", user: null, onSignOut: () => {}, open: false, onClose: () => {}, chats: [], activeChatId: null, onNavigate: () => {}, onNewChat: () => {}, onOpenChat: () => {}, onDeleteChat: () => {} }), h(SettingsPage, { onMenu: () => {} })));
-    for (const text of ["Planificador de rotaciones", "Nueva conversación", "Configuración", "Agente telefónico", "Qué dice", "Qué puede hacer", "Hablar el idioma de quien llama"]) expect(container.textContent).toContain(text);
+    for (const text of ["Field Watch", "Nueva conversación", "Configuración", "Agente telefónico", "Qué dice", "Qué puede hacer", "Hablar el idioma de quien llama"]) expect(container.textContent).toContain(text);
     expect((container.querySelector('#st-greeting') as HTMLTextAreaElement).value).toBe("Existing English agent greeting");
     expect(container.querySelector('[aria-label="Navegación principal"]')).toBeTruthy();
     const toolsTab = [...container.querySelectorAll('button')].find(el => el.textContent === "Qué puede hacer")!;

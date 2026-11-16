@@ -1,10 +1,9 @@
 import { useI18n } from "../i18n";
 import { LANGUAGE_LOCALES } from "../../../src/shared/language";
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, type UIMessage } from "ai";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useScoutSession } from "../ScoutSession";
+import { useEffect, useRef, useState } from "react";
 import { scoutStatus } from "../api";
-import { authFetch } from "../auth";
+
 import { ScoutMessage } from "../components/ScoutMessage";
 import { detectLang } from "../lang";
 import { LogoMark } from "../components/Logo";
@@ -79,16 +78,13 @@ type SpeechRec = {
 };
 
 interface Props {
-  chatId: string;
-  initialMessages: UIMessage[];
-  onMessages: (id: string, messages: UIMessage[]) => void;
+
   onMenu: () => void;
 }
 
-export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props) {
+export function ScoutPage({ onMenu }: Props) {
   const { t: tx, text: localize, language } = useI18n();
-  const transport = useMemo(() => new DefaultChatTransport({ api: "/api/scout/chat", fetch: authFetch, body: { language } }), [language]);
-  const { messages, sendMessage, status, error, stop, regenerate, clearError } = useChat({ id: chatId, messages: initialMessages, transport });
+  const { messages, sendMessage, status, error, stop, regenerate, clearError, blockedReason } = useScoutSession();
   const [input, setInput] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [listening, setListening] = useState(false);
@@ -110,15 +106,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
     inputRef.current?.focus();
   }, []);
 
-  // Persist when a turn starts and when it settles (not on every streamed token).
-  const lastSaved = useRef("");
-  useEffect(() => {
-    if (status === "streaming") return;
-    const sig = `${messages.length}:${status}`;
-    if (sig === lastSaved.current) return;
-    lastSaved.current = sig;
-    onMessages(chatId, messages);
-  }, [messages, status, chatId, onMessages]);
+
 
   const toBottom = (smooth = false) => {
     const el = scrollRef.current;
@@ -159,7 +147,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
 
   const send = (text: string) => {
     const q = text.trim();
-    if (!q || busy) return;
+    if (!q || busy || blockedReason) return;
     clearError();
     pinned.current = true;
     setShowJump(false);
@@ -231,6 +219,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
         placeholder={tx("Ask Sprout about your field")}
         aria-label={tx("Message Sprout")}
         maxLength={4000}
+        disabled={!!blockedReason}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
@@ -257,7 +246,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
           </svg>
         </button>
       ) : (
-        <button type="submit" className="sc-send" aria-label={tx("Send")} disabled={!input.trim()}>
+        <button type="submit" className="sc-send" aria-label={tx("Send")} disabled={!input.trim() || !!blockedReason}>
           {input.trim() ? (
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 19V5M5 12l7-7 7 7" />
@@ -275,7 +264,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
   const last = messages[messages.length - 1];
 
   return (
-    <div className="scout">
+    <main className="scout">
       <header className="sc-top">
         <button type="button" className="sc-icon-btn sc-menu-btn" aria-label={tx("Open sidebar")} onClick={onMenu}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -290,6 +279,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
       </header>
 
       {model?.research === "unavailable" && <p className="sc-research-state" role="status">{tx("Research unavailable: retrieval bindings are not configured. No research citations can be verified until search is available.")}</p>}
+      {blockedReason && <p role="status">{tx(blockedReason === "plan-required" ? "Build a rotation in Explore before asking about this field." : "This conversation belongs to an earlier field plan. Start a new chat to ask about the current plan.")}</p>}
 
       {empty ? (
         <div className="sc-hero">
@@ -328,13 +318,13 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
                 <span className="dot" />
                 <span className="dot" />
                 <span className="dot" />
-                <span className="sc-thinking-text">{tx("Sprout is checking the NASA data…")}</span>
+                <span className="sc-thinking-text">{tx("Thinking…")}</span>
               </div>
             )}
             {error && (
               <div className="sc-msg sc-bot sc-err">
                 <p>{localize(errorText(error))}</p>
-                <button type="button" className="sc-retry" onClick={() => void regenerate()}>{tx("Try again")}</button>
+                <button type="button" className="sc-retry" disabled={!!blockedReason} onClick={() => void regenerate()}>{tx("Try again")}</button>
               </div>
             )}
           </div>
@@ -352,7 +342,7 @@ export function ScoutPage({ chatId, initialMessages, onMessages, onMenu }: Props
           </div>
         </>
       )}
-    </div>
+    </main>
   );
 }
 

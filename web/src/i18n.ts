@@ -352,6 +352,13 @@ export function cropText(value: string, language: Language): string {
   const crop = aliases[normalized] ?? normalized;
   return Object.hasOwn(cropKeys, crop) ? cropName(crop as CropId, language) : translateKnown(language, value);
 }
+/** Display-only labels for Field Watch; never normalize crop IDs in requests or quoted passages. */
+export function watchCropName(value: string, language: Language): string {
+  const normalized = value.trim().toLowerCase().replaceAll(" ", "_");
+  const crop = normalized === "grain_sorghum" ? "sorghum" : normalized === "wheat" ? "winter_wheat" : normalized;
+  const label = (crop === "cover" ? translate(language, "Cover crops") : cropText(crop, language)).replaceAll("_", " ");
+  return label.charAt(0).toLocaleUpperCase(language) + label.slice(1);
+}
 export function rotationText(value: string, language: Language): string {
   if (language !== "en" && value.startsWith("Current pattern: ")) return `${language === "ko" ? "현재 재배 방식" : "Práctica actual"}: ${rotationText(value.slice("Current pattern: ".length), language)}`;
   return value.split(" → ").map(crop => cropText(crop, language)).join(" → ");
@@ -360,7 +367,7 @@ export const coverNames: Record<string, string> = { cereal_rye: "centeno", crims
 
 /** Complete templates from the deterministic Field Watch rules; never used for research or model text. */
 export function watchText(value: string, language: Language): string {
-  if (language === "en") return value;
+  if (language === "en" && !value.includes("reference stress window")) return value;
   if (value.startsWith("Historical replay: ")) return `${translate(language, "Historical replay")}: ${watchText(value.slice(19), language)}`;
   const rules: [RegExp, TranslationKey, string[]][] = [
     [/^Kansas weekly outlook for (.+) \(data through (\d{4}-\d{2}-\d{2}), context only\): alert "(.*)"\.$/, 'Kansas weekly outlook for {county} (data through {date}, context only): alert "{alert}".', ["county", "date", "alert"]],
@@ -394,7 +401,7 @@ export function watchText(value: string, language: Language): string {
     if (!match) continue;
     const values = Object.fromEntries(names.map((name, i) => {
       let text = match[i + 1]!;
-      if (name === "crop") text = cropText(text, language).toLowerCase();
+      if (name === "crop") text = language === "en" ? watchCropName(text, language) : cropText(text, language).toLowerCase();
       if (name === "span" || name === "date") text = text.replace(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/g, month => translateKnown(language, month));
       return [name, translateKnown(language, text)];
     }));

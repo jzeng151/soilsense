@@ -8,6 +8,8 @@ export interface ScoutChat {
   title: string;
   messages: UIMessage[];
   updatedAt: number;
+  /** Fingerprint of the field/plan this conversation was created for (legacy chats have none). */
+  contextKey?: string;
 }
 
 const KEY = "fieldshift.scout.chats.v1";

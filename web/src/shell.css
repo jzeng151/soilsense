@@ -166,8 +166,8 @@
 .auth-brand { position: relative; overflow: hidden; background: var(--color-brand-panel); color: var(--color-brand-panel-text); padding: 3.5rem; display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; }
 .auth-logo { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; color: var(--color-heading); }
 .auth-pitch { position: relative; z-index: 1; display: grid; gap: 1.5rem; max-width: 30rem; }
-.auth-pitch h1 { margin: 0; font-family: var(--font-display); font-size: clamp(3rem, 5.5vw, 4.5rem); line-height: 1; font-weight: 700; letter-spacing: -0.01em; color: var(--color-brand-panel-text); }
-.auth-pitch h1 em { font-style: normal; color: var(--color-brand-highlight); }
+.auth-pitch .auth-name { margin: 0; font-family: var(--font-display); font-size: clamp(3rem, 5.5vw, 4.5rem); line-height: 1; font-weight: 700; letter-spacing: -0.01em; color: var(--color-brand-panel-text); }
+.auth-pitch .auth-name em { font-style: normal; color: var(--color-brand-highlight); }
 .auth-pitch ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; color: var(--color-brand-panel-muted); font-size: 0.98rem; }
 .auth-pitch li { display: flex; gap: 0.7rem; align-items: baseline; }
 .auth-pitch li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--color-brand-highlight); flex: none; transform: translateY(-1px); }
@@ -181,7 +181,7 @@
 .auth-tabs button { border: 0; border-radius: var(--radius-full); padding: 0.5rem 0.75rem; background: transparent; color: var(--color-muted); font: inherit; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
 .auth-tabs button.on { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-sm); }
 .auth-head { display: grid; gap: 0.35rem; }
-.auth-head h2 { margin: 0; font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; letter-spacing: -0.01em; }
+.auth-head h1 { margin: 0; font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; letter-spacing: -0.01em; }
 .auth-head p { margin: 0; color: var(--color-muted); }
 .auth-form { display: grid; gap: 1rem; }
 .auth-field { display: grid; gap: 0.4rem; font-size: 0.88rem; font-weight: 600; color: var(--color-text); }

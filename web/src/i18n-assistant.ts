@@ -1,8 +1,15 @@
 export const assistantMessages = {
+
+  "Answer stopped early. Ask Sprout to continue.": "La respuesta se interrumpió. Pide a Sprout que continúe.",
+  "Source unavailable ({id})": "Fuente no disponible ({id})",
+
+  "This conversation belongs to an earlier field plan. Start a new chat to ask about the current plan.": "Esta conversación pertenece a un plan anterior. Inicia una conversación nueva para preguntar sobre el plan actual.",
+  "Build a rotation in Explore before asking about this field.": "Crea una rotación en Explorar antes de preguntar sobre esta parcela.",
+
   "Details": "Detalles",
   "You": "Tú",
-  "Field Assistant": "Asistente de parcelas",
-  "Your AI agronomy partner": "Tu compañero de agronomía con IA",
+  "Sprout": "Sprout",
+  "Your AI field advisor": "Tu asesor de campo con IA",
   "Assistant options": "Opciones del asistente",
   "Clear chat": "Borrar conversación",
   "Open full chat": "Abrir conversación completa",

@@ -14,6 +14,7 @@ export function FertilizerGuide({ fertilizer }: { fertilizer?: PlanFertilizer })
   const omRec = fertilizer.years.flatMap(y => y.recs).find(r => typeof r.inputsUsed.organicMatterPct === "number" && r.inputsUsed.organicMatterSource);
   const cell = (r: NutrientRec | undefined) => {
     if (!r) return t("Confirm with agronomist");
+    if (r.basis === "legume-not-needed") return <><strong>{t("Not needed (legume)")}</strong><small>{t("Legumes fix their own nitrogen; MF2586 gives no soybean N rate.")}</small></>;
     const removal = r.inputsUsed.cropRemovalLbPerAcre;
     return <>
       <strong>{r.lbPerAcre === null ? t(r.nutrient === "N" ? "Confirm with agronomist" : "Soil test needed") : fmt(r.lbPerAcre)}</strong>

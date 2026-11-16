@@ -1,5 +1,5 @@
 import { LANGUAGE_LOCALES, type Language } from "../../../src/shared/language";
-import { watchText, useI18n } from "../i18n";
+import { watchText, watchCropName, useI18n } from "../i18n";
 // Scheduled check by a field's own Cloudflare Agent (Durable Object): the visitor asks for a check, the agent
 // runs it about 45 s later on Cloudflare whether or not this page is open, and the result is saved there.
 // Reopening the page shows the saved result without running anything again.
@@ -47,7 +47,7 @@ interface WatchSettings {
   nextWeeklyAt: number | null;
   nextWindow: { crop: string; from: string; to: string; at: number; source: string } | null;
 }
-const CROP_NAME: Record<string, string> = { corn: "Corn", soybean: "Soybean", winter_wheat: "Winter wheat", oats: "Oats", alfalfa: "Alfalfa", sorghum: "Grain sorghum" };
+
 const MODE_LABEL: Record<AgentRun["mode"], string> = { live: "Current conditions", replay: "Historical replay", weekly: "Weekly check", window: "Crop window opened" };
 
 const LABEL: Record<Status, string> = { pending: "Scheduled", ok: "OK", watch: "Watch", dry: "Dry spell", insufficient: "No data", inactive: "Off season", error: "Error" };
@@ -191,7 +191,7 @@ export function ScheduledCheck() {
                   <option value="">{tx("Not confirmed")}</option>
                   {opts.weekly.crops.map((c) => (
                     <option key={c} value={c}>
-                      {localize(CROP_NAME[c] ?? c)}
+                      {watchCropName(c, language)}
                     </option>
                   ))}
                 </select>
@@ -202,7 +202,7 @@ export function ScheduledCheck() {
                   : tx("Weekly checks are off (the default).")}
                 {watch.enabled && watch.nextWindow && (
                   <>
-                    {" "}{tx("Extra check when")}{" "}{localize(CROP_NAME[watch.nextWindow.crop] ?? watch.nextWindow.crop)}{tx("'s heat-sensitive window opens:")}{" "}<b>{fmtDay(watch.nextWindow.at, language)}</b>{" "}{tx("(window")}{" "}{watch.nextWindow.from}{" "}{tx("to")}{" "}{watch.nextWindow.to}{tx("; an estimate from crop defaults, not an observed crop stage).")}</>
+                    {" "}{tx("Extra check when")}{" "}{watchCropName(watch.nextWindow.crop, language)}{tx("'s heat-sensitive window opens:")}{" "}<b>{fmtDay(watch.nextWindow.at, language)}</b>{" "}{tx("(window")}{" "}{watch.nextWindow.from}{" "}{tx("to")}{" "}{watch.nextWindow.to}{tx("; an estimate from crop defaults, not an observed crop stage).")}</>
                 )}
               </p>
             </fieldset>

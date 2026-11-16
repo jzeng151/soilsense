@@ -1,5 +1,7 @@
 export const exploreMessages = {
   "Cropped to fit; darkened": "Recortada para ajustarse; oscurecida",
+  "Field to plan": "Parcela que se planificará",
+  "Choose one selected field": "Elige una de las parcelas seleccionadas",
   "Field workspace": "Espacio de la parcela",
   "Rotation options": "Opciones de rotación",
   "Build a rotation in Rotation options first. Sprout will use that exact plan and your settings.": "Primero crea una rotación en Opciones de rotación. Sprout usará ese mismo plan y tus ajustes.",

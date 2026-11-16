@@ -14,6 +14,7 @@ import { runFieldWatch } from "./fieldwatch/run";
 import { live } from "./routes/live";
 import { refresh } from "./routes/refresh";
 import { POWER_REFRESH_CRON, startPowerRefresh } from "./refresh/workflow";
+import { IMERG_REFRESH_CRON, refreshImergEvidence } from "./imerg/refresh";
 
 // Durable Object classes must be exported from the main module.
 export { LiveRoom } from "./live/room";
@@ -63,6 +64,15 @@ async function scheduled(controller: ScheduledController, env: Env, ctx: Executi
   // Daily NASA POWER snapshot refresh (separate cron): start the Workflow instead of a Field Watch run.
   if (controller.cron === POWER_REFRESH_CRON) {
     ctx.waitUntil(startPowerRefresh(env, "cron").catch((err) => console.error(JSON.stringify({ msg: "power refresh start failed", err: String(err) }))));
+    return;
+  }
+  // IMERG refresh (every 5 min): must be matched before the Field Watch fallback below, which handles any other cron.
+  if (controller.cron === IMERG_REFRESH_CRON) {
+    ctx.waitUntil(
+      refreshImergEvidence(env)
+        .then((result) => console.log(JSON.stringify({ msg: "imerg refresh", ...result })))
+        .catch((err) => console.error(JSON.stringify({ msg: "imerg refresh failed", err: String(err) }))),
+    );
     return;
   }
   ctx.waitUntil(

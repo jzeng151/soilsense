@@ -50,7 +50,8 @@
   ],
 
   // Field Watch: check every watched field each hour in the background (scheduled() in src/worker/index.ts).
-  "triggers": { "crons": ["17 * * * *", "43 5 * * *"] },
+  // IMERG refresh: every 5 min, refresh at most one demo window before its cache expires (src/worker/imerg/refresh.ts).
+  "triggers": { "crons": ["17 * * * *", "43 5 * * *", "*/5 * * * *"] },
 
   // NASA POWER snapshot refresh: daily at 05:43 UTC (second cron above) and POST /api/refresh/run (ADMIN_TOKEN).
   "workflows": [{ "name": "soilsense-power-refresh", "binding": "POWER_REFRESH", "class_name": "PowerRefreshWorkflow" }, { "name": "soilsense-doc-ingest", "binding": "DOC_INGEST", "class_name": "DocIngestWorkflow" }],
@@ -69,7 +70,9 @@
   "vars": {
     "AI_MODEL": "@cf/google/gemma-4-26b-a4b-it",
     "TWILIO_VALIDATE": "true",
-    "HISTORY_START_YEAR": "1991"
+    "HISTORY_START_YEAR": "1991",
+    // Public CSB field outlines for the four demo areas (docs/FIELDS.md); "off" or unset disables them.
+    "FIELDS_ENABLED": "on"
   }
   // Secrets (set with `npx wrangler secret put NAME`, or .dev.vars locally):
   //   TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER (optional),

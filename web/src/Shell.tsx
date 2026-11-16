@@ -9,7 +9,7 @@ import { HowItWorksPage } from "./pages/HowItWorksPage";
 import { DocsAdmin } from "./components/DocsAdmin";
 import { ScoutSessionProvider, useScoutSession } from "./ScoutSession";
 import { GUEST_ID } from "./chats";
-import { ExploreRail, NavAccountContext, type RailHref } from "./components/explore/ExploreRail";
+import { ExploreRail, NavAccountContext, NavRailProvider, type RailHref } from "./components/explore/ExploreRail";
 import { ScoutPage } from "./pages/ScoutPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { SourcesPage } from "./pages/SourcesPage";
@@ -61,7 +61,7 @@ export function Shell() {
   }, []);
 
   return (
-    <LanguageProvider><ScoutSessionProvider ownerId={user?.id ?? GUEST_ID}><Workspace
+    <LanguageProvider><NavRailProvider><ScoutSessionProvider ownerId={user?.id ?? GUEST_ID}><Workspace
       key={user?.id ?? GUEST_ID}
       user={user}
       onSignedIn={setUser}
@@ -69,7 +69,7 @@ export function Shell() {
         await signOut();
         setUser(null);
       }}
-    /></ScoutSessionProvider></LanguageProvider>
+    /></ScoutSessionProvider></NavRailProvider></LanguageProvider>
   );
 }
 

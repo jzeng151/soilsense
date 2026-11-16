@@ -1,16 +1,9 @@
 .explore-page,
 .demo-page {
-  /* The rail and Sprout float over the map, so overlays are offset by their widths. */
-  --rail-w: 76px;
-  --rail-open-w: 236px;
+  /* The rail and Sprout float over the map, so overlays are offset by their widths. --rail-w comes from
+     components/explore/rail.css and follows the rail's open/minimized toggle, so overlays never sit under it. */
   --rail-clearance: var(--rail-w);
   --assist-w: 0px;
-}
-/* Move map labels out of the expanded rail's footprint without moving the map itself.
-   Keyboard focus uses the same layout as pointer hover. */
-.explore-page:has(.explore-rail:hover),
-.explore-page:has(.explore-rail:focus-within) {
-  --rail-clearance: var(--rail-open-w);
 }
 .explore-page.assistant-open.has-location {
   --assist-w: 416px;
@@ -257,6 +250,10 @@
 .explore-page.assistant-open .maplibregl-ctrl-bottom-right {
   right: var(--assist-w);
 }
+/* The expanded attribution wraps leftward from the right edge; stop it at the rail instead of drawing over it. */
+.explore-page .maplibregl-ctrl-bottom-right {
+  max-width: calc(100% - var(--rail-clearance) - var(--assist-w));
+}
 .explore-page .maplibregl-ctrl-bottom-left,
 .explore-page .maplibregl-ctrl-bottom-right,
 .explore-map-notes {
@@ -402,10 +399,6 @@
 }
 @media (max-width: 700px) {
   .is-globe .explore-layers:not(:has(section)) { display: none; }
-  .explore-page,
-  .demo-page {
-    --rail-w: 56px;
-  }
   .explore-page.assistant-open.has-location {
     --assist-w: 0px;
   }

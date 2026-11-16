@@ -827,6 +827,8 @@ export const korean: Partial<Record<string, string>> = {
   "Where this applies:": "적용 범위:",
   "Numbers inside quoted research come from those trial plots, not from your field.": "인용한 연구 속 수치는 해당 시험 포장에서 나온 값이며 내 포장의 값이 아닙니다.",
   "Main navigation": "주 메뉴",
+  "Minimize menu": "메뉴 최소화",
+  "Expand menu": "메뉴 펼치기",
   "Close navigation": "메뉴 닫기",
   "New chat": "새 대화",
   "Rotation planner": "윤작 계획",

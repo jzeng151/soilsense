@@ -1,3 +1,6 @@
+import type { Language } from "./language";
+import { GLOSSARY_KO } from "./glossary-ko";
+
 export const GLOSSARY_VERSION = "plain-language-v1";
 export interface GlossaryEntry { id: string; plain: string; technical: string; definition: string; limit: string; source: { title: string; url: string }; }
 const power = { title: "NASA POWER methodology", url: "https://power.larc.nasa.gov/docs/methodology/" };
@@ -22,7 +25,6 @@ export const GLOSSARY = [
   { id: "water-balance", plain: "Rain minus water demand", technical: "Climatic water balance", definition: "The displayed weather indicator subtracts modeled crop water demand from rain for the stated window.", limit: "It is not a full field water budget, measured pumping or a water right. Soil storage, runoff and actual irrigation need separate treatment.", source: engine },
 ] as const satisfies readonly GlossaryEntry[];
 type GlossaryId = typeof GLOSSARY[number]["id"];
-type GlossaryLanguage = "en" | "es";
 /** Source titles and URLs are provenance and remain as published. */
 export const GLOSSARY_ES: Record<GlossaryId, Pick<GlossaryEntry, "plain" | "technical" | "definition" | "limit">> = {
   "irrigation-allocation": { plain: "Agua asignada", technical: "Asignación de agua para riego", definition: "Cantidad de agua de riego autorizada para un período y una superficie determinados. Es un límite, no una prueba de que se haya extraído agua.", limit: "El modo de agua limitada de SoilSense supone unas 10 pulgadas por temporada de cultivo; confirma localmente los límites legales anuales y la capacidad del pozo." },
@@ -42,15 +44,17 @@ export const GLOSSARY_ES: Record<GlossaryId, Pick<GlossaryEntry, "plain" | "tech
   "frost-risk": { plain: "Tiempo entre heladas", technical: "Período libre de heladas", definition: "Días entre la última helada de primavera y la primera de otoño, usando la temperatura mínima diaria del aire igual o inferior a 32°F.", limit: "Una estimación regional de temperatura no es una helada observada en la parcela ni un pronóstico. Influyen la sensibilidad del cultivo y las zonas bajas del terreno." },
   "water-balance": { plain: "Lluvia menos demanda de agua", technical: "Balance hídrico climático", definition: "El indicador meteorológico mostrado resta de la lluvia la demanda de agua del cultivo estimada para el período indicado.", limit: "No es un balance hídrico completo de la parcela, una medición de extracción ni un derecho de agua. El almacenamiento en el suelo, la escorrentía y el riego real deben tratarse por separado." },
 };
-export function glossaryEntries(language: GlossaryLanguage = "en"): readonly GlossaryEntry[] {
+export function glossaryEntries(language: Language = "en"): readonly GlossaryEntry[] {
+  if (language === "ko") return GLOSSARY.map(entry => ({ ...entry, ...GLOSSARY_KO[entry.id] }));
   return language === "es" ? GLOSSARY.map(entry => ({ ...entry, ...GLOSSARY_ES[entry.id] })) : GLOSSARY;
 }
-export function glossaryEntry(id: string, language: GlossaryLanguage = "en"): GlossaryEntry {
+export function glossaryEntry(id: string, language: Language = "en"): GlossaryEntry {
   const entry = GLOSSARY.find((entry) => entry.id === id);
   if (!entry) throw new Error(`Unknown glossary term: ${id}`);
+  if (language === "ko") return { ...entry, ...GLOSSARY_KO[entry.id] };
   return language === "es" ? { ...entry, ...GLOSSARY_ES[entry.id] } : entry;
 }
 /** Stable shared text for future alerts, exports and AI grounding; defining a term enables no data feature. */
-export function glossaryContext(ids: readonly string[], language: GlossaryLanguage = "en"): string {
-  return [`${language === "es" ? "Vocabulario" : "Vocabulary"}: ${GLOSSARY_VERSION}`, ...[...new Set(ids)].map((id) => { const e = glossaryEntry(id, language); return `${e.plain} (${e.technical}): ${e.definition} ${e.limit} ${language === "es" ? "Fuente" : "Source"}: ${e.source.url}`; })].join("\n");
+export function glossaryContext(ids: readonly string[], language: Language = "en"): string {
+  return [`${language === "ko" ? "용어집" : language === "es" ? "Vocabulario" : "Vocabulary"}: ${GLOSSARY_VERSION}`, ...[...new Set(ids)].map((id) => { const e = glossaryEntry(id, language); return `${e.plain} (${e.technical}): ${e.definition} ${e.limit} ${language === "ko" ? "출처" : language === "es" ? "Fuente" : "Source"}: ${e.source.url}`; })].join("\n");
 }

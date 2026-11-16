@@ -12,17 +12,18 @@ import type {
   RotationPlan,
   SoilProfile,
 } from "../shared/types";
+import type { Language } from "../shared/language";
 import { formatSigned, round } from "../shared/units";
 import { CROPS } from "./crops";
 import type { CropClimate } from "./rotation";
 import { isSignificant } from "./stats";
 import { LOSS_WORDS, lossShares } from "./validate";
 
-const PRIORITY_WORDS: Record<Priority, { en: string; es: string }> = {
-  profit: { en: "profit", es: "ganancia" },
-  soil: { en: "soil health", es: "salud del suelo" },
-  risk: { en: "lower risk", es: "menor riesgo" },
-  balanced: { en: "a balance of profit, soil and risk", es: "un balance entre ganancia, suelo y riesgo" },
+const PRIORITY_WORDS: Record<Priority, Record<Language, string>> = {
+  profit: { en: "profit", es: "ganancia", ko: "수익" },
+  soil: { en: "soil health", es: "salud del suelo", ko: "토양 건강" },
+  risk: { en: "lower risk", es: "menor riesgo", ko: "위험 감소" },
+  balanced: { en: "a balance of profit, soil and risk", es: "un balance entre ganancia, suelo y riesgo", ko: "수익, 토양 건강, 위험 간의 균형" },
 };
 
 export const CROP_ES: Record<CropId, string> = {
@@ -33,6 +34,29 @@ export const CROP_ES: Record<CropId, string> = {
   alfalfa: "alfalfa",
   sorghum: "sorgo de grano",
   fallow: "barbecho (sin cultivo)",
+};
+
+const CROP_KO: Record<CropId, string> = {
+  corn: "옥수수",
+  soybean: "대두",
+  winter_wheat: "겨울밀",
+  oats: "귀리",
+  alfalfa: "알팔파",
+  sorghum: "수수",
+  fallow: "휴경(작물 미재배)",
+};
+
+const INDICATOR_KO: Record<string, string> = {
+  gs_rain: "생육기 강수량(5–9월)",
+  spring_rain: "봄철 강수량(4–5월)",
+  hot_days: "기온이 95°F 이상인 날의 수(6–8월)",
+  frost_free: "무상기간",
+  gdd: "생육적산온도(5–9월)",
+  dry_spell: "여름철 최장 연속 건조일수(6–8월)",
+  summer_tmax: "여름철 평균 최고기온(6–8월)",
+  water_demand: "작물 물 요구량(5–9월)",
+  water_balance: "물수지: 강수량에서 물 요구량을 뺀 값(5–9월)",
+  soil_wetness: "근권 토양 습윤도(6–8월)",
 };
 
 /** Make text easy for a text-to-speech voice: no symbols, units spelled out, no statistics jargon in brackets. */
@@ -215,6 +239,11 @@ function planSentenceEs(plan: RotationPlan): string {
   return plan.years.map((y) => `${CROP_ES[y.crop]} en ${y.year}${y.cover !== "none" ? ` con ${covers[y.cover]} como cobertura invernal` : ""}`).join(", luego ");
 }
 
+function planSentenceKo(plan: RotationPlan): string {
+  const covers = { cereal_rye: "호밀", crimson_clover: "크림슨클로버", hairy_vetch: "헤어리베치", none: "" };
+  return plan.years.map((y) => `${y.year}년 ${CROP_KO[y.crop]}${y.cover !== "none" ? `, 겨울철 피복작물로 ${covers[y.cover]} 재배` : ""}`).join(" → ");
+}
+
 export function buildExplanation(args: {
   plans: RotationPlan[];
   currentPractice: RotationPlan | null;
@@ -222,16 +251,50 @@ export function buildExplanation(args: {
   facts: ReasonFact[];
   priority: Priority;
   placeName?: string;
-  language?: "en" | "es";
+  language?: Language;
 }): { summary: string; speech: string; sms: string } {
   const { plans, climate, facts, priority, currentPractice } = args;
   const top = plans[0];
+  if (!top && args.language === "ko") return {
+    summary: "실행 가능한 윤작 계획을 찾지 못했습니다.",
+    speech: "이 위치에 대한 윤작 계획을 수립하지 못했습니다.",
+    sms: "SoilSense: 이용 가능한 윤작 계획이 없습니다.",
+  };
   if (!top) return args.language === "es"
     ? { summary: "No se encontró una rotación viable.", speech: "No pude preparar un plan para esta ubicación.", sms: "SoilSense: no hay un plan disponible." }
     : { summary: "No feasible rotation found.", speech: "Sorry, I could not build a plan for this location.", sms: "SoilSense: no plan available." };
 
   const sigTrends = climate.indicators.filter((i) => isSignificant(i.trend));
   const keyTrend = sigTrends.find((i) => ["hot_days", "gs_rain", "spring_rain", "dry_spell"].includes(i.id)) ?? sigTrends[0];
+
+  if (args.language === "ko") {
+    const place = args.placeName ? `${args.placeName} 인근 농경지` : "해당 농경지";
+    const units: Record<string, string> = { in: "인치", days: "일", "°F·days": "°F·일", "°F": "°F", "%": "%p" };
+    const climateLine = keyTrend
+      ? `${place}의 NASA 자료에 따르면 ${INDICATOR_KO[keyTrend.id] ?? keyTrend.label} 지표는 10년마다 약 ${Math.abs(round(keyTrend.changePerDecade, keyTrend.unit === "in" ? 1 : 0))} ${units[keyTrend.unit] ?? keyTrend.unit} ${keyTrend.changePerDecade > 0 ? "증가" : "감소"}하는 추세이며, 이 변화는 통계적으로 유의합니다.`
+      : `${place}의 NASA 자료에서는 ${climate.firstYear}년 이후 강수량이나 고온에 통계적으로 뚜렷한 변화가 나타나지 않았습니다.`;
+    const provenance = `NASA 기후 자료 ${climate.firstYear}-${climate.lastYear}년 기준.`;
+    const recommendation = `${PRIORITY_WORDS[priority].ko}에 중점을 둔 권장 윤작: ${planSentenceKo(top)}.`;
+    const nDiff = currentPractice ? currentPractice.totalNitrogenLbPerAcre - top.totalNitrogenLbPerAcre : 0;
+    let comparison = "";
+    if (currentPractice && facts.some(f => f.id === "vs-current")) {
+      const d = top.avgNetReturnPerAcre - currentPractice.avgNetReturnPerAcre;
+      comparison = ` 현재 재배 방식(${planSentenceKo(currentPractice)})을 유지할 때와 비교하면, 연간 에이커당 추정 순수익 차이는 ${d >= 0 ? "+" : "−"}$${Math.abs(d)}/acre이며, 3년간 질소 투입량은 ${Math.abs(nDiff)} lb/acre ${nDiff >= 0 ? "감소" : "증가"}합니다. 토양 건강 점수는 100점 만점에 권장 윤작 ${round(top.scores.soil * 100, 0)}점, 현재 재배 방식 ${round(currentPractice.scores.soil * 100, 0)}점입니다.`;
+    }
+    const benefit = currentPractice && nDiff > 20 ? ` 현재 재배 방식보다 3년간 에이커당 질소 투입량이 약 ${nDiff}파운드 적습니다.` : "";
+    const coverLine = top.coverYears > 0 ? " 피복작물은 겨울철 토양을 보호합니다." : "";
+    const advice = "종자를 구입하기 전에 관할 지역의 농업지도 담당자와 확인하세요.";
+    const speech = `${climateLine} ${provenance} ${recommendation}${benefit}${coverLine} ${advice}`
+      .replace(/([\d.]+) °F·일/g, "$1화씨 도일")
+      .replace(/([\d.]+)\s*°F/g, "화씨 $1도")
+      .replace(/([\d.]+) %p/g, "$1퍼센트포인트")
+      .replace(/ → /g, ", 다음으로 ");
+    return {
+      summary: `${climateLine} ${provenance} ${recommendation}${comparison}`,
+      speech,
+      sms: `SoilSense 윤작 계획: ${planSentenceKo(top)}. ${provenance} ${advice}`,
+    };
+  }
   const place = args.placeName ? ` near ${args.placeName}` : "";
 
   const climateLine = keyTrend

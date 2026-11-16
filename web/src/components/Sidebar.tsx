@@ -1,3 +1,4 @@
+import { LANGUAGES, LANGUAGE_NAMES } from "../../../src/shared/language";
 import { howItWorksCopy, useI18n } from "../i18n";
 import { useEffect, useRef } from "react";
 import type { User } from "../auth";
@@ -65,7 +66,7 @@ export function Sidebar({ route, user, onSignOut, open, onClose, chats, activeCh
           </svg>{tx("New chat")}</button>
 
         <div className="language-switch" role="group" aria-label={tx("Language")}>
-          {(["en", "es"] as const).map((code) => <button key={code} type="button" aria-pressed={language === code} onClick={() => setLanguage(code)}>{code.toUpperCase()}</button>)}
+          {LANGUAGES.map((code) => <button key={code} type="button" lang={code} aria-label={code === "ko" ? LANGUAGE_NAMES[code] : `${code.toUpperCase()} ${LANGUAGE_NAMES[code]}`} aria-pressed={language === code} onClick={() => setLanguage(code)}>{code === "ko" ? LANGUAGE_NAMES[code] : code.toUpperCase()}</button>)}
         </div>
         <nav className="sb-nav">
           <a href="#/explore" className={route === "explore" ? "on" : ""} onClick={() => onNavigate("explore")}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c6 5 6 13 0 18-6-5-6-13 0-18"/></svg>{tx("Explore")}</a>

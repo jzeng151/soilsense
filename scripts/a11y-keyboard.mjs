@@ -1,11 +1,12 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
-// Exact planner/navigation copy from i18n.ts/i18n-cards.ts and i18n-ko.ts.
+// Exact planner/navigation copy from i18n.ts/i18n-cards.ts, i18n-ko.ts and i18n-zh.ts.
 const labels = {
   en: { confirm: 'Yes, this is my field →', showPlan: 'Show my plan →', skip: 'Skip to main content', close: 'Close navigation', team: 'Team sign-in', open: 'Open sidebar', questions: 'Three quick questions' },
   es: { confirm: 'Sí, esta es mi parcela →', showPlan: 'Ver mi plan →', skip: 'Saltar al contenido principal', close: 'Cerrar navegación', team: 'Acceso del equipo', open: 'Abrir barra lateral', questions: 'Tres preguntas rápidas' },
   ko: { confirm: '네, 제 포장입니다 →', showPlan: '내 계획 보기 →', skip: '본문으로 건너뛰기', close: '메뉴 닫기', team: '팀 로그인', open: '사이드바 열기', questions: '간단한 질문 세 가지' },
+  'zh-Hans': { confirm: '是的，这是我的田块 →', showPlan: '显示我的计划 →', skip: '跳转到主要内容', close: '关闭导航', team: '团队登录', open: '打开侧栏', questions: '三个简单问题' },
 };
 const languages = Object.keys(labels);
 const widths = [1280,375];
@@ -97,4 +98,4 @@ try {
 }
 assert.equal(observations.length,languages.length * widths.length,'Every language and width completed');
 assert.equal(observations.flatMap(o=>o.undersizedButtons).length,0,'Enabled landing buttons meet the 44px team rule');
-console.log('Keyboard flow and 44px button checks passed in EN, ES and KO at both widths');
+console.log(`Keyboard flow and 44px button checks passed in ${languages.join(', ')} at both widths`);

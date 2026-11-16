@@ -3,12 +3,13 @@ import axe from 'axe-core';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 
-// Exact copy from i18n.ts/i18n-cards.ts, i18n-ko.ts and admin i18n-pages.ts.
+// Exact copy from i18n.ts/i18n-cards.ts, i18n-ko.ts, i18n-zh.ts and admin i18n-pages*.ts.
 // Keep this Node runner independent of the UI's TypeScript/React imports.
 const labels = {
   en: { confirm: 'Yes, this is my field →', showPlan: 'Show my plan →', water: /^Water conservation/, organic: /^Organic matter/, timing: 'Compare timing', history: 'Load field history', vegetation: 'Historical vegetation evidence', admin: 'Document review', token: 'Admin token', refresh: 'Refresh documents', review: 'Review ' },
   es: { confirm: 'Sí, esta es mi parcela →', showPlan: 'Ver mi plan →', water: /^Conservación del agua/, organic: /^Materia orgánica/, timing: 'Comparar fechas', history: 'Cargar historial de la parcela', vegetation: 'Datos históricos de vegetación', admin: 'Revisión de documentos', token: 'Token de administrador', refresh: 'Actualizar documentos', review: 'Revisar ' },
   ko: { confirm: '네, 제 포장입니다 →', showPlan: '내 계획 보기 →', water: /^용수 절약/, organic: /^유기물/, timing: '시기 비교', history: '포장 과거 자료 불러오기', vegetation: '과거 식생 근거 자료', admin: '문서 검토', token: '관리자 토큰', refresh: '문서 새로고침', review: '검토: ' },
+  'zh-Hans': { confirm: '是的，这是我的田块 →', showPlan: '显示我的计划 →', water: /^节约用水/, organic: /^有机质/, timing: '比较时间', history: '加载田块历史', vegetation: '历史植被证据', admin: '文档审核', token: '管理员令牌', refresh: '刷新文档', review: '审核 ' },
 };
 const languages = Object.keys(labels);
 const widths = [1280, 375];
@@ -59,7 +60,7 @@ try {
     // Both controls return from their translated busy label only after the requests settle.
     await page.getByRole('button', {name:copy.timing, exact:true}).waitFor();
     await page.getByRole('button', {name:copy.history, exact:true}).waitFor();
-    await page.waitForFunction(() => ![...document.querySelectorAll('main p, main button')].some(e => /^(?:Loading|Cargando)(?: |…)|불러오는 중…$/.test(e.textContent.trim())));
+    await page.waitForFunction(() => ![...document.querySelectorAll('main p, main button')].some(e => /^(?:Loading|Cargando)(?: |…)|불러오는 중…$|^正在加载/.test(e.textContent.trim())));
     // Async evidence can add disclosures after the plan shell first appears.
     await page.evaluate(() => document.querySelectorAll('details').forEach(d => { d.open = true; }));
     await page.waitForTimeout(500);

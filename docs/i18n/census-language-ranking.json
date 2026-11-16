@@ -1,0 +1,262 @@
+{
+  "source": "U.S. Census Bureau, 2025 ACS 1-Year Estimates, B16001, United States, population 5 years and over",
+  "tableUrl": "https://data.census.gov/table/ACSDT1Y2025.B16001?g=010XX00US",
+  "dataUrl": "https://data.census.gov/api/access/data/table?g=010XX00US&id=ACSDT1Y2025.B16001",
+  "metadataUrl": "https://data.census.gov/api/search/metadata/table?g=010XX00US&id=ACSDT1Y2025.B16001",
+  "retrievedAt": "2026-11-16T01:17:19.091948+00:00",
+  "method": "Keep estimate variables whose Census label has exactly two !! separators, omit Speak only English, sort estimates descending. These are language categories, some grouped; ACS estimates are subject to sampling error.",
+  "ranking": [
+    {
+      "language": "Spanish",
+      "variable": "B16001_003E",
+      "estimate": 44921985,
+      "marginOfError90": 177787
+    },
+    {
+      "language": "Chinese (incl. Mandarin, Cantonese)",
+      "variable": "B16001_075E",
+      "estimate": 3775645,
+      "marginOfError90": 47062
+    },
+    {
+      "language": "Tagalog (incl. Filipino)",
+      "variable": "B16001_099E",
+      "estimate": 1969835,
+      "marginOfError90": 39681
+    },
+    {
+      "language": "Vietnamese",
+      "variable": "B16001_087E",
+      "estimate": 1659708,
+      "marginOfError90": 37067
+    },
+    {
+      "language": "Arabic",
+      "variable": "B16001_105E",
+      "estimate": 1366367,
+      "marginOfError90": 45016
+    },
+    {
+      "language": "French (incl. Cajun)",
+      "variable": "B16001_006E",
+      "estimate": 1222687,
+      "marginOfError90": 35185
+    },
+    {
+      "language": "Korean",
+      "variable": "B16001_081E",
+      "estimate": 1173323,
+      "marginOfError90": 29668
+    },
+    {
+      "language": "Portuguese",
+      "variable": "B16001_015E",
+      "estimate": 1037525,
+      "marginOfError90": 34384
+    },
+    {
+      "language": "Hindi",
+      "variable": "B16001_048E",
+      "estimate": 1023916,
+      "marginOfError90": 32546
+    },
+    {
+      "language": "Russian",
+      "variable": "B16001_027E",
+      "estimate": 1001388,
+      "marginOfError90": 31171
+    },
+    {
+      "language": "Haitian",
+      "variable": "B16001_009E",
+      "estimate": 936913,
+      "marginOfError90": 38415
+    },
+    {
+      "language": "German",
+      "variable": "B16001_018E",
+      "estimate": 833996,
+      "marginOfError90": 25414
+    },
+    {
+      "language": "Yoruba, Twi, Igbo, or other languages of Western Africa",
+      "variable": "B16001_114E",
+      "estimate": 731932,
+      "marginOfError90": 31980
+    },
+    {
+      "language": "Other Indo-European languages",
+      "variable": "B16001_063E",
+      "estimate": 715295,
+      "marginOfError90": 35209
+    },
+    {
+      "language": "Amharic, Somali, or other Afro-Asiatic languages",
+      "variable": "B16001_111E",
+      "estimate": 705688,
+      "marginOfError90": 31690
+    },
+    {
+      "language": "Telugu",
+      "variable": "B16001_066E",
+      "estimate": 650020,
+      "marginOfError90": 30108
+    },
+    {
+      "language": "Urdu",
+      "variable": "B16001_051E",
+      "estimate": 624592,
+      "marginOfError90": 28023
+    },
+    {
+      "language": "Persian (incl. Farsi, Dari)",
+      "variable": "B16001_042E",
+      "estimate": 621079,
+      "marginOfError90": 27193
+    },
+    {
+      "language": "Yiddish, Pennsylvania Dutch or other West Germanic languages",
+      "variable": "B16001_021E",
+      "estimate": 607857,
+      "marginOfError90": 21300
+    },
+    {
+      "language": "Nepali, Marathi, or other Indic languages",
+      "variable": "B16001_060E",
+      "estimate": 590410,
+      "marginOfError90": 29328
+    },
+    {
+      "language": "Gujarati",
+      "variable": "B16001_045E",
+      "estimate": 562428,
+      "marginOfError90": 28467
+    },
+    {
+      "language": "Ilocano, Samoan, Hawaiian, or other Austronesian languages",
+      "variable": "B16001_102E",
+      "estimate": 538808,
+      "marginOfError90": 24525
+    },
+    {
+      "language": "Other languages of Asia",
+      "variable": "B16001_096E",
+      "estimate": 534963,
+      "marginOfError90": 26189
+    },
+    {
+      "language": "Ukrainian or other Slavic languages",
+      "variable": "B16001_036E",
+      "estimate": 509633,
+      "marginOfError90": 22061
+    },
+    {
+      "language": "Bengali",
+      "variable": "B16001_057E",
+      "estimate": 494741,
+      "marginOfError90": 26926
+    },
+    {
+      "language": "Japanese",
+      "variable": "B16001_078E",
+      "estimate": 486675,
+      "marginOfError90": 21672
+    },
+    {
+      "language": "Italian",
+      "variable": "B16001_012E",
+      "estimate": 484589,
+      "marginOfError90": 18111
+    },
+    {
+      "language": "Polish",
+      "variable": "B16001_030E",
+      "estimate": 483852,
+      "marginOfError90": 18449
+    },
+    {
+      "language": "Tamil",
+      "variable": "B16001_069E",
+      "estimate": 401880,
+      "marginOfError90": 23045
+    },
+    {
+      "language": "Swahili or other languages of Central, Eastern, and Southern Africa",
+      "variable": "B16001_117E",
+      "estimate": 401107,
+      "marginOfError90": 27577
+    },
+    {
+      "language": "Punjabi",
+      "variable": "B16001_054E",
+      "estimate": 381611,
+      "marginOfError90": 25709
+    },
+    {
+      "language": "Other and unspecified languages",
+      "variable": "B16001_126E",
+      "estimate": 364275,
+      "marginOfError90": 19645
+    },
+    {
+      "language": "Malayalam, Kannada, or other Dravidian languages",
+      "variable": "B16001_072E",
+      "estimate": 338774,
+      "marginOfError90": 18081
+    },
+    {
+      "language": "Thai, Lao, or other Tai-Kadai languages",
+      "variable": "B16001_093E",
+      "estimate": 314018,
+      "marginOfError90": 16693
+    },
+    {
+      "language": "Armenian",
+      "variable": "B16001_039E",
+      "estimate": 257424,
+      "marginOfError90": 17657
+    },
+    {
+      "language": "Hebrew",
+      "variable": "B16001_108E",
+      "estimate": 247683,
+      "marginOfError90": 15329
+    },
+    {
+      "language": "Greek",
+      "variable": "B16001_024E",
+      "estimate": 241722,
+      "marginOfError90": 14122
+    },
+    {
+      "language": "Hmong",
+      "variable": "B16001_084E",
+      "estimate": 239027,
+      "marginOfError90": 16305
+    },
+    {
+      "language": "Serbo-Croatian",
+      "variable": "B16001_033E",
+      "estimate": 231322,
+      "marginOfError90": 16630
+    },
+    {
+      "language": "Khmer",
+      "variable": "B16001_090E",
+      "estimate": 206165,
+      "marginOfError90": 16163
+    },
+    {
+      "language": "Other Native languages of North America",
+      "variable": "B16001_123E",
+      "estimate": 160585,
+      "marginOfError90": 7855
+    },
+    {
+      "language": "Navajo",
+      "variable": "B16001_120E",
+      "estimate": 139312,
+      "marginOfError90": 5972
+    }
+  ]
+}

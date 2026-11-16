@@ -51,6 +51,7 @@ export function HowItWorksPage({ onMenu }: { onMenu: () => void }) {
           <button type="button" lang="en" aria-label="English" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>English</button>
           <button type="button" lang="es" aria-label="Español" aria-pressed={language === "es"} onClick={() => setLanguage("es")}>Español</button>
           <button type="button" lang="ko" aria-label="한국어" aria-pressed={language === "ko"} onClick={() => setLanguage("ko")}>한국어</button>
+          <button type="button" lang="zh-Hans" aria-label="简体中文" aria-pressed={language === "zh-Hans"} onClick={() => setLanguage("zh-Hans")}>简体中文</button>
         </div>
         <p className="eyebrow">SoilSense · NASA Space Apps 2026</p>
         <h1>{text(copy.title)}</h1>

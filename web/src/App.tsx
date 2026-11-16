@@ -140,6 +140,7 @@ function soilName(name: string | undefined): string | undefined {
 
 /** "Grow soybean in 2027, corn in 2028, then soybean in 2029." */
 function planSentence(p: RotationPlan, language: Language): string {
+  if (language === "zh-Hans") return `建议依次安排：${p.years.map(y => `${y.year}年${y.crop === "fallow" ? "休耕" : `种植${cropName(y.crop, language)}`}`).join("，然后")}。`;
   if (language === "ko") return `다음 순서를 권장합니다: ${p.years.map(y => `${y.year}년 ${cropName(y.crop, language)}${y.crop === "fallow" ? "" : " 재배"}`).join(", 이후 ")}.`;
   if (language === "es") {
     const parts = p.years.map((y) => y.crop === "fallow" ? `dejar la parcela en barbecho en ${y.year}` : `cultivar ${cropName(y.crop, language).toLowerCase()} en ${y.year}`);
@@ -388,6 +389,7 @@ function MainFlow() {
           <span aria-hidden="true"> / </span>
           <button type="button" lang="es" aria-label="ES Español" aria-pressed={language === "es"} onClick={() => setLanguage("es")}>ES</button>
           <button type="button" lang="ko" aria-label="한국어" aria-pressed={language === "ko"} onClick={() => setLanguage("ko")}>한국어</button>
+          <button type="button" lang="zh-Hans" aria-label="简体中文" aria-pressed={language === "zh-Hans"} onClick={() => setLanguage("zh-Hans")}>简体中文</button>
         </div>
       </header>
 
@@ -713,7 +715,7 @@ function MainFlow() {
                 {(plan.request.soilTest || plan.request.yieldRecords?.length) && <div className="jr-card">
                   <h2 className="jr-h2">{t("Your measurements in this plan")}</h2>
                   {plan.request.soilTest && <SoilComparison soil={plan.soil} test={plan.request.soilTest} />}
-                  <ul className="reasons">{plan.facts.filter((f) => f.id.startsWith("farmer-")).map((f) => <li key={f.id}>{f.text}</li>)}</ul>
+                  <ul className="reasons">{plan.facts.filter((f) => f.id.startsWith("farmer-")).map((f) => <li key={f.id}>{factText(f.text, language)}</li>)}</ul>
                 </div>}
                 <DataEvidence plan={plan} />
 

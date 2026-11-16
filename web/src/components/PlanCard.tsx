@@ -7,6 +7,7 @@ import { PlanExplanation } from "./PlanExplanation";
 
 const localizedCoverNames = {
   es: coverNames,
+  "zh-Hans": { cereal_rye: "黑麦", crimson_clover: "绛三叶", hairy_vetch: "毛叶苕子", none: "无覆盖作物" },
   ko: { cereal_rye: "호밀", crimson_clover: "크림슨클로버", hairy_vetch: "헤어리베치", none: "피복작물 없음" },
 };
 

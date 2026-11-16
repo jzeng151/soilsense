@@ -276,7 +276,7 @@ api.post("/ask", async (c) => {
       console.warn(JSON.stringify({ msg: "workers ai failed", err: String(err) }));
     }
   }
-  return c.json({ answer: parseLanguage(body.language) === "ko" ? "지금은 AI 답변을 제공할 수 없습니다. 위 계획의 근거와 수치를 확인하고 지역 농업기술 보급 담당자나 농업 전문가에게 문의하세요." : fallbackAnswer(question, facts), source: "facts" });
+  return c.json({ answer: parseLanguage(body.language) === "ko" ? "지금은 AI 답변을 제공할 수 없습니다. 위 계획의 근거와 수치를 확인하고 지역 농업기술 보급 담당자나 농업 전문가에게 문의하세요." : parseLanguage(body.language) === "zh-Hans" ? "目前无法提供 AI 回答。请核对上述计划的依据和数值，并咨询当地农业推广人员或农艺师。" : fallbackAnswer(question, facts), source: "facts" });
 });
 
 api.get("/logs", async (c) => {

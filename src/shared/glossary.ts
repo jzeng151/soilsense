@@ -1,5 +1,6 @@
 import type { Language } from "./language";
 import { GLOSSARY_KO } from "./glossary-ko";
+import { GLOSSARY_ZH } from "./glossary-zh";
 
 export const GLOSSARY_VERSION = "plain-language-v1";
 export interface GlossaryEntry { id: string; plain: string; technical: string; definition: string; limit: string; source: { title: string; url: string }; }
@@ -45,16 +46,18 @@ export const GLOSSARY_ES: Record<GlossaryId, Pick<GlossaryEntry, "plain" | "tech
   "water-balance": { plain: "Lluvia menos demanda de agua", technical: "Balance hídrico climático", definition: "El indicador meteorológico mostrado resta de la lluvia la demanda de agua del cultivo estimada para el período indicado.", limit: "No es un balance hídrico completo de la parcela, una medición de extracción ni un derecho de agua. El almacenamiento en el suelo, la escorrentía y el riego real deben tratarse por separado." },
 };
 export function glossaryEntries(language: Language = "en"): readonly GlossaryEntry[] {
+  if (language === "zh-Hans") return GLOSSARY.map(entry => ({ ...entry, ...GLOSSARY_ZH[entry.id] }));
   if (language === "ko") return GLOSSARY.map(entry => ({ ...entry, ...GLOSSARY_KO[entry.id] }));
   return language === "es" ? GLOSSARY.map(entry => ({ ...entry, ...GLOSSARY_ES[entry.id] })) : GLOSSARY;
 }
 export function glossaryEntry(id: string, language: Language = "en"): GlossaryEntry {
   const entry = GLOSSARY.find((entry) => entry.id === id);
   if (!entry) throw new Error(`Unknown glossary term: ${id}`);
+  if (language === "zh-Hans") return { ...entry, ...GLOSSARY_ZH[entry.id] };
   if (language === "ko") return { ...entry, ...GLOSSARY_KO[entry.id] };
   return language === "es" ? { ...entry, ...GLOSSARY_ES[entry.id] } : entry;
 }
 /** Stable shared text for future alerts, exports and AI grounding; defining a term enables no data feature. */
 export function glossaryContext(ids: readonly string[], language: Language = "en"): string {
-  return [`${language === "ko" ? "용어집" : language === "es" ? "Vocabulario" : "Vocabulary"}: ${GLOSSARY_VERSION}`, ...[...new Set(ids)].map((id) => { const e = glossaryEntry(id, language); return `${e.plain} (${e.technical}): ${e.definition} ${e.limit} ${language === "ko" ? "출처" : language === "es" ? "Fuente" : "Source"}: ${e.source.url}`; })].join("\n");
+  return [`${language === "zh-Hans" ? "术语表" : language === "ko" ? "용어집" : language === "es" ? "Vocabulario" : "Vocabulary"}: ${GLOSSARY_VERSION}`, ...[...new Set(ids)].map((id) => { const e = glossaryEntry(id, language); return `${e.plain} (${e.technical}): ${e.definition} ${e.limit} ${language === "zh-Hans" ? "来源" : language === "ko" ? "출처" : language === "es" ? "Fuente" : "Source"}: ${e.source.url}`; })].join("\n");
 }

@@ -20,10 +20,10 @@ import { isSignificant } from "./stats";
 import { LOSS_WORDS, lossShares } from "./validate";
 
 const PRIORITY_WORDS: Record<Priority, Record<Language, string>> = {
-  profit: { en: "profit", es: "ganancia", ko: "수익" },
-  soil: { en: "soil health", es: "salud del suelo", ko: "토양 건강" },
-  risk: { en: "lower risk", es: "menor riesgo", ko: "위험 감소" },
-  balanced: { en: "a balance of profit, soil and risk", es: "un balance entre ganancia, suelo y riesgo", ko: "수익, 토양 건강, 위험 간의 균형" },
+  profit: { en: "profit", es: "ganancia", ko: "수익", "zh-Hans": "收益" },
+  soil: { en: "soil health", es: "salud del suelo", ko: "토양 건강", "zh-Hans": "土壤健康" },
+  risk: { en: "lower risk", es: "menor riesgo", ko: "위험 감소", "zh-Hans": "降低风险" },
+  balanced: { en: "a balance of profit, soil and risk", es: "un balance entre ganancia, suelo y riesgo", ko: "수익, 토양 건강, 위험 간의 균형", "zh-Hans": "兼顾收益、土壤健康和风险" },
 };
 
 export const CROP_ES: Record<CropId, string> = {
@@ -57,6 +57,29 @@ const INDICATOR_KO: Record<string, string> = {
   water_demand: "작물 물 요구량(5–9월)",
   water_balance: "물수지: 강수량에서 물 요구량을 뺀 값(5–9월)",
   soil_wetness: "근권 토양 습윤도(6–8월)",
+};
+
+const CROP_ZH: Record<CropId, string> = {
+  corn: "玉米",
+  soybean: "大豆",
+  winter_wheat: "冬小麦",
+  oats: "燕麦",
+  alfalfa: "苜蓿",
+  sorghum: "谷物高粱",
+  fallow: "休耕（不种植作物）",
+};
+
+const INDICATOR_ZH: Record<string, string> = {
+  gs_rain: "生长季降水量（5–9月）",
+  spring_rain: "春季降水量（4–5月）",
+  hot_days: "气温达到或超过95°F的天数（6–8月）",
+  frost_free: "无霜期",
+  gdd: "生长度日（5–9月）",
+  dry_spell: "夏季最长连续干旱天数（6–8月）",
+  summer_tmax: "夏季平均最高气温（6–8月）",
+  water_demand: "作物需水量（5–9月）",
+  water_balance: "水分平衡：降水量减去需水量（5–9月）",
+  soil_wetness: "根区土壤湿润度（6–8月）",
 };
 
 /** Make text easy for a text-to-speech voice: no symbols, units spelled out, no statistics jargon in brackets. */
@@ -244,6 +267,11 @@ function planSentenceKo(plan: RotationPlan): string {
   return plan.years.map((y) => `${y.year}년 ${CROP_KO[y.crop]}${y.cover !== "none" ? `, 겨울철 피복작물로 ${covers[y.cover]} 재배` : ""}`).join(" → ");
 }
 
+function planSentenceZh(plan: RotationPlan): string {
+  const covers = { cereal_rye: "黑麦", crimson_clover: "绛三叶", hairy_vetch: "毛叶苕子", none: "" };
+  return plan.years.map((y) => `${y.year}年${y.crop === "fallow" ? CROP_ZH[y.crop] : `种植${CROP_ZH[y.crop]}`}${y.cover !== "none" ? `，以${covers[y.cover]}作为越冬覆盖作物` : ""}`).join(" → ");
+}
+
 export function buildExplanation(args: {
   plans: RotationPlan[];
   currentPractice: RotationPlan | null;
@@ -255,6 +283,11 @@ export function buildExplanation(args: {
 }): { summary: string; speech: string; sms: string } {
   const { plans, climate, facts, priority, currentPractice } = args;
   const top = plans[0];
+  if (!top && args.language === "zh-Hans") return {
+    summary: "未找到可行的轮作方案。",
+    speech: "无法为此地点制定轮作方案。",
+    sms: "SoilSense：暂无可用的轮作方案。",
+  };
   if (!top && args.language === "ko") return {
     summary: "실행 가능한 윤작 계획을 찾지 못했습니다.",
     speech: "이 위치에 대한 윤작 계획을 수립하지 못했습니다.",
@@ -266,6 +299,36 @@ export function buildExplanation(args: {
 
   const sigTrends = climate.indicators.filter((i) => isSignificant(i.trend));
   const keyTrend = sigTrends.find((i) => ["hot_days", "gs_rain", "spring_rain", "dry_spell"].includes(i.id)) ?? sigTrends[0];
+
+  if (args.language === "zh-Hans") {
+    const place = args.placeName ? `${args.placeName}附近农田` : "您的农田";
+    const units: Record<string, string> = { "%": "个百分点" };
+    const climateLine = keyTrend
+      ? `NASA数据显示，${place}的${INDICATOR_ZH[keyTrend.id] ?? keyTrend.label}每10年约${keyTrend.changePerDecade > 0 ? "增加" : "减少"}${Math.abs(round(keyTrend.changePerDecade, keyTrend.unit === "in" ? 1 : 0))} ${units[keyTrend.unit] ?? keyTrend.unit}，这一变化具有统计显著性。`
+      : `NASA数据显示，自${climate.firstYear}年以来，${place}的降水或高温未出现统计上明确的变化。`;
+    const provenance = `依据NASA气候数据（${climate.firstYear}-${climate.lastYear}年）。`;
+    const recommendation = `以${PRIORITY_WORDS[priority]["zh-Hans"]}为重点，建议采用以下轮作：${planSentenceZh(top)}。`;
+    const nDiff = currentPractice ? currentPractice.totalNitrogenLbPerAcre - top.totalNitrogenLbPerAcre : 0;
+    let comparison = "";
+    if (currentPractice && facts.some(f => f.id === "vs-current")) {
+      const d = top.avgNetReturnPerAcre - currentPractice.avgNetReturnPerAcre;
+      comparison = ` 与继续当前种植方式（${planSentenceZh(currentPractice)}）相比，估算的每年净收益差额为${d >= 0 ? "+" : "−"}$${Math.abs(d)}/acre，3年内氮肥投入量${nDiff >= 0 ? "减少" : "增加"}${Math.abs(nDiff)} lb/acre。土壤健康评分满分为100分，建议轮作为${round(top.scores.soil * 100, 0)}分，当前种植方式为${round(currentPractice.scores.soil * 100, 0)}分。`;
+    }
+    const benefit = currentPractice && nDiff > 20 ? ` 与当前种植方式相比，3年内每英亩氮肥投入量约减少${nDiff}磅。` : "";
+    const coverLine = top.coverYears > 0 ? " 覆盖作物可在冬季保护土壤。" : "";
+    const advice = "购买种子前，请向当地农业推广人员核实。";
+    const speech = `${climateLine} ${provenance} ${recommendation}${benefit}${coverLine} ${advice}`
+      .replace(/([\d.]+)\s*°F·days/g, "$1华氏度日")
+      .replace(/([\d.]+)\s*°F/g, "华氏$1度")
+      .replace(/([\d.]+) in\b/g, "$1英寸")
+      .replace(/([\d.]+) days\b/g, "$1天")
+      .replace(/ → /g, "，然后");
+    return {
+      summary: `${climateLine} ${provenance} ${recommendation}${comparison}`,
+      speech,
+      sms: `SoilSense轮作方案：${planSentenceZh(top)}。${provenance} ${advice}`,
+    };
+  }
 
   if (args.language === "ko") {
     const place = args.placeName ? `${args.placeName} 인근 농경지` : "해당 농경지";

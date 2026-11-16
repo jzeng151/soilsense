@@ -1,3 +1,5 @@
+import { pageChinese } from "./i18n-pages-zh";
+
 /** Page-owned copy. English keys also provide the fallback for unsupported languages. */
 const translations = {
   "AI Gateway usage": ["Uso de AI Gateway", "AI Gateway 사용량"],
@@ -293,13 +295,14 @@ const translations = {
 
 export type PageTranslationKey = keyof typeof translations;
 export const pageMessages = {
+  "zh-Hans": pageChinese,
   en: Object.fromEntries(Object.keys(translations).map(key => [key, key])) as Record<PageTranslationKey, string>,
   es: Object.fromEntries(Object.entries(translations).map(([key, value]) => [key, value[0]])) as Record<PageTranslationKey, string>,
   ko: Object.fromEntries(Object.entries(translations).map(([key, value]) => [key, value[1]])) as Partial<Record<PageTranslationKey, string>>,
 };
 
 export function pageTranslate(language: string, key: string, values: Record<string, string | number> = {}): string {
-  const dictionary = language === "es" ? pageMessages.es : language === "ko" ? pageMessages.ko : pageMessages.en;
+  const dictionary = language === "es" ? pageMessages.es : language === "ko" ? pageMessages.ko : language === "zh-Hans" ? pageMessages["zh-Hans"] : pageMessages.en;
   const template = Object.hasOwn(dictionary, key) ? dictionary[key as PageTranslationKey] ?? key : key;
   return template.replace(/\{(\w+)\}/g, (match, name: string) => String(values[name] ?? match));
 }
@@ -340,7 +343,7 @@ export function pageErrorText(language: string, value: string): string {
 
 /** These are deterministic Field Watch templates, never research or model-generated passages. */
 export function pageWatchText(language: string, value: string): string {
-  if (language !== "es" && language !== "ko") return value;
+  if (language !== "es" && language !== "ko" && language !== "zh-Hans") return value;
   if (value.startsWith("Historical replay: ")) return pageTranslate(language, "Historical replay: {headline}", { headline: pageWatchText(language, value.slice(19)) });
   const rules: [RegExp, PageTranslationKey, string[]][] = [
     [/^Not enough recent NASA data to check (.+)$/, "Not enough recent NASA data to check {field}", ["field"]],

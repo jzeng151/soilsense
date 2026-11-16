@@ -3,6 +3,8 @@ import type { FieldBoundary, FieldsStatus } from '../../../src/shared/fields';
 import { shareEdge } from '../../../src/engine/fieldGeometry';
 import { useI18n } from '../i18n';
 import { csbCropSpanish } from '../i18n-fields';
+import { numberFields, validateFieldName } from '../../../src/shared/fields';
+import { fieldLabel, fieldName, FIELD_NAME_PREFIX } from './fieldLabels';
 
 /** The server, not a build-time flag or browser storage, authorizes this UI. */
 export function useBoundaryCatalog(point: { lat:number;lon:number } | null) {
@@ -21,7 +23,9 @@ export function useBoundaryCatalog(point: { lat:number;lon:number } | null) {
   useEffect(()=>{
     if(!status.enabled) return;
     const match=point?status.areas.find(a=>point.lon>=a.bbox[0] && point.lon<=a.bbox[2] && point.lat>=a.bbox[1] && point.lat<=a.bbox[3]):status.areas[0];
-    setArea(match?.id ?? '');
+    // Whole CSB polygons can cross the demo query box; their centroids may lie just outside it.
+    // Keep the farmer's chosen area rather than erasing its catalog when such a field is selected.
+    setArea(current=>match?.id ?? current);
   },[status,point]);
   useEffect(()=>{
     if(!status.enabled || !area){setFields([]);return;}
@@ -29,19 +33,29 @@ export function useBoundaryCatalog(point: { lat:number;lon:number } | null) {
     setLoading(true);setError(false);setFields([]);
     void fetch('/api/fields?area='+encodeURIComponent(area),{signal:AbortSignal.any([ctrl.signal,AbortSignal.timeout(15000)])})
       .then(async r=>{if(!r.ok)throw new Error('unavailable');return await r.json() as {fields:FieldBoundary[]};})
-      .then(data=>{if(!ctrl.signal.aborted)setFields(data.fields);})
+      .then(data=>{if(!ctrl.signal.aborted)setFields(numberFields(data.fields).map(f=>{try{const saved=localStorage.getItem(FIELD_NAME_PREFIX+f.id);const name=saved && validateFieldName(saved);return name?{...f,name}:f;}catch{return f;}}));})
       .catch(()=>{if(!ctrl.signal.aborted)setError(true);})
       .finally(()=>{if(!ctrl.signal.aborted)setLoading(false);});
     return ()=>ctrl.abort();
   },[status.enabled,area]);
-  return {enabled:status.enabled,areas:status.areas,area,setArea,fields,loading,error};
+  return {enabled:status.enabled,areas:status.areas,area,setArea,fields,setFields,loading,error};
 }
 interface Props {
   fields:FieldBoundary[];selected:FieldBoundary[];onChange:(fields:FieldBoundary[])=>void;
   areas:FieldsStatus['areas'];area:string;setArea:(area:string)=>void;
+  onRename?:(field:FieldBoundary,name:string)=>void;
   onShowArea:()=>void;onUseCentroid?:(field:FieldBoundary)=>void;loading:boolean;error:boolean;
 }
-export function FieldBoundaryPicker({fields,selected,onChange,areas,area,setArea,onShowArea,onUseCentroid,loading,error}:Props){
+function FieldRename({field,onRename}:{field:FieldBoundary;onRename:(field:FieldBoundary,name:string)=>void}) {
+  const {t,language}=useI18n();
+  const [value,setValue]=useState(fieldName(field,language));
+  const [invalid,setInvalid]=useState(false);
+  return <div style={{marginBlock:8}}><label>{t('Rename field (local only)')}<input style={{maxWidth:'100%',boxSizing:'border-box'}} value={value} maxLength={60} onChange={e=>{setValue(e.target.value);setInvalid(false);}} aria-invalid={invalid} /></label>{' '}
+    <button type="button" onClick={()=>{const name=validateFieldName(value);if(name===null){setInvalid(true);return;}onRename(field,name);}}>{t('Save field name')}</button>
+    {invalid && <p role="alert">{t('Field name must be 1–60 characters without control characters. Leave blank to reset.')}</p>}
+  </div>;
+}
+export function FieldBoundaryPicker({fields,selected,onChange,areas,area,setArea,onShowArea,onUseCentroid,onRename,loading,error}:Props){
   const {t,language}=useI18n();
   const acres=(value:number)=>value.toLocaleString(language==='es'?'es-US':'en-US',{maximumFractionDigits:1});
   const selectedIds=new Set(selected.map(f=>f.id));
@@ -63,7 +77,7 @@ export function FieldBoundaryPicker({fields,selected,onChange,areas,area,setArea
     <details><summary>{t('Fields in this area')} ({fields.length})</summary>
       <div style={{maxHeight:240,overflowY:'auto',padding:'0.5rem'}}>{fields.map(f=><label key={f.id} style={{display:'flex',gap:8,paddingBlock:8,alignItems:'start'}}>
         <input type="checkbox" checked={selectedIds.has(f.id)} onChange={()=>toggle(f)} />
-        <span>{f.name ?? f.id} · {t('{acres} acres',{acres:acres(f.areaAcres)})}</span>
+        <span>{fieldLabel(f,language)}<small style={{display:'block'}}>{f.id}</small></span>
       </label>)}</div>
     </details>
     <h4>{t('Selected fields')}</h4>
@@ -74,14 +88,15 @@ export function FieldBoundaryPicker({fields,selected,onChange,areas,area,setArea
     </div>
     {!selected.length && <p>{t('No fields selected.')}</p>}
     <ul style={{paddingInlineStart:'1.25rem'}}>{selected.map(f=><li key={f.id} style={{marginBlock:12}}>
-      <strong>{f.name ?? f.id}</strong> · {t('{acres} acres',{acres:acres(f.areaAcres)})}{' '}
+      <strong>{fieldLabel(f,language)}</strong><small style={{display:'block'}}>{f.id}</small>{' '}
       <button type="button" aria-label={`${t('Remove selected field')} ${f.id}`} onClick={()=>toggle(f)}>{t('Remove selected field')}</button>
       <details><summary>{t('CSB crop sequence (2018–2025)')}</summary>
         <ol>{f.cropSequence?.map(c=><li key={c.year}>{c.year}: {language==='es'?(csbCropSpanish[c.cdlCode] ?? c.crop):c.crop} ({c.cdlCode})</li>)}</ol>
       </details>
-      {selected.length===1 && onUseCentroid && <button type="button" onClick={()=>onUseCentroid(f)}>{t('Use this field centroid for the plan')}</button>}
+      {onRename && <FieldRename key={f.id+f.name} field={f} onRename={onRename} />}
+      {onUseCentroid && <button type="button" onClick={()=>onUseCentroid(f)}>{t('Plan this field')}</button>}
     </li>)}</ul>
-    <p className="jr-note">{t('Selection does not change the planning point unless you choose the centroid button. Crop history remains the existing point-based history.')}</p>
+    <p className="jr-note">{t('One selected field is the default plan. With multiple fields, choose Plan this field; fields are never averaged.')}</p>
     <p className="jr-note">{t('Nearby fields share coarse NASA POWER weather (~50 km); outlines do not make weather field-scale.')}</p>
     <a href="https://www.nass.usda.gov/Research_and_Science/Crop-Sequence-Boundaries/" target="_blank" rel="noreferrer">USDA NASS · {t('Source and limitations')}</a>
   </section>;

@@ -4,12 +4,14 @@ import type { CropId } from "../../src/shared/types";
 import { fieldMessages } from "./i18n-fields";
 import { cardMessages } from "./i18n-cards";
 import { assistantMessages } from "./i18n-assistant";
+import { myFieldsMessages } from "./i18n-myfields";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
   ...assistantMessages,
   ...fieldMessages,
   ...cardMessages,
+  ...myFieldsMessages,
   "District outlook (next ~4 weeks, team's Kansas model)": "Perspectiva del distrito (próximas ~4 semanas, modelo de Kansas del equipo)",
   "drought likely to continue.": "es probable que la sequía continúe.",
   "possible drought onset (low confidence).": "posible inicio de sequía (baja confianza).",

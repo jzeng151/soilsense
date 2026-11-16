@@ -659,7 +659,7 @@ function MainFlow() {
                 )}
 
                 {/* stretch: data evidence */}
-                <SensorFitCard fields={[]} plan={plan} />
+                <SensorFitCard fields={selectedFields} plan={plan} />
                 <UsdmContext plan={plan} />
                 <WindScreenCard plan={plan} />
                 <EconomicsCard plan={plan} />

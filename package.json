@@ -18,6 +18,7 @@
     "db:migrate:remote": "wrangler d1 migrations apply fieldshift --remote",
     "deploy": "npm run build:web && wrangler deploy",
     "prefetch": "node scripts/prefetch-demo.mjs",
+    "prewarm": "node scripts/prewarm.mjs",
     "dev:offline": "npm run build:web && wrangler dev -c wrangler.offline.jsonc"
   },
   "dependencies": {

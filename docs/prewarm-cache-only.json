@@ -1,0 +1,30 @@
+{
+  "target": "http://127.0.0.1:8815",
+  "checkedAt": "2026-11-16T02:52:08.392Z",
+  "runtime": {
+    "engineVersion": "e7-diverse-cpu-safe",
+    "computeMode": "cache-only"
+  },
+  "requests": 576,
+  "statuses": {
+    "200": 576
+  },
+  "wallMs": 17926,
+  "medianMs": 30.41,
+  "p95Ms": 36.08,
+  "status": {
+    "date": "2026-11-16",
+    "engineVersion": "e7-diverse-cpu-safe",
+    "warmedToday": 576,
+    "expected": 576,
+    "earliestExpiry": "2026-11-16T08:47:35.279Z",
+    "lastRunTime": "2026-11-16T02:46:56.403Z",
+    "completedAt": "2026-11-16T02:48:57.664Z",
+    "failures": 0,
+    "errors": [],
+    "mode": "external-required",
+    "lastRunMode": "inline",
+    "cron": "5 0,4,8,12,16,20 * * *",
+    "workflowBound": true
+  }
+}

@@ -14,6 +14,9 @@ import { runFieldWatch } from "./fieldwatch/run";
 import { live } from "./routes/live";
 import { refresh } from "./routes/refresh";
 import { POWER_REFRESH_CRON, startPowerRefresh } from "./refresh/workflow";
+import { PREWARM_CRON, startPrewarm } from "./prewarm/run";
+import { prewarm } from "./prewarm/routes";
+export { PlanPrewarmWorkflow } from "./prewarm/workflow";
 
 // Durable Object classes must be exported from the main module.
 export { LiveRoom } from "./live/room";
@@ -44,6 +47,7 @@ app.route("/api/refresh", refresh);
 app.route("/api/imerg", imerg);
 app.route("/api/fields", fields);
 app.route("/api/fields", myFields);
+app.route("/api/prewarm", prewarm);
 app.route("/api", api);
 app.route("/voice", voice);
 
@@ -60,6 +64,10 @@ app.onError((err, c) => {
 // Cloudflare Cron Trigger (wrangler "triggers.crons"): Field Watch checks every watched field in the
 // background, with no browser open, and saves each result in D1.
 async function scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+  if (controller.cron === PREWARM_CRON) {
+    ctx.waitUntil(startPrewarm(env, controller.scheduledTime).catch(err => console.error(JSON.stringify({ msg: "prewarm start failed", err: String(err) }))));
+    return;
+  }
   // Daily NASA POWER snapshot refresh (separate cron): start the Workflow instead of a Field Watch run.
   if (controller.cron === POWER_REFRESH_CRON) {
     ctx.waitUntil(startPowerRefresh(env, "cron").catch((err) => console.error(JSON.stringify({ msg: "power refresh start failed", err: String(err) }))));

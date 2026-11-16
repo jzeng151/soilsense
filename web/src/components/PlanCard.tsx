@@ -5,6 +5,7 @@ import { LANGUAGE_LOCALES, type Language } from "../../../src/shared/language";
 import "./prices.css";
 import type { CropId, PlanYear, RotationPlan } from "../../../src/shared/types";
 import { PlanExplanation } from "./PlanExplanation";
+import { FertilizerGuide } from "./FertilizerGuide";
 
 const localizedCoverNames = {
   es: coverNames,
@@ -98,6 +99,7 @@ export function TopPlan({ plan, compareTo, summary }: { plan: RotationPlan; comp
         </div>
       </dl>
       <GoalScore plan={plan} />
+      <FertilizerGuide fertilizer={plan.fertilizer} />
       {language !== "en" && summary ? <section className="px"><h3 className="px-title">{t("In short")}</h3><p className="px-narrative">{summary}</p></section> : <PlanExplanation rotation={plan} />}
     </article>
   );
@@ -126,6 +128,7 @@ export function PlanRow({ plan, title, compareTo, muted }: { plan: RotationPlan;
       </span>
       <ul className="plan-year-details">{plan.years.map(y=><li key={y.year}><strong>{y.year} · {cropName(y.crop,language)}</strong><YearEconomics year={y}/></li>)}</ul>
       <GoalScore plan={plan} />
+      <FertilizerGuide fertilizer={plan.fertilizer} />
     </li>
   );
 }

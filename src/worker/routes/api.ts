@@ -2,6 +2,7 @@ import { parseLanguage, responseLanguageInstruction } from "../../shared/languag
 import { generateAI, type AiRunner } from "../lib/ai";
 import { Hono, type Handler, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
+import { withFertilizer } from "../../engine/fertilizer";
 import { validateConstraints } from '../../shared/validateConstraints';
 import { validatePrices } from "../../shared/prices";
 import { hasMeasurements, validateMeasurements } from "../../shared/measurements";
@@ -111,6 +112,7 @@ export function validatePlanRequest(body: unknown): PlanRequest | string {
   // Water beyond rain: "rain" | "limited" | "full". Older clients send only `irrigated`.
   if (b.water !== undefined && b.water !== "rain" && b.water !== "limited" && b.water !== "full") return 'water must be "rain", "limited" or "full"';
   const water = (b.water as "rain" | "limited" | "full" | undefined) ?? (b.irrigated === true ? "full" : "rain");
+  if (b.includeFertilizer !== undefined && typeof b.includeFertilizer !== "boolean") return "includeFertilizer must be boolean";
   const constraints = validateConstraints(b.constraints, ALL_CROPS);
   if (typeof constraints === "string") return constraints;
   const priceInput = validatePrices(b);
@@ -222,7 +224,8 @@ api.post("/plan", async (c) => {
     c.executionCtx.waitUntil(logPlan(c.env, { channel: "web", plan }));
     c.header("Server-Timing", `plan;dur=${Date.now() - started}`);
     if (hasMeasurements(req)) c.header("Cache-Control", "private, no-store");
-    return c.json(plan);
+    // Enrich after cache retrieval: the opt-in flag never changes engine inputs or cache keys.
+    return c.json((body as { includeFertilizer?: boolean }).includeFertilizer ? withFertilizer(plan) : plan);
   } catch (err) {
     if (err instanceof PlanNotReady) {
       c.header("Retry-After", "60");

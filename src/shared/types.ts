@@ -1,6 +1,7 @@
 import type { ConstraintReport, FarmerConstraints } from './constraints';
 export type { FarmerConstraints } from './constraints';
 // Types shared by the Worker API, the engine and the dashboard.
+import type { FertilizerInputs, PlanFertilizer } from "./fertilizer";
 
 /** "fallow" = no crop for a season (weed control only) so the soil stores water; offered only on dry rain-fed fields. */
 export type CropId = "corn" | "soybean" | "winter_wheat" | "oats" | "alfalfa" | "sorghum" | "fallow";
@@ -144,6 +145,8 @@ export interface PlanYear {
 }
 
 export interface RotationPlan {
+  /** Opt-in display-only guideline; never used in ranking or economics. */
+  fertilizer?: PlanFertilizer;
   /** Factual crop-phase metadata; never a universal pest-protection claim. */
   includes_non_corn_year?: boolean;
   id: string;
@@ -171,7 +174,7 @@ export interface ReasonFact {
 }
 
 /** Farmer-entered measurements; never persisted on the server. Blank properties use the soil map. */
-export interface SoilTest {
+export interface SoilTest extends FertilizerInputs {
   ph?: number;
   organicMatterPct?: number;
   /** cm water / cm soil (equivalently in/in). Takes precedence over texture. */

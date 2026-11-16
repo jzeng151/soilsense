@@ -1,4 +1,5 @@
 import type { FarmerYield, PlanRequest, SoilProfile, SoilTest } from "./types";
+import { validateFertilizerInputs } from "./fertilizer-inputs";
 
 /** Approximate texture-only model assumptions, not laboratory measurements or SSURGO values.
  * Broad classes intentionally avoid inferring drainage or a measured profile depth. */
@@ -16,7 +17,9 @@ export function validateMeasurements(b: Record<string, unknown>, currentYear = n
   if (b.soilTest !== undefined) {
     if (!object(b.soilTest)) return "soilTest must be an object";
     const s = b.soilTest;
-    const test: SoilTest = {};
+    const fertilizer = validateFertilizerInputs(s);
+    if (typeof fertilizer === "string") return fertilizer;
+    const test: SoilTest = { ...fertilizer };
     for (const [key, min, max] of [["ph", 0, 14], ["organicMatterPct", 0, 100], ["awc", 0.01, 0.6]] as const) {
       if (s[key] === undefined) continue;
       if (!finiteRange(s[key], min, max)) return `${key} must be a finite number from ${min} to ${max}`;

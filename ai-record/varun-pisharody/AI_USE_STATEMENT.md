@@ -20,8 +20,9 @@ the outputs, charts and written explanations of the method. He did not independe
 statistics; the re-checks described in the logs (including an independent re-implementation) were also done by Claude.
 
 **Validation - what it is and is not.** The comparison with USDA NASS county yields is exploratory testing of the
-weather scores only. As `kansas-crop-rotation/reports/yield_validation.md` says, it does not test economics or
-rotation outcomes, and much of the signal comes from the 2022–23 drought.
+weather scores only (`kansas-crop-rotation/reports/yield_validation.md`). It does not test economics, which the model
+does not include, and it does not test rotation outcomes: no rotation was compared in the field. Much of the signal
+comes from the 2022–23 drought.
 
 **Sourced values versus modelling assumptions.**
 - *Sourced:* weather and soil wetness (NASA POWER); county yields (USDA NASS); drought categories (U.S. Drought

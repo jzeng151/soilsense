@@ -1,5 +1,5 @@
 export interface Env {
-  /** Optional public CSB boundary picker. Off unless explicitly "on". */
+  /** Optional public CSB fields and capability agents. Off unless explicitly "on". */
   FIELDS_ENABLED?: string;
   /** Earthdata bearer token: server-side only, never exposed in evidence URLs. */
   EARTHDATA_TOKEN?: string;

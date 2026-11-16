@@ -86,6 +86,8 @@ try {
     await visit(page);
     await page.locator('.map.leaflet-container').waitFor();
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
+    // One language switcher per view: the planner header owns it; the sidebar copy is hidden on this route.
+    assert.equal(await page.getByRole('group', { name: 'Language', exact: true }).count(), 1, 'Exactly one language switcher on the planner');
     await page.locator('#content').getByRole('button', { name: 'ES Español', exact: true }).click();
     await until(async () => await page.locator('html').getAttribute('lang') === 'es', 'Spanish html lang');
     await page.getByText('Hola, soy Sprout', { exact: true }).waitFor();

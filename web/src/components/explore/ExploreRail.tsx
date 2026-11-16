@@ -1,5 +1,6 @@
 import { useI18n } from "../../i18n";
 import { LogoMark } from "../Logo";
+import { LANGUAGE_NAMES, LANGUAGES } from "../../../../src/shared/language";
 export function ExploreRail({ onLayers }: { onLayers?: () => void }) {
   const { t, language, setLanguage } = useI18n();
   return (
@@ -44,12 +45,14 @@ export function ExploreRail({ onLayers }: { onLayers?: () => void }) {
         <Icon kind="settings" />
       </a>
       <div className="explore-rail-bottom">
+        {/* Cycles every supported language (Korean was unreachable here); the name keeps the visible code (WCAG 2.5.3). */}
         <button
           type="button"
-          aria-label={`${t("Language")}: ${language === "es" ? "ES" : "EN"}`}
-          onClick={() => setLanguage(language === "es" ? "en" : "es")}
+          aria-label={`${t("Language")}: ${language.toUpperCase()} → ${LANGUAGE_NAMES[LANGUAGES[(LANGUAGES.indexOf(language) + 1) % LANGUAGES.length]!]}`}
+          title={LANGUAGE_NAMES[LANGUAGES[(LANGUAGES.indexOf(language) + 1) % LANGUAGES.length]!]}
+          onClick={() => setLanguage(LANGUAGES[(LANGUAGES.indexOf(language) + 1) % LANGUAGES.length]!)}
         >
-          {language === "es" ? "ES" : "EN"}
+          {language.toUpperCase()}
         </button>
         <a href="#/signin" aria-label={t("Sign in")} title={t("Sign in")}>
           <Icon kind="profile" />

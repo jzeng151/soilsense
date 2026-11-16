@@ -212,6 +212,8 @@ export function ExplorePage() {
           onError={() => setMapFailed(true)}
           label={t(location ? "Satellite map" : "NASA globe")}
         />
+        {/* One h1 per view (WCAG 1.3.1/2.4.6): the visible intro heading disappears once a place is chosen. */}
+        {location && <h1 className="sr-only">{t("Explore")}: {location.label}</h1>}
         {!location && (
           <div className="explore-intro">
             <span>SOIL SENSE / {t("Explore")}</span>

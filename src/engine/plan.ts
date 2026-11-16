@@ -4,6 +4,7 @@
 import type { CountyInfo, CountyLosses, CropHistory, CropId, CropValidation, DroughtReplay, EtMonth, NassData, PlanRequest, PlanResponse, SoilProfile, WaterCheck, WaterLevel, WaterOption } from "../shared/types";
 import { validateConstraints } from '../shared/validateConstraints';
 import { constraintWater } from '../shared/constraintWater';
+import { validatePrices } from "../shared/prices";
 import { effectiveSoil, validateMeasurements } from "../shared/measurements";
 import { buildIndicators, type DailyClimate } from "./climate";
 import { buildExplanation, buildFacts, CROP_ES } from "./explain";
@@ -113,6 +114,8 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   if (typeof constraintCheck === "string") throw new Error(constraintCheck);
   const checked = validateMeasurements({ soilTest: request.soilTest, yieldRecords: request.yieldRecords }, now.getUTCFullYear());
   if (typeof checked === "string") throw new Error(checked);
+  const priceInput = validatePrices({ prices: request.prices, priceScenarios: request.priceScenarios });
+  if (typeof priceInput === "string") throw new Error(priceInput);
   const soil = effectiveSoil(inputs.soil, checked.soilTest);
   const history = effectiveHistory(cropHistory, request.recentCrops);
   const targetYear = planStartYear + 1;
@@ -137,7 +140,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   const dryRegion = annualRain < FALLOW_MAX_ANNUAL_RAIN_MM;
   const region = availableCrops(county?.stateCode, ALL_CROPS);
   const prices = inputs.nass?.prices ?? {};
-  const priceMap = Object.fromEntries(Object.entries(prices).map(([c, p]) => [c, p!.price])) as Partial<Record<CropId, number>>;
+  const priceMap = { ...Object.fromEntries(Object.entries(prices).map(([c, p]) => [c, p!.price])), ...priceInput.prices } as Partial<Record<CropId, number>>;
 
   // Weather work is shared: the crop climate depends only on full irrigation (canopy cooling) and on
   // whether trends are applied, so compute each variant once per plan.
@@ -225,6 +228,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       irrigated: full,
       water,
       prices: priceMap,
+      ...(priceInput.priceScenarios && w === level ? { priceScenarios: true } : {}),
       ...(quick ? { quickSearch: 30 } : {}),
     });
     return { ...result, cropClimate, crops, fallowAllowed, recentYields, usda, allowance, calibrations };
@@ -352,6 +356,15 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     if (advice.undocumentedBenefit) facts.push({ id: "pest-undocumented", kind: "agronomy", source: "Plan crop phases", text: advice.undocumentedBenefit });
   }
 
+  for (const [crop, price] of Object.entries(priceInput.prices ?? {}) as [CropId, number][]) {
+    const es = request.language === "es";
+    const unit = CROPS[crop].yieldUnit.startsWith("tons") ? "$/US short ton" : "$/bu";
+    facts.push({ id: `farmer-price-${crop}`, kind: "economics", source: es ? "Precio ingresado por el agricultor (sin verificar)" : "Farmer-entered price (unverified)",
+      text: es
+        ? `${CROP_ES[crop]}: se usa tu precio ${price} ${unit} en lugar del precio USDA o predeterminado. Rendimientos y costos no cambian.`
+        : `${CROPS[crop].name}: using your price ${price} ${unit} instead of the USDA or default price. Yields and costs are unchanged.` });
+  }
+
   const explanation = buildExplanation({
     plans,
     currentPractice,
@@ -364,6 +377,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
 
   return {
     request: { ...request, water: level, irrigated: level !== "rain" },
+    ...(main.priceSensitivity ? {priceSensitivity:main.priceSensitivity} : {}),
     generatedAt: now.toISOString(),
     ...(main.constraints ? { constraints: main.constraints } : {}),
     location: { county, lat: request.lat, lon: request.lon },
@@ -393,6 +407,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       ...(Object.entries(recentYields) as [CropId, RecentYield][])
         .filter(([c]) => (crops as CropId[]).includes(c))
         .map(([c, r]) => `${CROPS[c].name} yield basis: ${r.basis}.`),
+      ...(priceInput.prices ? [`Farmer price overrides take precedence over the USDA/default prices listed below: ${(Object.entries(priceInput.prices) as [CropId, number][]).map(([c,p]) => `${CROPS[c].name} ${p} ${CROPS[c].yieldUnit.startsWith("tons") ? "$/US short ton" : "$/bu"}`).join(", ")}. Costs and yields are unchanged; farmer prices are unverified.`] : []),
       ...(Object.keys(prices).length
         ? [
             `Prices: USDA NASS prices received, average of the latest months — ${(Object.entries(prices) as [CropId, NonNullable<(typeof prices)[CropId]>][])

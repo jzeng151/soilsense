@@ -7,6 +7,7 @@
 .fertilizer-guide table { border-collapse: collapse; width: 100%; min-width: 650px; font-size: .85rem; }
 .fertilizer-guide caption { text-align: left; padding: .5rem 0; }
 .fertilizer-guide th, .fertilizer-guide td { text-align: left; vertical-align: top; padding: .6rem; border-bottom: 1px solid var(--line, #d8d8ce); }
+.fertilizer-guide th:first-child { white-space: nowrap; }
 .fertilizer-guide small { display: block; font-size: .78rem; line-height: 1.4; margin-top: .2rem; white-space: normal; }
 .fertilizer-source { margin-bottom: 1rem; overflow-wrap: anywhere; }
 .fertilizer-source dl > div { display: flex; flex-wrap: wrap; gap: .5rem; }

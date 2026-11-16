@@ -51,6 +51,8 @@ describe("MF2586 printed tables and conservative missing-data behavior", () => {
     expect(rec("corn", 160, "P2O5").inputsUsed.cropRemovalLbPerAcre).toBeCloseTo(52.8);
     expect(rec("corn", 160, "K2O").inputsUsed.cropRemovalLbPerAcre).toBe(41.6);
     expect(rec("corn", 160, "P2O5", { mehlich3P: 19 }).lbPerAcre).toBe(15);
+    expect(rec("corn", 160, "P2O5", { mehlich3P: 20 }).lbPerAcre).toBe(15);
+    expect(rec("corn", 160, "K2O", { extractableK: 130 }).lbPerAcre).toBe(15);
     expect(rec("corn", 160, "P2O5", { mehlich3P: 21 }).lbPerAcre).toBe(0);
     expect(rec("alfalfa", 4, "P2O5", { mehlich3P: 26 }).lbPerAcre).toBe(0);
   });

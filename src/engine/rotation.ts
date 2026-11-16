@@ -16,6 +16,8 @@ import {
   type YearSeries,
 } from "./climate";
 import { ALL_CROPS, LEGACY_CROPS, COVERS, CROPS, type CropDef, NITROGEN_PRICE_PER_LB, nitrogenNeed, rotationYieldFactor } from "./crops";
+import { analyzePriceSensitivity } from "./priceScenarios";
+import type { PriceSensitivity } from "../shared/prices";
 import { createGoalScorer, selectedGoals } from "./goals";
 import { isSignificant, mannKendall } from "./stats";
 import { isExtraCrop } from "../shared/extraCrops";
@@ -345,6 +347,7 @@ export interface EngineInput {
   water: WaterContext;
   /** Current prices (e.g. USDA NASS prices received), per crop unit; defaults from crops.ts otherwise. */
   prices?: Partial<Record<CropId, number>>;
+  priceScenarios?: boolean;
   /**
    * Quick search: rank every crop sequence without cover crops first, then try cover-crop variants only for the
    * best `quickSearch` sequences. Used for the "what if your water changes?" comparison, where only the best
@@ -620,7 +623,7 @@ function simulateUncached(seq: CropId[], covers: CoverId[], input: EngineInput):
   });
 }
 
-function evaluate(seq: CropId[], covers: CoverId[], input: EngineInput): RawPlan {
+function evaluate(seq: CropId[], covers: CoverId[], input: EngineInput, prices = input.prices): RawPlan {
   const { cropClimate, history, planStartYear } = input;
   const full = [...history, ...seq];
   const offset = history.length;
@@ -666,7 +669,7 @@ function evaluate(seq: CropId[], covers: CoverId[], input: EngineInput): RawPlan
     // Pumping cost scales with the water actually pumped (energy, maintenance, labor).
     const irrigationCost = (s.pumpedMm / 25.4) * IRRIGATION_COST_PER_INCH;
     const cost = def.costPerAcre * costScale + irrigationCost + establishment + n * NITROGEN_PRICE_PER_LB + COVERS[coverAfter].costPerAcre;
-    const net = expectedYield * (input.prices?.[crop] ?? def.pricePerUnit) - cost;
+    const net = expectedYield * (prices?.[crop] ?? input.prices?.[crop] ?? def.pricePerUnit) - cost;
     return {
       year: planStartYear + i,
       crop,
@@ -767,6 +770,7 @@ export function currentPracticeSequence(history: CropId[], length = 3): CropId[]
 }
 
 export interface EngineResult {
+  priceSensitivity?: PriceSensitivity;
   plans: RotationPlan[];
   currentPractice: RotationPlan | null;
   evaluated: number;
@@ -868,6 +872,18 @@ export function runEngine(input: EngineInput, topN = 3): EngineResult {
     };
   }
   const plans = chosen.map((r, i) => ({ ...r.plan, id: `plan-${i + 1}` }));
+  const sensitivityCandidates = input.priceScenarios ? [
+    ...chosen.map((r,i) => ({ id: `plan-${i+1}`, raw:r.raw })),
+    ...(baselineRaw ? [{id:"current",raw:baselineRaw}] : []),
+  ] : [];
+  const priceSensitivity = input.priceScenarios ? analyzePriceSensitivity(
+    sensitivityCandidates.map(c => ({id:c.id,years:c.raw.years})),
+    (id, prices) => {
+      const raw = sensitivityCandidates.find(c => c.id===id)!.raw;
+      // Reuse this exact input identity and water memo: no new weather simulation or search.
+      return evaluate(raw.seq,raw.covers,input,prices).avgNet;
+    },
+  ) : undefined;
 
   return {
     plans,
@@ -879,6 +895,7 @@ export function runEngine(input: EngineInput, topN = 3): EngineResult {
         })()
       : null,
     evaluated: raws.length,
+    ...(priceSensitivity ? {priceSensitivity} : {}),
   };
 }
 

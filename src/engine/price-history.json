@@ -1,0 +1,422 @@
+{
+  "id": "ks-2016-2025-v1",
+  "retrievedAt": "2026-11-16T01:07:00.266Z",
+  "attribution": "USDA National Agricultural Statistics Service, Quick Stats",
+  "note": "Marketing year annual prices received, Kansas where available, US fallback. Wheat is all wheat, used as a winter-wheat proxy. Nominal dollars; no inflation adjustment.",
+  "records": [
+    {
+      "crop": "corn",
+      "level": "KS",
+      "query": "https://quickstats.nass.usda.gov/api/api_GET/?source_desc=SURVEY&sector_desc=CROPS&group_desc=FIELD+CROPS&commodity_desc=CORN&statisticcat_desc=PRICE+RECEIVED&agg_level_desc=STATE&state_alpha=KS&freq_desc=ANNUAL&year__GE=2016&year__LE=2025&short_desc=CORN%2C+GRAIN+-+PRICE+RECEIVED%2C+MEASURED+IN+%24+%2F+BU&domain_desc=TOTAL&format=JSON",
+      "rawFile": "corn-ks-2016-2025.json",
+      "sha256": "9c4e3ff5b82caa0398d22945d11e2801150f050c184e81684eeae72124c628e2",
+      "observations": [
+        {
+          "year": 2016,
+          "price": 3.2,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2017,
+          "price": 3.28,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2018,
+          "price": 3.58,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2019,
+          "price": 3.56,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2020,
+          "price": 4.35,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2021,
+          "price": 6.02,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2022,
+          "price": 7.04,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2023,
+          "price": 4.73,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2024,
+          "price": 4.28,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2025,
+          "price": 4,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        }
+      ]
+    },
+    {
+      "crop": "soybean",
+      "level": "KS",
+      "query": "https://quickstats.nass.usda.gov/api/api_GET/?source_desc=SURVEY&sector_desc=CROPS&group_desc=FIELD+CROPS&commodity_desc=SOYBEANS&statisticcat_desc=PRICE+RECEIVED&agg_level_desc=STATE&state_alpha=KS&freq_desc=ANNUAL&year__GE=2016&year__LE=2025&short_desc=SOYBEANS+-+PRICE+RECEIVED%2C+MEASURED+IN+%24+%2F+BU&domain_desc=TOTAL&format=JSON",
+      "rawFile": "soybean-ks-2016-2025.json",
+      "sha256": "42fb405e0e49723e8207956c65a88ac7e984174c2c773d31b483ea0d572412e7",
+      "observations": [
+        {
+          "year": 2016,
+          "price": 9.26,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2017,
+          "price": 9,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2018,
+          "price": 7.93,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2019,
+          "price": 8.28,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2020,
+          "price": 10.7,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2021,
+          "price": 12.9,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2022,
+          "price": 14.3,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2023,
+          "price": 12.3,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2024,
+          "price": 9.65,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2025,
+          "price": 10.1,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        }
+      ]
+    },
+    {
+      "crop": "winter_wheat",
+      "level": "KS",
+      "query": "https://quickstats.nass.usda.gov/api/api_GET/?source_desc=SURVEY&sector_desc=CROPS&group_desc=FIELD+CROPS&commodity_desc=WHEAT&statisticcat_desc=PRICE+RECEIVED&agg_level_desc=STATE&state_alpha=KS&freq_desc=ANNUAL&year__GE=2016&year__LE=2025&short_desc=WHEAT+-+PRICE+RECEIVED%2C+MEASURED+IN+%24+%2F+BU&domain_desc=TOTAL&format=JSON",
+      "rawFile": "winter_wheat-ks-2016-2025.json",
+      "sha256": "54e2ebf931c872449466b85fefd708c3bc66671ac36fa792e83d00cca2300a26",
+      "observations": [
+        {
+          "year": 2016,
+          "price": 3.2,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2017,
+          "price": 4.07,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2018,
+          "price": 4.93,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2019,
+          "price": 4.08,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2020,
+          "price": 4.53,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2021,
+          "price": 6.74,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2022,
+          "price": 8.71,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2023,
+          "price": 7.14,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2024,
+          "price": 5.43,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2025,
+          "price": 4.65,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        }
+      ]
+    },
+    {
+      "crop": "sorghum",
+      "level": "KS",
+      "query": "https://quickstats.nass.usda.gov/api/api_GET/?source_desc=SURVEY&sector_desc=CROPS&group_desc=FIELD+CROPS&commodity_desc=SORGHUM&statisticcat_desc=PRICE+RECEIVED&agg_level_desc=STATE&state_alpha=KS&freq_desc=ANNUAL&year__GE=2016&year__LE=2025&short_desc=SORGHUM%2C+GRAIN+-+PRICE+RECEIVED%2C+MEASURED+IN+%24+%2F+CWT&domain_desc=TOTAL&format=JSON",
+      "rawFile": "sorghum-ks-2016-2025.json",
+      "sha256": "19293eafacde12ece8362d3c3468145fac667f70127137d2d235f584a3fad14f",
+      "observations": [
+        {
+          "year": 2016,
+          "price": 4.67,
+          "unit": "$ / CWT",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2017,
+          "price": 5.58,
+          "unit": "$ / CWT",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2018,
+          "price": 5.59,
+          "unit": "$ / CWT",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2019,
+          "price": 5.7,
+          "unit": "$ / CWT",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2020,
+          "price": 8.85,
+          "unit": "$ / CWT",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2021,
+          "price": 10.8,
+          "unit": "$ / CWT",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2022,
+          "price": 12.3,
+          "unit": "$ / CWT",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2023,
+          "price": 8.51,
+          "unit": "$ / CWT",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2024,
+          "price": 7.15,
+          "unit": "$ / CWT",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2025,
+          "price": 6.02,
+          "unit": "$ / CWT",
+          "period": "MARKETING YEAR"
+        }
+      ]
+    },
+    {
+      "crop": "oats",
+      "level": "KS",
+      "query": "https://quickstats.nass.usda.gov/api/api_GET/?source_desc=SURVEY&sector_desc=CROPS&group_desc=FIELD+CROPS&commodity_desc=OATS&statisticcat_desc=PRICE+RECEIVED&agg_level_desc=STATE&state_alpha=KS&freq_desc=ANNUAL&year__GE=2016&year__LE=2025&short_desc=OATS+-+PRICE+RECEIVED%2C+MEASURED+IN+%24+%2F+BU&domain_desc=TOTAL&format=JSON",
+      "rawFile": "oats-ks-2016-2025.json",
+      "sha256": "c7f159617e219340ff336e5b0142005784134bde3f8d34c3fc189da0b723efec",
+      "observations": [
+        {
+          "year": 2016,
+          "price": 1.77,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2017,
+          "price": 2.93,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2018,
+          "price": 3.32,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2019,
+          "price": 3.4,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2020,
+          "price": 3.05,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2021,
+          "price": 4.46,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2022,
+          "price": 5.01,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2023,
+          "price": 3.75,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2024,
+          "price": 3.15,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2025,
+          "price": 2.85,
+          "unit": "$ / BU",
+          "period": "MARKETING YEAR"
+        }
+      ]
+    },
+    {
+      "crop": "alfalfa",
+      "level": "KS",
+      "query": "https://quickstats.nass.usda.gov/api/api_GET/?source_desc=SURVEY&sector_desc=CROPS&group_desc=FIELD+CROPS&commodity_desc=HAY&statisticcat_desc=PRICE+RECEIVED&agg_level_desc=STATE&state_alpha=KS&freq_desc=ANNUAL&year__GE=2016&year__LE=2025&short_desc=HAY%2C+ALFALFA+-+PRICE+RECEIVED%2C+MEASURED+IN+%24+%2F+TON&domain_desc=TOTAL&format=JSON",
+      "rawFile": "alfalfa-ks-2016-2025.json",
+      "sha256": "e7b85381039845426680c63d86333a1918b83c0c6ccbb62ae9f336c79da32fb0",
+      "observations": [
+        {
+          "year": 2016,
+          "price": 95,
+          "unit": "$ / TON",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2017,
+          "price": 128,
+          "unit": "$ / TON",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2018,
+          "price": 170,
+          "unit": "$ / TON",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2019,
+          "price": 140,
+          "unit": "$ / TON",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2020,
+          "price": 147,
+          "unit": "$ / TON",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2021,
+          "price": 178,
+          "unit": "$ / TON",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2022,
+          "price": 245,
+          "unit": "$ / TON",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2023,
+          "price": 240,
+          "unit": "$ / TON",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2024,
+          "price": 139,
+          "unit": "$ / TON",
+          "period": "MARKETING YEAR"
+        },
+        {
+          "year": 2025,
+          "price": 122,
+          "unit": "$ / TON",
+          "period": "MARKETING YEAR"
+        }
+      ]
+    }
+  ]
+}

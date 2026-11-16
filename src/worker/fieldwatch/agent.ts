@@ -50,8 +50,7 @@ export class FieldAgent extends Agent<Env> {
   private store(): SqlRunStore {
     this._store ??= new SqlRunStore(((strings: TemplateStringsArray, ...values: (string | number | boolean | null)[]) => {
       // A provider response can arrive after deletion. Never resurrect deleted application rows.
-      const text = strings.join("");
-      if (this._registeredLifecycle && !this.registration() && !/^\s*SELECT/i.test(text)) return [];
+      if (this._registeredLifecycle && !this.registration()) return [];
       return this.sql(strings, ...values);
     }) as SqlTag, this._registeredLifecycle ? 100 : 0);
     return this._store;
@@ -109,6 +108,17 @@ export class FieldAgent extends Agent<Env> {
     throw new Error("Unknown field");
   }
 
+  /** Cancel a newly-created job if registration was deleted while the scheduler yielded. */
+  private async scheduleForField(fieldId: string, at: Date | number, callback: "runScheduledCheck" | "weeklyCheck" | "windowCheck", payload: Record<string, unknown>) {
+    this.field(fieldId);
+    const job = await this.schedule(at, callback, payload);
+    if (fieldId.startsWith("u_") && this.registration()?.id !== fieldId) {
+      await this.cancelSchedule(job.id);
+      throw new Error("Unknown field");
+    }
+    return job;
+  }
+
   /** RPC: schedule a check about 45 s ahead, or return the one already waiting. */
   async requestCheck(req: { fieldId: string; mode: unknown; replayId?: unknown }): Promise<{ run: AgentRun; created: boolean }> {
     const field = this.field(req.fieldId);
@@ -118,7 +128,7 @@ export class FieldAgent extends Agent<Env> {
       this.sql`DELETE FROM field_runs WHERE run_id NOT IN (SELECT run_id FROM field_runs ORDER BY scheduled_at DESC LIMIT 99)`;
     }
     return requestCheck(this.store(), field, req, Date.now(), async (runId, delay) => {
-      await this.schedule(delay, "runScheduledCheck", { runId, fieldId: field.id });
+      await this.scheduleForField(field.id, delay, "runScheduledCheck", { runId, fieldId: field.id });
     });
   }
 
@@ -137,12 +147,14 @@ export class FieldAgent extends Agent<Env> {
   // ---------- Recurring watch: weekly checks (#15) and crop stress-window checks (#35) ----------
 
   private settings(): WatchSettings {
+    if (this._registeredLifecycle && !this.registration()) return { ...DEFAULT_SETTINGS };
     this.sql`CREATE TABLE IF NOT EXISTS watch_settings (id INTEGER PRIMARY KEY CHECK (id = 1), data TEXT NOT NULL)`;
     const rows = this.sql<{ data: string }>`SELECT data FROM watch_settings WHERE id = 1`;
     return rows[0] ? { ...DEFAULT_SETTINGS, ...(JSON.parse(rows[0].data) as WatchSettings) } : { ...DEFAULT_SETTINGS };
   }
 
   private saveSettings(s: WatchSettings): void {
+    if (this._registeredLifecycle && !this.registration()) return;
     this.sql`INSERT INTO watch_settings (id, data) VALUES (1, ${JSON.stringify(s)}) ON CONFLICT(id) DO UPDATE SET data = excluded.data`;
   }
 
@@ -160,6 +172,7 @@ export class FieldAgent extends Agent<Env> {
    */
   async updateWatch(fieldId: string, input: { enabled?: unknown; crop?: unknown }): Promise<WatchSettings> {
     this.field(fieldId);
+    if (REGISTERED_ID.test(fieldId) && input.crop !== undefined) throw new Error("Registered crop is pinned");
     const now = Date.now();
     const next = applySettings(this.settings(), input, now);
     for (const id of [next.weeklyScheduleId, next.windowScheduleId]) if (id) await this.cancelSchedule(id);
@@ -167,12 +180,12 @@ export class FieldAgent extends Agent<Env> {
     next.nextWindow = null;
     if (next.enabled) {
       const at = nextWeeklyAt(now);
-      const weekly = await this.schedule(new Date(at), "weeklyCheck", { fieldId, version: next.version });
+      const weekly = await this.scheduleForField(fieldId, new Date(at), "weeklyCheck", { fieldId, version: next.version });
       next.weeklyScheduleId = weekly.id;
       next.nextWeeklyAt = at;
       if (next.crop) {
         const plan = nextWindowOpening(next.crop, now);
-        const w = await this.schedule(new Date(plan.at), "windowCheck", { fieldId, version: next.version, crop: plan.crop, seasonYear: plan.seasonYear });
+        const w = await this.scheduleForField(fieldId, new Date(plan.at), "windowCheck", { fieldId, version: next.version, crop: plan.crop, seasonYear: plan.seasonYear });
         next.windowScheduleId = w.id;
         next.nextWindow = plan;
       }
@@ -190,7 +203,7 @@ export class FieldAgent extends Agent<Env> {
     if (payload.fieldId.startsWith("u_") && !await this.isRegistered(payload.fieldId)) return;
     if (settings.enabled && settings.version === payload.version) {
       const at = nextWeeklyAt(Date.now());
-      const s = await this.schedule(new Date(at), "weeklyCheck", { fieldId: payload.fieldId, version: settings.version });
+      const s = await this.scheduleForField(payload.fieldId, new Date(at), "weeklyCheck", { fieldId: payload.fieldId, version: settings.version });
       this.saveSettings({ ...settings, weeklyScheduleId: s.id, nextWeeklyAt: at });
     }
     if (run) await this.publish(run);
@@ -204,7 +217,7 @@ export class FieldAgent extends Agent<Env> {
     if (payload.fieldId.startsWith("u_") && !await this.isRegistered(payload.fieldId)) return;
     if (settings.enabled && settings.version === payload.version && settings.crop === payload.crop) {
       const plan = nextWindowOpening(payload.crop, Date.now());
-      const w = await this.schedule(new Date(plan.at), "windowCheck", { fieldId: payload.fieldId, version: settings.version, crop: plan.crop, seasonYear: plan.seasonYear });
+      const w = await this.scheduleForField(payload.fieldId, new Date(plan.at), "windowCheck", { fieldId: payload.fieldId, version: settings.version, crop: plan.crop, seasonYear: plan.seasonYear });
       this.saveSettings({ ...settings, windowScheduleId: w.id, nextWindow: plan });
     }
     if (run) await this.publish(run);

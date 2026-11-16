@@ -20,7 +20,7 @@ async function api<T>(url: string, method = "GET", body?: unknown): Promise<T> {
 }
 const crops: CropId[] = ["corn", "soybean", "winter_wheat", "oats", "alfalfa", "sorghum"];
 
-/** Self-gated until the shared selection plumbing is merged. No new controls when the flag is off. */
+/** Self-gated by the shared status endpoint; boundary selections come from the map. */
 export function MyFieldsPanel({ fields }: { fields: FieldBoundary[] }) {
   const [enabled, setEnabled] = useState(false);
   useEffect(() => { let active = true; void api<FieldsStatus>("/api/fields/status").then(s => { if (active) setEnabled(s.enabled === true); }).catch(() => {}); return () => { active = false; }; }, []);

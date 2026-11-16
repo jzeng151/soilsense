@@ -451,7 +451,7 @@ function MainFlow() {
             </p>
 
             <FieldWatchCard />
-            <MyFieldsPanel fields={[]} />
+            <MyFieldsPanel fields={selectedFields} />
 
             {point && (
               <div className="jr-found" aria-live="polite">

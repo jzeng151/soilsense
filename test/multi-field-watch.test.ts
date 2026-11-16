@@ -96,6 +96,13 @@ describe("capability registrations", () => {
     expect(await fresh.isRegistered(a)).toBe(true);
     expect(await fresh.isRegistered(b)).toBe(false);
   });
+  it("keeps a registered crop pinned when watch settings are changed", async () => {
+    const h = harness(); const id = await h.register(boundary, "soybean");
+    expect((await h.call(`/api/fieldwatch/agent/${id}/watch`, "PUT", { crop: "corn", enabled: true })).status).toBe(400);
+    expect((await h.call(`/api/fieldwatch/agent/${id}/watch`, "PUT", { crop: null })).status).toBe(400);
+    const watch = await (await h.call(`/api/fieldwatch/agent/${id}/watch`)).json() as { settings: { crop: string; enabled: boolean } };
+    expect(watch.settings).toMatchObject({ crop: "soybean", enabled: false });
+  });
   it("rejects forged/unknown ids before instantiating their storage; double-confirms registered ids", async () => {
     const h = harness(); const forged = capabilityId();
     for (const suffix of ["runs", "watch", "check"]) {
@@ -126,6 +133,26 @@ describe("capability registrations", () => {
     }
     expect(owned.jobs.size).toBe(0);
     expect(owned.db.prepare("SELECT name FROM sqlite_master WHERE name='field_runs'").all()).toHaveLength(0);
+  });
+  it("cannot recreate schedules when deletion overlaps a watch update", async () => {
+    const h = harness(); const id = await h.register();
+    await h.call(`/api/fieldwatch/agent/${id}/watch`, "PUT", { enabled: true });
+    const owned = h.agents.get(id)!;
+    const cancel = owned.agent.cancelSchedule.bind(owned.agent);
+    let entered!: () => void, release!: () => void;
+    const waiting = new Promise<void>(r => { entered = r; });
+    const gate = new Promise<void>(r => { release = r; });
+    let first = true;
+    owned.agent.cancelSchedule = async (job: string) => {
+      if (first) { first = false; entered(); await gate; }
+      return cancel(job);
+    };
+    const updating = h.call(`/api/fieldwatch/agent/${id}/watch`, "PUT", { enabled: true });
+    await waiting;
+    expect((await h.call(`/api/fields/${id}`, "DELETE")).status).toBe(200);
+    release(); expect((await updating).status).toBe(404);
+    expect(owned.jobs.size).toBe(0);
+    expect((await h.call(`/api/fieldwatch/agent/${id}/runs`)).status).toBe(404);
   });
   it("enforces a durable lifetime global cap even after deletion", async () => {
     const h = harness(); await h.register();

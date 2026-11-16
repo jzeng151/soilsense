@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
+import { execFileSync } from "node:child_process";
 const base = process.env.BASE_URL ?? "http://127.0.0.1:8803";
 assert.equal(new URL(base).port, "8803");
 assert.ok(["localhost", "127.0.0.1"].includes(new URL(base).hostname), "This mutation smoke is local-only");
@@ -10,7 +11,7 @@ assert.ok(out, "Set MULTIWATCH_ARTIFACTS to a scratch directory");
 await mkdir(out, { recursive: true });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const ids = [];
-const results = { fixture: "constructed polygons; not sourced USDA data", scans: [], statuses: [], keyboard: [], assertions: [] };
+const results = { fixture: "constructed polygons; not sourced USDA data", revision: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), scans: [], statuses: [], keyboard: [], assertions: [] };
 async function request(path, method = "GET", body) {
   const r = await fetch(base + path, { method, headers: body ? { "content-type": "application/json" } : {}, body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(20_000) });
   const data = await r.json();
@@ -44,7 +45,7 @@ try {
     const context = await browser.newContext({ viewport: { width: 375, height: 900 } });
     await context.addInitScript(({ saved, language }) => { localStorage.setItem("soilsense.myfields.v1", JSON.stringify(saved)); localStorage.setItem("soilsense.language", language); }, { saved, language });
     const page = await context.newPage();
-    await page.goto(base, { waitUntil: "networkidle" });
+    await page.goto(base, { waitUntil: "domcontentloaded" });
     const panel = page.locator(".my-fields");
     await panel.waitFor();
     await panel.getByRole("heading", { name: language === "es" ? "Mis parcelas" : "My fields", exact: true }).waitFor();
@@ -54,7 +55,7 @@ try {
     await writeFile(`${out}/axe-${language}-375.json`, JSON.stringify(audit, null, 2));
     const dimensions = await panel.evaluate(el => ({ width: el.getBoundingClientRect().width, scroll: el.scrollWidth, client: el.clientWidth }));
     assert.ok(dimensions.scroll <= dimensions.client, "Panel overflows at 375px");
-    results.scans.push({ language, width: 375, violations: audit.violations.length, incomplete: audit.incomplete.length, dimensions });
+    results.scans.push({ language, width: 375, axe: audit.testEngine.version, browser: browser.version(), inventory: await panel.evaluate(el => ({ headings: [...el.querySelectorAll("h2,h3")].map(h => h.textContent), fields: el.querySelectorAll(".my-fields-row").length, disclosures: el.querySelectorAll("details").length })), violations: audit.violations.length, incomplete: audit.incomplete.length, dimensions });
     // Real Tab/Space checks on native controls, not synthetic click events.
     const schedule = panel.getByRole("button", { name: language === "es" ? "Programar revisión de la parcela" : "Schedule field check", exact: true }).first();
     await schedule.focus(); await page.keyboard.press("Tab");

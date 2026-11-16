@@ -175,7 +175,17 @@ fieldWatch.put("/agent/:field/watch", async (c) => {
   if (body.crop !== undefined && body.crop !== null && !WATCHABLE_CROPS.includes(body.crop as never)) {
     return c.json({ error: `crop must be null or one of: ${WATCHABLE_CROPS.join(", ")}` }, 400);
   }
+  if (REGISTERED_ID.test(fieldId) && body.crop !== undefined) return c.json({ error: "Registered crop is pinned; register a new field to change it." }, 400);
   const agent = await agentFor(c.env, fieldId);
-  await agent.updateWatch(fieldId, { enabled: body.enabled, crop: body.crop });
-  return c.json(await agent.getWatch(fieldId));
+  try {
+    await agent.updateWatch(fieldId, { enabled: body.enabled, crop: body.crop });
+    return c.json(await agent.getWatch(fieldId));
+  } catch (error) {
+    // Deletion may invalidate authorization while a scheduler RPC is awaiting.
+    if (REGISTERED_ID.test(fieldId)) {
+      const denied = await registeredAccess(c, fieldId);
+      if (denied) return denied;
+    }
+    throw error;
+  }
 });

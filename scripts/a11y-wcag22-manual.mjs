@@ -45,13 +45,21 @@ try {
     await step('Assistant toggle focusable', true);
     await p.keyboard.press('Enter'); await p.waitForTimeout(800);
     await step('Assistant opened with Enter', await assistantVisible());
-    const composer = await tabTo(f => f.tag === 'textarea', 60);
+    // The composer and suggestions stay disabled until the field plan loads; wait for that first.
+    await p.locator('.fa-rotation').first().waitFor({ timeout: 90000 }).catch(() => {});
+    await p.locator('.fa-composer textarea:enabled').first().waitFor({ timeout: 30000 }).catch(() => {});
+    await p.waitForTimeout(500);
+    const composerState = await p.evaluate(() => { const t = document.querySelector('.fa-composer textarea'); return t ? { disabled: t.disabled, notice: document.querySelector('.fa-notice, .fa-status')?.textContent?.trim().slice(0, 100) ?? null } : null; });
+    log.push({ label: 'composer state (disabled when the Worker has no AI model; not a keyboard trap)', ok: !!composerState, composerState });
+    const composer = composerState && !composerState.disabled ? await tabTo(f => f.tag === 'textarea', 40) : false;
     await step('Composer reached by Tab', composer);
-    await p.keyboard.type('What is the top rotation?');
-    const before = await p.locator('.fa-turn, .fa-user').count();
-    await p.keyboard.press('Enter'); await p.waitForTimeout(4000);
-    const after = await p.locator('.fa-turn, .fa-user').count();
-    await step('Enter sends the question (user turn added)', after > before);
+    if (composer) {
+      await p.keyboard.type('What is the top rotation?');
+      const before = await p.locator('.fa-turn, .fa-user').count();
+      await p.keyboard.press('Enter'); await p.waitForTimeout(4000);
+      const after = await p.locator('.fa-turn, .fa-user').count();
+      await step('Enter sends the question (user turn added)', after > before);
+    }
     report.checks[`chatLive-${width}`] = await p.evaluate(() => [...document.querySelectorAll('.field-assistant [aria-live], .field-assistant [role=log], .field-assistant [role=status]')].map(e => ({ tag: e.tagName.toLowerCase(), role: e.getAttribute('role'), live: e.getAttribute('aria-live'), cls: e.className.slice(0, 40) })));
     const closeBtn = p.locator('.field-assistant button[aria-label]').filter({ hasText: /×|✕/ }).first();
     const closeLabel = await p.locator('.fa-header button[aria-label], .field-assistant header button[aria-label]').evaluateAll(bs => bs.map(b => b.getAttribute('aria-label')));
@@ -60,6 +68,7 @@ try {
     await step('Assistant closed with keyboard', !(await assistantVisible()));
     log.push({ label: 'focus after close', focus: await focusInfo(p), headerButtons: closeLabel, closeBtnCount: await closeBtn.count() });
     // Nav rail
+    if (!p.url().includes('#/explore')) await openExplore(p);
     await p.locator('.explore-rail a').first().focus();
     const rail = []; for (let i = 0; i < 9; i++) { rail.push(await focusInfo(p)); await p.keyboard.press('Tab'); }
     report.checks[`keyboard-explore-${width}`] = { log, rail, focusWithoutIndicator: log.filter(l => l.focus && l.focus.tag !== 'body' && !l.focus.indicator).map(l => l.focus.name), obscured: log.filter(l => l.focus && l.focus.tag !== 'body' && l.focus.unobscuredPoints === 0).map(l => l.focus.name) };
@@ -78,7 +87,7 @@ try {
       const rect = s => { const e = document.querySelector(s); return e && e.getBoundingClientRect(); };
       const overlap = (a, b) => a && b && !(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top);
       const attrib = rect('.maplibregl-ctrl-attrib');
-      const infoIcons = (() => { const b = document.querySelector('.maplibregl-ctrl-attrib-button'); if (!b) return null; const cs = getComputedStyle(b); return { h: b.getBoundingClientRect().height, repeat: cs.backgroundRepeat, iconsRendered: cs.backgroundRepeat.includes('no-repeat') ? 1 : Math.max(1, Math.floor(b.getBoundingClientRect().height / 24)) }; })();
+      const infoIcons = (() => { const b = document.querySelector('.maplibregl-ctrl-attrib-button'); if (!b) return null; const cs = getComputedStyle(b); return { h: b.getBoundingClientRect().height, repeat: cs.backgroundRepeat, iconsRendered: cs.backgroundRepeat.includes('no-repeat') ? 1 : Math.ceil(b.getBoundingClientRect().height / 24) }; })();
       return { interactive: els.length, under24: small.map(({ e, r }) => ({ name: (e.getAttribute('aria-label') || e.textContent).trim().slice(0, 40), w: Math.round(r.width), h: Math.round(r.height) })), attribution: attrib && { w: Math.round(attrib.width), h: Math.round(attrib.height), expanded: document.querySelector('.maplibregl-ctrl-attrib')?.classList.contains('maplibregl-compact-show') }, attributionOverlapsToggle: !!overlap(attrib, rect('.explore-assistant-toggle')), attributionOverlapsAssistant: !!overlap(attrib, rect('.explore-assistant')), infoIcons };
     });
     console.log('targets', width, JSON.stringify(report.checks[`targets-explore-${width}`]).slice(0, 300));
@@ -116,7 +125,7 @@ try {
   const routes = ['#/explore', '#/demo', '#/', '#/how-it-works', '#/sources', '#/live', '#/scout', '#/signin'];
   report.checks.reflow320 = []; report.checks.textSpacing = [];
   for (const route of routes) {
-    const p = await page0(320); await p.goto(base + '/' + route); await p.locator('main, .explore-page').first().waitFor(); await p.waitForTimeout(route === '#/explore' ? 3000 : 1500);
+    const p = await page0(320); await p.goto(base + '/' + route); await p.locator('main, .explore-page, #content').first().waitFor(); await p.waitForTimeout(route === '#/explore' ? 3000 : 1500);
     const reflow = await p.evaluate(() => ({ docOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth, wideElements: [...document.querySelectorAll('body *')].filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.right > document.documentElement.clientWidth + 1 && getComputedStyle(e).position !== 'fixed' && !e.closest('table, pre, .maplibregl-map, [role=region][tabindex], .fertilizer-scroll'); }).slice(0, 5).map(e => `${e.tagName.toLowerCase()}.${String(e.className).slice(0, 30)}`) }));
     report.checks.reflow320.push({ route, ...reflow });
     await p.addStyleTag({ content: '* { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; } p { margin-bottom: 2em !important; }' });

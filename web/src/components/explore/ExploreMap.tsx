@@ -1,0 +1,313 @@
+import maplibregl, { type GeoJSONSource, type Map as GLMap } from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
+import { useEffect, useRef } from "react";
+import type { FieldBoundary } from "../../../../src/shared/fields";
+import type { ExploreLocation } from "./location";
+export const NASA_TILES =
+  "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg";
+export const MODIS_TILES =
+  "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/2025-07-29/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg";
+export const USGS_TILES =
+  "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}";
+interface Props {
+  location: ExploreLocation | null;
+  imagery: "usgs" | "modis";
+  fields: FieldBoundary[];
+  selected: string[];
+  showFields: boolean;
+  boundary: GeoJSON.FeatureCollection | null;
+  showBoundary: boolean;
+  rotating: boolean;
+  onInteract: () => void;
+  onSelect: (field: FieldBoundary) => void;
+  onReady: (map: GLMap | null) => void;
+  onError: () => void;
+  label: string;
+}
+const empty: GeoJSON.FeatureCollection = {
+  type: "FeatureCollection",
+  features: [],
+};
+export function ExploreMap(props: Props) {
+  const el = useRef<HTMLDivElement>(null),
+    map = useRef<GLMap | null>(null),
+    latest = useRef(props);
+  latest.current = props;
+  useEffect(() => {
+    if (!el.current) return;
+    let m: GLMap;
+    try {
+      m = new maplibregl.Map({
+        container: el.current,
+        center: [-95, 30],
+        zoom: 1.3,
+        minZoom: 0.5,
+        maxZoom: 18,
+        attributionControl: { compact: true },
+        style: {
+          version: 8,
+          projection: { type: "globe" },
+          sources: {
+            nasa: {
+              type: "raster",
+              tiles: [NASA_TILES],
+              tileSize: 256,
+              maxzoom: 8,
+              attribution: "NASA GIBS · Blue Marble",
+            },
+            usgs: {
+              type: "raster",
+              tiles: [USGS_TILES],
+              tileSize: 256,
+              maxzoom: 16,
+              attribution: "USGS The National Map",
+            },
+            modis: {
+              type: "raster",
+              tiles: [MODIS_TILES],
+              tileSize: 256,
+              maxzoom: 9,
+              attribution: "NASA GIBS · MODIS Terra · 2025-07-29",
+            },
+          },
+          layers: [
+            { id: "earth", type: "raster", source: "nasa" },
+            {
+              id: "usgs",
+              type: "raster",
+              source: "usgs",
+              minzoom: 8,
+              paint: {
+                "raster-opacity": [
+                  "interpolate",
+                  ["linear"],
+                  ["zoom"],
+                  8,
+                  0,
+                  10,
+                  1,
+                ],
+              },
+            },
+            {
+              id: "modis",
+              type: "raster",
+              source: "modis",
+              layout: { visibility: "none" },
+              minzoom: 3,
+            },
+          ],
+        },
+      });
+    } catch {
+      latest.current.onError();
+      return;
+    }
+    map.current = m;
+    const resize = new ResizeObserver(() => m.resize());
+    resize.observe(el.current);
+    m.addControl(
+      new maplibregl.ScaleControl({ unit: "imperial" }),
+      "bottom-left",
+    );
+    m.on("error", (e) => {
+      if (e.error?.message?.includes("WebGL")) latest.current.onError();
+    });
+    m.on("load", () => {
+      const css = getComputedStyle(el.current!);
+      const line = css.getPropertyValue("--color-on-data").trim() || "white";
+      const selected = css.getPropertyValue("--color-accent").trim();
+      const fill = css.getPropertyValue("--color-data").trim();
+      m.addSource("fields", { type: "geojson", data: empty, attribution: 'USDA NASS Crop Sequence Boundaries (not surveyed parcel lines)' });
+      m.addLayer({
+        id: "field-fill",
+        type: "fill",
+        source: "fields",
+        paint: {
+          "fill-color": [
+            "case",
+            ["boolean", ["get", "selected"], false],
+            selected,
+            fill,
+          ],
+          "fill-opacity": 0.25,
+        },
+      });
+      m.addLayer({
+        id: "field-line",
+        type: "line",
+        source: "fields",
+        paint: {
+          "line-color": line,
+          "line-width": [
+            "case",
+            ["boolean", ["get", "selected"], false],
+            4,
+            1.5,
+          ],
+        },
+      });
+      m.addSource("zip", { type: "geojson", data: empty, attribution: 'U.S. Census Bureau · 2020 ZCTA (approximate postal area)' });
+      m.addLayer({
+        id: "zip-line",
+        type: "line",
+        source: "zip",
+        paint: {
+          "line-color": line,
+          "line-width": 3,
+          "line-dasharray": [3, 2],
+        },
+      });
+      m.on("click", "field-fill", (e) => {
+        const id = e.features?.[0]?.properties?.id;
+        const f = latest.current.fields.find((f) => f.id === id);
+        if (f) latest.current.onSelect(f);
+      });
+      m.on("mouseenter", "field-fill", () => {
+        m.getCanvas().style.cursor = "pointer";
+      });
+      m.on("mouseleave", "field-fill", () => {
+        m.getCanvas().style.cursor = "";
+      });
+      latest.current.onReady(m);
+    });
+    const stop = () => latest.current.onInteract();
+    const container = el.current;
+    container.addEventListener('keydown', stop);
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onMotion = () => { if (motion.matches) m.stop(); };
+    motion.addEventListener('change', onMotion);
+    m.on("mousedown", stop);
+    m.on("touchstart", stop);
+    m.on("wheel", stop);
+    m.on("keydown", stop);
+    let longitude = -95;
+    const spin = window.setInterval(() => {
+      if (
+        latest.current.rotating &&
+        !latest.current.location &&
+        m.loaded() &&
+        !m.isMoving() &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        longitude += 3;
+        m.easeTo({ center: [longitude, 30], duration: 2000, easing: (t) => t });
+      }
+    }, 2200);
+    return () => {
+      container.removeEventListener('keydown', stop);
+      motion.removeEventListener('change', onMotion);
+      resize.disconnect();
+      clearInterval(spin);
+      latest.current.onReady(null);
+      m.remove();
+      map.current = null;
+    };
+  }, []);
+  useEffect(() => {
+    if (!props.rotating && !props.location) map.current?.stop();
+  }, [props.rotating]);
+  useEffect(() => {
+    const m = map.current;
+    if (!m) return;
+    const apply = (animate = true) => {
+      const p = props.location;
+      const camera = p
+        ? {
+            center: [p.lon, p.lat] as [number, number],
+            zoom: p.zip ? 12 : 14,
+            padding: { top: 0, bottom: 0, left: 0, right: 0 },
+          }
+        : {
+            center: [-95, 30] as [number, number],
+            zoom: window.innerWidth > 700 ? 2.3 : 1.6,
+            padding: {
+              top: 0,
+              bottom: window.innerWidth > 700 ? 0 : 240,
+              left: 0,
+              right: window.innerWidth > 700 ? 400 : 0,
+            },
+          };
+      if (!p || !animate || window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+        m.jumpTo(camera);
+      else m.flyTo({ ...camera, duration: 2400, essential: false });
+    };
+    apply();
+    const breakpoint = window.matchMedia('(max-width: 700px)');
+    const onBreakpoint = () => { if (!props.location) apply(false); };
+    breakpoint.addEventListener('change', onBreakpoint);
+    return () => breakpoint.removeEventListener('change', onBreakpoint);
+  }, [props.location]);
+  useEffect(() => {
+    const m = map.current;
+    if (!m) return;
+    const apply = () => {
+      if (!m.getSource("fields")) return;
+      (m.getSource("fields") as GeoJSONSource).setData({
+        type: "FeatureCollection",
+        features: props.fields.map((f) => ({
+          type: "Feature",
+          properties: { id: f.id, selected: props.selected.includes(f.id) },
+          geometry: { type: "Polygon", coordinates: f.polygon },
+        })),
+      });
+      (m.getSource("zip") as GeoJSONSource).setData(props.boundary ?? empty);
+      for (const id of ["field-fill", "field-line"])
+        m.setLayoutProperty(
+          id,
+          "visibility",
+          props.showFields ? "visible" : "none",
+        );
+      m.setLayoutProperty(
+        "zip-line",
+        "visibility",
+        props.showBoundary ? "visible" : "none",
+      );
+      m.setLayoutProperty(
+        "usgs",
+        "visibility",
+        props.imagery === "usgs" ? "visible" : "none",
+      );
+      m.setLayoutProperty(
+        "modis",
+        "visibility",
+        props.imagery === "modis" ? "visible" : "none",
+      );
+    };
+    if (m.getSource("fields")) apply();
+    else m.once("load", apply);
+    return () => {
+      m.off("load", apply);
+    };
+  }, [
+    props.fields,
+    props.selected,
+    props.showFields,
+    props.boundary,
+    props.showBoundary,
+    props.imagery,
+  ]);
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !props.location) return;
+    const p = props.location;
+    const marker = new maplibregl.Marker({
+      color: getComputedStyle(el.current!)
+        .getPropertyValue("--color-cta")
+        .trim(),
+    })
+      .setLngLat([p.lon, p.lat])
+      .addTo(m);
+    return () => {
+      marker.remove();
+    };
+  }, [props.location]);
+  return (
+    <div
+      ref={el}
+      className="explore-map"
+      role="region"
+      aria-label={props.label}
+    />
+  );
+}

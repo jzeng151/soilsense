@@ -1,5 +1,8 @@
 import { useI18n } from "./i18n";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, lazy, Suspense } from "react";
+import { landingRedirect } from "./components/explore/location";
+const ExplorePage = lazy(() => import('./pages/ExplorePage').then(m => ({ default: m.ExplorePage })));
+const DemoFarmsPage = lazy(() => import('./pages/DemoFarmsPage').then(m => ({ default: m.DemoFarmsPage })));
 import { App } from "./App";
 import { LanguageProvider } from "./i18n";
 import { HowItWorksPage } from "./pages/HowItWorksPage";
@@ -17,6 +20,8 @@ import { getMe, SIGNED_OUT_EVENT, signOut, type User } from "./auth";
 type WorkspaceRoute = Route | "admin/docs";
 const routeFromHash = (): WorkspaceRoute => {
   const h = window.location.hash;
+  if (h.startsWith("#/explore")) return "explore";
+  if (h === "#/demo") return "demo";
   if (h === "#/admin/docs") return "admin/docs";
   if (h.startsWith("#/scout")) return "scout";
   if (h.startsWith("#/sources")) return "sources";
@@ -65,25 +70,41 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
   const { t: tx } = useI18n();
   const [route, setRoute] = useState<WorkspaceRoute>(routeFromHash);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [exploreLanding, setExploreLanding] = useState(false);
+  useEffect(() => {
+    let active = true;
+    fetch('/api/ui/status').then(r => r.ok ? r.json() : null).then(status => {
+      if (!active) return;
+      const enabled = status?.exploreLanding === true;
+      setExploreLanding(enabled);
+      const redirect = landingRedirect(window.location.hash, enabled);
+      if (redirect) window.location.hash = redirect;
+    }).catch(() => {});
+    return () => { active = false; };
+  }, []);
   const ownerId = user?.id ?? GUEST_ID;
   const [chats, setChats] = useState<ScoutChat[]>(() => loadChats(ownerId));
   // Always points at a chat; a brand-new chat only enters the list once it has messages.
   const [activeId, setActiveId] = useState<string>(newChatId);
 
   useEffect(() => {
-    const onHash = () => setRoute(routeFromHash());
+    const onHash = () => {
+      const redirect = landingRedirect(window.location.hash, exploreLanding);
+      if (redirect) window.location.hash = redirect;
+      else setRoute(routeFromHash());
+    };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
-  }, []);
+  }, [exploreLanding]);
 
   useEffect(() => saveChats(ownerId, chats), [ownerId, chats]);
 
   const go = useCallback((r: Route) => {
     setRoute(r);
     setSidebarOpen(false);
-    const hash = r === "planner" ? "#/" : `#/${r}`;
+    const hash = r === "planner" ? (exploreLanding ? "#/planner" : "#/") : `#/${r}`;
     if (window.location.hash !== hash) window.location.hash = hash;
-  }, []);
+  }, [exploreLanding]);
 
   const saveMessages = useCallback((id: string, messages: UIMessage[]) => {
     if (!messages.length) return;
@@ -95,6 +116,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
   }, []);
 
   const active = chats.find((c) => c.id === activeId) ?? null;
+  if (route === 'explore' || route === 'demo') return <Suspense fallback={<main aria-busy="true">Soil Sense…</main>}>{route === 'explore' ? <ExplorePage/> : <DemoFarmsPage/>}</Suspense>;
 
   return (
     <div className={`shell route-${route}`}>

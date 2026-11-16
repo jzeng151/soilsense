@@ -1,6 +1,7 @@
 // SoilSense Worker: JSON API for the dashboard, Twilio voice webhooks, and static dashboard assets.
 
 import { fields } from "./routes/fields";
+import { explore } from "./routes/explore";
 import { imerg } from "./imerg/routes";
 import { myFields } from "./routes/myfields";
 import { Hono } from "hono";
@@ -31,6 +32,8 @@ app.use("*", async (c, next) => {
 });
 
 app.get("/healthz", (c) => c.json({ ok: true }));
+app.get("/api/ui/status", (c) => c.json({ exploreLanding: c.env.EXPLORE_LANDING === "on" }));
+app.route("/api/explore", explore);
 // WebSocket for Twilio ConversationRelay (the conversational phone agent).
 app.get("/voice-agent", (c) => handleAgentSocket(c.req.raw, c.env));
 app.route("/api/admin", admin);

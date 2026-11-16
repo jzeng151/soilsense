@@ -1,9 +1,11 @@
 import { createContext, createElement, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { CropId } from "../../src/shared/types";
-import { constraintMessages } from './i18n-constraints';
+import { exploreMessages } from "./i18n-explore";
 import { fieldMessages } from "./i18n-fields";
 import { cardMessages } from "./i18n-cards";
+import { assistantMessages } from "./i18n-assistant";
+import { constraintMessages } from './i18n-constraints';
 import { korean } from "./i18n-ko";
 import { LANGUAGES, parseLanguage, type Language } from "../../src/shared/language";
 export type { Language } from "../../src/shared/language";
@@ -12,6 +14,8 @@ import { myFieldsMessages } from "./i18n-myfields";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
+  ...exploreMessages,
+  ...assistantMessages,
   ...constraintMessages,
   ...fieldMessages,
   ...cardMessages,

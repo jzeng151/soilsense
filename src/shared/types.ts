@@ -1,3 +1,5 @@
+import type { ConstraintReport, FarmerConstraints } from './constraints';
+export type { FarmerConstraints } from './constraints';
 // Types shared by the Worker API, the engine and the dashboard.
 
 /** "fallow" = no crop for a season (weed control only) so the soil stores water; offered only on dry rain-fed fields. */
@@ -185,10 +187,14 @@ export interface FarmerYield {
 }
 
 export interface PlanRequest {
+
   /** Optional farmer-entered $/yield-unit prices; override NASS and prototype defaults. */
   prices?: Partial<Record<CropId, number>>;
   /** Sensitivity over historical price scenarios for selected plans only, not a forecast. */
   priceScenarios?: boolean;
+
+  constraints?: FarmerConstraints;
+
   soilTest?: SoilTest;
   yieldRecords?: FarmerYield[];
   lat: number;
@@ -205,7 +211,11 @@ export interface PlanRequest {
 }
 
 export interface PlanResponse {
+
   priceSensitivity?: import("./prices").PriceSensitivity;
+
+  constraints?: ConstraintReport;
+
   request: PlanRequest;
   generatedAt: string;
   location: { county: CountyInfo | null; lat: number; lon: number };

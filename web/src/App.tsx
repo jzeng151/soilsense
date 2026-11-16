@@ -9,6 +9,8 @@ import type { Language, TranslationKey } from "./i18n";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CropId, FieldResponse, Goal, PlanRequest, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
 import { MeasurementPanel, SoilComparison } from "./components/Measurements";
+import type { FarmerConstraints } from '../../src/shared/constraints';
+import { ConstraintsPanel, ConstraintSummary } from './components/ConstraintsPanel';
 import { GoalPicker } from "./components/GoalPicker";
 import { PricePanel, type PriceDraft } from "./components/PricePanel";
 import { PriceRobustnessCard } from "./components/PriceRobustnessCard";
@@ -204,6 +206,9 @@ function MainFlow() {
   const [guessed, setGuessed] = useState(false);
   const [water, setWater] = useState<WaterLevel>("rain");
   const [priority, setPriority] = useState<Priority>("balanced");
+  const [constraints, setConstraints] = useState<FarmerConstraints | undefined>();
+  const [constraintsValid, setConstraintsValid] = useState(true);
+  const changeConstraints = useCallback((value: FarmerConstraints | undefined, valid: boolean) => { setConstraints(value); setConstraintsValid(valid); }, []);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [priceDraft, setPriceDraft] = useState<PriceDraft>({values:{},prices:{},valid:true});
   const {prices,valid:pricesValid} = priceDraft;
@@ -321,7 +326,7 @@ function MainFlow() {
   const lastMapped = useMemo(() => [...(field?.cropHistory.years ?? [])].reverse().find((y) => y.crop) ?? null, [field]);
 
   const run = useCallback(async (waterOverride?: WaterLevel) => {
-    if (!point || (!thisYear && !planningField) || !measurementsValid || !fieldHistoryValid || !pricesValid) return;
+    if (!point || (!thisYear && !planningField) || !measurementsValid || !fieldHistoryValid || !pricesValid || !constraintsValid) return;
     const w = waterOverride ?? water;
     if (waterOverride) setWater(waterOverride);
     setPlanLoading(true);
@@ -337,7 +342,7 @@ function MainFlow() {
     if (lastMapped?.crop && lastMapped.year < THIS_SEASON) recentCrops.push(lastMapped.crop);
     if (thisYear) recentCrops.push(thisYear);
     try {
-      const res = await fetchPlan(fieldPlanRequest({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, goals, recentCrops, language, ...measurements, ...(Object.keys(prices).length ? {prices} : {}), priceScenarios: true }, boundaryCatalog.enabled, planningField, planningCrops), ctrl.signal);
+      const res = await fetchPlan(fieldPlanRequest({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, goals, ...(constraints ? { constraints } : {}), recentCrops, language, ...measurements, ...(Object.keys(prices).length ? {prices} : {}), priceScenarios: true }, boundaryCatalog.enabled, planningField, planningCrops), ctrl.signal);
       setPlan(res);
       setAnswer(null);
     } catch (e) {
@@ -345,7 +350,7 @@ function MainFlow() {
     } finally {
       if (planAbort.current === ctrl) setPlanLoading(false);
     }
-  }, [point, thisYear, water, priority, goals, lastMapped, go, language, measurements, measurementsValid, prices, pricesValid, boundaryCatalog.enabled, planningField, fieldHistoryValid, fieldHistoryEdits]);
+  }, [point, thisYear, water, priority, goals, lastMapped, go, language, measurements, measurementsValid, prices, pricesValid, constraints, constraintsValid, boundaryCatalog.enabled, planningField, fieldHistoryValid, fieldHistoryEdits]);
 
   // Regenerate the server summary when switching languages on an existing result.
   useEffect(() => {
@@ -606,13 +611,14 @@ function MainFlow() {
 
             <GoalPicker value={goals} onChange={setGoals} water={water} />
             <PricePanel value={priceDraft} onChange={setPriceDraft} />
+            <ConstraintsPanel value={constraints} onChange={changeConstraints} />
             {point && <MeasurementPanel key={`${point.lat},${point.lon}`} fieldKey={`${point.lat},${point.lon}`} soil={field.soil} onChange={changeMeasurements} />}
 
             <div className="jr-actions">
               <button type="button" className="ghost" onClick={() => go("field")}>
                 {t("← Back")}
               </button>
-              <button type="button" className="primary" disabled={(!thisYear && !planningField) || !fieldHistoryValid || planLoading || !measurementsValid || !pricesValid} onClick={() => void run()}>
+              <button type="button" className="primary" disabled={(!thisYear && !planningField) || !fieldHistoryValid || planLoading || !measurementsValid || !pricesValid || !constraintsValid} onClick={() => void run()}>
                 {(thisYear || planningField) ? t("Show my plan →") : t("Pick what you grew to continue")}
               </button>
             </div>
@@ -659,6 +665,7 @@ function MainFlow() {
               </div>
             )}
 
+            {plan && !planLoading && <ConstraintSummary report={plan.constraints} currentPractice={plan.currentPractice} />}
             {plan && !planLoading && !best && <div className="jr-card" role="status"><h1 className="jr-title">{t("No feasible rotation found")}</h1><DecisionNotice /><p>{t("Review your crop history, water assumptions and priorities. Missing evidence is not a zero score.")}</p><button type="button" className="ghost" onClick={() => go("questions")}>{t("Review inputs")}</button></div>}
 
             {plan && !planLoading && best && (

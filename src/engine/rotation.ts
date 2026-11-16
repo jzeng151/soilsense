@@ -328,7 +328,12 @@ export function evaluateCropClimate(
 
 // ---------------- Plan enumeration and scoring ----------------
 
+import { constraintWater } from '../shared/constraintWater';
+import type { ConstraintReport, FarmerConstraints } from '../shared/constraints';
+import { cropConstraintIssues, normalizeConstraints, sequenceConstraintIssues } from './constraints';
+
 export interface EngineInput {
+  constraints?: FarmerConstraints;
   cropClimate: Record<CropId, CropClimate>;
   /** Recent crops on the field, oldest first; last = most recent season. */
   history: CropId[];
@@ -771,18 +776,28 @@ export function currentPracticeSequence(history: CropId[], length = 3): CropId[]
 
 export interface EngineResult {
   priceSensitivity?: PriceSensitivity;
+  constraints?: ConstraintReport;
   plans: RotationPlan[];
   currentPractice: RotationPlan | null;
   evaluated: number;
 }
 
 export function runEngine(input: EngineInput, topN = 3): EngineResult {
+  const waterConstraint = constraintWater(input.constraints);
+  if (waterConstraint) input = { ...input, irrigated: false, water: { ...input.water, irrigated: false, allowanceMm: waterConstraint.seasonalCapInches * 25.4 } };
   const crops = input.crops?.length ? input.crops : LEGACY_CROPS.filter((c) => c !== "fallow");
   const legacy = crops.filter(c => !isExtraCrop(c));
   let sequences = [...cartesian([legacy, legacy, legacy]), ...expandedSequences(crops)].filter((s) =>
     feasibleSequence(s, input.history, input.firstYearWheatAllowed),
   );
 
+  const constraints = normalizeConstraints(input.constraints);
+  const binding = new Set<import('../shared/constraints').ConstraintCode>();
+  if (constraints) sequences = sequences.filter(seq => {
+    const issues = sequenceConstraintIssues(seq, input.history, constraints);
+    for (const issue of issues) binding.add(issue.constraint);
+    return !issues.length;
+  });
   const goals = selectedGoals(input.goals);
   // Goal-sensitive cover variants must not be pruned using the old base-only quick score.
   if (!goals.length && input.quickSearch && sequences.length > input.quickSearch) {
@@ -895,7 +910,18 @@ export function runEngine(input: EngineInput, topN = 3): EngineResult {
         })()
       : null,
     evaluated: raws.length,
+
     ...(priceSensitivity ? {priceSensitivity} : {}),
+
+    ...(constraints ? { constraints: {
+      status: plans.length ? 'satisfied' as const : 'infeasible' as const,
+      ...(waterConstraint ? { water: waterConstraint } : {}),
+      binding: plans.length ? [] : [...binding].sort(),
+      excludedCrops: crops.map(crop => ({ crop, reasons: cropConstraintIssues(crop, constraints) })).filter(x => x.reasons.length),
+      currentPracticeViolations: baselineSeq ? sequenceConstraintIssues(baselineSeq, input.history, constraints) : [],
+      ...(!plans.length ? { message: `No rotation satisfies these constraints: ${[...binding].join(', ') || 'crop availability and rotation rules'}. No constraints were relaxed.` } : {}),
+    } } : {}),
+
   };
 }
 

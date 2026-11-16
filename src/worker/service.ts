@@ -76,7 +76,10 @@ export class PlanNotReady extends Error {
   }
 }
 
+import { normalizeConstraints } from '../shared/constraints';
+
 export function planCacheKey(request: PlanRequest, opts: PlanOpts = {}, now = new Date()): string {
+  const constraints = normalizeConstraints(request.constraints);
   const water = request.water ?? (request.irrigated ? "full" : "rain");
   return [
     `plan:${PLAN_ENGINE_VERSION}`,
@@ -85,8 +88,12 @@ export function planCacheKey(request: PlanRequest, opts: PlanOpts = {}, now = ne
     request.lon.toFixed(4),
     water,
     request.priority,
+
     ...(request.prices && Object.keys(request.prices).length ? [`prices=${pricesCacheToken(request.prices)}`] : []),
     ...(request.priceScenarios !== undefined ? [`price-scenarios=${request.priceScenarios ? PRICE_SCENARIO_VERSION : "off"}`] : []),
+
+    ...(constraints ? [`constraints=${JSON.stringify(constraints)}`] : []),
+
     ...(request.goals?.length ? [`goals=${request.goals.join(",")}`] : []),
     (request.recentCrops ?? []).join(","),
     request.language ?? "en",

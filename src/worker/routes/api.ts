@@ -1,7 +1,11 @@
 import { generateAI, type AiRunner } from "../lib/ai";
 import { Hono, type Handler, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
+
 import { validatePrices } from "../../shared/prices";
+
+import { validateConstraints } from '../../shared/validateConstraints';
+
 import { hasMeasurements, validateMeasurements } from "../../shared/measurements";
 import { GOALS, type CropId, type Goal, type PlanRequest, type PlanResponse, type Priority } from "../../shared/types";
 import { currentUser } from "../lib/auth";
@@ -111,9 +115,11 @@ export function validatePlanRequest(body: unknown): PlanRequest | string {
   const water = (b.water as "rain" | "limited" | "full" | undefined) ?? (b.irrigated === true ? "full" : "rain");
   const priceInput = validatePrices(b);
   if (typeof priceInput === "string") return priceInput;
+  const constraints = validateConstraints(b.constraints, ALL_CROPS);
+  if (typeof constraints === "string") return constraints;
   const measurements = validateMeasurements(b);
   if (typeof measurements === "string") return measurements;
-  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language, ...measurements, ...priceInput, ...(goals !== undefined ? { goals } : {}) };
+  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language, ...measurements, ...priceInput, ...(constraints ? { constraints } : {}), ...(goals !== undefined ? { goals } : {}) };
 }
 
 function upstreamMessage(err: unknown): { status: 502 | 500; body: { error: string; detail?: string } } {

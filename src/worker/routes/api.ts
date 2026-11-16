@@ -2,6 +2,8 @@ import { generateAI, type AiRunner } from "../lib/ai";
 import { Hono, type Handler, type MiddlewareHandler } from "hono";
 import { ALL_CROPS } from "../../engine/crops";
 import { withFertilizer } from "../../engine/fertilizer";
+import { validateConstraints } from '../../shared/validateConstraints';
+import { validatePrices } from "../../shared/prices";
 import { hasMeasurements, validateMeasurements } from "../../shared/measurements";
 import { GOALS, type CropId, type Goal, type PlanRequest, type PlanResponse, type Priority } from "../../shared/types";
 import { currentUser } from "../lib/auth";
@@ -110,9 +112,13 @@ export function validatePlanRequest(body: unknown): PlanRequest | string {
   if (b.water !== undefined && b.water !== "rain" && b.water !== "limited" && b.water !== "full") return 'water must be "rain", "limited" or "full"';
   const water = (b.water as "rain" | "limited" | "full" | undefined) ?? (b.irrigated === true ? "full" : "rain");
   if (b.includeFertilizer !== undefined && typeof b.includeFertilizer !== "boolean") return "includeFertilizer must be boolean";
+  const constraints = validateConstraints(b.constraints, ALL_CROPS);
+  if (typeof constraints === "string") return constraints;
+  const priceInput = validatePrices(b);
+  if (typeof priceInput === "string") return priceInput;
   const measurements = validateMeasurements(b);
   if (typeof measurements === "string") return measurements;
-  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language, ...measurements, ...(goals !== undefined ? { goals } : {}) };
+  return { ...coords, irrigated: water !== "rain", water, priority, recentCrops, language, ...measurements, ...priceInput, ...(constraints ? { constraints } : {}), ...(goals !== undefined ? { goals } : {}) };
 }
 
 function upstreamMessage(err: unknown): { status: 502 | 500; body: { error: string; detail?: string } } {

@@ -1,5 +1,6 @@
 // Fetches every data source for a location (in parallel, cached) and runs the engine.
 
+import { PRICE_SCENARIO_VERSION, pricesCacheToken } from "../shared/prices";
 import { hasMeasurements } from "../shared/measurements";
 import { mergeDaymet } from "../engine/climate";
 import { buildPlan } from "../engine/plan";
@@ -73,7 +74,10 @@ export class PlanNotReady extends Error {
   }
 }
 
+import { normalizeConstraints } from '../shared/constraints';
+
 export function planCacheKey(request: PlanRequest, opts: PlanOpts = {}, now = new Date()): string {
+  const constraints = normalizeConstraints(request.constraints);
   const water = request.water ?? (request.irrigated ? "full" : "rain");
   return [
     `plan:${PLAN_ENGINE_VERSION}`,
@@ -81,6 +85,9 @@ export function planCacheKey(request: PlanRequest, opts: PlanOpts = {}, now = ne
     request.lon.toFixed(4),
     water,
     request.priority,
+    ...(constraints ? [`constraints=${JSON.stringify(constraints)}`] : []),
+    ...(request.prices && Object.keys(request.prices).length ? [`prices=${pricesCacheToken(request.prices)}`] : []),
+    ...(request.priceScenarios !== undefined ? [`price-scenarios=${request.priceScenarios ? PRICE_SCENARIO_VERSION : "off"}`] : []),
     ...(request.goals?.length ? [`goals=${request.goals.join(",")}`] : []),
     (request.recentCrops ?? []).join(","),
     request.language ?? "en",

@@ -95,7 +95,9 @@ export async function makePlan(
   request: PlanRequest,
   opts: PlanOpts = {},
 ): Promise<PlanResponse> {
-  const inline = env.PLAN_COMPUTE_MODE === "inline";
+  // Default is inline (fresh computation). Set PLAN_COMPUTE_MODE=cache-only on a Workers Free account, where an
+  // uncached plan exceeds the 10 ms CPU budget, and prewarm with scripts/prefetch-demo.mjs.
+  const inline = env.PLAN_COMPUTE_MODE !== "cache-only";
   // Personal data never reaches shared caches, even on the low-budget fallback path.
   if (opts.now || hasMeasurements(request)) {
     if (!inline) throw new PlanNotReady();

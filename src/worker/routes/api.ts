@@ -158,7 +158,7 @@ api.get("/field-memory/:field/:vector", async (c) => {
 });
 
 // CPU-safe deployments serve precomputed responses; compute them locally or on a paid Worker.
-api.get("/plan/runtime", (c) => c.json({ engineVersion: PLAN_ENGINE_VERSION, computeMode: c.env.PLAN_COMPUTE_MODE === "inline" ? "inline" : "cache-only" }));
+api.get("/plan/runtime", (c) => c.json({ engineVersion: PLAN_ENGINE_VERSION, computeMode: c.env.PLAN_COMPUTE_MODE === "cache-only" ? "cache-only" : "inline" }));
 
 // The admin supplies a complete result, never a client-chosen D1 key. This route
 // deliberately does not fetch sources or call the engine on the Free-plan Worker.

@@ -6,7 +6,8 @@
 // --list prints fixed profiles without network/secrets; --list-live adds the current UI-inferred histories.
 // --limit=N is a smoke test ONLY. Rewarm every 6h and after midnight UTC (date/version are in the key).
 // This covers mapped histories, original presets, corn answers and inferred UI defaults, not arbitrary edits/goals/measurements.
-// For interactive uncached planning use Workers Paid + PLAN_COMPUTE_MODE=inline, not Workers Free.
+// Workers Paid: the default inline mode computes fresh plans. Workers Free: set PLAN_COMPUTE_MODE=cache-only on the
+// target and prewarm with this script (fresh computation exceeds the Free 10 ms CPU budget).
 import { pathToFileURL } from "node:url";
 import { isDeepStrictEqual } from "node:util";
 export const farms = [

@@ -25,7 +25,7 @@ it("requires an admin credential before accepting precomputed output", async () 
   expect(res.status).toBe(401);
 });
 it("persists a real locally computed plan, and reads that exact response from D1 without any engine work", async () => {
-  const env = { DB: database(), ADMIN_TOKEN: "test-admin" };
+  const env = { DB: database(), ADMIN_TOKEN: "test-admin", PLAN_COMPUTE_MODE: "cache-only" as const };
   const res = await api.request("/plan/cache", post({ engineVersion: PLAN_ENGINE_VERSION, plan }), env, ctx);
   expect(res.status).toBe(200);
   expect(await res.json()).toMatchObject({ key: planCacheKey(plan.request), stored: true });

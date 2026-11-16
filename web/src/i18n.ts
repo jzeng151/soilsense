@@ -1,6 +1,7 @@
 import { createContext, createElement, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { CropId } from "../../src/shared/types";
+import { fieldMessages } from "./i18n-fields";
 import { cardMessages } from "./i18n-cards";
 import { korean } from "./i18n-ko";
 import { LANGUAGES, parseLanguage, type Language } from "../../src/shared/language";
@@ -8,6 +9,7 @@ export type { Language } from "../../src/shared/language";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
+  ...fieldMessages,
   ...cardMessages,
   "District outlook (next ~4 weeks, team's Kansas model)": "Perspectiva del distrito (próximas ~4 semanas, modelo de Kansas del equipo)",
   "drought likely to continue.": "es probable que la sequía continúe.",

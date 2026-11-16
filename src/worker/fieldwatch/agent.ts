@@ -15,7 +15,7 @@ type SqlTag = <T>(strings: TemplateStringsArray, ...values: (string | number | b
 
 /** RunStore on the agent's SQLite database. Each run is one row; `data` holds the full JSON record. */
 export class SqlRunStore implements RunStore {
-  constructor(private sql: SqlTag) {
+  constructor(private sql: SqlTag, private retention = 0) {
     this.sql`CREATE TABLE IF NOT EXISTS field_runs (
       run_id TEXT PRIMARY KEY,
       status TEXT NOT NULL,
@@ -33,6 +33,7 @@ export class SqlRunStore implements RunStore {
   }
   insert(run: AgentRun): void {
     this.sql`INSERT INTO field_runs (run_id, status, scheduled_at, data) VALUES (${run.runId}, ${run.status}, ${run.scheduledAt}, ${JSON.stringify(run)})`;
+    if (this.retention) this.sql`DELETE FROM field_runs WHERE status != 'pending' AND run_id NOT IN (SELECT run_id FROM field_runs ORDER BY scheduled_at DESC LIMIT ${this.retention})`;
   }
   update(run: AgentRun): void {
     this.sql`UPDATE field_runs SET status = ${run.status}, data = ${JSON.stringify(run)} WHERE run_id = ${run.runId}`;
@@ -44,9 +45,15 @@ export class SqlRunStore implements RunStore {
 
 export class FieldAgent extends Agent<Env> {
   private _store: SqlRunStore | null = null;
+  private _registeredLifecycle = false;
 
   private store(): SqlRunStore {
-    this._store ??= new SqlRunStore(this.sql.bind(this) as SqlTag);
+    this._store ??= new SqlRunStore(((strings: TemplateStringsArray, ...values: (string | number | boolean | null)[]) => {
+      // A provider response can arrive after deletion. Never resurrect deleted application rows.
+      const text = strings.join("");
+      if (this._registeredLifecycle && !this.registration() && !/^\s*SELECT/i.test(text)) return [];
+      return this.sql(strings, ...values);
+    }) as SqlTag, this._registeredLifecycle ? 100 : 0);
     return this._store;
   }
 
@@ -70,6 +77,7 @@ export class FieldAgent extends Agent<Env> {
   private registration(): { id: string; config: Registration } | null {
     if (!this.sql`SELECT name FROM sqlite_master WHERE type='table' AND name='registered_field'`.length) return null;
     const row = this.sql<{ id: string; data: string }>`SELECT id, data FROM registered_field LIMIT 1`[0];
+    if (row) this._registeredLifecycle = true;
     return row ? { id: row.id, config: JSON.parse(row.data) as Registration } : null;
   }
   async isRegistered(id: string): Promise<boolean> {
@@ -179,6 +187,7 @@ export class FieldAgent extends Agent<Env> {
     if (payload.fieldId.startsWith("u_") && !await this.isRegistered(payload.fieldId)) return;
     const settings = this.settings();
     const run = await runRecurringCheck("weekly", payload, settings, this.store(), this.env, this.field(payload.fieldId), new Date());
+    if (payload.fieldId.startsWith("u_") && !await this.isRegistered(payload.fieldId)) return;
     if (settings.enabled && settings.version === payload.version) {
       const at = nextWeeklyAt(Date.now());
       const s = await this.schedule(new Date(at), "weeklyCheck", { fieldId: payload.fieldId, version: settings.version });
@@ -192,6 +201,7 @@ export class FieldAgent extends Agent<Env> {
     if (payload.fieldId.startsWith("u_") && !await this.isRegistered(payload.fieldId)) return;
     const settings = this.settings();
     const run = await runRecurringCheck("window", payload, settings, this.store(), this.env, this.field(payload.fieldId), new Date());
+    if (payload.fieldId.startsWith("u_") && !await this.isRegistered(payload.fieldId)) return;
     if (settings.enabled && settings.version === payload.version && settings.crop === payload.crop) {
       const plan = nextWindowOpening(payload.crop, Date.now());
       const w = await this.schedule(new Date(plan.at), "windowCheck", { fieldId: payload.fieldId, version: settings.version, crop: plan.crop, seasonYear: plan.seasonYear });

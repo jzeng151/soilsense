@@ -1,28 +1,18 @@
 import { Hono } from "hono";
+import { fieldRequestAllowed } from "../fieldwatch/fieldLimit";
 import type { AppEnv } from "./auth";
 import { agentFor, registeredAccess } from "./fieldwatch";
 import { capabilityId, REGISTRATION_BYTES, validateRegistration } from "../fieldwatch/registration";
 
 export const myFields = new Hono<AppEnv>();
-const buckets = new Map<string, { tokens: number; at: number }>();
-/** Best-effort local fallback only; production reuses the existing binding with a separate key prefix. */
-export function registrationAllowed(ip: string, now = Date.now()): boolean {
-  const b = buckets.get(ip) ?? { tokens: 5, at: now };
-  b.tokens = Math.min(5, b.tokens + (now - b.at) / 12_000);
-  b.at = now;
-  if (buckets.size > 5000) buckets.clear();
-  buckets.set(ip, b);
-  if (b.tokens < 1) return false;
-  b.tokens -= 1;
-  return true;
-}
+
 myFields.use("*", async (c, next) => {
   c.header("Cache-Control", "no-store");
   if (c.env.FIELDS_ENABLED !== "on") return c.json({ error: "fields disabled" }, 404);
   if (!c.env.FIELD_AGENT) return c.json({ error: "Field agents unavailable." }, 503);
   if (c.req.method !== "GET") {
     const ip = c.req.header("CF-Connecting-IP") ?? "local";
-    const allowed = c.env.SCOUT_LIMITER ? (await c.env.SCOUT_LIMITER.limit({ key: `fields:${ip}` })).success : registrationAllowed(ip);
+    const allowed = await fieldRequestAllowed(c.env, ip);
     if (!allowed) return c.json({ error: "Too many field requests. Try again in a minute." }, 429);
   }
   await next();

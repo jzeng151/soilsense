@@ -10,6 +10,7 @@
 
 import { Hono, type Context } from "hono";
 import { REGISTERED_ID } from "../fieldwatch/registration";
+import { fieldRequestAllowed } from "../fieldwatch/fieldLimit";
 import { getAgentByName } from "agents";
 import { CHECK_DELAY_SECONDS, REPLAY_PRESETS, type AgentRun } from "../fieldwatch/agentCore";
 import { FRESH_DAYS, WATCHABLE_CROPS, WEEKLY_DESCRIPTION } from "../fieldwatch/watchCore";
@@ -93,7 +94,8 @@ export async function agentFor(env: { FIELD_AGENT?: DurableObjectNamespace }, fi
 
 fieldWatch.use("/agent/:field/*", async (c, next) => {
   const id = c.req.param("field") ?? "";
-  if (WATCHED_FIELDS.some(f => f.id === id) || id === "options") return next();
+  if (WATCHED_FIELDS.some(f => f.id === id) || id === "options" || (!id.startsWith("u_") && c.env.FIELDS_ENABLED !== "on")) return next();
+  if (c.env.FIELDS_ENABLED === "on" && c.req.method !== "GET" && !await fieldRequestAllowed(c.env, c.req.header("CF-Connecting-IP") ?? "local")) return c.json({ error: "Too many field requests. Try again in a minute." }, 429);
   const denied = await registeredAccess(c, id);
   if (denied) return denied;
   await next();

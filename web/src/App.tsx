@@ -27,6 +27,7 @@ import { EconomicsCard } from "./components/EconomicsCard";
 import { HistoricalScenarios } from "./components/HistoricalScenarios";
 
 import { FieldWatchCard } from "./components/FieldWatchCard";
+import { MyFieldsPanel } from "./components/MyFieldsPanel";
 import { UsdmContext } from "./components/UsdmContext";
 import { WindScreenCard } from "./components/WindScreenCard";
 import { TrendChart, trendText, trendTone } from "./components/TrendChart";
@@ -435,6 +436,7 @@ function MainFlow() {
             </p>
 
             <FieldWatchCard />
+            <MyFieldsPanel fields={[]} />
 
             {point && (
               <div className="jr-found" aria-live="polite">
@@ -643,6 +645,7 @@ function MainFlow() {
                 )}
 
                 {/* stretch: data evidence */}
+
                 <UsdmContext plan={plan} />
                 <WindScreenCard plan={plan} />
                 <EconomicsCard plan={plan} />

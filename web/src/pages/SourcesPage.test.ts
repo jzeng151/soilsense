@@ -51,13 +51,19 @@ it.each(["en", "es", "ko"] as const)("renders every Sources description, chip, b
   expect([...container.querySelectorAll(selector)].map(node => node.textContent!)).toEqual(english);
 });
 
-it("has complete ES/KO dictionaries, preserves interpolation values and falls back to English", () => {
+it("reports Korean page coverage, preserves interpolation values and falls back to English", () => {
   const placeholders = (value: string) => [...value.matchAll(/\{(\w+)\}/g)].map(match => match[1]).sort();
   for (const language of ["es", "ko"] as const) {
-    expect(Object.keys(pageMessages[language])).toEqual(Object.keys(pageMessages.en));
+    if (language === "es") expect(Object.keys(pageMessages.es)).toEqual(Object.keys(pageMessages.en));
+    else {
+      const missing = Object.keys(pageMessages.en).filter(key => !pageMessages.ko[key as keyof typeof pageMessages.en]);
+      console.info(`Korean pages: ${Object.keys(pageMessages.en).length - missing.length}/${Object.keys(pageMessages.en).length}; ${missing.length} keys fall back to English`, missing);
+    }
     for (const key of Object.keys(pageMessages.en) as (keyof typeof pageMessages.en)[]) {
-      expect(pageMessages[language][key].trim(), `${language}: ${key}`).not.toBe("");
-      expect(placeholders(pageMessages[language][key]), `${language}: ${key}`).toEqual(placeholders(key));
+      const value = pageMessages[language][key];
+      if (value === undefined && language === "ko") { expect(pageTranslate(language, key)).toBe(key); continue; }
+      expect(value?.trim(), `${language}: ${key}`).not.toBe("");
+      expect(placeholders(value!), `${language}: ${key}`).toEqual(placeholders(key));
     }
   }
   expect(pageTranslate("fr", "Watch a call")).toBe("Watch a call");

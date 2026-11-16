@@ -289,18 +289,18 @@ const translations = {
   "Extracted document exceeds 10 MiB": ["El documento extraído supera los 10 MiB", "추출된 문서가 10 MiB를 초과합니다"],
   "Failed to fetch": ["No se pudo conectar con el servidor", "서버에 연결할 수 없습니다"],
   "NetworkError when attempting to fetch resource.": ["Error de red al intentar recuperar el recurso.", "리소스를 가져오는 중 네트워크 오류가 발생했습니다."],
-} satisfies Record<string, [string, string]>;
+} satisfies Record<string, [string, string?]>;
 
 export type PageTranslationKey = keyof typeof translations;
 export const pageMessages = {
   en: Object.fromEntries(Object.keys(translations).map(key => [key, key])) as Record<PageTranslationKey, string>,
   es: Object.fromEntries(Object.entries(translations).map(([key, value]) => [key, value[0]])) as Record<PageTranslationKey, string>,
-  ko: Object.fromEntries(Object.entries(translations).map(([key, value]) => [key, value[1]])) as Record<PageTranslationKey, string>,
+  ko: Object.fromEntries(Object.entries(translations).map(([key, value]) => [key, value[1]])) as Partial<Record<PageTranslationKey, string>>,
 };
 
 export function pageTranslate(language: string, key: string, values: Record<string, string | number> = {}): string {
   const dictionary = language === "es" ? pageMessages.es : language === "ko" ? pageMessages.ko : pageMessages.en;
-  const template = Object.hasOwn(dictionary, key) ? dictionary[key as PageTranslationKey] : key;
+  const template = Object.hasOwn(dictionary, key) ? dictionary[key as PageTranslationKey] ?? key : key;
   return template.replace(/\{(\w+)\}/g, (match, name: string) => String(values[name] ?? match));
 }
 

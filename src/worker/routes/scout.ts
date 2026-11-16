@@ -26,6 +26,8 @@ import { parseLanguage, responseLanguageInstruction, type Language } from "../..
 import { z } from "zod";
 import { ALL_CROPS, COVERS, CROPS } from "../../engine/crops";
 import { DATA_SOURCES } from "../../engine/plan";
+import { planFertilizer } from "../../engine/fertilizer";
+import { FertilizerEvidence, FERTILIZER_CITATION_RULES } from "../fertilizerFacts";
 import type { CropId, PlanResponse, Priority } from "../../shared/types";
 import { lookupZip } from "../data/geo";
 import type { Env } from "../env";
@@ -53,6 +55,7 @@ You can call tools that reach every Soil Sense data source:
 Rules:
 - ${RESEARCH_CITATION_RULES}
 - ${FIELD_MEMORY_RULES}
+- ${FERTILIZER_CITATION_RULES}
 - Use tools whenever a question depends on data. Never invent numbers; quote what the tools return and name the source (NASA POWER, USDA SSURGO, USDA CDL, USDA NASS).
 - Coverage is the contiguous United States only. If the user gives a place without coordinates or a ZIP, ask for a ZIP code or lat/lon.
 - If the user does not say whether a field is irrigated, assume rain-fed and say so. Default priority is "balanced".
@@ -88,7 +91,7 @@ function coords(lat: number, lon: number): { lat: number; lon: number } {
 }
 
 /** Plans are large (daily series etc.); hand the model a compact, fact-dense version. */
-function compactPlan(p: PlanResponse) {
+export function compactPlan(p: PlanResponse, fertilizer = new FertilizerEvidence()) {
   return {
     location: p.location,
     soil: p.soil,
@@ -121,6 +124,7 @@ function compactPlan(p: PlanResponse) {
         netReturnPerAcre: y.netReturnPerAcre,
       })),
       notes: r.notes,
+      fertilizerFacts: fertilizer.add(planFertilizer(r, p)),
     })),
     currentPractice: p.currentPractice ? { label: p.currentPractice.label, scores: p.currentPractice.scores, avgNetReturnPerAcre: p.currentPractice.avgNetReturnPerAcre } : null,
     facts: p.facts.map((f) => `[${f.kind}${f.significant ? ", significant" : ""}] ${f.text} (${f.source})`),
@@ -155,7 +159,7 @@ async function usageAnalytics(env: Env, days: number) {
 
 // ---------- Tools (AI SDK) ----------
 
-export function makeTools(env: Env, writer: UIMessageStreamWriter, research: ChatResearch, memory = new ChatFieldMemory(env), language: Language = "en") {
+export function makeTools(env: Env, writer: UIMessageStreamWriter, research: ChatResearch, memory = new ChatFieldMemory(env), language: Language = "en", fertilizer = new FertilizerEvidence()) {
   const cited = new Set<string>();
   /** Emit each dataset a tool actually used as a source part (once per answer). */
   const cite = (toolName: string) => {
@@ -220,7 +224,7 @@ export function makeTools(env: Env, writer: UIMessageStreamWriter, research: Cha
         const c = coords(lat, lon);
         const plan = await makePlan(env, { ...c, irrigated: irrigated === true, priority: priority ?? "balanced", language, recentCrops: recent_crops?.length ? recent_crops : undefined });
         cite("build_rotation_plan");
-        return compactPlan(plan);
+        return compactPlan(plan, fertilizer);
       },
     }),
     get_crop_catalog: tool({
@@ -320,7 +324,8 @@ scout.post("/chat", async (c) => {
       const research = new ChatResearch({ ai: env.AI, index: env.RESEARCH_INDEX, db: env.DB, gatewayId: env.AI_GATEWAY_ID });
       const memory = new ChatFieldMemory(env);
       const language = parseLanguage(body.language);
-      const tools = makeTools(env, writer, research, memory, language);
+      const fertilizer = new FertilizerEvidence();
+      const tools = makeTools(env, writer, research, memory, language, fertilizer);
       const { stream, model } = await firstWorking(candidates, (m, signal) =>
         streamText({
           model: m.model,
@@ -343,7 +348,7 @@ ${responseLanguageInstruction(language)}`,
           sendSources: true,
           // Which model answered (shown under the reply; Workers AI first, Gemini as backup).
           messageMetadata: ({ part }) => (part.type === "start" ? { model: model.id, provider: model.provider } : undefined),
-        }), research, memory),
+        }), research, memory, fertilizer),
       );
     },
   });

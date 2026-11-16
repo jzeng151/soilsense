@@ -4,6 +4,7 @@
 // The logic lives in agentCore.ts; this class only adapts it to the SDK (storage, scheduling, RPC).
 
 import { Agent } from "agents";
+import { GLOBAL_REGISTRATION_CAP, REGISTERED_ID, registeredField, type Registration } from "./registration";
 import type { CropId } from "../../shared/types";
 import type { Env } from "../env";
 import { executeRun, requestCheck, type AgentRun, type RunStore } from "./agentCore";
@@ -49,16 +50,65 @@ export class FieldAgent extends Agent<Env> {
     return this._store;
   }
 
+  /** Registry RPCs live on the fixed __registry instance. SQL before any await serializes reservations. */
+  async reserveRegistration(id: string): Promise<boolean> {
+    if (this.env.FIELDS_ENABLED !== "on" || !REGISTERED_ID.test(id)) return false;
+    this.sql`CREATE TABLE IF NOT EXISTS field_registry (id TEXT PRIMARY KEY, active INTEGER NOT NULL)`;
+    const total = this.sql<{ n: number }>`SELECT COUNT(*) AS n FROM field_registry`[0]!.n;
+    if (total >= GLOBAL_REGISTRATION_CAP) return false;
+    this.sql`INSERT INTO field_registry (id, active) VALUES (${id}, 1)`;
+    return true;
+  }
+  async hasRegistration(id: string): Promise<boolean> {
+    if (this.env.FIELDS_ENABLED !== "on" || !REGISTERED_ID.test(id)) return false;
+    if (!this.sql`SELECT name FROM sqlite_master WHERE type='table' AND name='field_registry'`.length) return false;
+    return this.sql`SELECT id FROM field_registry WHERE id=${id} AND active=1`.length > 0;
+  }
+  async forgetRegistration(id: string): Promise<void> {
+    this.sql`UPDATE field_registry SET active=0 WHERE id=${id}`;
+  }
+  private registration(): { id: string; config: Registration } | null {
+    if (!this.sql`SELECT name FROM sqlite_master WHERE type='table' AND name='registered_field'`.length) return null;
+    const row = this.sql<{ id: string; data: string }>`SELECT id, data FROM registered_field LIMIT 1`[0];
+    return row ? { id: row.id, config: JSON.parse(row.data) as Registration } : null;
+  }
+  async isRegistered(id: string): Promise<boolean> {
+    return this.env.FIELDS_ENABLED === "on" && this.registration()?.id === id;
+  }
+  async registerField(id: string, config: Registration): Promise<void> {
+    if (this.env.FIELDS_ENABLED !== "on" || !REGISTERED_ID.test(id) || this.registration()) throw new Error("Invalid registration");
+    this.sql`CREATE TABLE registered_field (id TEXT PRIMARY KEY, data TEXT NOT NULL)`;
+    this.sql`INSERT INTO registered_field (id, data) VALUES (${id}, ${JSON.stringify(config)})`;
+    this.saveSettings({ ...this.settings(), crop: config.watchedCrop });
+  }
+  async deleteField(id: string): Promise<void> {
+    if (!await this.isRegistered(id)) return;
+    // Remove authorization synchronously before yielding to scheduler cancellation.
+    this.sql`DELETE FROM registered_field`;
+    for (const schedule of await this.listSchedules()) await this.cancelSchedule(schedule.id);
+    this.sql`DROP TABLE IF EXISTS field_runs`;
+    this.sql`DROP TABLE IF EXISTS watch_settings`;
+    this.sql`DROP TABLE IF EXISTS registered_field`;
+    this._store = null;
+  }
+
   /** The watched field this call is about (callers route each field id to its own agent instance). */
   private field(fieldId: string): WatchedField {
     const f = WATCHED_FIELDS.find((x) => x.id === fieldId);
-    if (!f) throw new Error(`Unknown field ${fieldId}`);
-    return f;
+    if (f) return f;
+    const r = this.env.FIELDS_ENABLED === "on" ? this.registration() : null;
+    if (r?.id === fieldId) return registeredField(fieldId, r.config);
+    throw new Error("Unknown field");
   }
 
   /** RPC: schedule a check about 45 s ahead, or return the one already waiting. */
   async requestCheck(req: { fieldId: string; mode: unknown; replayId?: unknown }): Promise<{ run: AgentRun; created: boolean }> {
     const field = this.field(req.fieldId);
+    if (REGISTERED_ID.test(field.id)) {
+      const recent = this.store().list(1)[0];
+      if (recent && recent.status !== "pending" && Date.now() - recent.scheduledAt < 60_000) return { run: recent, created: false };
+      this.sql`DELETE FROM field_runs WHERE run_id NOT IN (SELECT run_id FROM field_runs ORDER BY scheduled_at DESC LIMIT 99)`;
+    }
     return requestCheck(this.store(), field, req, Date.now(), async (runId, delay) => {
       await this.schedule(delay, "runScheduledCheck", { runId, fieldId: field.id });
     });
@@ -66,6 +116,7 @@ export class FieldAgent extends Agent<Env> {
 
   /** Called by the SDK scheduler. Safe to call twice: a finished run is never re-evaluated. */
   async runScheduledCheck(payload: { runId: string; fieldId: string }): Promise<void> {
+    if (payload.fieldId.startsWith("u_") && !await this.isRegistered(payload.fieldId)) return;
     const run = await executeRun(this.store(), payload.runId, this.env, this.field(payload.fieldId), new Date(), undefined, this.settings().crop);
     if (run && run.status !== "pending") await this.publish(run);
   }
@@ -125,6 +176,7 @@ export class FieldAgent extends Agent<Env> {
   /** Weekly callback. Ignored if disabled or if the settings changed since it was scheduled; otherwise checks,
    *  then schedules next Monday's run for the same settings version. */
   async weeklyCheck(payload: { fieldId: string; version: number }): Promise<void> {
+    if (payload.fieldId.startsWith("u_") && !await this.isRegistered(payload.fieldId)) return;
     const settings = this.settings();
     const run = await runRecurringCheck("weekly", payload, settings, this.store(), this.env, this.field(payload.fieldId), new Date());
     if (settings.enabled && settings.version === payload.version) {
@@ -137,6 +189,7 @@ export class FieldAgent extends Agent<Env> {
 
   /** One-off callback when the confirmed crop's reference window opens; then plans next season's opening. */
   async windowCheck(payload: { fieldId: string; version: number; crop: CropId; seasonYear: number }): Promise<void> {
+    if (payload.fieldId.startsWith("u_") && !await this.isRegistered(payload.fieldId)) return;
     const settings = this.settings();
     const run = await runRecurringCheck("window", payload, settings, this.store(), this.env, this.field(payload.fieldId), new Date());
     if (settings.enabled && settings.version === payload.version && settings.crop === payload.crop) {
@@ -149,6 +202,7 @@ export class FieldAgent extends Agent<Env> {
 
   /** Mirror the finished run to the live room (#/live) when that binding exists; never fails the check. */
   private async publish(run: AgentRun): Promise<void> {
+    if (run.fieldId.startsWith("u_")) return; // capabilities must never enter the public live room
     const ns = this.env.LIVE_ROOM;
     if (!ns) return;
     try {

@@ -1,6 +1,7 @@
 // SoilSense Worker: JSON API for the dashboard, Twilio voice webhooks, and static dashboard assets.
 
 import { imerg } from "./imerg/routes";
+import { myFields } from "./routes/myfields";
 import { Hono } from "hono";
 import type { Env } from "./env";
 import { api } from "./routes/api";
@@ -37,6 +38,8 @@ app.route("/api/live", live);
 // NASA POWER snapshot refresh (Workflow) status, evidence manifests and the admin-only trigger.
 app.route("/api/refresh", refresh);
 app.route("/api/imerg", imerg);
+// Capability registration is separate from the CSB boundary discovery router.
+app.route("/api/fields", myFields);
 app.route("/api", api);
 app.route("/voice", voice);
 

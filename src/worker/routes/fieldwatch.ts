@@ -8,7 +8,8 @@
 //   GET  /api/fieldwatch/agent/:field/watch → recurring watch settings (weekly + crop window), next runs, recent results
 //   PUT  /api/fieldwatch/agent/:field/watch { enabled?: boolean, crop?: CropId | null } → change them
 
-import { Hono } from "hono";
+import { Hono, type Context } from "hono";
+import { REGISTERED_ID } from "../fieldwatch/registration";
 import { getAgentByName } from "agents";
 import { CHECK_DELAY_SECONDS, REPLAY_PRESETS, type AgentRun } from "../fieldwatch/agentCore";
 import { FRESH_DAYS, WATCHABLE_CROPS, WEEKLY_DESCRIPTION } from "../fieldwatch/watchCore";
@@ -83,11 +84,29 @@ fieldWatch.post("/run", async (c) => {
 
 // ---------- Scheduled checks by the field's own agent (Agents SDK Durable Object) ----------
 
-type AgentRpc = Pick<FieldAgent, "requestCheck" | "listRuns" | "getWatch" | "updateWatch">;
+export type AgentRpc = Pick<FieldAgent, "requestCheck" | "listRuns" | "getWatch" | "updateWatch" | "reserveRegistration" | "hasRegistration" | "forgetRegistration" | "registerField" | "isRegistered" | "deleteField">;
 const noAgent = { error: "Scheduled checks need the FIELD_AGENT Durable Object binding. Deploy with the FieldAgent migration, then try again." };
 
-async function agentFor(env: { FIELD_AGENT?: DurableObjectNamespace }, fieldId: string): Promise<AgentRpc> {
+export async function agentFor(env: { FIELD_AGENT?: DurableObjectNamespace }, fieldId: string): Promise<AgentRpc> {
   return (await getAgentByName(env.FIELD_AGENT as never, fieldId)) as unknown as AgentRpc;
+}
+
+fieldWatch.use("/agent/:field/*", async (c, next) => {
+  const id = c.req.param("field") ?? "";
+  if (WATCHED_FIELDS.some(f => f.id === id) || id === "options") return next();
+  const denied = await registeredAccess(c, id);
+  if (denied) return denied;
+  await next();
+});
+export async function registeredAccess(c: Context<AppEnv>, id: string): Promise<Response | null> {
+  if (c.env.FIELDS_ENABLED !== "on") return c.json({ error: "fields disabled" }, 404);
+  if (!REGISTERED_ID.test(id)) return c.json({ error: "Unknown field." }, 404);
+  if (!c.env.FIELD_AGENT) return c.json(noAgent, 503);
+  // Registry lookup first: forged ids never instantiate their own DO or create its storage.
+  const registry = await agentFor(c.env, "__registry");
+  if (!await registry.hasRegistration(id)) return c.json({ error: "Unknown field." }, 404);
+  if (!await (await agentFor(c.env, id)).isRegistered(id)) return c.json({ error: "Unknown field." }, 404);
+  return null;
 }
 
 fieldWatch.get("/agent/options", (c) =>
@@ -103,7 +122,7 @@ fieldWatch.get("/agent/options", (c) =>
 
 fieldWatch.post("/agent/:field/check", async (c) => {
   const fieldId = c.req.param("field");
-  if (!WATCHED_FIELDS.some((f) => f.id === fieldId)) return c.json({ error: `Unknown field. Use one of: ${WATCHED_FIELDS.map((f) => f.id).join(", ")}` }, 400);
+  if (!WATCHED_FIELDS.some((f) => f.id === fieldId) && !REGISTERED_ID.test(fieldId)) return c.json({ error: `Unknown field. Use one of: ${WATCHED_FIELDS.map((f) => f.id).join(", ")}` }, 400);
   if (!c.env.FIELD_AGENT) return c.json(noAgent, 503);
   const raw = await c.req.text();
   if (raw.length > 500) return c.json({ error: "Request too large." }, 413);
@@ -124,7 +143,7 @@ fieldWatch.post("/agent/:field/check", async (c) => {
 
 fieldWatch.get("/agent/:field/runs", async (c) => {
   const fieldId = c.req.param("field");
-  if (!WATCHED_FIELDS.some((f) => f.id === fieldId)) return c.json({ error: `Unknown field. Use one of: ${WATCHED_FIELDS.map((f) => f.id).join(", ")}` }, 400);
+  if (!WATCHED_FIELDS.some((f) => f.id === fieldId) && !REGISTERED_ID.test(fieldId)) return c.json({ error: `Unknown field. Use one of: ${WATCHED_FIELDS.map((f) => f.id).join(", ")}` }, 400);
   if (!c.env.FIELD_AGENT) return c.json(noAgent, 503);
   const limit = Math.min(50, Math.max(1, Number(c.req.query("limit") ?? 10) || 10));
   const runs: AgentRun[] = await (await agentFor(c.env, fieldId)).listRuns(limit);
@@ -133,14 +152,14 @@ fieldWatch.get("/agent/:field/runs", async (c) => {
 
 fieldWatch.get("/agent/:field/watch", async (c) => {
   const fieldId = c.req.param("field");
-  if (!WATCHED_FIELDS.some((f) => f.id === fieldId)) return c.json({ error: "Unknown field." }, 400);
+  if (!WATCHED_FIELDS.some((f) => f.id === fieldId) && !REGISTERED_ID.test(fieldId)) return c.json({ error: "Unknown field." }, 400);
   if (!c.env.FIELD_AGENT) return c.json(noAgent, 503);
   return c.json(await (await agentFor(c.env, fieldId)).getWatch(fieldId));
 });
 
 fieldWatch.put("/agent/:field/watch", async (c) => {
   const fieldId = c.req.param("field");
-  if (!WATCHED_FIELDS.some((f) => f.id === fieldId)) return c.json({ error: "Unknown field." }, 400);
+  if (!WATCHED_FIELDS.some((f) => f.id === fieldId) && !REGISTERED_ID.test(fieldId)) return c.json({ error: "Unknown field." }, 400);
   if (!c.env.FIELD_AGENT) return c.json(noAgent, 503);
   const raw = await c.req.text();
   if (raw.length > 200) return c.json({ error: "Request too large." }, 413);

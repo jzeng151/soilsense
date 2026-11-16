@@ -51,7 +51,14 @@ sources at any time: `node scripts/verify-research-corpus.mjs` (needs `pdftotext
 
 ## API
 
-- `GET /api/research/status` – pinned config, corpus version, bindings, saved-entry count.
+- `GET /api/research/status` – pinned config, **bundled** corpus version/chunk count, bindings,
+  saved-entry count, and `ingestion.status: "unchecked"`. A bound index or nonzero index-wide vector
+  count does **not** prove research ingestion: field memory and reviewed documents share the index.
+- `GET /api/research/status?verify=true` – read-only inventory of all 40 expected curated vector IDs,
+  in batches of at most 20 (`getByIds` limit). Reports `ready`, `missing`, `partial`, or `unavailable`,
+  with expected/indexed/missing/invalid counts when the read succeeds. Checks default namespace,
+  dimensions, finite values and exact corpus/crop/chunk/source metadata. This establishes vector
+  presence, **not** semantic relevance or metadata-filter indexing; use the query verifier too.
 - `GET /api/research/corpus` – the corpus.
 - `POST /api/research/query` `{ "crops": ["corn"], "query": "…" }` – raw retrieval check:
   `status` is `live` (≤ 2 passages), `empty` (unsupported crop, or nothing above the 0.45 cosine floor),
@@ -130,7 +137,53 @@ Local tests exercise mocked embedding/index results and actual SQLite round trip
 stub. A deployed check with real Workers AI and Vectorize bindings is still required to assess live
 retrieval relevance for dry-spell queries; a similarity score is not agronomic confidence.
 
-## Morning steps (Tunk) — nothing below has been run yet
+## Diagnosing an empty shared index
+
+The test Worker investigation on 2026-11-15 found 40/40 expected curated IDs absent. A complete
+read-only inventory found 42 existing vectors, all in `field-memory:*` namespaces
+and none with `corpus` metadata (the count was increasing with concurrent plan requests). Both
+`crop` and `corpus` metadata indexes already existed. `/status` still said `chunks: 13` because
+that number describes `corpus.json`, not Vectorize. There was no curated vector to score, so
+changing thresholds, crop vocabulary, pooling or namespace filters would not repair this deployment.
+No remote writes were performed during diagnosis.
+
+Operator repair for **this test Worker** (not the production Worker):
+
+```bash
+# Coordinator only: run from C:/Users/steve/Projects/soilsense AFTER integrating this PR into next.
+# The absolute config resolves Worker source/assets relative to that checkout, not this worktree.
+npm run build
+npx wrangler deploy -c C:/Users/steve/Projects/soilsense/wrangler.me.jsonc
+
+# Read-only preflight: both crop and corpus must be present; they already were in this investigation.
+npx wrangler vectorize list-metadata-index soilsense-research-v1 -c C:/Users/steve/Projects/soilsense/wrangler.me.jsonc
+
+# Coordinator only: ADMIN_TOKEN must already be exported securely. Upserts ONLY the 40 curated IDs;
+# it does not delete or overwrite field-memory or reviewed-document vectors.
+node scripts/ingest-research.mjs https://soilsense-jason.jason-zeng151.workers.dev
+
+# Read-only repeatable verification (no token needed and NO ingestion POST).
+node scripts/ingest-research.mjs https://soilsense-jason.jason-zeng151.workers.dev --verify-only
+curl --fail-with-body 'https://soilsense-jason.jason-zeng151.workers.dev/api/research/status?verify=true'
+```
+
+The script polls inventory and all eight supported crop/feature queries plus unsupported `rice`.
+It exits nonzero on missing/invalid inventory, HTTP errors, supported crops without scored passages,
+or unsupported crops returning passages. `--attempts=1` makes a one-shot read-only check;
+`--attempts=12 --interval-ms=5000` are the default polling settings. An older deployment without
+`ingestion` status deliberately fails verification rather than silently assuming readiness.
+If a metadata index is absent, create it **before** re-ingesting (do not recreate/delete the shared
+index). Existing vectors need re-upsert after metadata-index creation; query checks catch this
+case even if inventory is `ready`.
+
+Plans (`explainRotation`), Field Watch (`researchNoteFor`) and Sprout (`ChatResearch.search`) all
+call `researchFor` → `retrieveLive` with the same embedding, corpus/crop filters and score floor.
+The repair restores evidence for all three without a separate code path or a lowered score floor.
+Existing persisted Field Watch notes are historical: reopening one does not requery; a **new**
+Dry/Watch check is needed to store a new note. Watch retrieval still has its 1.5-second ceiling;
+post-ingestion live latency/relevance and generated Sprout citations must be checked by the operator.
+
+## Morning steps (Tunk) — initial setup checklist
 
 1. `npx wrangler login` (if needed), then `bash scripts/setup-research-index.sh`
    (creates the index and **both metadata indexes before any upsert**).

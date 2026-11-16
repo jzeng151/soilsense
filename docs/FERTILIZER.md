@@ -79,7 +79,7 @@ All sufficiency equations use `a + b × EY + c × lab + d × EY × lab`:
 | Sorghum silage | 48, 1.19, −2.38, −.0594 | 16 | 73, 1.8, −.56, −.0139 | 28 | 3.20 / 8.70 per ton |
 | Established alfalfa | 73, 4.56, −2.92, −.18 | 19 | 84, 5.24, −.56, −.035 | 31 | 12 / 60 per ton (15% moisture) |
 
-P threshold 20 ppm (alfalfa 25), K 130 ppm (alfalfa 150). Below threshold minimum 15 lb/acre; above threshold basic sufficiency rate zero, with optional starter P **up to 20 lb P2O5/acre** for non-alfalfa crops. Starter is **not automatically added**. At exactly threshold apply printed polynomial, clamp negative to 0; don't extend the “less than” minimum beyond its stated domain. K starter has no numeric generic rate in MF2586; no amount inferred. Soybean fertilizer should not contact seed. Respect seed-contact N+K2O limits for all starters. At very low P at least 25–50% banded is recommended by the guide; placement needs local equipment/seed safety decisions.
+P threshold 20 ppm (alfalfa 25), K 130 ppm (alfalfa 150). Below threshold minimum 15 lb/acre; above threshold basic sufficiency rate zero, with optional starter P **up to 20 lb P2O5/acre** for non-alfalfa crops. Starter is **not automatically added**. At exactly the critical threshold the prose is ambiguous (it says less than/greater than); implementation uses the inclusive medium-category table convention, retaining the 15-lb minimum at exactly P20/K130 (alfalfa P25/K150). This boundary choice is explicit rather than silently showing zero at a medium-category endpoint. K starter has no numeric generic rate in MF2586; no amount inferred. Soybean fertilizer should not contact seed. Respect seed-contact N+K2O limits for all starters. At very low P at least 25–50% banded is recommended by the guide; placement needs local equipment/seed safety decisions.
 
 Build-maintenance, same crop-specific pages:
 
@@ -121,3 +121,18 @@ Zinc broadcast for corn, sorghum, soybean: `11.5 − 11.25 × ppm DTPA Zn`; at �
 ## Limits / extensibility
 
 `src/engine/fertilizer.ts` has its own crop table; no changes to cost-model crop records. Source-supported sunflower/corn_silage/sorghum_silage entries are reserved for expanded crop IDs with matching source yield units. **Cotton, canola, triticale, millet are not covered in MF2586: rates withheld**, never borrowed from wheat/corn. No commercial product selection, nutrient blending, seed-contact dose, environmental loss estimate, or prescription is implied. This is a provisional crop-year guideline conditional on stated inputs and assumptions.
+
+## Worked recorded Finney example and verification
+
+Using fixed `test/helpers/finney.ts` and `test/fixtures/plan-finney-*.json`, irrigated/balanced plan-1 has corn in **2028**, expected yield **202 bu/acre**, following **2027 soybean with hairy-vetch cover**. Finney County KS, longitude **−100.706**, Richfield silt loam, SSURGO sand **19.6667%**, mapped SOM **1.6066666666666667%**. No farmer soil-test values are supplied.
+
+Independent substitution into printed p5 corn equation:
+
+`(.84/.55) × 202 − 1.0 × 30 − 1.6066666666666667 × 20 − 0 − 0 − 40 = 206.37575757575758`, displayed **206.4 lb N/acre**. Here .84 is irrigated internal efficiency; .55 is default broadcast/fall preplant recovery; se1 is western medium-texture soil; profile nitrate30 is the explicit no-sample default; manure/other N0 are stated assumptions; soybean credit40 is from p4. Hairy vetch has **no MF2586 quantitative credit**, so none is invented. Rate is above30 and below irrigated cap300. This differs intentionally from the existing engine's cost-model N (**81 lb/acre** in this fixture); that number and economics are unchanged.
+
+No measured Mehlich-3 P / extractable K / soil pH + buffer pH / DTPA Zn: **P2O5, K2O, lime, Zn rates are null**. Separately labelled removal from p2: `.33×202 = 66.66 lb P2O5/acre`; `.26×202 = 52.52 lb K2O/acre` (UI66.7/52.5). Sulfur with explicit guide default25: `.2×202 − 2.5×1.6066666666666667 − 25 − 0 = 11.38333333333334`, displayed **11.4 lb S/acre**.
+
+- `npm run typecheck`; `npm test`; `npm run build`.
+- `npx vitest run test/fertilizer.test.ts test/fertilizer-tables.test.ts test/fertilizer-api.test.ts web/src/components/FertilizerGuide.test.ts`: 37 tests at initial completed UI verification.
+- Real HTTP `/api/plan` default response compared byte-for-byte against the opt-in response after removing **only** `fertilizer` fields; passed. API tests also cover pinned Finney fixture equality and prove laboratory inputs do not change rankings/yields/economics.
+- Reproducible built-app smoke: `node scripts/fertilizer-smoke.mjs http://127.0.0.1:8811 <profile-scratch-output-dir>`. Real API, no response stubs/admin credentials. EN/ES at375 and1280; three table rows; no document overflow; keyboard horizontal table scroll40px at375; no browser errors. Axe4.14 selected WCAG2A/AA and2.1A/AA: **0 violations** in all four guide states. Mobile contrast has **22 incomplete nodes per language** from clipped table content; desktop has no incomplete findings. These are retained in full JSON, not counted as passes or a WCAG conformance claim. Source-detail text is explicitly original English (`lang=en`), while the farmer-facing table/form/disclaimer are EN/ES.

@@ -41,14 +41,14 @@ export function cropYearFertilizer(y: PlanYear, c: FertilizerContext, inputs: Fe
   if (!y.yieldUnit.startsWith(expectedUnit)) return result(nutrients.map(n => needed(n, "2", "Expected yield unit does not match the MF2586 crop rule; rate withheld.")));
   if (!Number.isFinite(y.expectedYield) || y.expectedYield < 0) return result(nutrients.map(n => needed(n, "2", "Valid expected yield needed.")));
   const ey = y.expectedYield;
-  const om = c.organicMatterPct;
+  const om = c.organicMatterPct !== undefined && Number.isFinite(c.organicMatterPct) ? c.organicMatterPct : undefined;
   const profile = inputs.profileNitrateLbPerAcre ?? 30;
   const fe = inputs.nApplication === "injected-or-split" ? .65 : .55;
   // Coarse soil is conservatively treated as high loss risk, even in western Kansas.
   const se = c.coarseTexture || c.lon > -98 ? .7 : 1;
   const previousAdjustment = c.previousCrop === "fallow" && inputs.profileNitrateLbPerAcre === undefined ? -20 :
     r.cool ? c.previousCrop === "sorghum" || c.previousCrop === "sunflower" ? 30 : 0 : c.previousCrop === "soybean" ? -40 : 0;
-  const nInputs: NutrientRec["inputsUsed"] = { expectedYield: ey, profileNitrateLbPerAcre: profile, profileNSource: inputs.profileNitrateLbPerAcre === undefined ? "MF2586 default; not sampled" : "farmer soil test (0–24 inches)", nApplication: inputs.nApplication ?? "broadcast-preplant", fertilizerEfficiency: fe, soilNitrateEfficiency: se, previousCrop: c.previousCrop ?? "unknown", previousCropAdjustment: previousAdjustment, manureNLbPerAcre: inputs.manureNLbPerAcre ?? 0, organicMatterSource: c.organicMatterSource };
+  const nInputs: NutrientRec["inputsUsed"] = { expectedYield: ey, profileNitrateLbPerAcre: profile, profileNSource: inputs.profileNitrateLbPerAcre === undefined ? "MF2586 default; not sampled" : "farmer soil test (0–24 inches)", ...(r.ie === undefined ? { profileNitrateMultiplier: 1 } : { nApplication: inputs.nApplication ?? "broadcast-preplant", fertilizerEfficiency: fe, soilNitrateEfficiency: se }), previousCrop: c.previousCrop ?? "unknown", previousCropAdjustment: previousAdjustment, manureNLbPerAcre: inputs.manureNLbPerAcre ?? 0, organicMatterSource: c.organicMatterSource };
   const nNotes = ["Other N credits (irrigation water, grazing) and tillage adjustments are not supplied; assumed zero. Manure input means plant-available N for this crop, not total manure N."];
   if (om !== undefined) nInputs.organicMatterPct = om;
   if (c.previousCover && c.previousCover !== "none") nNotes.push("No cover-crop N credit: MF2586 does not quantify cereal rye, crimson clover or hairy vetch credits. Do not equate crimson clover with red/sweet clover.");
@@ -61,8 +61,8 @@ export function cropYearFertilizer(y: PlanYear, c: FertilizerContext, inputs: Fe
   else {
     const ie = y.crop === "corn" && c.irrigated ? .84 : r.ie;
     const raw = (ie === undefined ? (r.nFactor ?? 0) * ey : ie / fe * ey) - (ie === undefined ? 1 : se) * profile - om * (r.cool ? 10 : 20) - (inputs.manureNLbPerAcre ?? 0) + previousAdjustment;
-    const cap = y.crop === "corn" ? c.irrigated ? 300 : 230 : Infinity;
-    n = rate("N", Math.min(cap, Math.max(30, raw)), "formula", r.nPage, { ...nInputs, ...(ie === undefined ? { yieldFactor: r.nFactor ?? 0 } : { internalEfficiency: ie }), uncappedRate: raw }, [...nNotes, "30 lb N/acre starter minimum; for oats MF2586 says this minimum may be appropriate, not mandatory."]);
+    const cap = crop === "corn" || crop === "corn_silage" ? c.irrigated ? 300 : 230 : Infinity;
+    n = rate("N", Math.min(cap, Math.max(30, raw)), "formula", r.nPage, { ...nInputs, ...(ie === undefined ? { yieldFactor: r.nFactor ?? 0 } : { internalEfficiency: ie }), uncappedRate: raw }, [...nNotes, r.ie === undefined ? "Provisional 30 lb N/acre starter minimum: MF2586 says this may be appropriate for oats, sunflower and silage, not mandatory." : "30 lb N/acre minimum recommended for early crop growth and development."]);
   }
   const pk = (which: 0 | 1): NutrientRec => {
     const nutrient = which === 0 ? "P2O5" : "K2O";
@@ -74,7 +74,7 @@ export function cropYearFertilizer(y: PlanYear, c: FertilizerContext, inputs: Fe
     used[which === 0 ? "mehlich3P" : "extractableK"] = lab;
     const target = which === 0 ? r.alfalfa ? 25 : 20 : r.alfalfa ? 150 : 130;
     const upper = target + (which === 0 ? 10 : 30);
-    const sufficiency = lab > target ? 0 : Math.max(lab < target ? 15 : 0, polynomial(which === 0 ? r.p : r.k, ey, lab));
+    const sufficiency = lab > target ? 0 : Math.max(15, polynomial(which === 0 ? r.p : r.k, ey, lab));
     const notes = ["Formula rate, rounded to 0.1 lb/acre; printed category tables use representative soil values and rounded rates, not exact interpolation."];
     if (lab > target && !r.alfalfa) notes.push(which === 0 ? "Only optional starter P suggested above critical soil test: up to 20 lb P2O5/acre at planting; not automatically added." : "Only optional NPK/NPKS starter suggested above critical K; no starter K amount inferred.");
     notes.push("Total broadcast + banded nutrients. Respect seed-contact limits; do not place soybean fertilizer in direct seed contact.");

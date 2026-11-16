@@ -1,6 +1,7 @@
 import type { CropId } from '../shared/types';
 import type { ConstraintIssue, CropRequirements, FarmerConstraints } from '../shared/constraints';
 import { normalizeConstraints } from '../shared/constraints';
+import { cropSpecies } from '../shared/extraCrops';
 
 /** Planning assumptions for modeled products (corn/sorghum are grain, alfalfa is hay).
  * Not a claim that a crop has only one planting method or buyer. P3 can extend this lookup. */
@@ -39,7 +40,7 @@ export function sequenceConstraintIssues(seq: CropId[], history: CropId[], c: Fa
   if (c.maxCornYears !== undefined && seq.filter(crop => crop === 'corn' || crop === 'corn_silage').length > c.maxCornYears)
     issues.push({ constraint: 'maxCornYears', detail: String(c.maxCornYears) });
   if (c.noSameCropBackToBack) {
-    for (let i = 0; i < seq.length; i++) if (seq[i] === (i ? seq[i - 1] : history[history.length - 1])) {
+    for (let i = 0; i < seq.length; i++) if (cropSpecies(seq[i]) === cropSpecies(i ? seq[i - 1] : history[history.length - 1])) {
       issues.push({ constraint: 'noSameCropBackToBack', crop: seq[i] });
       break;
     }

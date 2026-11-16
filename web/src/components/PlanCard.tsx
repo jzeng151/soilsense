@@ -38,7 +38,7 @@ function DeltaTag({ delta }: { delta: number }) {
 function YearEconomics({ year }: { year: PlanYear }) {
   const { t } = useI18n();
   return <dl className="year-economics">
-    <div><dt>{t("Expected yield")}</dt><dd>{year.crop==="fallow" ? t("No harvest") : `${year.expectedYield} ${t(year.yieldUnit.startsWith("tons") ? "US short tons/acre" : "bu/acre")}`}</dd></div>
+    <div><dt>{t("Expected yield")}</dt><dd>{year.crop==="fallow" ? t("No harvest") : `${year.expectedYield} ${t(year.yieldUnit.startsWith("tons") ? "US short tons/acre" : year.yieldUnit.startsWith("lb") ? "lb/acre" : "bu/acre")}`}</dd></div>
     <div><dt>{t("Net $/acre")}</dt><dd>{money(year.netReturnPerAcre)}</dd></div>
   </dl>;
 }

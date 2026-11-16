@@ -4,6 +4,8 @@
   "attribution": "USDA NASS Quick Stats",
   "note": "Exact product Kansas marketing-year annual prices only. Incomplete or suppressed series remain fixed, not interpolated.",
   "records": [],
+  "fixedPriceSources": { "cotton": null, "corn_silage": null, "sorghum_silage": null, "sunflower": null, "sunflower_confection": null, "triticale": null, "other_hay": null },
+  "fixedReason": "No complete exact-product Kansas 2016-2025 series: upland cotton 2017 suppressed; sunflower oil/non-oil all ten years suppressed; no verified silage or annual forage-hay/triticale received-price series. Do not interpolate, substitute grain or invent price variation.",
   "probes": [
     {
       "crop": "cotton",

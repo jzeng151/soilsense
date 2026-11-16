@@ -11,6 +11,8 @@ export interface PriceSensitivity {
   varyingCrops: CropId[];
   /** No historical series: held at the request's price or default, not invented. */
   fixedPriceCrops: CropId[];
+  /** Null means no complete sourced historical series for this new product. */
+  fixedPriceSources?: Partial<Record<CropId, null>>;
   /** All tied highest-net candidates count as best; these counts need not sum to N. */
   plans: { planId: string; bestCount: number; minNetPerAcre: number; maxNetPerAcre: number }[];
 }

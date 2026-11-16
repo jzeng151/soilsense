@@ -12,7 +12,7 @@ it.skipIf(!process.env.PLAN_CAPTURE_DIR)("profiles every demo farm × irrigation
   for (const farm of ["finney", "story", "champaign", "lancaster"]) {
     const data = JSON.parse(readFileSync(`${process.env.PLAN_CAPTURE_DIR}/plan-input-${farm}.json`, "utf8"));
     for (const irrigated of [false, true]) for (const priority of ["balanced", "profit", "soil", "risk"] as Priority[]) {
-      const input: PlanInputs = { ...data, now: new Date(data.now), request: { ...data.request, recentCrops: histories[farm], irrigated, priority } };
+      const input: PlanInputs = { ...data, extraCrops: process.env.PLAN_EXTRA_CROPS === "on", now: new Date(data.now), request: { ...data.request, recentCrops: histories[farm], irrigated, priority } };
       const samples = [];
       let plan: ReturnType<typeof buildPlan> | undefined;
       for (let i = 0; i < 4; i++) {

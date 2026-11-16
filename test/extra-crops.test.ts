@@ -11,6 +11,23 @@ import { planCacheKey } from "../src/worker/service";
 import { pricesFrom } from "../src/worker/data/nass";
 import { validateMeasurements } from "../src/shared/measurements";
 import { extraCropParameterSource } from "../src/engine/additionalCrops";
+import { analyzePriceSensitivity } from "../src/engine/priceScenarios";
+import { cropConstraintIssues, sequenceConstraintIssues } from "../src/engine/constraints";
+
+it("does not invent a complete scenario source for suppressed or missing new-crop prices", () => {
+ const result=analyzePriceSensitivity([{id:"new",years:EXTRA_CROP_IDS.map(crop=>({crop})) as never}],()=>100);
+ expect(result.fixedPriceCrops).toEqual([...EXTRA_CROP_IDS].sort());
+ expect(result.fixedPriceSources).toEqual(Object.fromEntries(EXTRA_CROP_IDS.map(c=>[c,null])));
+});
+it("enforces harvest equipment and buyers for every new product", () => {
+ for(const crop of ["corn_silage","sorghum_silage"] as const) {
+  expect(cropConstraintIssues(crop,{unavailableEquipment:["forage_harvester"]})).not.toEqual([]);
+  expect(cropConstraintIssues(crop,{marketOutlets:["grain_elevator"]})).not.toEqual([]);
+ }
+ expect(cropConstraintIssues("cotton",{marketOutlets:["grain_elevator"]})).not.toEqual([]);
+ expect(sequenceConstraintIssues(["corn_silage","soybean","corn"],[],{maxCornYears:1})).not.toEqual([]);
+ expect(sequenceConstraintIssues(["corn_silage","soybean","corn"],["corn"],{noSameCropBackToBack:true})).not.toEqual([]);
+});
 it("pins each budget value and explicitly leaves unsupported response coefficients unsourced", () => {
  const budgets = [
   ["cotton",900,0.66,535,31.89,73], ["corn_silage",18,35.75,537.30,68.60,157],

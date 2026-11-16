@@ -23,7 +23,7 @@ import { analyzePriceSensitivity } from "./priceScenarios";
 import type { PriceSensitivity } from "../shared/prices";
 import { createGoalScorer, selectedGoals } from "./goals";
 import { isSignificant, mannKendall } from "./stats";
-import { isExtraCrop } from "../shared/extraCrops";
+import { isExtraCrop, cropSpecies } from "../shared/extraCrops";
 import { expandedSequences } from "./expandedSearch";
 
 export const PRIORITY_WEIGHTS: Record<Priority, Pick<ScoreBreakdown, "climate" | "reliability" | "soil" | "profit">> = {
@@ -406,7 +406,7 @@ export function feasibleSequence(seq: CropId[], history: CropId[], firstYearWhea
     // management (not universal disease protection). History retains the last 3 years.
     if ((crop === "sunflower" || crop === "sunflower_confection") && full.slice(Math.max(0, idx - 3), idx).some(c => c === "sunflower" || c === "sunflower_confection")) return false;
     // Grain and silage are the SAME species for the three-consecutive-year rule.
-    const species = (c: CropId | undefined) => c === "corn_silage" ? "corn" : c === "sorghum_silage" || c === "other_hay" ? "sorghum" : c;
+    const species = cropSpecies;
     if (isExtraCrop(crop) && species(crop) === species(full[idx-1]) && species(crop) === species(full[idx-2])) return false;
     if ((crop === "corn" || crop === "sorghum") && [full[idx-1], full[idx-2]].some(c => c && isExtraCrop(c)) && species(crop) === species(full[idx-1]) && species(crop) === species(full[idx-2])) return false;
     // Never two fallow seasons in a row; no annual crop three seasons in a row.

@@ -48,7 +48,7 @@ export async function runPrewarm(env: Env, step: WarmSteps = { do: (_name, callb
     return { skipped: true, reason: "cache-only requires off-Worker compute" };
   }
   if (!env.DB) throw new Error("Durable plan cache unavailable");
-  const startedAt = new Date().toISOString();
+  const startedAt = await step.do("run time", async () => new Date().toISOString());
   const histories: DemoHistories = {};
   const run: WarmRun = { startedAt, completedAt: null, histories, failures: 0, errors: [], mode: "inline" };
   await step.do("start", () => saveWarmRun(env, run));

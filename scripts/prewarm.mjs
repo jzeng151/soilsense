@@ -1,8 +1,8 @@
 // Post-deploy / CI entry point. Runs compute locally, never on the Free target.
 // Node >=22.18; ADMIN_TOKEN is the target's existing admin secret.
 import { spawn, spawnSync } from "node:child_process";
-import { mkdtempSync, openSync, closeSync, rmSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { mkdtempSync, mkdirSync, openSync, closeSync } from "node:fs";
+import { rm } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { main } from "./prefetch-demo.mjs";
@@ -23,13 +23,13 @@ try {
     // Never accidentally use or kill a different session's process on the chosen port.
     try { await fetch(`${origin}/healthz`, { signal: AbortSignal.timeout(500) }); throw new Error(`Port ${port} is occupied; set PREWARM_PORT to an unused port`); }
     catch (error) { if (error.message.includes("occupied")) throw error; }
-    scratch = mkdtempSync(join(tmpdir(), "soilsense-prewarm-"));
+    const scratchRoot = process.env.TMPDIR ?? resolve(".wrangler/prewarm-scratch");
+    mkdirSync(scratchRoot, { recursive: true });
+    scratch = mkdtempSync(join(scratchRoot, "soilsense-prewarm-"));
     const state = join(scratch, "state");
     run([wrangler, "d1", "migrations", "apply", "fieldshift", "--local", "--persist-to", state, "-c", "wrangler.offline.jsonc"]);
     // Asset bundle must match the checkout; no deploy or remote database operation.
-    const npm = process.platform === "win32" ? "npm.cmd" : "npm";
-    const built = spawnSync(npm, ["run", "build:web"], { stdio: "inherit", shell: process.platform === "win32" });
-    if (built.status !== 0) throw new Error("Local asset build failed");
+    run([resolve("node_modules/vite/bin/vite.js"), "build", "--config", "web/vite.config.ts"]);
     const localToken = randomUUID();
     log = openSync(join(scratch, "wrangler.log"), "a");
     child = spawn(process.execPath, [wrangler, "dev", "-c", "wrangler.offline.jsonc", "--ip", "127.0.0.1", "--port", String(port),
@@ -55,5 +55,9 @@ finally {
   }
   if (log !== undefined) closeSync(log);
   // Retain failure logs for diagnosis, remove only the ephemeral successful source.
-  if (scratch && !process.exitCode) rmSync(scratch, { recursive: true, force: true, maxRetries: 3 });
+  if (scratch && !process.exitCode) {
+    try { await rm(scratch, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 }); }
+    catch { console.warn(`Prewarm verified; cleanup could not remove locked local scratch directory: ${scratch}`); }
+  }
+  if (scratch && process.exitCode) console.error(`Local diagnostic logs retained in ${scratch}`);
 }

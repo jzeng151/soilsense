@@ -10,6 +10,7 @@ import type { ExplanationResponse, ResearchResult } from "../../../src/shared/re
 import type { PlanResponse, RotationPlan } from "../../../src/shared/types";
 import { fetchExplanation, getLastPlan, subscribeLastPlan } from "../api";
 import "./explanation.css";
+import { Markdown } from "./Markdown";
 
 const sig = (r: RotationPlan) => `${r.id}:${r.years.map((y) => `${y.crop}+${y.cover}`).join(",")}`;
 
@@ -88,7 +89,10 @@ export function PlanExplanation({ rotation }: { rotation: RotationPlan }) {
       {current?.error && <p className="px-loading">{tx("The short explanation isn't available right now. The plan above is complete.")}</p>}
       {data && (
         <>
-          <p className="px-narrative">{data.narrative}</p>
+          <div className="px-narrative"><Markdown text={data.narrative} references={Object.fromEntries([
+            ...data.facts.map(f => [f.id, { label: f.source, detail: `${f.display} · ${f.period}` }]),
+            ...data.research.passages.map(p => [p.chunkId, { label: p.sourceTitle, href: p.sourceUrl, detail: p.text }]),
+          ])} /></div>
           <p className="px-meta">{tx("Evidence as of")}{" "}{day(data.asOf, language)}{" "}{tx("· weather history")}{" "}{data.evidencePeriod}{" "}{tx("(past observations, not a forecast)")}{data.status === "saved" && data.savedAt ? tx(" · explanation saved {date}", { date: day(data.savedAt, language) }) : ""}
           </p>
           <p className="px-checks">{data.checks}</p>

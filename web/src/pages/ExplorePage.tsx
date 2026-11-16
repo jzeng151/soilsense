@@ -46,9 +46,12 @@ export function ExplorePage({ active = true }: { active?: boolean } = {}) {
     [mapFailed, setMapFailed] = useState(false);
   const [workspaceTab, setWorkspaceTab] = useState<"plan" | "chat">("plan");
   const [sharedPlan, setSharedPlan] = useState<PlanResponse | null>(null);
-  const activeField = selected.length === 1 ? fields.find(f => f.id === selected[0]) : undefined;
+  const [planningFieldId, setPlanningFieldId] = useState("");
+  const activeId = selected.length === 1 ? selected[0] : selected.includes(planningFieldId) ? planningFieldId : undefined;
+  const activeField = fields.find(f => f.id === activeId);
+  const needsPlanningField = selected.length > 0 && !activeField;
   const target = activeField ? activeField.centroid : location;
-  const sessionKey = `${location?.lat}:${location?.lon}:${activeField?.id ?? "point"}`;
+  const sessionKey = `${location?.lat}:${location?.lon}:${needsPlanningField ? "choose-field" : activeField?.id ?? "point"}`;
   useEffect(() => { setSharedPlan(null); setWorkspaceTab("plan"); }, [sessionKey]);
   const map = useRef<GLMap | null>(null),
     zipInput = useRef<HTMLInputElement>(null),
@@ -412,14 +415,20 @@ export function ExplorePage({ active = true }: { active?: boolean } = {}) {
             <button type="button" onClick={() => setAssistantOpen(false)} aria-label={t("Close assistant")}>×</button>
           </div>
           <div className="workspace-planner" hidden={workspaceTab !== "plan"}>
-            <App key={sessionKey} embedded initialLocation={target ?? undefined} initialField={activeField} onPlanChange={setSharedPlan} onChooseLocation={chooseLocation} />
+            {selected.length > 1 && <label className="workspace-plan-notice">{t("Field to plan")}
+              <select value={activeField?.id ?? ""} onChange={e => setPlanningFieldId(e.target.value)}>
+                <option value="">{t("Choose one selected field")}</option>
+                {fields.filter(f => selected.includes(f.id)).map(f => <option key={f.id} value={f.id}>{f.name || f.id}</option>)}
+              </select>
+            </label>}
+            {!needsPlanningField && <App key={sessionKey} embedded initialLocation={target ?? undefined} initialField={activeField} onPlanChange={setSharedPlan} onChooseLocation={chooseLocation} />}
             <MyFieldsPanel fields={fields.filter(f => selected.includes(f.id))} />
           </div>
           <div className="workspace-chat" hidden={workspaceTab !== "chat"}>
             {!sharedPlan && <p role="status" className="workspace-plan-notice">{t("Build a rotation in Rotation options first. Sprout will use that exact plan and your settings.")}</p>}
             <Suspense fallback={<p>{t("Sprout loading…")}</p>}>
-              <Assistant key={sessionKey} sharedPlan={sharedPlan}
-                context={{ ...location, ...(target ?? {}), label: activeField?.name || location.label, selectedFieldIds: selected }}
+              <Assistant key={`${sessionKey}:${sharedPlan && !needsPlanningField ? JSON.stringify([sharedPlan.generatedAt, sharedPlan.request]) : "unplanned"}`} sharedPlan={needsPlanningField ? null : sharedPlan}
+                context={{ ...location, ...(target ?? {}), label: activeField?.name || location.label, selectedFieldIds: activeField ? [activeField.id] : [] }}
               />
             </Suspense>
           </div>

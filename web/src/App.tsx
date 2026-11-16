@@ -234,6 +234,11 @@ function MainFlow({ initialLocation, initialField, embedded = false, onPlanChang
   const [asking, setAsking] = useState(false);
   const fieldAbort = useRef<AbortController | null>(null);
   const planAbort = useRef<AbortController | null>(null);
+  const inputState = { point, water, priority, constraints, goals, prices, measurements, thisYear, fieldId: planningField?.id, fieldHistoryEdits, language };
+  const inputSignature = JSON.stringify(inputState);
+  const latestInputs = useRef(inputSignature);
+  latestInputs.current = inputSignature;
+  const pendingInputs = useRef<string | null>(null);
   const top = useRef<HTMLDivElement>(null);
 
   const go = useCallback((s: Step) => {
@@ -288,7 +293,12 @@ function MainFlow({ initialLocation, initialField, embedded = false, onPlanChang
   useEffect(() => { onPlanChange?.(plan); }, [plan, onPlanChange]);
   useEffect(() => {
     setPlan(null);
-  }, [water, priority, constraints, goals, prices, measurements, thisYear, planningField?.id, fieldHistoryEdits]);
+    if (pendingInputs.current !== null && pendingInputs.current !== inputSignature) {
+      planAbort.current?.abort();
+      pendingInputs.current = null;
+      setPlanLoading(false);
+    }
+  }, [inputSignature]);
 
   const pickPoint = useCallback((lat:number,lon:number) => {
     // An explicit free-point/demo pick leaves field mode, preventing history/measurement mixups.
@@ -365,17 +375,20 @@ function MainFlow({ initialLocation, initialField, embedded = false, onPlanChang
     planAbort.current?.abort();
     const ctrl = new AbortController();
     planAbort.current = ctrl;
+    const submittedInputs = JSON.stringify({ ...JSON.parse(latestInputs.current), water: w });
+    pendingInputs.current = submittedInputs;
     const recentCrops: CropId[] = [];
     if (lastMapped?.crop && lastMapped.year < THIS_SEASON) recentCrops.push(lastMapped.crop);
     if (thisYear) recentCrops.push(thisYear);
     try {
       const res = await fetchPlan(fieldPlanRequest({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, goals, ...(constraints ? { constraints } : {}), recentCrops, language, ...measurements, ...(Object.keys(prices).length ? {prices} : {}), priceScenarios: true }, boundaryCatalog.enabled, planningField, planningCrops), ctrl.signal);
+      if (planAbort.current !== ctrl || ctrl.signal.aborted || latestInputs.current !== submittedInputs) return;
       setPlan(res);
       setAnswer(null);
     } catch (e) {
-      if ((e as Error).name !== "AbortError") setError("We couldn't build your plan. Please try again.");
+      if (planAbort.current === ctrl && !ctrl.signal.aborted && (e as Error).name !== "AbortError") setError("We couldn't build your plan. Please try again.");
     } finally {
-      if (planAbort.current === ctrl) setPlanLoading(false);
+      if (planAbort.current === ctrl) { pendingInputs.current = null; setPlanLoading(false); }
     }
   }, [point, thisYear, water, priority, goals, lastMapped, go, language, measurements, measurementsValid, constraints, constraintsValid, prices, pricesValid, boundaryCatalog.enabled, planningField, fieldHistoryValid, fieldHistoryEdits]);
 
@@ -424,6 +437,9 @@ function MainFlow({ initialLocation, initialField, embedded = false, onPlanChang
   };
 
   const startOver = () => {
+    // A location edit is tentative until Explore confirms it. Cancel must leave the current flow usable.
+    if (embedded && onChooseLocation) { onChooseLocation(); return; }
+    planAbort.current?.abort();
     setPoint(null);
     setSelectedFields([]);
     setField(null);

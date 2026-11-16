@@ -825,6 +825,8 @@ export const korean: Partial<Record<string, string>> = {
   "Rotation planner": "윤작 계획",
   "Field Watch": "Field Watch",
   "Cropped to fit; darkened": "화면에 맞게 자르고 어둡게 조정함",
+  "Field to plan": "계획할 포장",
+  "Choose one selected field": "선택한 포장 중 하나를 고르세요",
   "Field workspace": "포장 작업 공간",
   "Rotation options": "윤작 선택지",
   "Build a rotation in Rotation options first. Sprout will use that exact plan and your settings.": "먼저 윤작 선택지에서 계획을 만드세요. Sprout은 같은 계획과 설정을 사용합니다.",

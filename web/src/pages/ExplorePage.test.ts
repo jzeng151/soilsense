@@ -4,8 +4,8 @@ import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { LanguageProvider, LANGUAGE_STORAGE_KEY } from '../i18n';
 import { ExplorePage } from './ExplorePage';
-vi.mock('../App',()=>({App:()=>createElement('div',{'data-testid':'planner-inputs'},'Planner inputs')}));
-vi.mock('../components/explore/ExploreMap',()=>({ExploreMap:()=>createElement('div',{'data-testid':'map'})}));
+vi.mock('../App',()=>({App:({initialField}:{initialField?:{id:string}})=>createElement('div',{'data-testid':'planner-inputs','data-field':initialField?.id ?? 'point'},'Planner inputs')}));
+vi.mock('../components/explore/ExploreMap',()=>({ExploreMap:({fields = [],onSelect}:{fields?:{id:string}[];onSelect:(field:{id:string})=>void})=>createElement('div',{'data-testid':'map'},fields.map(f=>createElement('button',{key:f.id,className:'mock-field',onClick:()=>onSelect(f)},f.id)))}));
 vi.mock('../components/assistant/FieldAssistantPanel',()=>({FieldAssistantPanel:({context}:{context:{label:string}})=>createElement('div',{'data-testid':'assistant'},context.label)}));
 Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true});
 afterEach(()=>{vi.unstubAllGlobals();localStorage.clear();window.location.hash='';});
@@ -25,6 +25,23 @@ it.each(['en','es'] as const)('renders the ZIP entry and labeled map controls in
     expect(fetcher).not.toHaveBeenCalled();
     expect(el.querySelector('[role="status"]')?.textContent).toContain(language==='es'?'cinco dígitos':'five-digit');
   }finally{await act(async()=>root.unmount());el.remove();}
+});
+it('requires an explicit active field when multiple boundaries are selected', async()=>{
+  window.location.hash='#/explore?lat=38.1095&lon=-100.706&label=Finney';
+  const fields=[{id:'one',name:'Field one',centroid:{lat:38.1,lon:-100.7},areaAcres:40},{id:'two',name:'Field two',centroid:{lat:38.2,lon:-100.8},areaAcres:60}];
+  vi.stubGlobal('fetch',vi.fn(async (url:unknown)=>({ok:true,json:async()=>String(url).includes('/api/fields?')?{fields}:{enabled:false}})));
+  const el=document.createElement('div');document.body.append(el);const root=createRoot(el);
+  try {
+    await act(async()=>{root.render(createElement(LanguageProvider,null,createElement(ExplorePage)));await new Promise(r=>setTimeout(r,20));});
+    await act(async()=>{(el.querySelectorAll('.mock-field')[0] as HTMLButtonElement).click();});
+    expect(el.querySelector('[data-testid="planner-inputs"]')?.getAttribute('data-field')).toBe('one');
+    await act(async()=>{(el.querySelectorAll('.mock-field')[1] as HTMLButtonElement).click();});
+    expect(el.querySelector('[data-testid="planner-inputs"]')).toBeNull();
+    const select=el.querySelector('.workspace-planner select') as HTMLSelectElement;
+    expect(select).not.toBeNull();
+    await act(async()=>{select.value='two';select.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(el.querySelector('[data-testid="planner-inputs"]')?.getAttribute('data-field')).toBe('two');
+  } finally {await act(async()=>root.unmount());el.remove();}
 });
 it('opens a demo field and gives the assistant its real location',async()=>{
   window.location.hash='#/explore?lat=42.0563&lon=-93.495&label=Story';

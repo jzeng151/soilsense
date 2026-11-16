@@ -225,7 +225,8 @@ export function ExploreMap(props: Props) {
         ? {
             center: [p.lon, p.lat] as [number, number],
             zoom: p.zip ? 12 : 14,
-            padding: { top: 0, bottom: 0, left: 0, right: 0 },
+            // Keep the field centred in the map area left visible by the floating rail and Sprout panel.
+            padding: window.innerWidth > 700 ? { top: 0, bottom: 0, left: 76, right: 416 } : { top: 0, bottom: 0, left: 56, right: 0 },
           }
         : {
             center: [-95, 30] as [number, number],

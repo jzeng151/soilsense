@@ -378,21 +378,20 @@ export function ExplorePage() {
             </section>
           )}
         </div>
-        {location && (
+        {/* Only offered while Sprout is closed; the open panel has its own close button. */}
+        {location && !assistantOpen && (
           <button
             type="button"
             className="explore-assistant-toggle theme-canopy"
-            aria-expanded={assistantOpen}
-            onClick={() => setAssistantOpen((v) => !v)}
+            aria-expanded={false}
+            onClick={() => setAssistantOpen(true)}
           >
-            {t(
-              assistantOpen ? "Close Sprout" : "Open Sprout",
-            )}
+            {t("Open Sprout")}
           </button>
         )}
       </div>
       {location && assistantOpen && (
-        <aside className="explore-assistant theme-canopy">
+        <aside className="explore-assistant">
           <Suspense fallback={<p>{t("Sprout loading…")}</p>}>
             <Assistant
               context={{ ...location, selectedFieldIds: selected }}

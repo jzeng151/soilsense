@@ -1,3 +1,13 @@
+.explore-page,
+.demo-page {
+  /* The rail and Sprout float over the map, so overlays are offset by their widths. */
+  --rail-w: 76px;
+  --rail-open-w: 236px;
+  --assist-w: 0px;
+}
+.explore-page.assistant-open.has-location {
+  --assist-w: 416px;
+}
 .explore-page {
   position: fixed;
   inset: 0;
@@ -25,31 +35,75 @@
   box-shadow: 0 0 0 6px var(--color-data);
 }
 .explore-rail {
-  width: 88px;
-  flex: none;
-  z-index: 5;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--rail-w);
+  z-index: 6;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   flex-direction: column;
-  padding: 24px 12px;
-  gap: 12px;
+  padding: 20px 14px;
+  gap: 8px;
+  overflow: hidden auto;
   border-right: 1px solid var(--color-border);
-  background: var(--color-bg);
+  /* Slightly see-through Canopy; text stays ≥7:1 because the blur keeps the backdrop dark. */
+  background: color-mix(in srgb, var(--color-bg) 86%, transparent);
+  backdrop-filter: blur(14px);
+  transition: width 0.18s ease, box-shadow 0.18s ease;
+}
+/* Hover (pointer) or keyboard focus expands the rail over the map to show each label. */
+.explore-rail:hover,
+.explore-rail:focus-within {
+  width: var(--rail-open-w);
+  box-shadow: var(--shadow-lg);
 }
 .explore-rail a,
 .explore-rail button {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  gap: 14px;
+  flex: none;
   min-height: 46px;
-  width: 46px;
+  width: 100%;
+  padding: 0 11px;
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   color: var(--color-text);
   background: transparent;
   text-decoration: none;
-  font: inherit;
+  font: 500 14px var(--font-sans);
+  white-space: nowrap;
   cursor: pointer;
+}
+.explore-rail svg {
+  flex: none;
+}
+.explore-rail .er-label {
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.explore-rail:hover .er-label,
+.explore-rail:focus-within .er-label {
+  opacity: 1;
+}
+.explore-rail .er-code {
+  flex: none;
+  width: 24px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+.explore-rail a[aria-current="page"] {
+  background: var(--color-subtle);
+  border-color: var(--color-border-strong);
+}
+/* Outlines must stay inside the clipped rail. */
+.explore-rail :focus-visible {
+  outline-offset: -3px;
+  box-shadow: none;
 }
 .explore-rail a:hover,
 .explore-rail button:hover {
@@ -66,24 +120,18 @@
   stroke-linejoin: round;
 }
 .explore-rail .explore-brand {
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 35px;
-  font: 600 14px var(--font-display);
-  line-height: 1.1;
-  text-align: center;
+  padding: 0 4px;
+  margin-bottom: 20px;
+  font: 600 18px var(--font-display);
 }
 .explore-rail-bottom {
   margin-top: auto;
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 .explore-map-area {
-  flex: 1;
-  min-width: 0;
-  position: relative;
+  position: absolute;
+  inset: 0;
   isolation: isolate;
   background: var(--color-inverse-bg);
 }
@@ -96,7 +144,7 @@
 .explore-intro {
   position: absolute;
   top: 48px;
-  left: 48px;
+  left: calc(var(--rail-w) + 48px);
   max-width: 440px;
   color: var(--color-inverse-text);
   pointer-events: none;
@@ -207,8 +255,8 @@
 }
 .explore-location-chip {
   top: 24px;
-  left: 24px;
-  max-width: calc(100% - 110px);
+  left: calc(var(--rail-w) + 24px);
+  max-width: calc(100% - var(--rail-w) - var(--assist-w) - 110px);
   padding: 14px 18px;
   text-align: left;
   font: 600 14px var(--font-sans);
@@ -218,7 +266,7 @@
   margin-left: 16px;
 }
 .explore-map-controls {
-  right: 20px;
+  right: calc(var(--assist-w) + 20px);
   top: 24px;
   display: grid;
   overflow: hidden;
@@ -238,7 +286,7 @@
 }
 .explore-layers {
   bottom: 50px;
-  right: 20px;
+  right: calc(var(--assist-w) + 20px);
   display: flex;
   flex-direction: column-reverse;
   max-width: 300px;
@@ -278,23 +326,35 @@
 .explore-layers p {
   font-size: 12px;
 }
+/* Sprout floats over the map: no backing column, cream (light theme) and slightly see-through. */
 .explore-assistant {
-  width: 390px;
-  flex: none;
-  z-index: 3;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  bottom: 16px;
+  width: calc(var(--assist-w) - 32px);
+  z-index: 5;
+  display: flex;
   min-height: 0;
-  border-left: 1px solid var(--color-border);
-  background: var(--color-bg);
-  padding: 16px 12px;
-  overflow: auto;
+}
+.explore-assistant .field-assistant {
+  max-width: none;
+  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  backdrop-filter: blur(16px);
+}
+.explore-page.assistant-open .maplibregl-ctrl-bottom-right {
+  right: var(--assist-w);
+}
+.explore-page .maplibregl-ctrl-bottom-left {
+  left: var(--rail-w);
 }
 .explore-assistant-toggle {
   top: 86px;
-  left: 24px;
+  left: calc(var(--rail-w) + 24px);
 }
 .explore-status {
   position: absolute;
-  left: 24px;
+  left: calc(var(--rail-w) + 24px);
   bottom: 95px;
   max-width: min(440px, 85%);
   background: var(--color-bg);
@@ -306,7 +366,7 @@
 }
 .explore-map-notes {
   position: absolute;
-  left: 14px;
+  left: calc(var(--rail-w) + 14px);
   bottom: 64px;
   max-width: 55%;
   font-size: 11px;
@@ -344,6 +404,7 @@
   overflow: auto;
 }
 .demo-content {
+  margin-left: var(--rail-w);
   padding: clamp(24px, 6vw, 80px);
   flex: 1;
 }
@@ -384,8 +445,8 @@
   color: var(--color-primary);
 }
 @media (max-width: 1000px) {
-  .explore-assistant {
-    width: 330px;
+  .explore-page.assistant-open.has-location {
+    --assist-w: 356px;
   }
   .explore-location-card {
     right: 4%;
@@ -402,14 +463,19 @@
 }
 @media (max-width: 700px) {
   .is-globe .explore-layers:not(:has(section)) { display: none; }
+  .explore-page,
+  .demo-page {
+    --rail-w: 56px;
+  }
+  .explore-page.assistant-open.has-location {
+    --assist-w: 0px;
+  }
   .explore-rail {
-    width: 56px;
-    padding: 14px 5px;
-    gap: 12px;
+    padding: 14px 6px;
+    gap: 6px;
   }
   .explore-rail .explore-brand {
-    font-size: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
   }
   .explore-brand img {
     width: 32px;
@@ -417,8 +483,8 @@
   }
   .explore-rail a,
   .explore-rail button {
-    width: 40px;
     min-height: 40px;
+    padding: 0 9px;
   }
   .explore-rail svg {
     width: 21px;
@@ -426,7 +492,7 @@
   }
   .explore-intro {
     top: 28px;
-    left: 20px;
+    left: calc(var(--rail-w) + 14px);
     right: 20px;
     max-width: 235px;
   }
@@ -439,7 +505,7 @@
   .explore-location-card {
     top: auto;
     bottom: 46px;
-    left: 14px;
+    left: calc(var(--rail-w) + 10px);
     right: 14px;
     transform: none;
     width: auto;
@@ -470,31 +536,32 @@
   }
   .explore-location-chip {
     top: 14px;
-    left: 12px;
+    left: calc(var(--rail-w) + 10px);
     font-size: 12px;
     padding: 12px;
-    max-width: calc(100% - 24px);
+    max-width: calc(100% - var(--rail-w) - 70px);
   }
   .explore-assistant {
-    position: absolute;
+    top: auto;
     bottom: 0;
-    left: 56px;
+    left: var(--rail-w);
     right: 0;
     width: auto;
     height: 48dvh;
-    border-radius: 22px 22px 0 0;
-    border-top: 1px solid var(--color-input-border);
-    padding: 12px 8px;
   }
   .assistant-open.has-location .explore-map-area {
-    margin-bottom: 48dvh;
+    bottom: 48dvh;
+  }
+  /* The sheet sits below the map, not over it, so keep it nearly opaque there. */
+  .explore-assistant .field-assistant {
+    background: color-mix(in srgb, var(--color-bg) 96%, transparent);
   }
   /* Top-left under the location chip: at the bottom it collided with the map attribution
      and the assistant sheet's close button on 390px phones. */
   .explore-assistant-toggle {
     top: 72px;
     bottom: auto;
-    left: 12px;
+    left: calc(var(--rail-w) + 10px);
     padding: 10px;
     font-size: 12px;
   }
@@ -515,7 +582,7 @@
   }
   .explore-status {
     bottom: 155px;
-    left: 12px;
+    left: calc(var(--rail-w) + 10px);
     font-size: 12px;
   }
   .demo-grid {

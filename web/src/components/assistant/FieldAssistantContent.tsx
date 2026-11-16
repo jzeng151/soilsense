@@ -87,7 +87,7 @@ export function FieldAssistantContent({ context, onClose, className = "" }: Fiel
   try { errorMessage = (JSON.parse(errorMessage) as { error?: string }).error || errorMessage; } catch { /* SDK errors may be plain text. */ }
   if (httpError === 429) errorMessage = t("Too many messages. Wait a minute before trying again.");
   if (httpError === 503) errorMessage = t("AI is unavailable. Your rotation and plan facts are still available below.");
-  return <aside className={`theme-canopy field-assistant ${className}`} aria-label={t("Sprout")}>
+  return <aside className={`field-assistant ${className}`} aria-label={t("Sprout")}>
     <header className="fa-header"><Sprout mood="hello" width={38} decorative />
       <div><h2>{t("Sprout")}</h2><p>{t("Your AI field advisor")}</p></div>
       <details open={menu} className="fa-menu" onToggle={e => setMenu(e.currentTarget.open)} onKeyDown={e => { if (e.key === "Escape") { setMenu(false); menuRef.current?.focus(); } }}>

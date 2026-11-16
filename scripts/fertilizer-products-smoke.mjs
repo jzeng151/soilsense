@@ -4,6 +4,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { execFileSync } from 'node:child_process';
+const sourceRevision = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 const require = createRequire(import.meta.url);
 const out = process.argv[2];
 if (!out) throw Error('Supply scratch output directory');
@@ -51,7 +53,7 @@ try {
     assert.deepEqual(errors, []);
     const inventory = await page.locator('.fertilizer-guide').evaluateAll(guides => ({ guides: guides.length, closed: guides.flatMap(g => [g, ...g.querySelectorAll('details')]).filter(d => !d.open).length, summaries: guides.flatMap(g => [...g.querySelectorAll('summary')]).map(s => s.textContent) }));
     assert.equal(inventory.closed, 0);
-    report.push({ language, width, overflow, errors, inventory, violations: audit.violations.length, incomplete: audit.incomplete.length, axeVersion: audit.testEngine.version, browser: browser.version(), apiStatus: response.status() });
+    report.push({ sourceRevision, language, width, overflow, errors, inventory, violations: audit.violations.length, incomplete: audit.incomplete.length, axeVersion: audit.testEngine.version, browser: browser.version(), apiStatus: response.status() });
     await context.close();
   }
 } finally {

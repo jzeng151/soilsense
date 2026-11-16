@@ -3,7 +3,14 @@
   /* The rail and Sprout float over the map, so overlays are offset by their widths. */
   --rail-w: 76px;
   --rail-open-w: 236px;
+  --rail-clearance: var(--rail-w);
   --assist-w: 0px;
+}
+/* Move map labels out of the expanded rail's footprint without moving the map itself.
+   Keyboard focus uses the same layout as pointer hover. */
+.explore-page:has(.explore-rail:hover),
+.explore-page:has(.explore-rail:focus-within) {
+  --rail-clearance: var(--rail-open-w);
 }
 .explore-page.assistant-open.has-location {
   --assist-w: 416px;
@@ -132,7 +139,7 @@
 .explore-map-area {
   position: absolute;
   inset: 0;
-  isolation: isolate;
+  /* Do not trap map information overlays in a stacking context below the rail. */
   background: var(--color-inverse-bg);
 }
 .explore-map-area .explore-map {
@@ -144,7 +151,7 @@
 .explore-intro {
   position: absolute;
   top: 48px;
-  left: calc(var(--rail-w) + 48px);
+  left: calc(var(--rail-clearance) + 48px);
   max-width: 440px;
   color: var(--color-inverse-text);
   pointer-events: none;
@@ -255,7 +262,7 @@
 }
 .explore-location-chip {
   top: 24px;
-  left: calc(var(--rail-w) + 24px);
+  left: calc(var(--rail-clearance) + 24px);
   max-width: calc(100% - var(--rail-w) - var(--assist-w) - 110px);
   padding: 14px 18px;
   text-align: left;
@@ -345,16 +352,43 @@
 .explore-page.assistant-open .maplibregl-ctrl-bottom-right {
   right: var(--assist-w);
 }
+.explore-page .maplibregl-ctrl-bottom-left,
+.explore-page .maplibregl-ctrl-bottom-right,
+.explore-map-notes {
+  z-index: 7;
+}
 .explore-page .maplibregl-ctrl-bottom-left {
-  left: var(--rail-w);
+  left: var(--rail-clearance);
+}
+.explore-location-chip {
+  max-width: calc(100% - var(--rail-clearance) - var(--assist-w) - 110px);
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .explore-location-chip {
+    max-width: calc(100% - var(--rail-clearance) - 70px);
+  }
+}
+.explore-location-chip,
+.explore-assistant-toggle,
+.explore-map-notes,
+.explore-page .maplibregl-ctrl-bottom-left {
+  transition: left 0.18s ease, max-width 0.18s ease;
+}
+/* At narrow widths there isn't space to slide the landing form past an open rail.
+   Keep the form in its normal position; the location chip above still moves. */
+@media (max-width: 700px) {
+  .explore-location-card {
+    left: calc(var(--rail-w) + 10px);
+  }
 }
 .explore-assistant-toggle {
   top: 86px;
-  left: calc(var(--rail-w) + 24px);
+  left: calc(var(--rail-clearance) + 24px);
 }
 .explore-status {
   position: absolute;
-  left: calc(var(--rail-w) + 24px);
+  left: calc(var(--rail-clearance) + 24px);
   bottom: 95px;
   max-width: min(440px, 85%);
   background: var(--color-bg);
@@ -366,7 +400,7 @@
 }
 .explore-map-notes {
   position: absolute;
-  left: calc(var(--rail-w) + 14px);
+  left: calc(var(--rail-clearance) + 14px);
   bottom: 64px;
   max-width: 55%;
   font-size: 11px;
@@ -492,7 +526,7 @@
   }
   .explore-intro {
     top: 28px;
-    left: calc(var(--rail-w) + 14px);
+    left: calc(var(--rail-clearance) + 14px);
     right: 20px;
     max-width: 235px;
   }
@@ -505,7 +539,7 @@
   .explore-location-card {
     top: auto;
     bottom: 46px;
-    left: calc(var(--rail-w) + 10px);
+    left: calc(var(--rail-clearance) + 10px);
     right: 14px;
     transform: none;
     width: auto;
@@ -536,10 +570,10 @@
   }
   .explore-location-chip {
     top: 14px;
-    left: calc(var(--rail-w) + 10px);
+    left: calc(var(--rail-clearance) + 10px);
     font-size: 12px;
     padding: 12px;
-    max-width: calc(100% - var(--rail-w) - 70px);
+    max-width: calc(100% - var(--rail-clearance) - 70px);
   }
   .explore-assistant {
     top: auto;
@@ -561,7 +595,7 @@
   .explore-assistant-toggle {
     top: 72px;
     bottom: auto;
-    left: calc(var(--rail-w) + 10px);
+    left: calc(var(--rail-clearance) + 10px);
     padding: 10px;
     font-size: 12px;
   }
@@ -582,7 +616,7 @@
   }
   .explore-status {
     bottom: 155px;
-    left: calc(var(--rail-w) + 10px);
+    left: calc(var(--rail-clearance) + 10px);
     font-size: 12px;
   }
   .demo-grid {

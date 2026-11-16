@@ -823,6 +823,7 @@ export const korean: Partial<Record<string, string>> = {
   "Close navigation": "메뉴 닫기",
   "New chat": "새 대화",
   "Rotation planner": "윤작 계획",
+  "Field Watch": "Field Watch",
   "AI": "AI",
   "Live call": "실시간 통화",
   "Settings": "설정",

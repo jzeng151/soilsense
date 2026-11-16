@@ -73,7 +73,7 @@ export function Sidebar({ route, user, onSignOut, open, onClose, chats, activeCh
         <nav className="sb-nav">
           <a href="#/explore" className={route === "explore" ? "on" : ""} onClick={() => onNavigate("explore")}><NavIcon kind="explore" />{tx("Explore")}</a>
           <a href="#/demo" className={route === "demo" ? "on" : ""} onClick={() => onNavigate("demo")}><NavIcon kind="demo" />{tx("Demo farms")}</a>
-          <a href="#/planner" className={route === "planner" ? "on" : ""} onClick={() => onNavigate("planner")}><NavIcon kind="planner" />{tx("Rotation planner")}</a>
+          <a href="#/planner" className={route === "planner" ? "on" : ""} onClick={() => onNavigate("planner")}><NavIcon kind="planner" />{tx("Field Watch")}</a>
           <a href="#/scout" className={route === "scout" ? "on" : ""} onClick={() => onNavigate("scout")}>
             <NavIcon kind="sprout" />
             Sprout

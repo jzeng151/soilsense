@@ -6,7 +6,7 @@ import { LANGUAGE_NAMES, LANGUAGES } from "../../../../src/shared/language";
 const LINKS = [
   { href: "#/explore", kind: "explore", label: "Explore" },
   { href: "#/demo", kind: "demo", label: "Demo farms" },
-  { href: "#/planner", kind: "planner", label: "Rotation planner" },
+  { href: "#/planner", kind: "planner", label: "Field Watch" },
   { href: "#/scout", kind: "sprout", label: "Sprout" },
   { href: "#/live", kind: "live", label: "Live call" },
   { href: "#/sources", kind: "sources", label: "Sources" },

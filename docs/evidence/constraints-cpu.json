@@ -1,0 +1,1172 @@
+{
+  "baselineRevision": "d0e175f",
+  "measuredAfterRevision": "8329e5b",
+  "defaultScenarioCount": 32,
+  "defaultWarmSamplesPerScenario": 3,
+  "firstSampleDiscarded": true,
+  "defaultRankedOutputsIdentical": true,
+  "defaultBefore": {
+    "wallMs": 24.75,
+    "cpuMs": 31.0
+  },
+  "defaultAfter": {
+    "wallMs": 28.061,
+    "cpuMs": 31.0
+  },
+  "runtime": "v24.20.0",
+  "platform": "win32",
+  "disclaimer": "Local process CPU and synchronous wall time, not Cloudflare billed CPU. Coarse Windows CPU counters and concurrent host workloads limit precision.",
+  "standaloneWarmups": 5,
+  "standaloneRepetitions": 20,
+  "standalone": [
+    {
+      "name": "unconstrained",
+      "medians": {
+        "wallMs": 30.781,
+        "cpuMs": 31.0
+      },
+      "samples": [
+        {
+          "wallMs": 36.28480000000002,
+          "cpuMs": 63
+        },
+        {
+          "wallMs": 35.00259999999997,
+          "cpuMs": 63
+        },
+        {
+          "wallMs": 33.212199999999996,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 30.649900000000002,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 33.98760000000004,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 34.49349999999998,
+          "cpuMs": 79
+        },
+        {
+          "wallMs": 29.376500000000078,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 29.812400000000025,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 25.798099999999977,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 32.622999999999934,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 31.121700000000033,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 24.564399999999978,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 28.244199999999978,
+          "cpuMs": 47
+        },
+        {
+          "wallMs": 28.971500000000106,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 27.081500000000005,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 30.912599999999998,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 29.27559999999994,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 38.77539999999999,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 31.403400000000033,
+          "cpuMs": 47
+        },
+        {
+          "wallMs": 27.608299999999986,
+          "cpuMs": 15
+        }
+      ],
+      "plans": [
+        {
+          "crops": [
+            "soybean",
+            "winter_wheat",
+            "soybean"
+          ],
+          "net": 135,
+          "pumpedIn": 9.5
+        },
+        {
+          "crops": [
+            "soybean",
+            "sorghum",
+            "soybean"
+          ],
+          "net": 147,
+          "pumpedIn": 9.7
+        },
+        {
+          "crops": [
+            "sorghum",
+            "soybean",
+            "winter_wheat"
+          ],
+          "net": 46,
+          "pumpedIn": 9.5
+        }
+      ],
+      "current": [
+        "corn",
+        "winter_wheat",
+        "corn"
+      ],
+      "constraints": null,
+      "report": null
+    },
+    {
+      "name": "no-hay",
+      "medians": {
+        "wallMs": 26.358,
+        "cpuMs": 31.0
+      },
+      "samples": [
+        {
+          "wallMs": 25.99720000000002,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 29.02390000000014,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 27.92560000000003,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 26.365800000000036,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 29.327400000000125,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 25.157600000000002,
+          "cpuMs": 47
+        },
+        {
+          "wallMs": 23.277900000000045,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 24.274799999999914,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 26.32619999999997,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 23.923999999999978,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 26.380100000000084,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 24.323799999999892,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 25.84349999999995,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 32.078500000000076,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 29.5317,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 24.808500000000095,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 26.569799999999987,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 28.715400000000045,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 26.35089999999991,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 26.893699999999853,
+          "cpuMs": 15
+        }
+      ],
+      "plans": [
+        {
+          "crops": [
+            "soybean",
+            "winter_wheat",
+            "soybean"
+          ],
+          "net": 135,
+          "pumpedIn": 9.5
+        },
+        {
+          "crops": [
+            "soybean",
+            "sorghum",
+            "soybean"
+          ],
+          "net": 147,
+          "pumpedIn": 9.7
+        },
+        {
+          "crops": [
+            "sorghum",
+            "soybean",
+            "winter_wheat"
+          ],
+          "net": 46,
+          "pumpedIn": 9.5
+        }
+      ],
+      "current": [
+        "corn",
+        "winter_wheat",
+        "corn"
+      ],
+      "constraints": {
+        "unavailableEquipment": [
+          "hay_equipment"
+        ]
+      },
+      "report": {
+        "status": "satisfied",
+        "binding": [],
+        "excludedCrops": [
+          {
+            "crop": "alfalfa",
+            "reasons": [
+              {
+                "constraint": "unavailableEquipment",
+                "crop": "alfalfa",
+                "detail": "hay_equipment"
+              }
+            ]
+          }
+        ],
+        "currentPracticeViolations": []
+      }
+    },
+    {
+      "name": "no-row-planter",
+      "medians": {
+        "wallMs": 16.906,
+        "cpuMs": 16.0
+      },
+      "samples": [
+        {
+          "wallMs": 18.07420000000002,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 17.544999999999845,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 17.916500000000042,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 15.224199999999882,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 17.17190000000005,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 15.65910000000008,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 17.213199999999915,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 15.541999999999916,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 16.6400000000001,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 19.576499999999896,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 16.54769999999985,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 16.470299999999952,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 15.09920000000011,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 14.212199999999939,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 16.620400000000018,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 17.23479999999995,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 14.80600000000004,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 17.81560000000013,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 22.384500000000116,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 17.827800000000025,
+          "cpuMs": 16
+        }
+      ],
+      "plans": [
+        {
+          "crops": [
+            "alfalfa",
+            "alfalfa",
+            "winter_wheat"
+          ],
+          "net": -59,
+          "pumpedIn": 9.7
+        },
+        {
+          "crops": [
+            "alfalfa",
+            "alfalfa",
+            "alfalfa"
+          ],
+          "net": -18,
+          "pumpedIn": 10
+        },
+        {
+          "crops": [
+            "oats",
+            "winter_wheat",
+            "alfalfa"
+          ],
+          "net": -94,
+          "pumpedIn": 9.3
+        }
+      ],
+      "current": [
+        "corn",
+        "winter_wheat",
+        "corn"
+      ],
+      "constraints": {
+        "unavailableEquipment": [
+          "row_crop_planter"
+        ]
+      },
+      "report": {
+        "status": "satisfied",
+        "binding": [],
+        "excludedCrops": [
+          {
+            "crop": "corn",
+            "reasons": [
+              {
+                "constraint": "unavailableEquipment",
+                "crop": "corn",
+                "detail": "row_crop_planter"
+              }
+            ]
+          },
+          {
+            "crop": "soybean",
+            "reasons": [
+              {
+                "constraint": "unavailableEquipment",
+                "crop": "soybean",
+                "detail": "row_crop_planter"
+              }
+            ]
+          },
+          {
+            "crop": "sorghum",
+            "reasons": [
+              {
+                "constraint": "unavailableEquipment",
+                "crop": "sorghum",
+                "detail": "row_crop_planter"
+              }
+            ]
+          }
+        ],
+        "currentPracticeViolations": [
+          {
+            "constraint": "unavailableEquipment",
+            "crop": "corn",
+            "detail": "row_crop_planter"
+          }
+        ]
+      }
+    },
+    {
+      "name": "must-corn-once",
+      "medians": {
+        "wallMs": 19.874,
+        "cpuMs": 16.0
+      },
+      "samples": [
+        {
+          "wallMs": 24.525900000000092,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 20.24440000000004,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 21.654399999999896,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 23.84810000000016,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 26.42109999999957,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 28.558599999999842,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 25.44950000000017,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 18.7170000000001,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 20.5020999999997,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 19.503200000000106,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 16.308199999999943,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 21.52410000000009,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 17.229499999999916,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 18.94300000000021,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 18.74940000000015,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 21.58719999999994,
+          "cpuMs": 47
+        },
+        {
+          "wallMs": 18.961099999999988,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 18.439499999999953,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 18.50610000000006,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 18.027900000000045,
+          "cpuMs": 32
+        }
+      ],
+      "plans": [
+        {
+          "crops": [
+            "soybean",
+            "corn",
+            "soybean"
+          ],
+          "net": 142,
+          "pumpedIn": 9.8
+        },
+        {
+          "crops": [
+            "soybean",
+            "winter_wheat",
+            "corn"
+          ],
+          "net": 73,
+          "pumpedIn": 9.6
+        },
+        {
+          "crops": [
+            "corn",
+            "soybean",
+            "sorghum"
+          ],
+          "net": 94,
+          "pumpedIn": 9.8
+        }
+      ],
+      "current": [
+        "corn",
+        "winter_wheat",
+        "corn"
+      ],
+      "constraints": {
+        "mustInclude": [
+          "corn"
+        ],
+        "maxCornYears": 1
+      },
+      "report": {
+        "status": "satisfied",
+        "binding": [],
+        "excludedCrops": [],
+        "currentPracticeViolations": [
+          {
+            "constraint": "maxCornYears",
+            "detail": "1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "no-corn",
+      "medians": {
+        "wallMs": 23.808,
+        "cpuMs": 31.0
+      },
+      "samples": [
+        {
+          "wallMs": 25.214200000000346,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 21.73660000000018,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 24.03060000000005,
+          "cpuMs": 47
+        },
+        {
+          "wallMs": 26.617199999999684,
+          "cpuMs": 46
+        },
+        {
+          "wallMs": 24.793199999999615,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 26.789600000000064,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 28.261000000000422,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 26.217699999999695,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 23.584400000000187,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 21.12039999999979,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 24.46349999999984,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 25.678300000000036,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 26.154899999999998,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 22.598499999999603,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 20.754699999999957,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 20.784099999999853,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 22.392899999999827,
+          "cpuMs": 47
+        },
+        {
+          "wallMs": 19.39330000000018,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 23.21459999999979,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 21.668299999999817,
+          "cpuMs": 31
+        }
+      ],
+      "plans": [
+        {
+          "crops": [
+            "soybean",
+            "winter_wheat",
+            "soybean"
+          ],
+          "net": 135,
+          "pumpedIn": 9.5
+        },
+        {
+          "crops": [
+            "soybean",
+            "sorghum",
+            "soybean"
+          ],
+          "net": 147,
+          "pumpedIn": 9.7
+        },
+        {
+          "crops": [
+            "sorghum",
+            "soybean",
+            "winter_wheat"
+          ],
+          "net": 46,
+          "pumpedIn": 9.5
+        }
+      ],
+      "current": [
+        "corn",
+        "winter_wheat",
+        "corn"
+      ],
+      "constraints": {
+        "excludeCrops": [
+          "corn"
+        ]
+      },
+      "report": {
+        "status": "satisfied",
+        "binding": [],
+        "excludedCrops": [
+          {
+            "crop": "corn",
+            "reasons": [
+              {
+                "constraint": "excludeCrops",
+                "crop": "corn"
+              }
+            ]
+          }
+        ],
+        "currentPracticeViolations": [
+          {
+            "constraint": "excludeCrops",
+            "crop": "corn"
+          }
+        ]
+      }
+    },
+    {
+      "name": "no-repeat-grain-market",
+      "medians": {
+        "wallMs": 23.152,
+        "cpuMs": 31.0
+      },
+      "samples": [
+        {
+          "wallMs": 22.876600000000053,
+          "cpuMs": 48
+        },
+        {
+          "wallMs": 44.95479999999998,
+          "cpuMs": 109
+        },
+        {
+          "wallMs": 36.64670000000024,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 28.973700000000008,
+          "cpuMs": 48
+        },
+        {
+          "wallMs": 20.911799999999857,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 24.594900000000052,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 23.782400000000052,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 22.062400000000252,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 21.274999999999636,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 18.523499999999785,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 21.59830000000011,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 22.675900000000183,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 22.198899999999867,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 21.077299999999923,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 24.167899999999918,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 27.187800000000152,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 23.428300000000036,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 25.604799999999614,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 20.122199999999793,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 25.67380000000003,
+          "cpuMs": 16
+        }
+      ],
+      "plans": [
+        {
+          "crops": [
+            "soybean",
+            "winter_wheat",
+            "soybean"
+          ],
+          "net": 135,
+          "pumpedIn": 9.5
+        },
+        {
+          "crops": [
+            "soybean",
+            "sorghum",
+            "soybean"
+          ],
+          "net": 147,
+          "pumpedIn": 9.7
+        },
+        {
+          "crops": [
+            "sorghum",
+            "soybean",
+            "winter_wheat"
+          ],
+          "net": 46,
+          "pumpedIn": 9.5
+        }
+      ],
+      "current": [
+        "corn",
+        "winter_wheat",
+        "corn"
+      ],
+      "constraints": {
+        "noSameCropBackToBack": true,
+        "marketOutlets": [
+          "grain_elevator"
+        ]
+      },
+      "report": {
+        "status": "satisfied",
+        "binding": [],
+        "excludedCrops": [
+          {
+            "crop": "alfalfa",
+            "reasons": [
+              {
+                "constraint": "marketOutlets",
+                "crop": "alfalfa",
+                "detail": "feedlot_dairy"
+              }
+            ]
+          }
+        ],
+        "currentPracticeViolations": []
+      }
+    },
+    {
+      "name": "3-inch-cap",
+      "medians": {
+        "wallMs": 19.922,
+        "cpuMs": 16.0
+      },
+      "samples": [
+        {
+          "wallMs": 24.497100000000046,
+          "cpuMs": 32
+        },
+        {
+          "wallMs": 22.860400000000027,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 22.91780000000017,
+          "cpuMs": 63
+        },
+        {
+          "wallMs": 18.863200000000234,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 23.472299999999905,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 19.495499999999993,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 17.77890000000025,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 18.43159999999989,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 16.10440000000017,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 19.51189999999997,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 19.550700000000234,
+          "cpuMs": 62
+        },
+        {
+          "wallMs": 21.16719999999941,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 21.181099999999788,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 23.510800000000017,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 18.441600000000108,
+          "cpuMs": 0
+        },
+        {
+          "wallMs": 20.368199999999888,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 19.060200000000805,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 21.735899999999674,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 17.952800000000025,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 20.293299999999363,
+          "cpuMs": 16
+        }
+      ],
+      "plans": [
+        {
+          "crops": [
+            "sorghum",
+            "oats",
+            "sorghum"
+          ],
+          "net": -7,
+          "pumpedIn": 3
+        },
+        {
+          "crops": [
+            "oats",
+            "sorghum",
+            "oats"
+          ],
+          "net": -47,
+          "pumpedIn": 3
+        },
+        {
+          "crops": [
+            "oats",
+            "oats",
+            "winter_wheat"
+          ],
+          "net": -60,
+          "pumpedIn": 3
+        }
+      ],
+      "current": [
+        "corn",
+        "winter_wheat",
+        "corn"
+      ],
+      "constraints": {
+        "irrigationInches": 3
+      },
+      "report": {
+        "status": "satisfied",
+        "water": {
+          "seasonalCapInches": 3
+        },
+        "binding": [],
+        "excludedCrops": [],
+        "currentPracticeViolations": []
+      }
+    },
+    {
+      "name": "conflict",
+      "medians": {
+        "wallMs": 14.16,
+        "cpuMs": 16.0
+      },
+      "samples": [
+        {
+          "wallMs": 16.273200000000543,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 13.957900000000336,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 15.365299999999479,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 14.195300000000316,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 16.217899999999645,
+          "cpuMs": 31
+        },
+        {
+          "wallMs": 15.883700000000317,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 14.125300000000607,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 15.235599999999977,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 12.506500000000415,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 12.95010000000002,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 13.896199999999226,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 13.422999999999774,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 14.357500000000073,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 12.530999999999949,
+          "cpuMs": 0
+        },
+        {
+          "wallMs": 13.840900000000147,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 13.224900000000162,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 13.938899999999194,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 17.187299999999595,
+          "cpuMs": 15
+        },
+        {
+          "wallMs": 16.611699999999473,
+          "cpuMs": 16
+        },
+        {
+          "wallMs": 14.730099999999766,
+          "cpuMs": 16
+        }
+      ],
+      "plans": [],
+      "current": [
+        "corn",
+        "winter_wheat",
+        "corn"
+      ],
+      "constraints": {
+        "mustInclude": [
+          "corn"
+        ],
+        "excludeCrops": [
+          "corn"
+        ]
+      },
+      "report": {
+        "status": "infeasible",
+        "binding": [
+          "excludeCrops",
+          "mustInclude"
+        ],
+        "bindingIssues": [
+          {
+            "constraint": "excludeCrops",
+            "crop": "corn"
+          },
+          {
+            "constraint": "mustInclude",
+            "crop": "corn"
+          }
+        ],
+        "excludedCrops": [
+          {
+            "crop": "corn",
+            "reasons": [
+              {
+                "constraint": "excludeCrops",
+                "crop": "corn"
+              }
+            ]
+          }
+        ],
+        "currentPracticeViolations": [
+          {
+            "constraint": "excludeCrops",
+            "crop": "corn"
+          }
+        ],
+        "message": "No rotation satisfies these constraints: excludeCrops, mustInclude. No constraints were relaxed."
+      }
+    }
+  ]
+}

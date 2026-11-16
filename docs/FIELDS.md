@@ -46,6 +46,16 @@ Reproduce with `python scripts/csb-subset.py` (Python stdlib only, network requi
 
 `fieldGeometry.ts` computes spherical geodesic area using mean Earth radius 6,371,008.8 m and 4,046.8564224 m²/acre, subtracts holes independently of winding, and uses a local equirectangular area-weighted centroid. These local-field helpers are not intended for antimeridian/polar polygons. All 221 derived acreages agree with source `CSBACRES` within 0.3%; source acreage uses its native projected/geodetic convention, so exact equality is not expected. Shared-edge tests tolerate 1e-8 degrees (~1 mm), handle split segments and reject corner-only contact; roads/gaps are deliberately not adjacency.
 
+## Built-app verification
+
+At source revision `4a7853fc4effc63f9ed7b1e6df84b1511dc682b4` (clean worktree), `node scripts/csb-smoke.mjs <scratch-output-dir>` exercised the real built Worker on 8801 without mocking API responses:
+
+- All four API field counts matched SVG outlines and checkbox counts: 63 / 47 / 73 / 38.
+- Polygon event handlers: single select, Shift-add and Ctrl-remove; real keyboard Space toggled a focused checkbox.
+- EN and ES, expanded field list and crop histories, widths 1280 / 375 / 320: zero selected axe violations, no page or component horizontal overflow, no page errors. Scanner: axe 4.14.0, Playwright 1.65.1, Chromium 159.0.8154.6; tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, scoped to the boundary picker.
+- 78 color-contrast node instances across those six states remain **incomplete**, not passes. This is not WCAG certification or a screen-reader listening test. Full axe JSON, screenshots and source hashes were retained in the session scratch `fields-audit` directory; the committed smoke script reproduces them.
+- Restarting the same built Worker **without** the flag returned exact disabled 404 JSON for status and data, with zero new picker controls and zero outline paths in the actual browser.
+
 ## License / attribution
 
 USDA NASS states that CSB is public domain and free to redistribute, supplied **as is**, without warranty of results. Users are responsible for interpretations. Attribute USDA NASS Crop Sequence Boundaries (2018–2025), link the product documentation, and preserve source URLs/vintage and this limitation. See the official product page and <https://gee-community-catalog.org/projects/csb/> for the published license/liability text. Basemap imagery retains its existing USGS/NASA/OpenStreetMap attribution, separate from CSB.

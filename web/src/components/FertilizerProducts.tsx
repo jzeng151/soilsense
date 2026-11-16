@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import type { CropYearFertilizer } from "../../../src/shared/fertilizer";
-import { FERTILIZER_PRODUCTS, fertilizerProductOptions, fertilizerTiming, limeProductAmount, LIME_SOURCE, MF2586_URL } from "../../../src/engine/fertilizerProducts";
+import { FERTILIZER_PRODUCTS, fertilizerCalculation, fertilizerProductOptions, fertilizerTiming, limeProductAmount, LIME_SOURCE, MF2586_URL } from "../../../src/engine/fertilizerProducts";
 import { useI18n } from "../i18n";
 
 const ES: Record<string, string> = {
@@ -10,7 +10,7 @@ const ES: Record<string, string> = {
   "Option": "Opción", "lb product/acre": "lb de producto/acre", "N credit from phosphate and sulfate": "Crédito de N del fosfato y sulfato", "Excess N": "N excedente",
   "These products supply more N than the guideline; discuss a different P/S source with your agronomist.": "Estos productos aportan más N que la guía; consulta otra fuente de P/S con tu agrónomo.",
   "No product rate for removal-only estimates or missing soil tests.": "No se calculan dosis de producto a partir de estimaciones de extracción o sin análisis de suelo.",
-  "Ag lime": "Cal agrícola", "Product ECC (%) from supplier label": "ECC del producto (%) según la etiqueta del proveedor",
+  "Ag lime": "Cal agrícola", "No lime application indicated by these inputs.": "Estos datos no indican necesidad de aplicar cal.", "Source notes and inputs (original English)": "Notas y datos de la fuente (inglés original)", "Product ECC (%) from supplier label": "ECC del producto (%) según la etiqueta del proveedor",
   "Enter a valid ECC greater than 0 and at most 100%.": "Ingresa un ECC mayor que 0 y de hasta 100%.",
   "Soil test and product ECC needed before calculating aglime pounds.": "Se necesitan el análisis de suelo y el ECC del producto para calcular las libras de cal agrícola.",
   "Product lb/acre = nutrient lb/acre ÷ (analysis % / 100).": "lb de producto/acre = lb de nutriente/acre ÷ (análisis % / 100).",
@@ -30,6 +30,7 @@ export function FertilizerProducts({ year }: { year: CropYearFertilizer }) {
   const lime = year.recs.find(r => r.nutrient === "lime" && r.basis !== "removal" && r.basis !== "soil-test-needed");
   const validEcc = ecc.trim() !== "" && Number.isFinite(Number(ecc)) && Number(ecc) > 0 && Number(ecc) <= 100;
   const timing = fertilizerTiming(year);
+  if (year.crop === "fallow") return null;
   return <details style={{ minWidth: 0, overflowWrap: "anywhere" }}>
     <summary style={{ minHeight: 44, cursor: "pointer" }}>{tx("Products & timing")}</summary>
     <p>{tx("Illustrative alternatives, not ranked. No price comparison. Check the purchased product's guaranteed analysis. Amounts are pounds of product, not pounds of nutrient; liquid products are not gallons.")}</p>
@@ -45,14 +46,16 @@ export function FertilizerProducts({ year }: { year: CropYearFertilizer }) {
       <label htmlFor={id}>{tx("Product ECC (%) from supplier label")}</label>{" "}
       <input id={id} type="number" inputMode="decimal" min="0.01" max="100" step="any" value={ecc} onChange={e => setEcc(e.target.value)} style={{ width: "6rem", maxWidth: "100%", minHeight: 44 }} aria-invalid={ecc !== "" && !validEcc} />
       <p aria-live="polite">{validEcc ? `${limeProductAmount(lime.lbPerAcre, Number(ecc)).toFixed(1)} ${tx("lb product/acre")}` : tx("Enter a valid ECC greater than 0 and at most 100%.")}</p>
-    </> : <p>{tx("Soil test and product ECC needed before calculating aglime pounds.")}</p>}
+    </> : <p>{tx(lime?.lbPerAcre === 0 ? "No lime application indicated by these inputs." : "Soil test and product ECC needed before calculating aglime pounds.")}</p>}
     <p><a href={LIME_SOURCE}>K-State MF1065 — ECC</a></p>
     {timing.length > 0 && <><h4>{tx("Timing & placement")}</h4><ul>{timing.map((n, i) => <li key={i}>{language === "es" ? n.es : n.text} <a href={`${n.url}#page=${Number(n.page) + 2}`}>MF2586 p. {n.page}</a></li>)}</ul></>}
     <details><summary style={{ minHeight: 44, cursor: "pointer" }}>{tx("How was this calculated?")}</summary>
       <p>{tx("Expected yield is the plan's expected yield for this crop-year.")} {year.expectedYield} {year.yieldUnit}.</p>
       <p>{tx("Product lb/acre = nutrient lb/acre ÷ (analysis % / 100).")}</p>
       <p>{tx("Size MAP/DAP to P2O5; credit its N and ammonium-sulfate N, then remaining N = max(0, guideline N − credits). Potash = K2O ÷ 0.60. Aglime = lb ECC ÷ (product ECC % / 100).")}</p>
-      {year.recs.map((r, i) => <div key={`${r.nutrient}-${i}`}><strong>{r.nutrient}: {r.lbPerAcre === null ? tx("soil test needed") : `${r.lbPerAcre} lb/acre`}</strong> — {r.basis === "removal" ? tx("Removal only — not an application rate") : r.basis}
+      <p>{tx("Source notes and inputs (original English)")}</p>
+      {year.recs.map((r, i) => <div lang="en" key={`${r.nutrient}-${i}`}><strong>{r.nutrient}: {r.lbPerAcre === null ? tx("soil test needed") : `${r.lbPerAcre} lb/acre`}</strong> — {r.basis === "removal" ? tx("Removal only — not an application rate") : r.basis}
+        {fertilizerCalculation(year, r) && <p>{fertilizerCalculation(year, r)}</p>}
         <p>{tx("Inputs")}: {Object.entries(r.inputsUsed).map(([key, value]) => `${key}=${value}`).join("; ") || "—"}</p>
         <ul>{r.notes.map((note, j) => <li key={j}>{note}</li>)}</ul><a href={MF2586_URL}>MF2586 p. {r.source.page}</a>
       </div>)}

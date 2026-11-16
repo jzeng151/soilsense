@@ -1,4 +1,5 @@
-import type { CropYearFertilizer, Nutrient, PlanFertilizer } from "../shared/fertilizer";
+import type { CropYearFertilizer, Nutrient, NutrientRec, PlanFertilizer } from "../shared/fertilizer";
+import { FERTILIZER_CROPS } from "./fertilizer";
 
 export const MF2586_URL = "https://bookstore.ksre.ksu.edu/pubs/soil-test-interpretations-and-fertilizer-recommendations_MF2586.pdf";
 const MSU = "https://extension.msstate.edu/publications/useful-nutrient-management-planning-data";
@@ -73,11 +74,30 @@ export function fertilizerTiming(y: CropYearFertilizer): TimingNote[] {
   });
   return notes;
 }
+export function fertilizerCalculation(y: CropYearFertilizer, r: NutrientRec): string | null {
+  const rule = FERTILIZER_CROPS[y.crop];
+  if (!rule) return null;
+  const i = r.inputsUsed;
+  if (r.nutrient === "N" && typeof i.uncappedRate === "number") {
+    const yieldTerm = typeof i.internalEfficiency === "number" ? `(${i.internalEfficiency} / ${i.fertilizerEfficiency}) × ${y.expectedYield}` : `${i.yieldFactor} × ${y.expectedYield}`;
+    const nitrateEfficiency = typeof i.internalEfficiency === "number" ? i.soilNitrateEfficiency : 1;
+    return `Uncapped N = ${yieldTerm} − ${nitrateEfficiency} × ${i.profileNitrateLbPerAcre} − ${i.organicMatterPct} × ${rule.cool ? 10 : 20} − ${i.manureNLbPerAcre} + (${i.previousCropAdjustment}) = ${i.uncappedRate} lb/acre. Other credits/adjustments assumed zero; minimum/cap and qualification in source notes.`;
+  }
+  if ((r.nutrient === "P2O5" || r.nutrient === "K2O") && typeof i.cropRemovalLbPerAcre === "number") {
+    const removal = `Crop removal = ${y.expectedYield} × ${i.removalLbPerYieldUnit} = ${i.cropRemovalLbPerAcre} lb/acre (not an application rate).`;
+    const lab = r.nutrient === "P2O5" ? i.mehlich3P : i.extractableK;
+    if (typeof lab !== "number") return removal;
+    const c = r.nutrient === "P2O5" ? rule.p : rule.k;
+    return `${removal} Sufficiency polynomial = ${c[0]} + (${c[1]} × ${y.expectedYield}) + (${c[2]} × ${lab}) + (${c[3]} × ${y.expectedYield} × ${lab}); crop minimum/critical-test rules in source notes.${r.basis === "build-maintenance" ? ` Build = removal + max(0, ${i.targetSoilPpm} − ${lab}) × ${r.nutrient === "P2O5" ? 18 : 9} / ${i.yearsToBuild}, subject to sufficiency floor and upper-test cutoff.` : ""}`;
+  }
+  if (r.nutrient === "S" && rule.sulfur !== undefined && typeof i.profileSulfurLbPerAcre === "number") return `S = max(0, ${rule.sulfur} × ${y.expectedYield} − 2.5 × ${i.organicMatterPct} − ${i.profileSulfurLbPerAcre} − 0 other sulfur credits), rounded to 0.1 lb/acre.`;
+  return null;
+}
 export interface FertilizerFact { id: string; text: string; source: string; url: string }
 export function fertilizerFacts(plan: PlanFertilizer): FertilizerFact[] {
   return plan.years.flatMap(y => [
-    ...y.recs.map((r, i) => ({ id: `fertilizer-${plan.planId}-${y.year}-${r.nutrient}-${i}`, text: `${y.year} ${y.crop}; expected yield ${y.expectedYield} ${y.yieldUnit} from the plan. ${r.nutrient}: ${r.lbPerAcre === null ? "soil test needed" : `${r.lbPerAcre} lb/acre`}; basis=${r.basis}. Inputs=${JSON.stringify(r.inputsUsed)}. ${r.notes.join(" ")} ${plan.disclaimer}`, source: `K-State MF2586 p. ${r.source.page}`, url: MF2586_URL })),
-    ...fertilizerProductOptions(y).map((o, i) => ({ id: `fertilizer-${plan.planId}-${y.year}-products-${i}`, text: `Illustrative option, not ranked: ${o.lines.map(l => `${l.product.name} ${l.product.grade}: ${l.lbProductPerAcre.toFixed(1)} lb product/acre (${l.product.sourceUrl}, ${l.product.locator})`).join("; ")}. N supplied by phosphate/sulfate: ${o.nCreditLbPerAcre.toFixed(1)} lb/acre; excess N: ${o.excessNLbPerAcre?.toFixed(1) ?? "unknown"}. No price or seed-placement claim. ${plan.disclaimer}`, source: "Extension guaranteed-analysis arithmetic (product lb = nutrient lb / mass fraction)", url: MSU })),
+    ...y.recs.map((r, i) => ({ id: `fertilizer-${plan.planId}-${y.year}-${r.nutrient}-${i}`, text: `${y.year} ${y.crop}; expected yield ${y.expectedYield} ${y.yieldUnit} from the plan. ${r.nutrient}: ${r.lbPerAcre === null ? "soil test needed" : `${r.lbPerAcre} lb/acre`}; basis=${r.basis}. Inputs=${JSON.stringify(r.inputsUsed)}. ${r.notes.join(" ")} ${fertilizerCalculation(y, r) ?? ""} ${plan.disclaimer}`, source: `K-State MF2586 p. ${r.source.page}`, url: MF2586_URL })),
+    ...fertilizerProductOptions(y).flatMap((o, i) => o.lines.map((l, j) => ({ id: `fertilizer-${plan.planId}-${y.year}-products-${i}-${j}`, text: `${y.year} ${y.crop}; illustrative option ${i + 1}, not ranked: ${l.product.name} ${l.product.grade}: ${l.lbProductPerAcre.toFixed(1)} lb product/acre; supplies ${JSON.stringify(l.supplies)} lb nutrient/acre. Option N credit from phosphate/sulfate: ${o.nCreditLbPerAcre.toFixed(1)} lb/acre; remaining N target after credits: ${o.remainingNLbPerAcre?.toFixed(1) ?? "unknown"}; excess N: ${o.excessNLbPerAcre?.toFixed(1) ?? "unknown"}. Product lb = nutrient lb / mass fraction. No price or seed-placement claim. ${plan.disclaimer}`, source: `${l.product.name} ${l.product.grade} guaranteed-analysis example — ${l.product.locator}`, url: l.product.sourceUrl }))),
     ...fertilizerTiming(y).map((n, i) => ({ id: `fertilizer-${plan.planId}-${y.year}-timing-${i}`, text: n.text, source: `K-State MF2586 p. ${n.page}`, url: n.url })),
   ]);
 }

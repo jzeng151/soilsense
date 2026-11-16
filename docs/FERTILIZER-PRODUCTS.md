@@ -40,7 +40,9 @@ Read from the actual PDF using pdftotext, not search snippets. Locators below ar
 
 ## Integration
 
-`FertilizerProducts` accepts the shared `CropYearFertilizer` contract and nests under the nutrient guide. EN/ES UI controls and timing text are local to the component, avoiding changes to another session's Korean dictionaries.
+`FertilizerProducts` accepts the shared `CropYearFertilizer` contract and nests under the nutrient guide for each non-fallow crop-year on each plan card. It imports the rate engine's coefficient table only to render formula explanations; it does not write or recalculate guideline rates. EN/ES controls and timing text are local to the component, avoiding changes to another session's Korean dictionaries. Source inputs/formulas and original source notes are explicitly labelled as original English.
+
+`compactPlan` in Scout's existing `build_rotation_plan` tool now calls F-A's `planFertilizer` and registers nutrient, product and timing facts server-side with stable `fertilizer-…` fact ids and per-answer `[G1]` citation ids. The final citation stream emits source links only for registered, actually cited facts, warns about invented G ids and never trusts client history to register evidence. The offline configuration has no AI binding: tool payload/citation behavior is tested, but live model prose was not claimed as verified. This does not change `/api/plan` payloads: F-A's separate `includeFertilizer: true` request opt-in controls plan enrichment, and the browser requests it explicitly.
 
 Export for Explore's suggestion list (do not restyle its chat panel):
 
@@ -57,4 +59,18 @@ The exact string is `Fertilizer guide for this rotation (K-State)`.
 - 46 lb P2O5/acre / 0.46 = **100 lb DAP/acre**, supplying **18 lb N/acre**. For 150 lb guideline N, remaining N = **132 lb/acre**; urea = 132 / 0.46 = **286.956522 lb product/acre**. 60 lb K2O / 0.60 = **100 lb potash/acre**.
 - MF1065's own example: 3,000 lb ECC/acre / 0.60 = **5,000 lb aglime/acre**.
 
-Tests exercise these literal independently worked expectations, missing-lab/removal exclusion, excess-N warnings and bilingual disclosures. Finney end-to-end checks and chat integration are recorded with final verification results rather than assumed from these unit examples.
+## Real Finney worked example and browser verification
+
+The local built Worker returned HTTP 200 for `lat=38.1095, lon=-100.706, irrigated=true, priority=balanced, includeFertilizer=true`; response water mode `full`, county Finney KS, language EN. Its top rotation's **2028 corn** expected yield was **202 bu/acre**. Previous crop soybean; previous hairy-vetch cover receives no unsupported MF2586 credit. USDA SSURGO mapped SOM **1.6066666666666667%**, not a farmer lab measurement. No soil-test override was supplied.
+
+MF2586 printed p. 5 (plus default/previous-crop adjustments pp. 3–4): irrigated `ie=0.84`, broadcast/preplant `fe=0.55`, western medium-texture `se=1`, unsampled profile N default **30 lb/acre**, manure N **0**, other N/tillage/irrigation-water credits **0**, previous-soybean adjustment **−40 lb/acre**. Independent arithmetic:
+
+`(0.84/0.55) × 202 − 1×30 − 1.6066666666666667×20 − 0 − 0 − 40 = 206.37575757575758`
+
+This is above the 30 minimum and below the 300 irrigated-corn cap; rounded guideline **206.4 lb N/acre**. Printed p. 34 sulfur: `0.2×202 − 2.5×1.6066666666666667 − 25 default profile S − 0 other credits = 11.38333333333334`, rounded **11.4 lb S/acre**.
+
+Ammonium sulfate **47.5 lb product/acre** supplies 11.4 S and **9.975 N**. Remaining N **196.425 lb/acre** is supplied by one of three alternatives: anhydrous **239.5**, urea **427.0**, or UAN32 **613.8 lb product/acre** (display precision). There is no P product and no associated MAP/DAP N credit because Mehlich-3 P was absent. Extractable K, buffer pH and DTPA Zn also were absent: those rates remain soil-test-needed. Printed p. 2 removal evidence: **66.66 lb P2O5/acre**, **52.52 lb K2O/acre**, never converted to products. Supplier ECC was not entered, so no aglime product rate was produced.
+
+Reproducible built-app check: `node scripts/fertilizer-products-smoke.mjs <scratch-output-directory>`, restricted to localhost port 8812. Real API responses, no interception/fabrication. EN and ES, 1280 and 375 px, five mounted guides each; native Enter/Space disclosure toggles; all intended disclosures expanded; no page errors or document overflow. axe-core 4.14.0 / Chromium 159.0.8154.6: zero selected WCAG A/AA violations in the fertilizer-guide scope across all four states. At 375 px axe left color-contrast incomplete (135 EN / 136 ES nodes); this is explicitly **not** a contrast pass or full-app conformance claim. Full JSON and screenshots are retained in the profile scratch `fertilizer-products-audit-final` directory. Final integrated verification: `npm run typecheck`, `npm run build`, `npm test` (**730 passed, 14 skipped; 104 passing files, 6 skipped**), and the six-file fertilizer/Finney regression selection (**55 passed**) succeeded. The existing suite logs unrelated localhost:3000 connection warnings while passing; the build retains its existing large-chunk warning. A real HTTP comparison of unflagged `/api/plan` against flagged output after removing only per-plan/current-practice `fertilizer` fields was **byte-identical, 38,174 bytes**.
+
+Tests exercise literal independently worked expectations, missing-lab/removal exclusion, excess-N warnings, bilingual disclosures, actual Finney Scout tool payloads, citation registration/rejection and the fixed Finney plan regression. F-A's `withFertilizer` test strips optional enrichment and proves the remainder byte-identical without mutation.

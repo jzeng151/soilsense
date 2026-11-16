@@ -9,6 +9,9 @@ describe("display-only fertilizer product equivalents", () => {
     expect(productAmount(150, 82)).toBeCloseTo(182.926829, 5);
     expect(Math.round(productAmount(150, 82))).toBe(183);
   });
+  it.each([[46, 326.0869565], [28, 535.7142857], [32, 468.75], [21, 714.2857143]] as const)("converts a 150 lb N target using %s%% guaranteed analysis", (analysis, expected) => {
+    expect(productAmount(150, analysis)).toBeCloseTo(expected, 5);
+  });
   it("credits DAP N before sizing urea, and reports an excess instead of a negative rate", () => {
     const options = fertilizerProductOptions(year(rec("N", 150), rec("P2O5", 46), rec("K2O", 60)));
     expect(options).toHaveLength(3);
@@ -23,6 +26,18 @@ describe("display-only fertilizer product equivalents", () => {
   });
   it("does not turn unknown soil tests or crop removal into product applications", () => {
     expect(fertilizerProductOptions(year(rec("P2O5", 50, "removal"), rec("K2O", null, "soil-test-needed")))).toEqual([]);
+  });
+  it("credits ammonium sulfate N and never mutates the nutrient guide", () => {
+    const input = year(rec("N", 150), rec("S", 24), rec("P2O5", 52));
+    const before = JSON.stringify(input);
+    const option = fertilizerProductOptions(input)[0]!;
+    expect(option.lines.find(l => l.product.id === "ammoniumSulfate")?.lbProductPerAcre).toBe(100);
+    expect(option.nCreditLbPerAcre).toBe(32); // 11 MAP + 21 ammonium sulfate
+    expect(option.remainingNLbPerAcre).toBe(118);
+    expect(JSON.stringify(input)).toBe(before);
+  });
+  it("deduplicates identical P-only examples rather than showing three fake alternatives", () => {
+    expect(fertilizerProductOptions(year(rec("P2O5", 52)))).toHaveLength(2);
   });
   it("converts lime using measured ECC rather than pretending aglime is pure", () => {
     expect(limeProductAmount(3000, 60)).toBe(5000); // K-State MF1065 worked example

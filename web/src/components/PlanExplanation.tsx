@@ -1,3 +1,4 @@
+import { LANGUAGE_LOCALES, type Language } from "../../../src/shared/language";
 import { useI18n } from "../i18n";
 // Short grounded explanation for one rotation card (#8) with its cited research passages (#7).
 // Shows whether the text is live AI output, a saved explanation, or the fixed template, and the as-of date
@@ -18,9 +19,9 @@ function findIn(plan: PlanResponse | null, rotation: RotationPlan): PlanResponse
   return all.some((p) => sig(p) === sig(rotation)) ? plan : null;
 }
 
-const day = (iso: string, language: "en" | "es" = "en") => {
+const day = (iso: string, language: Language = "en") => {
   const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString(language === "es" ? "es-US" : "en-US", { year: "numeric", month: "short", day: "numeric" });
+  return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString(LANGUAGE_LOCALES[language], { year: "numeric", month: "short", day: "numeric" });
 };
 
 const STATUS: Record<ExplanationResponse["status"], { label: string; title: string }> = {

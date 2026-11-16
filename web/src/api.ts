@@ -72,7 +72,7 @@ export async function fetchPlan(req: PlanRequest, signal?: AbortSignal): Promise
   return plan;
 }
 
-export async function askQuestion(body: { question: string; planLabel: string; summary: string; facts: string[] }): Promise<{ answer: string; source: string }> {
+export async function askQuestion(body: { question: string; planLabel: string; summary: string; facts: string[]; language?: import("../../src/shared/language").Language }): Promise<{ answer: string; source: string }> {
   return handle(await fetch("/api/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }));
 }
 

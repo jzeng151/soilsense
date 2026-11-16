@@ -205,7 +205,7 @@ export interface PlanRequest {
   water?: WaterLevel;
   /** Optional override when satellite crop history is unavailable. Most recent last. */
   recentCrops?: CropId[];
-  language?: "en" | "es";
+  language?: import("./language").Language;
 }
 
 export interface PlanResponse {

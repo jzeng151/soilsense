@@ -3,6 +3,8 @@ import { ACCEPTED_EXTENSIONS, likelyGarbledChunk, type ReviewDecision } from "..
 import { RESEARCH_TAGS } from "../../../src/worker/research/config";
 import { addDocFromUrl, fetchDoc, fetchDocs, reviewDoc, uploadDoc, type AdminDocDetail, type AdminDocument } from "../api";
 import { LanguageProvider, useI18n } from "../i18n";
+import { pageCropText, pageErrorText, pageStatusText, pageTranslate } from "../i18n-pages";
+import { detectLang } from "../lang";
 import "./DocsAdmin.css";
 
 const TOKEN_KEY = "soilsense:docs-admin-token";
@@ -10,6 +12,7 @@ function storedToken(): string {
   try { return sessionStorage.getItem(TOKEN_KEY) ?? ""; } catch { return ""; }
 }
 const sourceFields = ["title", "url", "publisher", "year", "license", "attribution", "applicability"] as const;
+const sourceLabels = { title: "Title", url: "Source URL", publisher: "Publisher", year: "Year", license: "License", attribution: "Attribution", applicability: "Applicability" };
 
 /** Hidden operator tool. The server, not this route, enforces ADMIN_TOKEN. */
 export function DocsAdmin() {
@@ -17,7 +20,8 @@ export function DocsAdmin() {
 }
 
 function DocsAdminContent() {
-  const { t } = useI18n();
+  const { language } = useI18n();
+  const t = (key: string, values?: Record<string, string | number>) => pageTranslate(language, key, values);
   const [researchUrl, setResearchUrl] = useState("");
   const [token, setToken] = useState(storedToken);
   const [docs, setDocs] = useState<AdminDocument[]>([]);
@@ -72,31 +76,36 @@ function DocsAdminContent() {
       setDetail(await fetchDoc(docId, token)); await refresh(); setMessage("Rejection submitted; current status read back below.");
     });
   }
-  return <main className="docs-admin">
-    <a href="#/">← Back to planner</a>
-    <h1>Document review</h1>
-    <p>Upload research, inspect exact chunks, then supply source metadata yourself. Nothing is searchable until reviewed and indexed.</p>
-    <label>Admin token<input type="password" autoComplete="off" value={token} disabled={busy} onChange={(event) => changeToken(event.target.value)} /></label>
-    <p>Stored only in this tab’s session storage. Clear it when finished.</p>
+  return <main className="docs-admin" lang={language}>
+    <a href="#/">{t("← Back to planner")}</a>
+    <h1>{t("Document review")}</h1>
+    <p>{t("Upload research, inspect exact chunks, then supply source metadata yourself. Nothing is searchable until reviewed and indexed.")}</p>
+    <label>{t("Admin token")}<input type="password" autoComplete="off" value={token} disabled={busy} onChange={(event) => changeToken(event.target.value)} /></label>
+    <p>{t("Stored only in this tab’s session storage. Clear it when finished.")}</p>
     <div className="docs-actions">
-      <button type="button" disabled={busy || !token} onClick={() => void run(refresh)}>Refresh documents</button>
-      <button type="button" disabled={busy} onClick={() => changeToken("")}>Clear token</button>
+      <button type="button" disabled={busy || !token} onClick={() => void run(refresh)}>{t("Refresh documents")}</button>
+      <button type="button" disabled={busy} onClick={() => changeToken("")}>{t("Clear token")}</button>
     </div>
-    <p role="status" aria-live="polite">{busy ? "Working…" : message}</p>
-    {error && <p role="alert" className="error">{error}</p>}
+    <p role="status" aria-live="polite">{t(busy ? "Working…" : message)}</p>
+    {error && <div role="alert" className="error">
+      <p>{pageErrorText(language, error)}</p>
+      {pageErrorText("en", error) === "Request failed" && error !== "Request failed" && <details>
+        <summary>{t("Technical details")}</summary><pre lang={detectLang(error) ?? "en"}>{error}</pre>
+      </details>}
+    </div>}
     <form onSubmit={(event) => { event.preventDefault(); if (!file) return; void run(async () => {
       await uploadDoc(file, token); await refresh();
       setFile(null); if (fileInput.current) fileInput.current.value = "";
       setMessage("Upload accepted. Ingestion runs asynchronously; refresh to check its status.");
     }); }}>
-      <h2>Upload</h2>
-      <label>Research document<input ref={fileInput} type="file" accept={ACCEPTED_EXTENSIONS.join(",")} required disabled={busy} onChange={(event) => setFile(event.target.files?.[0] ?? null)} /></label>
-      <button disabled={busy || !token || !file}>Upload document</button>
+      <h2>{t("Upload")}</h2>
+      <label>{t("Research document")}<input ref={fileInput} type="file" accept={ACCEPTED_EXTENSIONS.join(",")} required disabled={busy} onChange={(event) => setFile(event.target.files?.[0] ?? null)} /></label>
+      <button disabled={busy || !token || !file}>{t("Upload document")}</button>
     </form>
     <form onSubmit={(event) => { event.preventDefault(); void run(async () => {
       const result = await addDocFromUrl(researchUrl, token);
       await refresh(); setResearchUrl("");
-      setMessage(t(result.method === "html-fetch-fallback" ? "URL accepted using plain HTML fallback (Browser Rendering unavailable). Refresh to check review status." : "URL accepted. Refresh to check review status."));
+      setMessage(result.method === "html-fetch-fallback" ? "URL accepted using plain HTML fallback (Browser Rendering unavailable). Refresh to check review status." : "URL accepted. Refresh to check review status.");
     }); }}>
       <h2>{t("Add a research document by URL")}</h2>
       <p>{t("Only approved research hosts over HTTPS, up to 10 MiB. Source metadata still requires human confirmation.")}</p>
@@ -104,43 +113,43 @@ function DocsAdminContent() {
       <button disabled={busy || !token || !researchUrl}>{t("Add document from URL")}</button>
     </form>
     <section aria-labelledby="docs-list-heading">
-      <h2 id="docs-list-heading">Documents</h2>
-      {!docs.length && <p>No documents loaded. Enter a token and refresh.</p>}
+      <h2 id="docs-list-heading">{t("Documents")}</h2>
+      {!docs.length && <p>{t("No documents loaded. Enter a token and refresh.")}</p>}
       <ul>{docs.map((doc) => <li key={doc.docId}>
-        <button type="button" disabled={busy} aria-pressed={detail?.doc.docId === doc.docId} onClick={() => void run(async () => setDetail(await fetchDoc(doc.docId, token)))}>{doc.title || doc.r2Key}</button>
-        <p>{doc.status} · Updated {doc.updatedAt}</p>
-        <p>Chunks: {doc.chunkCounts ? Object.entries(doc.chunkCounts).map(([status, count]) => `${status}: ${count}`).join(", ") || "none" : "open document to inspect"}</p>
+        <button type="button" disabled={busy} aria-pressed={detail?.doc.docId === doc.docId} onClick={() => void run(async () => setDetail(await fetchDoc(doc.docId, token)))}><span lang={detectLang(doc.title ?? "") ?? "en"}>{doc.title || doc.r2Key}</span></button>
+        <p>{pageStatusText(language, doc.status)} · {t("Updated {date}", { date: doc.updatedAt })}</p>
+        <p>{t("Chunks: {counts}", { counts: doc.chunkCounts ? Object.entries(doc.chunkCounts).map(([status, count]) => `${pageStatusText(language, status)}: ${count}`).join(", ") || t("none") : t("open document to inspect") })}</p>
       </li>)}</ul>
     </section>
     {detail && <section aria-labelledby="review-heading" key={detail.doc.docId}>
-      <h2 id="review-heading">Review {detail.doc.title || detail.doc.r2Key}</h2>
-      <p>Status: {detail.doc.status}</p>
-      {detail.provenance && <p>{t("Retrieved source (confirm before approving)")}: {detail.provenance.sourceUrl} · {detail.provenance.retrievedAt} · {detail.provenance.intakeMethod}</p>}
-      <details open><summary>Extracted chunks ({detail.chunks.length})</summary>
-        <p>Exclude publisher boilerplate, citation blocks or unreadable text from search. All chunks start included; warnings never change selections or source text.</p>
+      <h2 id="review-heading">{t("Review {document}", { document: "" })}<span lang={detectLang(detail.doc.title ?? "") ?? "en"}>{detail.doc.title || detail.doc.r2Key}</span></h2>
+      <p>{t("Status: {status}", { status: pageStatusText(language, detail.doc.status) })}</p>
+      {detail.provenance && <p>{t("Retrieved source (confirm before approving)")}: {detail.provenance.sourceUrl} · {detail.provenance.retrievedAt} · {pageStatusText(language, detail.provenance.intakeMethod ?? "")}</p>}
+      <details open><summary>{t("Extracted chunks ({count})", { count: detail.chunks.length })}</summary>
+        <p>{t("Exclude publisher boilerplate, citation blocks or unreadable text from search. All chunks start included; warnings never change selections or source text.")}</p>
         {detail.chunks.map((chunk) => <article key={`${detail.doc.docId}:${detail.doc.latestSha256 ?? detail.versions[0]?.sha256}:${chunk.chunkId}`}>
-          <h3>{chunk.chunkId}</h3><p>Offsets [{chunk.start}, {chunk.end}) · {chunk.status}</p>
-          {likelyGarbledChunk(chunk.text) && <p className="docs-warning"><strong>Warning: possibly garbled text</strong> — long mixed-case words may have missing spaces. Inspect against the original; this heuristic can be wrong.</p>}
-          <pre>{chunk.text}</pre>
-          <label className="docs-checkbox"><input type="checkbox" name="excludeChunkIds" value={chunk.chunkId} form="docs-review-form" defaultChecked={false} disabled={busy || !token || detail.doc.status !== "pending_review"} />Exclude from search</label>
+          <h3>{chunk.chunkId}</h3><p>{t("Offsets [{start}, {end}) · {status}", { start: chunk.start, end: chunk.end, status: pageStatusText(language, chunk.status) })}</p>
+          {likelyGarbledChunk(chunk.text) && <p className="docs-warning"><strong>{t("Warning: possibly garbled text")}</strong> — {t("long mixed-case words may have missing spaces. Inspect against the original; this heuristic can be wrong.")}</p>}
+          <pre lang={detectLang(chunk.text) ?? "en"}>{chunk.text}</pre>
+          <label className="docs-checkbox"><input type="checkbox" name="excludeChunkIds" value={chunk.chunkId} form="docs-review-form" defaultChecked={false} disabled={busy || !token || detail.doc.status !== "pending_review"} />{t("Exclude from search")}</label>
         </article>)}
       </details>
       <form id="docs-review-form" onSubmit={(event) => void review(event)}>
         <fieldset disabled={busy || !token}>
-          <legend>Human review decision</legend>
-          <label>Reviewer<input name="reviewer" required maxLength={200} /></label>
-          {sourceFields.map((field) => <label key={field}>{field === "url" ? "Source URL" : field[0]!.toUpperCase() + field.slice(1)}
+          <legend>{t("Human review decision")}</legend>
+          <label>{t("Reviewer")}<input name="reviewer" required maxLength={200} /></label>
+          {sourceFields.map((field) => <label key={field}>{t(sourceLabels[field])}
             <input name={field} defaultValue={field === "url" ? detail.provenance?.sourceUrl ?? "" : ""} type={field === "year" ? "number" : field === "url" ? "url" : "text"} required maxLength={field === "year" ? undefined : 4000} min={field === "year" ? 1000 : undefined} max={field === "year" ? 9999 : undefined} step={field === "year" ? 1 : undefined} />
           </label>)}
-          <fieldset><legend>Crop tags (at least one to approve)</legend>
-            {RESEARCH_TAGS.map((tag) => <label className="docs-checkbox" key={tag}><input type="checkbox" name="crops" value={tag} />{tag.replaceAll("_", " ")}</label>)}
+          <fieldset><legend>{t("Crop tags (at least one to approve)")}</legend>
+            {RESEARCH_TAGS.map((tag) => <label className="docs-checkbox" key={tag}><input type="checkbox" name="crops" value={tag} />{pageCropText(language, tag)}</label>)}
           </fieldset>
-          <label>Review note (optional)<textarea name="note" rows={3} maxLength={4000} /></label>
+          <label>{t("Review note (optional)")}<textarea name="note" rows={3} maxLength={4000} /></label>
           <div className="docs-actions">
-            <button type="submit" disabled={!detail.chunks.length || detail.doc.status !== "pending_review"}>Approve and index</button>
-            <button type="button" disabled={detail.doc.status !== "pending_review"} onClick={(event) => { if (event.currentTarget.form) void reject(event.currentTarget.form); }}>Reject document</button>
+            <button type="submit" disabled={!detail.chunks.length || detail.doc.status !== "pending_review"}>{t("Approve and index")}</button>
+            <button type="button" disabled={detail.doc.status !== "pending_review"} onClick={(event) => { if (event.currentTarget.form) void reject(event.currentTarget.form); }}>{t("Reject document")}</button>
           </div>
-          {detail.doc.status !== "pending_review" && <p>Decisions are available when the workflow is pending review.</p>}
+          {detail.doc.status !== "pending_review" && <p>{t("Decisions are available when the workflow is pending review.")}</p>}
         </fieldset>
       </form>
     </section>}

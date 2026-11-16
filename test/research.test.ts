@@ -254,6 +254,20 @@ describe("research retrieval", () => {
 // ---------- Explanations ----------
 
 describe("grounded explanations", () => {
+  it.each(["full", "rain"] as const)("restores Finney %s plan research after ingestion into a previously empty research index", async water => {
+    const plan = fakePlan({ water, irrigated: water === "full" });
+    const selectedRotation = water === "full" ? rotation("plan-1", ["soybean", "corn", "soybean"]) : plan.plans[1]!;
+    if (water === "full") plan.plans[0] = selectedRotation;
+    const ai = mockAi(modelSays({ rotationId: selectedRotation.id, narrative: "Research provides context for this rotation.", citations: [] })).ai;
+    const { index } = mockIndex(0.9);
+    const d = { ai, index, saved: empty, scoringVersion: "test" };
+    expect((await explainRotation(d, plan, selectedRotation)).response.research).toMatchObject({ status: "empty", passages: [] });
+    await index.upsert!(await buildVectors(ai));
+    const result = (await explainRotation(d, plan, selectedRotation)).response;
+    expect(result.research.status).toBe("live");
+    expect(result.research.passages.length).toBeGreaterThan(0);
+    expect(result.research.passages.some(p => p.chunkId.startsWith("ksu-li-"))).toBe(true);
+  });
   it("validates fallback output identically and records the actual answering model", async () => {
     const plan = fakePlan();
     const underlying = mockAi().ai;
@@ -404,6 +418,23 @@ describe("research routes", () => {
     const body = (await res.json()) as { embedding: { dimensions: number; pooling: string }; generation: { model: string } };
     expect(body.embedding).toMatchObject({ dimensions: 768, pooling: "cls" });
     expect(body.generation.model).toBe(GENERATION.model);
+  });
+
+  it("distinguishes bundled chunks from a shared index containing only field memory", async () => {
+    const getByIds = vi.fn(async () => []);
+    const env = { RESEARCH_INDEX: { getByIds } };
+    const res = await app.request("/api/research/status?verify=true", {}, env, ctx);
+    const body = await res.json();
+    expect(body).toMatchObject({ chunks: 13, ingestion: { status: "missing", expectedVectors: 40, indexedVectors: 0, missingVectors: 40 } });
+    expect(getByIds).toHaveBeenCalledTimes(2);
+    expect(getByIds.mock.calls.every((args) => (args as unknown as [string[]])[0].length <= 20)).toBe(true);
+  });
+
+  it("does not imply ingestion readiness from a bound index or the bundled corpus", async () => {
+    const getByIds = vi.fn();
+    const res = await app.request("/api/research/status", {}, { RESEARCH_INDEX: { getByIds } }, ctx);
+    expect(await res.json()).toMatchObject({ ingestion: { status: "unchecked", expectedVectors: 40 } });
+    expect(getByIds).not.toHaveBeenCalled();
   });
 
   it("query: unsupported crop is an explicit empty result", async () => {

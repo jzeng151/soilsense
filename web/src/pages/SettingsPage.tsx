@@ -105,7 +105,7 @@ const TOOL_DONE: Record<string, string> = {
 
 type Tab = "instructions" | "tools" | "activity";
 
-export function SettingsPage({ onMenu }: { onMenu: () => void }) {
+export function SettingsPage() {
   const { t: tx, text: localize } = useI18n();
   const [token, setToken] = useState(readToken);
   // Only ask for a password if the server says one is required.
@@ -185,11 +185,6 @@ export function SettingsPage({ onMenu }: { onMenu: () => void }) {
 
   return (
     <div className="app settings">
-      <button type="button" className="sb-toggle" aria-label={tx("Open sidebar")} onClick={onMenu}>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 7h16M4 12h16M4 17h16" />
-        </svg>
-      </button>
       <main className="st-wrap">
         <header className="st-head">
           <div>

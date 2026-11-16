@@ -70,11 +70,14 @@ try {
     const a = getComputedStyle(el.querySelector('a')), b = getComputedStyle(el.querySelector('button'));
     return keys.every(k => a[k] === b[k]);
   }); assert(styleMatch, 'Open full chat matches Clear chat style');
+  // Recent chats now live in Sprout's header (components/ChatHistory.tsx), not a sidebar: open the list before reading it.
+  const openRecent = async () => { if (!(await page.locator('#sc-history-panel').count())) await page.getByRole('button', { name: /^Recent chats/ }).click(); await page.locator('#sc-history-panel').waitFor(); };
+  const recentChats = async () => { await openRecent(); return page.locator('.sc-chats li').count(); };
   await page.getByRole('link', { name: 'Open full chat' }).click();
   await page.locator('.sc-thread').getByText('Smoke partial', { exact: true }).waitFor();
   assert.equal(requests.length, 1, 'navigation sends no second LLM request');
   await page.getByRole('button', { name: 'Stop', exact: true }).waitFor();
-  await page.locator('.sb-nav').getByRole('link', { name: 'Explore', exact: true }).click();
+  await page.locator('nav.explore-rail').getByRole('link', { name: 'Explore', exact: true }).click();
   await page.locator('.fa-thread').getByText('Smoke partial', { exact: true }).waitFor();
   await page.getByRole('button', { name: 'Stop', exact: true }).waitFor();
   finish(' completed in full chat');
@@ -82,7 +85,7 @@ try {
   assert.equal(requests.length, 1, 'return to Explore sends no model request');
   await page.getByLabel('Assistant options').click(); await page.getByRole('link', { name: 'Open full chat' }).click();
   await page.locator('.sc-thread').waitFor();
-  assert.equal(await page.locator('.sb-chats li').count(), 1, 'one Recent chat');
+  assert.equal(await recentChats(), 1, 'one Recent chat');
   await page.getByLabel('Message Sprout').fill('Follow-up from full chat');
   await Promise.all([page.waitForResponse(r => r.url().endsWith('/api/scout/chat')), page.getByRole('button', { name: 'Send', exact: true }).click()]);
   assert.equal(requests.length, 2);
@@ -94,13 +97,13 @@ try {
   assert.equal(requests.length, 2, 'reload restores history without replay');
   await page.getByRole('button', { name: 'New chat', exact: true }).click();
   await page.getByRole('heading', { name: "Hi, I'm Sprout. What's growing on your field?" }).waitFor();
-  assert.equal(await page.locator('.sb-chats li').count(), 1, 'New retains Recent history');
-  await page.locator('.sb-chats li button').first().click();
+  assert.equal(await recentChats(), 1, 'New retains Recent history');
+  await openRecent(); await page.locator('.sc-chats li .sc-chat').first().click();
   await page.locator('.sc-thread').getByText('Smoke partial follow-up', { exact: true }).waitFor();
-  await page.getByRole('button', { name: /^Delete chat/ }).click();
-  assert.equal(await page.locator('.sb-chats li').count(), 0, 'Delete removes Recent chat');
+  await openRecent(); await page.getByRole('button', { name: /^Delete chat/ }).click();
+  assert.equal(await recentChats(), 0, 'Delete removes Recent chat');
   await page.reload(); await page.getByRole('heading', { name: "Hi, I'm Sprout. What's growing on your field?" }).waitFor();
-  assert.equal(await page.locator('.sb-chats li').count(), 0, 'Delete persists on reload');
+  assert.equal(await recentChats(), 0, 'Delete persists on reload');
   await page.evaluate(hash => { location.hash = hash; }, explore);
   await buildPlan();
   await page.getByRole('button', { name: 'Why is this rotation recommended?' }).click();
@@ -116,7 +119,7 @@ try {
   assert.equal(requests.length, 3, 'three explicit sends, no navigation/reload requests');
   await page.getByLabel('Assistant options').click(); await page.getByRole('link', { name: 'Open full chat' }).click();
   await page.locator('.sc-hero').waitFor();
-  assert.equal(await page.locator('.sb-chats li').count(), 0, 'Clear removes Recent history too');
+  assert.equal(await recentChats(), 0, 'Clear removes Recent history too');
   assert.deepEqual(errors, [], 'no uncaught browser errors');
   console.log(JSON.stringify({ result: 'PASS', chatRequests: requests.length, checks: ['live Explore → Scout handoff exactly once', 'return to Explore during stream', 'full-page field plan context', 'reload without replay', 'Recent chats', 'new/open/delete', 'clear during stream without resurrection', 'matching menu styles', 'no page errors'], persistence: 'browser localStorage only; fixture server does not save transcripts' }, null, 2));
 } finally { await browser?.close(); if (live) live.end(); await new Promise(resolve => server.close(resolve)); }

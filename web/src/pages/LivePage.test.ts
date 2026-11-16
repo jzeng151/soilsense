@@ -43,7 +43,7 @@ async function mount(language: Language, status: { demo: boolean; available: boo
   const container = document.createElement("div"); document.body.append(container);
   root = createRoot(container);
   await act(async () => root!.render(createElement(LanguageProvider, { children: createElement("div", null,
-    createElement(LanguageControls), createElement(LivePage, { onMenu: () => {} })) })));
+    createElement(LanguageControls), createElement(LivePage)) })));
   return container;
 }
 
@@ -55,7 +55,6 @@ it.each(["en", "es", "ko"] as const)("shows localized demo-off, empty and unavai
     es: "El modo de demostración está desactivado. Un miembro del equipo puede activarlo en Configuración.",
     ko: "데모 모드가 꺼져 있습니다. 팀원이 설정에서 켤 수 있습니다.",
   }[language]);
-  expect(container.querySelector(".sb-toggle")?.getAttribute("aria-label")).toBe({ en: "Open sidebar", es: "Abrir menú lateral", ko: "사이드바 열기" }[language]);
   expect(container.querySelector('[role="log"]')?.getAttribute("aria-label")).toBe({ en: "Call transcript", es: "Transcripción de la llamada", ko: "통화 기록" }[language]);
   expect(container.querySelector(".lv-empty")?.textContent).toBe({ en: "When someone calls, the conversation shows up here.", es: "Cuando alguien llame, la conversación aparecerá aquí.", ko: "전화가 오면 이곳에 대화가 표시됩니다." }[language]);
   expect(container.textContent).toContain({ en: "Not built yet", es: "Aún no se ha creado", ko: "아직 생성되지 않음" }[language]);

@@ -31,20 +31,6 @@ try {
     assert.equal(await page.evaluate(()=>document.activeElement?.id),'content','Skip link focuses the main content');
     await page.goto(base);
     await page.locator('.leaflet-container').waitFor();
-    if (width === 375) {
-      await page.keyboard.press('Tab');
-      await page.keyboard.press('Tab');
-      await page.keyboard.press('Enter');
-      await page.getByRole('button',{name:copy.close}).waitFor();
-      assert.equal(await page.getByRole('button',{name:copy.close}).evaluate(e=>e===document.activeElement),true);
-      await page.keyboard.press('Shift+Tab');
-      assert.equal(await page.getByRole('link',{name:copy.team}).evaluate(e=>e===document.activeElement),true,'Drawer contains reverse Tab');
-      await page.keyboard.press('Tab');
-      await page.keyboard.press('Escape');
-      assert.equal(await page.getByRole('button',{name:copy.open}).evaluate(e=>e===document.activeElement),true,'Escape restores focus');
-      await page.goto(base);
-      await page.locator('.leaflet-container').waitFor();
-    }
     // Real Tab presses, not synthetic DOM click events. Record the entire landing order.
     const order=[];
     for(let i=0;i<40;i++) {
@@ -52,7 +38,8 @@ try {
       order.push(await page.evaluate(()=>({tag:document.activeElement.tagName,text:(document.activeElement.textContent||document.activeElement.getAttribute('aria-label')||'').trim().slice(0,90)})));
       if(await page.getByRole('button',{name:'Kansas',exact:true}).evaluate(e=>e===document.activeElement)) break;
     }
-    if (width === 375) assert.equal(order[0].text,copy.skip,'Skip link comes first'), assert.equal(order[1].text,copy.open,'Collapsed phone navigation must not receive focus');
+    // Every width shows the same navigation rail (no phone drawer), so after the skip link Tab reaches the rail's brand link.
+    assert.equal(order[0].text,copy.skip,'Skip link comes first'), assert.equal(order[1].text,'Soil Sense','Navigation rail follows the skip link');
     assert.equal(await page.getByRole('button',{name:'Kansas',exact:true}).evaluate(e=>e===document.activeElement),true,'Kansas reachable by Tab');
     await page.keyboard.press('Enter');
     await page.getByRole('button',{name:confirm,exact:true}).waitFor();

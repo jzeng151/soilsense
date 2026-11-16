@@ -391,7 +391,7 @@ function FieldWatchPanel({ events }: { events: LiveEvent[] }) {
   );
 }
 
-export function LivePage({ onMenu }: { onMenu: () => void }) {
+export function LivePage() {
   const { language } = useI18n();
   const t = (key: string, values?: Record<string, string | number>) => pageTranslate(language, key, values);
   const { events, conn, phone } = useLiveEvents();
@@ -416,11 +416,6 @@ export function LivePage({ onMenu }: { onMenu: () => void }) {
 
   return (
     <div className="app live" lang={language}>
-      <button type="button" className="sb-toggle" aria-label={t("Open sidebar")} onClick={onMenu}>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 7h16M4 12h16M4 17h16" />
-        </svg>
-      </button>
       <main className="lv-wrap">
         <header className="lv-head">
           <div>

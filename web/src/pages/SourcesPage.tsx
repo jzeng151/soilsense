@@ -165,16 +165,11 @@ const BADGE: Record<NonNullable<Source["status"]>, string> = {
   ai: "Answers questions",
 };
 
-export function SourcesPage({ onMenu }: { onMenu: () => void }) {
+export function SourcesPage() {
   const { language } = useI18n();
   const t = (key: string) => pageTranslate(language, key);
   return (
     <div className="app sources" lang={language}>
-      <button type="button" className="sb-toggle" aria-label={t("Open sidebar")} onClick={onMenu}>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 7h16M4 12h16M4 17h16" />
-        </svg>
-      </button>
       <main className="src-wrap">
         <header className="src-head">
           <p className="eyebrow">{t("Data sources")}</p>

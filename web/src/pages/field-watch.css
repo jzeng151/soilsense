@@ -1,0 +1,5 @@
+/* Field Watch can be opened directly (rail link or #/field-watch), before Explore or the planner has loaded
+   field-workspace.css / i18n.css. Carry its own page padding and keep its title bar visible
+   (styles.css hides `.shell .app > .topbar`, the planner's duplicate brand bar). */
+.field-watch-page { padding: 24px; }
+.shell .app.field-watch-page > .topbar { display: flex; }

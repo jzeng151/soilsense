@@ -1,6 +1,7 @@
 import { FieldWatchCard } from "../components/FieldWatchCard";
 import { MyFieldsPanel } from "../components/MyFieldsPanel";
 import { useI18n } from "../i18n";
+import "./field-watch.css";
 
 /** Monitoring only. Rotation planning lives in Explore and never starts on this page. */
 export function FieldWatchPage() {

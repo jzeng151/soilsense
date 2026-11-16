@@ -9,6 +9,14 @@ vi.mock("../auth", () => ({ getMe: async () => null, SIGNED_OUT_EVENT: "signed-o
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 afterEach(() => { localStorage.clear(); window.location.hash = ""; });
 
+/** Rail links are plain hash links (as on Explore): the route changes on the browser's hashchange event, a task after the click. */
+async function follow(container: HTMLElement, href: string) {
+  await act(async () => {
+    container.querySelector<HTMLAnchorElement>(`a[href="${href}"]`)!.click();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+}
+
 it.each(["en", "es"] as const)("opens the public how-it-works route in %s with sourced, image-free content", async language => {
   localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
   window.location.hash = "#/how-it-works";
@@ -40,9 +48,9 @@ it.each(["en", "es"] as const)("opens the public how-it-works route in %s with s
     const switchTo = language === "en" ? "Español" : "English";
     await act(async () => container.querySelector<HTMLButtonElement>(`button[aria-label="${switchTo}"]`)!.click());
     expect(container.querySelector("h1")?.textContent).toBe(language === "en" ? "Cómo funciona" : "How it works");
-    await act(async () => container.querySelector<HTMLAnchorElement>('a[href="#/sources"]')!.click());
+    await follow(container, "#/sources");
     expect(container.querySelector("h1")?.textContent).toBe(language === "en" ? "De dónde vienen nuestros datos" : "Where our data comes from");
-    await act(async () => container.querySelector<HTMLAnchorElement>('a[href="#/how-it-works"]')!.click());
+    await follow(container, "#/how-it-works");
     expect(container.querySelector("h1")?.textContent).toBe(language === "en" ? "Cómo funciona" : "How it works");
   } finally {
     await act(async () => root.unmount());

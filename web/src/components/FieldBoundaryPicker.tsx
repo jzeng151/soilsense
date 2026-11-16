@@ -53,9 +53,9 @@ export function FieldBoundaryPicker({fields,selected,onChange,areas,area,setArea
   return <section aria-labelledby="field-boundary-title" style={{minWidth:0,overflowWrap:'anywhere',marginBlock:'1rem'}}>
     <h3 id="field-boundary-title">{t('Choose public field outlines')}</h3>
     <p className="jr-note">{t('CSB outlines are synthetic crop boundaries, not ownership or tax parcels. Coverage tonight: about 3 × 3 km around each demo farm only.')}</p>
-    <label>{t('Boundary area')}{' '}<select value={area} onChange={e=>setArea(e.target.value)}>
+    <label htmlFor="csb-boundary-area">{t('Boundary area')}</label>{' '}<select id="csb-boundary-area" value={area} onChange={e=>setArea(e.target.value)}>
       <option value="">—</option>{areas.map(a=><option key={a.id} value={a.id}>{a.name}</option>)}
-    </select></label>{' '}
+    </select>{' '}
     <button type="button" disabled={!area} onClick={onShowArea}>{t('Show boundaries on map')}</button>
     <p className="jr-note">{t('Click an outline to select it. Shift/Ctrl-click to add or remove; or use the checkboxes below.')}</p>
     {loading && <p role="status">{t('Loading field outlines…')}</p>}
@@ -75,7 +75,7 @@ export function FieldBoundaryPicker({fields,selected,onChange,areas,area,setArea
     {!selected.length && <p>{t('No fields selected.')}</p>}
     <ul style={{paddingInlineStart:'1.25rem'}}>{selected.map(f=><li key={f.id} style={{marginBlock:12}}>
       <strong>{f.name ?? f.id}</strong> · {t('{acres} acres',{acres:acres(f.areaAcres)})}{' '}
-      <button type="button" aria-label={`${t('Remove selected field')} ${f.id}`} onClick={()=>toggle(f)}>×</button>
+      <button type="button" aria-label={`${t('Remove selected field')} ${f.id}`} onClick={()=>toggle(f)}>{t('Remove selected field')}</button>
       <details><summary>{t('CSB crop sequence (2018–2025)')}</summary>
         <ol>{f.cropSequence?.map(c=><li key={c.year}>{c.year}: {language==='es'?(csbCropSpanish[c.cdlCode] ?? c.crop):c.crop} ({c.cdlCode})</li>)}</ol>
       </details>

@@ -97,8 +97,8 @@ export async function retrieveLive(
   const [vector] = await embed(deps.ai, [query], deps.gatewayId, { db: deps.db, signal: deps.signal, feature: deps.feature });
   if (!vector) throw new Error("embedding: empty");
   const res = await deps.index.query(vector, {
-    // All shared research is in the default namespace. Never search field-memory namespaces.
-    namespace: "",
+    // No namespace option: Vectorize treats `namespace: ""` as a literal namespace, which matched nothing in
+    // production. The corpus filter below is what keeps field-memory vectors (no `corpus` metadata) out.
     topK: 10,
     returnMetadata: "indexed",
     filter: { corpus: { $in: [CORPUS_VERSION, DOCS_CORPUS] }, crop: tags.length === 1 ? { $eq: tags[0]! } : { $in: tags } },

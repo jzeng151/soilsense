@@ -1,5 +1,8 @@
 import type { FieldBoundary } from "../../src/shared/fields";
 import { FieldBoundaryPicker, useBoundaryCatalog } from "./components/FieldBoundaryPicker";
+import { fieldPlanHistory, fieldPlanRequest, cdlToCropId, numberFields } from '../../src/shared/fields';
+import { FIELD_NAME_PREFIX } from './components/fieldLabels';
+import { FieldPlanHistory } from './components/FieldPlanHistory';
 import "./i18n.css";
 import { useI18n, translate, translateKnown, cropName } from "./i18n";
 import type { Language, TranslationKey } from "./i18n";
@@ -182,6 +185,13 @@ function MainFlow() {
   const [point, setPoint] = useState<{ lat: number; lon: number } | null>(null);
   const [selectedFields, setSelectedFields] = useState<FieldBoundary[]>([]);
   const boundaryCatalog = useBoundaryCatalog(point);
+  const [explicitField, setExplicitField] = useState<FieldBoundary | null>(null);
+  const [fieldHistoryEdits, setFieldHistoryEdits] = useState<Record<string,(CropId|'')[]>>({});
+  const [nameStorageFailed,setNameStorageFailed]=useState(false);
+  const planningField = boundaryCatalog.enabled ? (explicitField ?? (selectedFields.length===1 ? selectedFields[0]! : null)) : null;
+  const planningValues = planningField ? (fieldHistoryEdits[planningField.id] ?? fieldPlanHistory(planningField).years.map(y=>cdlToCropId(y.cdlCode) ?? '')) : [];
+  const planningCrops = planningValues.filter((c):c is CropId=>Boolean(c));
+  const fieldHistoryValid = !planningField || planningCrops.length>0;
   const [focus, setFocus] = useState<{ lat: number; lon: number; zoom: number; key: number } | null>(null);
   const [zip, setZip] = useState("");
   const [zipMsg, setZipMsg] = useState<{ key: TranslationKey; values?: Record<string, string | number> } | null>(null);
@@ -231,15 +241,40 @@ function MainFlow() {
       const g = guessThisYear(f);
       setThisYear(g);
       setGuessed(Boolean(g));
+      return true;
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
         setField(null);
         setError("We couldn't load your field. Try again or select another field.");
       }
+      return false;
     } finally {
       if (fieldAbort.current === ctrl) setFieldLoading(false);
     }
   }, []);
+
+  const pickPoint = useCallback((lat:number,lon:number) => {
+    // An explicit free-point/demo pick leaves field mode, preventing history/measurement mixups.
+    setSelectedFields([]);
+    setExplicitField(null);
+    return pick(lat,lon);
+  },[pick]);
+
+  const selectFields = (fields: FieldBoundary[]) => {
+    setSelectedFields(fields);
+    setExplicitField(null);
+    setPlan(null);
+    if (fields.length===1) void pick(fields[0]!.centroid.lat,fields[0]!.centroid.lon);
+  };
+  const renameField = (field:FieldBoundary,name:string) => {
+    try { if(name) localStorage.setItem(FIELD_NAME_PREFIX+field.id,name); else localStorage.removeItem(FIELD_NAME_PREFIX+field.id); }
+    catch { setNameStorageFailed(true); }
+    const generated=numberFields(boundaryCatalog.fields).find(f=>f.id===field.id)?.name;
+    const updated={...field,name:name || generated};
+    boundaryCatalog.setFields(prev=>prev.map(f=>f.id===field.id?updated:f));
+    setSelectedFields(prev=>prev.map(f=>f.id===field.id?updated:f));
+    setExplicitField(prev=>prev?.id===field.id?updated:prev);
+  };
 
   const findZip = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -271,7 +306,7 @@ function MainFlow() {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setFocus({ lat: pos.coords.latitude, lon: pos.coords.longitude, zoom: 14, key: Date.now() });
-        void pick(pos.coords.latitude, pos.coords.longitude);
+        void pickPoint(pos.coords.latitude, pos.coords.longitude);
       },
       () => setZipMsg({ key: "We couldn't get your location. Type a ZIP code or tap the map." }),
       { timeout: 10000 },
@@ -281,7 +316,7 @@ function MainFlow() {
   const lastMapped = useMemo(() => [...(field?.cropHistory.years ?? [])].reverse().find((y) => y.crop) ?? null, [field]);
 
   const run = useCallback(async (waterOverride?: WaterLevel) => {
-    if (!point || !thisYear || !measurementsValid) return;
+    if (!point || (!thisYear && !planningField) || !measurementsValid || !fieldHistoryValid) return;
     const w = waterOverride ?? water;
     if (waterOverride) setWater(waterOverride);
     setPlanLoading(true);
@@ -295,9 +330,9 @@ function MainFlow() {
     planAbort.current = ctrl;
     const recentCrops: CropId[] = [];
     if (lastMapped?.crop && lastMapped.year < THIS_SEASON) recentCrops.push(lastMapped.crop);
-    recentCrops.push(thisYear);
+    if (thisYear) recentCrops.push(thisYear);
     try {
-      const res = await fetchPlan({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, goals, recentCrops, language, ...measurements }, ctrl.signal);
+      const res = await fetchPlan(fieldPlanRequest({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, goals, recentCrops, language, ...measurements }, boundaryCatalog.enabled, planningField, planningCrops), ctrl.signal);
       setPlan(res);
       setAnswer(null);
     } catch (e) {
@@ -305,7 +340,7 @@ function MainFlow() {
     } finally {
       if (planAbort.current === ctrl) setPlanLoading(false);
     }
-  }, [point, thisYear, water, priority, goals, lastMapped, go, language, measurements, measurementsValid]);
+  }, [point, thisYear, water, priority, goals, lastMapped, go, language, measurements, measurementsValid, boundaryCatalog.enabled, planningField, fieldHistoryValid, fieldHistoryEdits]);
 
   // Regenerate the server summary when switching languages on an existing result.
   useEffect(() => {
@@ -423,18 +458,20 @@ function MainFlow() {
             </p>
 
             <p className="jr-tap">{t("Then tap your field on the map.")}</p>
-            <MapPicker point={point} onPick={pick} focus={focus}
+            <MapPicker point={point} onPick={pickPoint} focus={focus}
               boundaries={boundaryCatalog.enabled ? boundaryCatalog.fields : undefined}
               selectedFields={boundaryCatalog.enabled ? selectedFields : undefined}
-              onSelectFields={boundaryCatalog.enabled ? setSelectedFields : undefined} />
+              onSelectFields={boundaryCatalog.enabled ? selectFields : undefined} />
             {boundaryCatalog.enabled && <FieldBoundaryPicker {...boundaryCatalog}
-              selected={selectedFields} onChange={setSelectedFields}
-              onUseCentroid={f => { void pick(f.centroid.lat, f.centroid.lon); }}
+              selected={selectedFields} onChange={selectFields}
+              onRename={renameField}
+              onUseCentroid={f => { setExplicitField(f); void pick(f.centroid.lat, f.centroid.lon).then(ok=>{if(ok) go("questions");}); }}
               onShowArea={() => {
                 const area = boundaryCatalog.areas.find(a => a.id === boundaryCatalog.area);
                 if (area) setFocus({ lat: (area.bbox[1]+area.bbox[3])/2, lon: (area.bbox[0]+area.bbox[2])/2, zoom: 14, key: Date.now() });
               }} />}
 
+            {nameStorageFailed && <p role="status">{t("Local storage unavailable; name lasts for this visit only.")}</p>}
             <p className="jr-examples">
               {t("No field handy? Try an example:")}{" "}
               {DEMO_FARMS.map((d) => (
@@ -444,7 +481,7 @@ function MainFlow() {
                   className="chip-btn"
                   onClick={() => {
                     setWater(d.irrigated ? "full" : "rain");
-                    void pick(d.lat, d.lon);
+                    void pickPoint(d.lat, d.lon);
                   }}
                 >
                   {DEMO_SHORT[d.name] ?? d.name}
@@ -505,7 +542,8 @@ function MainFlow() {
             <h1 id="s2" className="jr-title">{t("Three quick questions")}</h1>
             <p className="jr-lead">{place ? t("About your field in {place}.", { place }) : t("About your field.")}</p>
 
-            <fieldset className="jr-q">
+            {planningField && <FieldPlanHistory field={planningField} values={planningValues} onChange={values=>setFieldHistoryEdits(prev=>({...prev,[planningField.id]:values}))} />}
+            {!planningField && <fieldset className="jr-q">
               <legend>
                 <span className="jr-qn">1</span> {t("What did you grow in {year}?", { year: THIS_SEASON })}
               </legend>
@@ -528,7 +566,7 @@ function MainFlow() {
                   </button>
                 ))}
               </div>
-            </fieldset>
+            </fieldset>}
 
             <fieldset className="jr-q">
               <legend>
@@ -568,8 +606,8 @@ function MainFlow() {
               <button type="button" className="ghost" onClick={() => go("field")}>
                 {t("← Back")}
               </button>
-              <button type="button" className="primary" disabled={!thisYear || planLoading || !measurementsValid} onClick={() => void run()}>
-                {thisYear ? t("Show my plan →") : t("Pick what you grew to continue")}
+              <button type="button" className="primary" disabled={(!thisYear && !planningField) || !fieldHistoryValid || planLoading || !measurementsValid} onClick={() => void run()}>
+                {(thisYear || planningField) ? t("Show my plan →") : t("Pick what you grew to continue")}
               </button>
             </div>
           </section>
@@ -578,6 +616,7 @@ function MainFlow() {
         {/* ---------- Step 3: the plan ---------- */}
         {step === "plan" && (
           <section aria-live="polite">
+            {planningField && <FieldPlanHistory field={planningField} values={planningValues} used={plan?.request.recentCrops} onEdit={()=>go("questions")} />}
             {planLoading && (
               <div className="jr-card jr-loading">
                 <div className="jr-hero">
@@ -639,7 +678,7 @@ function MainFlow() {
                   )}
                   {tradeoff(best, plan.currentPractice, language) && <p className="jr-tradeoff">{tradeoff(best, plan.currentPractice, language)}</p>}
                   <p className="jr-context">
-                    {t("Based on:")} {thisYear && cropName(thisYear, language).toLowerCase()} ({THIS_SEASON}) · {t(waterText[plan.water ?? water].title).toLowerCase()} ·{" "}
+                    {t("Based on:")} {planningField ? plan.request.recentCrops?.map(c=>cropName(c,language)).join(" → ") : <>{thisYear && cropName(thisYear, language).toLowerCase()} ({THIS_SEASON})</>} · {t(waterText[plan.water ?? water].title).toLowerCase()} ·{" "}
                     {t(PRIORITIES.find((p) => p.id === priority)!.label).toLowerCase()}{" "}
                     <button type="button" className="link-btn" onClick={() => go("questions")}>
                       {t("Change")}

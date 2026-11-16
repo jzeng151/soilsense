@@ -1,0 +1,30 @@
+/* One planning flow in Explore. The hidden tab stays mounted to preserve the farmer's inputs. */
+.explore-page.assistant-open.has-location:has(.is-planning) { --assist-w: min(792px, calc(100vw - var(--rail-w))); }
+@media (max-width: 700px) {
+  .explore-page.assistant-open.has-location:has(.is-planning) { --assist-w: 0px; }
+  /* The planning sheet covers the lower map. Keep credits in the exposed top strip,
+     not floating over the farmer's form, and hide only the optional scale there. */
+  .explore-page.assistant-open:has(.is-planning) .maplibregl-ctrl-bottom-right { bottom: auto; top: 12px; right: 12px; }
+  .explore-page.assistant-open:has(.is-planning) .maplibregl-ctrl-bottom-left { visibility: hidden; }
+}
+.explore-workspace { flex-direction: column; background: color-mix(in srgb, var(--field-cream) 88%, transparent); backdrop-filter: blur(16px); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-lg); }
+.explore-workspace[hidden], .explore-workspace [hidden] { display: none !important; }
+.explore-page .explore-workspace.is-planning { width: min(760px, calc(100vw - var(--rail-w) - 32px)); }
+.workspace-tabs { display: flex; gap: 8px; align-items: center; padding: 10px; border-bottom: 1px solid var(--color-border-strong); flex: none; }
+.workspace-tabs button { min-height: 44px; padding: 8px 12px; border: 1px solid var(--color-input-border); border-radius: 12px; background: var(--field-cream); color: var(--color-text); cursor: pointer; }
+.workspace-tabs button[aria-pressed="true"] { background: var(--canopy); color: var(--field-cream); }
+.workspace-tabs button:last-child { margin-left: auto; }
+.workspace-planner { overflow: auto; min-height: 0; flex: 1; }
+.workspace-planner .app { width: 100%; padding: 0; }
+.workspace-planner .topbar, .workspace-planner .foot { display: none; }
+.workspace-planner .jr-main { padding: 16px; }
+.workspace-chat { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.workspace-chat .field-assistant { flex: 1; min-height: 0; border-radius: 0; }
+.workspace-plan-notice { padding: 12px; margin: 0; }
+.field-watch-page { padding: 24px; }
+@media (max-width: 700px) {
+  .explore-page .explore-workspace.is-planning { width: auto; top: 76px; height: auto; left: var(--rail-w); right: 0; bottom: 0; }
+  .workspace-planner .jr-main { padding: 8px; }
+  .workspace-tabs { gap: 4px; padding: 6px; }
+  .workspace-tabs button { padding: 8px; }
+}

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import app from '../src/worker/index';
 describe('explore public endpoints', () => {
-  it('keeps the landing opt-in and recognizes only on', async () => {
-    for (const [flag, expected] of [[undefined,false], ['off',false], ['true',false], ['on',true]] as const) {
+  it('opens Explore by default with an explicit off escape hatch', async () => {
+      for (const [flag, expected] of [[undefined,true], ['off',false], ['true',true], ['on',true]] as const) {
       const r = await app.request('/api/ui/status', {}, { EXPLORE_LANDING: flag });
       expect(r.status).toBe(200);
       expect(await r.json()).toEqual({ exploreLanding: expected });

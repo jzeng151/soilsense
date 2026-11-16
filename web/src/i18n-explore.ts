@@ -1,4 +1,11 @@
 export const exploreMessages = {
+  "Cropped to fit; darkened": "Recortada para ajustarse; oscurecida",
+  "Field to plan": "Parcela que se planificará",
+  "Choose one selected field": "Elige una de las parcelas seleccionadas",
+  "Field workspace": "Espacio de la parcela",
+  "Rotation options": "Opciones de rotación",
+  "Build a rotation in Rotation options first. Sprout will use that exact plan and your settings.": "Primero crea una rotación en Opciones de rotación. Sprout usará ese mismo plan y tus ajustes.",
+  "Monitor saved fields, review recent checks and manage automatic watches. Plan crop rotations in Explore.": "Supervisa parcelas guardadas, revisa las últimas comprobaciones y gestiona la vigilancia automática. Planifica rotaciones en Explorar.",
   "Clarion loam · Corn Belt, rain-fed": "Franco Clarion · Cinturón del Maíz, secano",
   "Elburn silt loam · rain-fed": "Franco limoso Elburn · secano",
   "Center-pivot field · High Plains, irrigated": "Parcela con pivote central · Grandes Llanuras, regadío",

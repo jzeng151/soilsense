@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { Shell } from './Shell';
 vi.mock('./auth',()=>({getMe:async()=>null,SIGNED_OUT_EVENT:'signed-out',signOut:async()=>{}}));
-vi.mock('./App',()=>({App:()=>createElement('div',{'data-testid':'existing-planner'},'Existing planner')}));
+vi.mock('./pages/FieldWatchPage',()=>({FieldWatchPage:()=>createElement('div',{'data-testid':'existing-planner'},'Field Watch monitoring')}));
 vi.mock('./pages/ExplorePage',()=>({ExplorePage:()=>createElement('div',{'data-testid':'explore'},'Explore')}));
 Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true});
 afterEach(()=>{vi.unstubAllGlobals();localStorage.clear();window.location.hash='';});

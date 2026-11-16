@@ -4,6 +4,8 @@ import type { Language, TranslationKey } from "./i18n";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CropId, FieldResponse, Goal, PlanRequest, PlanResponse, Priority, ReasonFact, RotationPlan, WaterLevel } from "../../src/shared/types";
 import { MeasurementPanel, SoilComparison } from "./components/Measurements";
+import type { FarmerConstraints } from '../../src/shared/constraints';
+import { ConstraintsPanel, ConstraintSummary } from './components/ConstraintsPanel';
 import { GoalPicker } from "./components/GoalPicker";
 import { Glossary, Definition } from "./components/Glossary";
 import { askQuestion, fetchField, fetchPlan } from "./api";
@@ -184,6 +186,9 @@ function MainFlow() {
   const [guessed, setGuessed] = useState(false);
   const [water, setWater] = useState<WaterLevel>("rain");
   const [priority, setPriority] = useState<Priority>("balanced");
+  const [constraints, setConstraints] = useState<FarmerConstraints | undefined>();
+  const [constraintsValid, setConstraintsValid] = useState(true);
+  const changeConstraints = useCallback((value: FarmerConstraints | undefined, valid: boolean) => { setConstraints(value); setConstraintsValid(valid); }, []);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [plan, setPlan] = useState<PlanResponse | null>(null);
   const [planLoading, setPlanLoading] = useState(false);
@@ -274,7 +279,7 @@ function MainFlow() {
   const lastMapped = useMemo(() => [...(field?.cropHistory.years ?? [])].reverse().find((y) => y.crop) ?? null, [field]);
 
   const run = useCallback(async (waterOverride?: WaterLevel) => {
-    if (!point || !thisYear || !measurementsValid) return;
+    if (!point || !thisYear || !measurementsValid || !constraintsValid) return;
     const w = waterOverride ?? water;
     if (waterOverride) setWater(waterOverride);
     setPlanLoading(true);
@@ -290,7 +295,7 @@ function MainFlow() {
     if (lastMapped?.crop && lastMapped.year < THIS_SEASON) recentCrops.push(lastMapped.crop);
     recentCrops.push(thisYear);
     try {
-      const res = await fetchPlan({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, goals, recentCrops, language, ...measurements }, ctrl.signal);
+      const res = await fetchPlan({ lat: point.lat, lon: point.lon, irrigated: w !== "rain", water: w, priority, goals, ...(constraints ? { constraints } : {}), recentCrops, language, ...measurements }, ctrl.signal);
       setPlan(res);
       setAnswer(null);
     } catch (e) {
@@ -298,7 +303,7 @@ function MainFlow() {
     } finally {
       if (planAbort.current === ctrl) setPlanLoading(false);
     }
-  }, [point, thisYear, water, priority, goals, lastMapped, go, language, measurements, measurementsValid]);
+  }, [point, thisYear, water, priority, goals, lastMapped, go, language, measurements, measurementsValid, constraints, constraintsValid]);
 
   // Regenerate the server summary when switching languages on an existing result.
   useEffect(() => {
@@ -543,13 +548,14 @@ function MainFlow() {
             </fieldset>
 
             <GoalPicker value={goals} onChange={setGoals} water={water} />
+            <ConstraintsPanel value={constraints} onChange={changeConstraints} />
             {point && <MeasurementPanel key={`${point.lat},${point.lon}`} fieldKey={`${point.lat},${point.lon}`} soil={field.soil} onChange={changeMeasurements} />}
 
             <div className="jr-actions">
               <button type="button" className="ghost" onClick={() => go("field")}>
                 {t("← Back")}
               </button>
-              <button type="button" className="primary" disabled={!thisYear || planLoading || !measurementsValid} onClick={() => void run()}>
+              <button type="button" className="primary" disabled={!thisYear || planLoading || !measurementsValid || !constraintsValid} onClick={() => void run()}>
                 {thisYear ? t("Show my plan →") : t("Pick what you grew to continue")}
               </button>
             </div>
@@ -595,6 +601,7 @@ function MainFlow() {
               </div>
             )}
 
+            {plan && !planLoading && <ConstraintSummary report={plan.constraints} currentPractice={plan.currentPractice} />}
             {plan && !planLoading && !best && <div className="jr-card" role="status"><h1 className="jr-title">{t("No feasible rotation found")}</h1><DecisionNotice /><p>{t("Review your crop history, water assumptions and priorities. Missing evidence is not a zero score.")}</p><button type="button" className="ghost" onClick={() => go("questions")}>{t("Review inputs")}</button></div>}
 
             {plan && !planLoading && best && (

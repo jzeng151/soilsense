@@ -32,6 +32,8 @@ export interface ConstraintReport {
   status: 'satisfied' | 'infeasible';
   /** Constraints rejecting otherwise agronomically feasible sequences, not a claimed minimal unsatisfiable set. */
   binding: ConstraintCode[];
+  /** Concrete crop/limit details for the non-minimal conflict set. */
+  bindingIssues?: ConstraintIssue[];
   excludedCrops: { crop: CropId; reasons: ConstraintIssue[] }[];
   currentPracticeViolations: ConstraintIssue[];
   message?: string;

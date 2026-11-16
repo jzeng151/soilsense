@@ -33,6 +33,7 @@ describe('constraints during enumeration', () => {
   expect(result.constraints?.status).toBe('infeasible');
   expect(result.constraints?.message).toContain('No rotation satisfies these constraints');
   expect(result.constraints?.binding.length).toBeGreaterThan(0);
+  if (constraints.mustInclude?.includes('corn')) expect(result.constraints?.bindingIssues).toContainEqual({ constraint: 'mustInclude', crop: 'corn' });
   expect(result.currentPractice).not.toBeNull();
   expect(result.constraints?.currentPracticeViolations.length).toBeGreaterThan(0);
  });
@@ -52,6 +53,14 @@ describe('constraints during enumeration', () => {
   const result = run({ irrigationInches: 3, well: { gpm: 500, acres: 125, pumpingDays: 100, hoursPerDay: 20 } });
   expect(result.constraints?.water?.seasonalCapInches).toBe(3);
   for (const plan of [...result.plans, result.currentPractice!]) for (const year of plan.years) expect(year.waterPumpedIn).toBeLessThanOrEqual(3);
+ });
+ it('finds a required crop missing from all of the old top three', () => {
+  const original = buildPlan(finneyInputs);
+  const missing = ALL_CROPS.find(crop => crop !== 'fallow' && original.plans.every(p => p.years.every(y => y.crop !== crop)));
+  expect(missing).toBeDefined();
+  const constrained = run({ mustInclude: [missing!] });
+  expect(constrained.plans.length).toBeGreaterThan(0);
+  for (const plan of constrained.plans) expect(plan.years.map(y => y.crop)).toContain(missing);
  });
  it('searches beyond the old top three to exclude a crop', () => {
   const original = buildPlan(finneyInputs);

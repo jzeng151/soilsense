@@ -6,7 +6,7 @@ const base: PlanRequest = { lat: 38.1095, lon: -100.706, priority: 'balanced', i
 it('validates constraints strictly and retains their canonical form', () => {
  const request = validatePlanRequest({ ...base, constraints: { excludeCrops: ['corn', 'corn', 'alfalfa'], irrigationInches: 0 } });
  expect(request).toMatchObject({ constraints: { excludeCrops: ['alfalfa', 'corn'], irrigationInches: 0 } });
- for (const constraints of [null, [], { irrigationInches: -1 }, { irrigationInches: 31 }, { irrigationInches: '10' }, { maxCornYears: 1.5 }, { excludeCrops: ['cotton'] }, { noSameCropBackToBack: 'true' }, { marketOutlets: ['online'] }, { unavailableEquipment: ['tractor'] }, { well: { gpm: 500 } }, { well: { gpm: 1, acres: 0, pumpingDays: 100, hoursPerDay: 24 } }, { unknown: true }]) {
+ for (const constraints of [null, [], { irrigationInches: -1 }, { irrigationInches: 31 }, { irrigationInches: '10' }, { maxCornYears: 1.5 }, { excludeCrops: ['not_a_crop'] }, { noSameCropBackToBack: 'true' }, { marketOutlets: ['online'] }, { unavailableEquipment: ['tractor'] }, { well: { gpm: 500 } }, { well: { gpm: 1, acres: 0, pumpingDays: 100, hoursPerDay: 24 } }, { unknown: true }]) {
   expect(typeof validatePlanRequest({ ...base, constraints })).toBe('string');
  }
 });

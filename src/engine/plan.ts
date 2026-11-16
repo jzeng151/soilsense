@@ -180,7 +180,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
 
   /** Everything that depends on how much water the field gets. */
   const plansFor = (w: WaterLevel, quick = false) => {
-    const cap = constraintWater(request.constraints);
+    const cap = waterCap;
     const full = w === "full" && !cap;
     const allowance = cap ? cap.seasonalCapInches * 25.4 : w === "limited" ? LIMITED_IRRIGATION_MM : 0;
     const cropClimate = cropClimateFor(full, true);

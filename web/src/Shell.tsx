@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState, lazy, Suspense } from "react";
 import { landingRedirect } from "./components/explore/location";
 const ExplorePage = lazy(() => import('./pages/ExplorePage').then(m => ({ default: m.ExplorePage })));
 const DemoFarmsPage = lazy(() => import('./pages/DemoFarmsPage').then(m => ({ default: m.DemoFarmsPage })));
-import { App } from "./App";
+import { FieldWatchPage } from "./pages/FieldWatchPage";
 import { LanguageProvider } from "./i18n";
 import { HowItWorksPage } from "./pages/HowItWorksPage";
 import { DocsAdmin } from "./components/DocsAdmin";
@@ -20,6 +20,7 @@ import { getMe, SIGNED_OUT_EVENT, signOut, type User } from "./auth";
 type WorkspaceRoute = Route | "admin/docs";
 const routeFromHash = (): WorkspaceRoute => {
   const h = window.location.hash;
+  if (h === "#/field-watch" || h === "#/planner") return "planner";
   if (h.startsWith("#/explore")) return "explore";
   if (h === "#/demo") return "demo";
   if (h === "#/admin/docs") return "admin/docs";
@@ -102,7 +103,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
   const go = useCallback((r: Route) => {
     setRoute(r);
     setSidebarOpen(false);
-    const hash = r === "planner" ? (exploreLanding ? "#/planner" : "#/") : `#/${r}`;
+    const hash = r === "planner" ? "#/field-watch" : `#/${r}`;
     if (window.location.hash !== hash) window.location.hash = hash;
   }, [exploreLanding]);
 
@@ -176,7 +177,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
                 <path d="M4 7h16M4 12h16M4 17h16" />
               </svg>
             </button>
-            <App />
+            <FieldWatchPage />
           </>
         )}
       </div>

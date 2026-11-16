@@ -1,0 +1,29 @@
+/* ESO panorama is decorative: CSS only, no image semantics or focus stop. The linked credit is real text. */
+.explore-page.is-globe .explore-map-area {
+  background-color: #090d14;
+  background-image: linear-gradient(rgba(5, 9, 17, .52), rgba(5, 9, 17, .52)), url('/images/eso0932a-milky-way.webp');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.explore-sky-credit {
+  position: absolute;
+  left: calc(var(--rail-clearance) + 14px);
+  bottom: 32px;
+  z-index: 7;
+  max-width: calc(100% - var(--rail-clearance) - 32px);
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(5, 9, 17, .90);
+  color: #fbf6ea;
+  font-size: 12px;
+  line-height: 1.5;
+  transition: left .18s ease;
+}
+.explore-sky-credit a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 700px) {
+  .explore-page.is-globe .explore-location-card { bottom: 94px; }
+  .explore-sky-credit { bottom: 28px; padding: 6px 8px; font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) { .explore-sky-credit { transition: none; } }

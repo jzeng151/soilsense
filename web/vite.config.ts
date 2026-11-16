@@ -11,6 +11,16 @@ export default defineConfig({
     outDir: fileURLToPath(new URL("../dist/web", import.meta.url)),
     emptyOutDir: true,
     sourcemap: true,
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            { name: "vendor-react", test: /node_modules[\\/](?:react|react-dom|scheduler)[\\/]/ },
+            { name: "vendor-map", test: /node_modules[\\/]leaflet[\\/]/ },
+          ],
+        },
+      },
+    },
   },
   server: {
     port: 5173,

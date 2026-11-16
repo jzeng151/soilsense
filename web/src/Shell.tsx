@@ -1,17 +1,17 @@
 import { useI18n } from "./i18n";
-import { useCallback, useEffect, useState } from "react";
-import { App } from "./App";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
+const App = lazy(() => import("./App").then(m => ({ default: m.App })));
 import { LanguageProvider } from "./i18n";
-import { HowItWorksPage } from "./pages/HowItWorksPage";
-import { DocsAdmin } from "./components/DocsAdmin";
+const HowItWorksPage = lazy(() => import("./pages/HowItWorksPage").then(m => ({ default: m.HowItWorksPage })));
+const DocsAdmin = lazy(() => import("./components/DocsAdmin").then(m => ({ default: m.DocsAdmin })));
 import type { UIMessage } from "ai";
 import { firstUserText, GUEST_ID, loadChats, newChatId, saveChats, titleFrom, type ScoutChat } from "./chats";
 import { Sidebar, type Route } from "./components/Sidebar";
-import { ScoutPage } from "./pages/ScoutPage";
-import { SettingsPage } from "./pages/SettingsPage";
-import { SourcesPage } from "./pages/SourcesPage";
-import { LivePage } from "./pages/LivePage";
-import { AuthPage } from "./pages/AuthPage";
+const ScoutPage = lazy(() => import("./pages/ScoutPage").then(m => ({ default: m.ScoutPage })));
+const SettingsPage = lazy(() => import("./pages/SettingsPage").then(m => ({ default: m.SettingsPage })));
+const SourcesPage = lazy(() => import("./pages/SourcesPage").then(m => ({ default: m.SourcesPage })));
+const LivePage = lazy(() => import("./pages/LivePage").then(m => ({ default: m.LivePage })));
+const AuthPage = lazy(() => import("./pages/AuthPage").then(m => ({ default: m.AuthPage })));
 import { getMe, SIGNED_OUT_EVENT, signOut, type User } from "./auth";
 
 type WorkspaceRoute = Route | "admin/docs";
@@ -125,6 +125,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
         }}
       />
       <div className="shell-main" id="content" tabIndex={-1}>
+        <Suspense fallback={<p role="status">{tx("Loading…")}</p>}>
         {route === "admin/docs" ? (
           <DocsAdmin />
         ) : route === "scout" ? (
@@ -157,6 +158,7 @@ function Workspace({ user, onSignedIn, onSignOut }: { user: User | null; onSigne
             <App />
           </>
         )}
+        </Suspense>
       </div>
     </div>
   );

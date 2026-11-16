@@ -1,3 +1,4 @@
+import { deferred } from "./components/deferred";
 import type { FieldBoundary } from "../../src/shared/fields";
 import { FieldBoundaryPicker, useBoundaryCatalog } from "./components/FieldBoundaryPicker";
 import { fieldPlanHistory, fieldPlanRequest, cdlToCropId, numberFields } from '../../src/shared/fields';
@@ -14,7 +15,7 @@ import type { FarmerConstraints } from '../../src/shared/constraints';
 import { ConstraintsPanel, ConstraintSummary } from './components/ConstraintsPanel';
 import { GoalPicker } from "./components/GoalPicker";
 import { PricePanel, type PriceDraft } from "./components/PricePanel";
-import { PriceRobustnessCard } from "./components/PriceRobustnessCard";
+const PriceRobustnessCard = deferred<Parameters<typeof import("./components/PriceRobustnessCard").PriceRobustnessCard>[0]>(() => import("./components/PriceRobustnessCard").then(m => ({ default: m.PriceRobustnessCard })));
 
 import { Glossary, Definition } from "./components/Glossary";
 import { askQuestion, fetchField, fetchPlan } from "./api";
@@ -29,20 +30,20 @@ import { CROP_COLORS, PlanRow, TopPlan } from "./components/PlanCard";
 import { LogoMark } from "./components/Logo";
 import { Sprout } from "./components/Sprout";
 
-import { VegetationCard } from "./components/VegetationCard";
+const VegetationCard = deferred<Parameters<typeof import("./components/VegetationCard").VegetationCard>[0]>(() => import("./components/VegetationCard").then(m => ({ default: m.VegetationCard })));
 
-import { CropTimingEvidence } from "./components/CropTimingEvidence";
-import { SmapCard } from "./components/SmapCard";
-import { SensorFitCard } from "./components/SensorFitCard";
-import { GraceWellsCard } from "./components/GraceWellsCard";
-import { FarmerConstraintEvidence } from "./components/FarmerConstraintEvidence";
-import { EconomicsCard } from "./components/EconomicsCard";
-import { HistoricalScenarios } from "./components/HistoricalScenarios";
+const CropTimingEvidence = deferred<Parameters<typeof import("./components/CropTimingEvidence").CropTimingEvidence>[0]>(() => import("./components/CropTimingEvidence").then(m => ({ default: m.CropTimingEvidence })));
+const SmapCard = deferred<Parameters<typeof import("./components/SmapCard").SmapCard>[0]>(() => import("./components/SmapCard").then(m => ({ default: m.SmapCard })));
+const SensorFitCard = deferred<Parameters<typeof import("./components/SensorFitCard").SensorFitCard>[0]>(() => import("./components/SensorFitCard").then(m => ({ default: m.SensorFitCard })));
+const GraceWellsCard = deferred<Parameters<typeof import("./components/GraceWellsCard").GraceWellsCard>[0]>(() => import("./components/GraceWellsCard").then(m => ({ default: m.GraceWellsCard })));
+const FarmerConstraintEvidence = deferred<Parameters<typeof import("./components/FarmerConstraintEvidence").FarmerConstraintEvidence>[0]>(() => import("./components/FarmerConstraintEvidence").then(m => ({ default: m.FarmerConstraintEvidence })));
+const EconomicsCard = deferred<Parameters<typeof import("./components/EconomicsCard").EconomicsCard>[0]>(() => import("./components/EconomicsCard").then(m => ({ default: m.EconomicsCard })));
+const HistoricalScenarios = deferred<Parameters<typeof import("./components/HistoricalScenarios").HistoricalScenarios>[0]>(() => import("./components/HistoricalScenarios").then(m => ({ default: m.HistoricalScenarios })));
 
 import { FieldWatchCard } from "./components/FieldWatchCard";
 import { MyFieldsPanel } from "./components/MyFieldsPanel";
 import { UsdmContext } from "./components/UsdmContext";
-import { WindScreenCard } from "./components/WindScreenCard";
+const WindScreenCard = deferred<Parameters<typeof import("./components/WindScreenCard").WindScreenCard>[0]>(() => import("./components/WindScreenCard").then(m => ({ default: m.WindScreenCard })));
 import { TrendChart, trendText, trendTone } from "./components/TrendChart";
 
 // A simple three-step journey: 1) find your field, 2) three quick questions, 3) your plan.

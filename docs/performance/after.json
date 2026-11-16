@@ -1,0 +1,216 @@
+{
+  "browser": "159.0.8154.6",
+  "base": "http://127.0.0.1:8818",
+  "results": [
+    {
+      "profile": "desktop",
+      "hash": "#/",
+      "run": 1,
+      "lcp": 988,
+      "ready": 582.5999999046326,
+      "jsTransferredBytes": 252939
+    },
+    {
+      "profile": "desktop",
+      "hash": "#/",
+      "run": 2,
+      "lcp": 772,
+      "ready": 469.09999990463257,
+      "jsTransferredBytes": 252881
+    },
+    {
+      "profile": "desktop",
+      "hash": "#/",
+      "run": 3,
+      "lcp": 816,
+      "ready": 464.30000019073486,
+      "jsTransferredBytes": 252886
+    },
+    {
+      "profile": "desktop",
+      "hash": "#/how-it-works",
+      "run": 1,
+      "lcp": 488,
+      "ready": 474.1000003814697,
+      "jsTransferredBytes": 189839
+    },
+    {
+      "profile": "desktop",
+      "hash": "#/how-it-works",
+      "run": 2,
+      "lcp": 452,
+      "ready": 436.80000019073486,
+      "jsTransferredBytes": 189810
+    },
+    {
+      "profile": "desktop",
+      "hash": "#/how-it-works",
+      "run": 3,
+      "lcp": 464,
+      "ready": 451,
+      "jsTransferredBytes": 189820
+    },
+    {
+      "profile": "Fast 3G / 4x CPU",
+      "hash": "#/",
+      "run": 1,
+      "lcp": 2836,
+      "ready": 2813.7999997138977,
+      "jsTransferredBytes": 252886
+    },
+    {
+      "profile": "Fast 3G / 4x CPU",
+      "hash": "#/",
+      "run": 2,
+      "lcp": 2828,
+      "ready": 2800.5,
+      "jsTransferredBytes": 252886
+    },
+    {
+      "profile": "Fast 3G / 4x CPU",
+      "hash": "#/",
+      "run": 3,
+      "lcp": 2696,
+      "ready": 2680,
+      "jsTransferredBytes": 252886
+    },
+    {
+      "profile": "Fast 3G / 4x CPU",
+      "hash": "#/how-it-works",
+      "run": 1,
+      "lcp": 2104,
+      "ready": 2072.2000002861023,
+      "jsTransferredBytes": 189835
+    },
+    {
+      "profile": "Fast 3G / 4x CPU",
+      "hash": "#/how-it-works",
+      "run": 2,
+      "lcp": 2080,
+      "ready": 2046.5999999046326,
+      "jsTransferredBytes": 189826
+    },
+    {
+      "profile": "Fast 3G / 4x CPU",
+      "hash": "#/how-it-works",
+      "run": 3,
+      "lcp": 2116,
+      "ready": 2071.0999999046326,
+      "jsTransferredBytes": 189834
+    }
+  ],
+  "chunks": [
+    {
+      "name": "api-BQRM3piy.js",
+      "bytes": 2701
+    },
+    {
+      "name": "App-DVStNgfg.js",
+      "bytes": 185045
+    },
+    {
+      "name": "AuthPage-pPh2RVv6.js",
+      "bytes": 4092
+    },
+    {
+      "name": "crops-CHeVDmNx.js",
+      "bytes": 4147
+    },
+    {
+      "name": "CropTimingEvidence-BTn93Cjj.js",
+      "bytes": 4639
+    },
+    {
+      "name": "DocsAdmin-BKu1YZYA.js",
+      "bytes": 21177
+    },
+    {
+      "name": "EconomicsCard-Dh7zB6Gv.js",
+      "bytes": 8977
+    },
+    {
+      "name": "FarmerConstraintEvidence-Y2RCgrzT.js",
+      "bytes": 7311
+    },
+    {
+      "name": "GraceWellsCard-DFjNzOwd.js",
+      "bytes": 6310
+    },
+    {
+      "name": "HistoricalScenarios-De-fkvK9.js",
+      "bytes": 3418
+    },
+    {
+      "name": "HowItWorksPage-y7AgxdQV.js",
+      "bytes": 9932
+    },
+    {
+      "name": "i18n-ko-B1oAOEL1.js",
+      "bytes": 174790
+    },
+    {
+      "name": "i18n-pages-BtfJdBcF.js",
+      "bytes": 41986
+    },
+    {
+      "name": "index-DSBgSB6_.js",
+      "bytes": 203203
+    },
+    {
+      "name": "lang-DMtHqMJ3.js",
+      "bytes": 109608
+    },
+    {
+      "name": "LivePage-QMVnPwOu.js",
+      "bytes": 13746
+    },
+    {
+      "name": "PriceRobustnessCard-DMo8KhBd.js",
+      "bytes": 1801
+    },
+    {
+      "name": "rolldown-runtime-XKyaHtl9.js",
+      "bytes": 726
+    },
+    {
+      "name": "ScoutPage-DCMhkgSs.js",
+      "bytes": 199753
+    },
+    {
+      "name": "SensorFitCard-Q4Ot9ChM.js",
+      "bytes": 9415
+    },
+    {
+      "name": "SettingsPage-DBrN_xD-.js",
+      "bytes": 17510
+    },
+    {
+      "name": "SmapCard-Bo73Vzpn.js",
+      "bytes": 2869
+    },
+    {
+      "name": "SourcesPage-CBDc7wZI.js",
+      "bytes": 7643
+    },
+    {
+      "name": "Sprout-Cx_xUhgn.js",
+      "bytes": 20697
+    },
+    {
+      "name": "VegetationCard-BqCUyR5S.js",
+      "bytes": 3991
+    },
+    {
+      "name": "vendor-map-DI4ACfwM.js",
+      "bytes": 148652
+    },
+    {
+      "name": "vendor-react-KPuNr9iS.js",
+      "bytes": 218797
+    },
+    {
+      "name": "WindScreenCard-C5zrfjMI.js",
+      "bytes": 9482
+    }
+  ]
+}

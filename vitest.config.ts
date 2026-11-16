@@ -14,6 +14,7 @@ export default defineConfig({
   test: {
     include: ["test/**/*.test.ts", "web/src/**/*.test.ts"],
     environment: "node",
+    setupFiles: ["./test/setup-i18n.ts"],
     testTimeout: 20000,
   },
 });

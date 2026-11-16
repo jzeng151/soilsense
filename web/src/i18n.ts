@@ -4,7 +4,15 @@ import type { CropId } from "../../src/shared/types";
 import { constraintMessages } from './i18n-constraints';
 import { fieldMessages } from "./i18n-fields";
 import { cardMessages } from "./i18n-cards";
-import { korean } from "./i18n-ko";
+// Only the selected language is fetched; failures keep the English fallback usable.
+let korean: Partial<Record<string, string>> = {};
+let koreanLoad: Promise<void> | undefined;
+export function loadLanguage(language: Language): Promise<void> {
+  if (language !== "ko") return Promise.resolve();
+  return koreanLoad ??= import("./i18n-ko").then(module => {
+    Object.assign(korean, module.korean);
+  }).catch(error => { koreanLoad = undefined; throw error; });
+}
 import { LANGUAGES, parseLanguage, type Language } from "../../src/shared/language";
 export type { Language } from "../../src/shared/language";
 import { priceMessages } from "./i18n-prices";
@@ -218,7 +226,7 @@ export const messages = {
 
 
 /** Judge/farmer guide: paired copy keeps the tables and diagram fully bilingual. */
-const bilingual = (en: string, es: string): Record<Language, string> => Object.fromEntries(LANGUAGES.map(language => [language, language === "es" ? es : language === "ko" ? korean[en] ?? en : en])) as Record<Language, string>;
+const bilingual = (en: string, es: string): Record<Language, string> => Object.defineProperty(Object.fromEntries(LANGUAGES.map(language => [language, language === "es" ? es : en])), "ko", { enumerable: true, get: () => korean[en] ?? en }) as Record<Language, string>;
 export const howItWorksCopy = {
   title: bilingual("How it works", "Cómo funciona"),
   menu: bilingual("Open sidebar", "Abrir navegación"),
@@ -318,6 +326,13 @@ const LanguageContext = createContext<typeof defaultLanguage | null>(null);
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const parent = useContext(LanguageContext);
   const [language, setLanguage] = useState<Language>(initialLanguage);
+  const [, refreshDictionary] = useState(0);
+  useEffect(() => {
+    if (parent || language !== "ko") return;
+    let active = true;
+    void loadLanguage(language).then(() => { if (active) refreshDictionary(n => n + 1); }).catch(() => { /* English remains available offline. */ });
+    return () => { active = false; };
+  }, [language, parent]);
   useEffect(() => {
     if (parent) return;
     const doc = (globalThis as { document?: { documentElement: { lang: string } } }).document;

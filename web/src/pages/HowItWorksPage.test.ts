@@ -16,7 +16,7 @@ it.each(["en", "es"] as const)("opens the public how-it-works route in %s with s
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(createElement(Shell)));
+    await act(async () => { root.render(createElement(Shell)); await import("./HowItWorksPage"); });
     expect(container.querySelector("h1")?.textContent).toBe(language === "en" ? "How it works" : "Cómo funciona");
     const nav = container.querySelector('a[href="#/how-it-works"]');
     expect(nav?.getAttribute("aria-current")).toBe("page");
@@ -40,7 +40,7 @@ it.each(["en", "es"] as const)("opens the public how-it-works route in %s with s
     const switchTo = language === "en" ? "Español" : "English";
     await act(async () => container.querySelector<HTMLButtonElement>(`button[aria-label="${switchTo}"]`)!.click());
     expect(container.querySelector("h1")?.textContent).toBe(language === "en" ? "Cómo funciona" : "How it works");
-    await act(async () => container.querySelector<HTMLAnchorElement>('a[href="#/sources"]')!.click());
+    await act(async () => { container.querySelector<HTMLAnchorElement>('a[href="#/sources"]')!.click(); await import("./SourcesPage"); });
     expect(container.querySelector("h1")?.textContent).toBe(language === "en" ? "De dónde vienen nuestros datos" : "Where our data comes from");
     await act(async () => container.querySelector<HTMLAnchorElement>('a[href="#/how-it-works"]')!.click());
     expect(container.querySelector("h1")?.textContent).toBe(language === "en" ? "Cómo funciona" : "How it works");

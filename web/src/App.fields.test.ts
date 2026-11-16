@@ -79,5 +79,5 @@ it('flag off ignores stored labels and preserves the original point-based reques
   expect(el.textContent).not.toContain('Choose public field outlines');
   expect(el.textContent).not.toContain('Stored field');
   await click('Kansas');await click('Yes, this is my field →');await click('Corn');await click('Show my plan →');
-  expect(fetchPlan).toHaveBeenLastCalledWith({lat:38.1095,lon:-100.706,irrigated:true,water:'full',priority:'balanced',goals:[],recentCrops:['corn','corn'],language:'en'},expect.any(AbortSignal));
+  expect(fetchPlan).toHaveBeenLastCalledWith({lat:38.1095,lon:-100.706,irrigated:true,water:'full',priority:'balanced',goals:[],recentCrops:['corn','corn'],language:'en',priceScenarios:true},expect.any(AbortSignal));
 });

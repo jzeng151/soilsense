@@ -1,3 +1,5 @@
+import type { FieldBoundary } from "../../src/shared/fields";
+import { FieldBoundaryPicker, useBoundaryCatalog } from "./components/FieldBoundaryPicker";
 import "./i18n.css";
 import { useI18n, translate, translateKnown, cropName } from "./i18n";
 import type { Language, TranslationKey } from "./i18n";
@@ -22,6 +24,7 @@ import { VegetationCard } from "./components/VegetationCard";
 
 import { CropTimingEvidence } from "./components/CropTimingEvidence";
 import { SmapCard } from "./components/SmapCard";
+import { SensorFitCard } from "./components/SensorFitCard";
 import { GraceWellsCard } from "./components/GraceWellsCard";
 import { FarmerConstraintEvidence } from "./components/FarmerConstraintEvidence";
 import { EconomicsCard } from "./components/EconomicsCard";
@@ -176,6 +179,8 @@ function MainFlow() {
   const { language, setLanguage, t } = useI18n();
   const [step, setStep] = useState<Step>("field");
   const [point, setPoint] = useState<{ lat: number; lon: number } | null>(null);
+  const [selectedFields, setSelectedFields] = useState<FieldBoundary[]>([]);
+  const boundaryCatalog = useBoundaryCatalog(point);
   const [focus, setFocus] = useState<{ lat: number; lon: number; zoom: number; key: number } | null>(null);
   const [zip, setZip] = useState("");
   const [zipMsg, setZipMsg] = useState<{ key: TranslationKey; values?: Record<string, string | number> } | null>(null);
@@ -346,6 +351,7 @@ function MainFlow() {
 
   const startOver = () => {
     setPoint(null);
+    setSelectedFields([]);
     setField(null);
     setPlan(null);
     setThisYear("");
@@ -416,7 +422,17 @@ function MainFlow() {
             </p>
 
             <p className="jr-tap">{t("Then tap your field on the map.")}</p>
-            <MapPicker point={point} onPick={pick} focus={focus} />
+            <MapPicker point={point} onPick={pick} focus={focus}
+              boundaries={boundaryCatalog.enabled ? boundaryCatalog.fields : undefined}
+              selectedFields={boundaryCatalog.enabled ? selectedFields : undefined}
+              onSelectFields={boundaryCatalog.enabled ? setSelectedFields : undefined} />
+            {boundaryCatalog.enabled && <FieldBoundaryPicker {...boundaryCatalog}
+              selected={selectedFields} onChange={setSelectedFields}
+              onUseCentroid={f => { void pick(f.centroid.lat, f.centroid.lon); }}
+              onShowArea={() => {
+                const area = boundaryCatalog.areas.find(a => a.id === boundaryCatalog.area);
+                if (area) setFocus({ lat: (area.bbox[1]+area.bbox[3])/2, lon: (area.bbox[0]+area.bbox[2])/2, zoom: 14, key: Date.now() });
+              }} />}
 
             <p className="jr-examples">
               {t("No field handy? Try an example:")}{" "}
@@ -644,6 +660,7 @@ function MainFlow() {
                 )}
 
                 {/* stretch: data evidence */}
+                <SensorFitCard fields={selectedFields} plan={plan} />
                 <UsdmContext plan={plan} />
                 <WindScreenCard plan={plan} />
                 <EconomicsCard plan={plan} />

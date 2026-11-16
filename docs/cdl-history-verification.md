@@ -52,4 +52,8 @@ Historical Final retention is extended from 30 to 365 days consistently for meta
 
 Local regression tests cover cross-field cache poisoning, memory/D1 precedence, non-sliding cooldown/recovery, the observed XML wrapper/fault, partial retry, a stalled HTTP-200 body, actual committed demo CSB coverage/year filtering, fallback-to-live recovery, and durable comparison reads after 31 days (Final available, Late expired) and 366 days (Final expired). The IMERG retention test uses explicitly synthetic rain and a D1-shaped test double, not additional NASA observations. Existing live NASA binary fixture tests still run in the full suite.
 
+A local workerd instance on assigned port 8814 (offline config, fresh local D1 migrations) also returned Champaign's complete 2016–2025 live-CDL history via `/api/field` in 1.889 seconds; an unwarmed local Final comparison correctly remained unavailable. This exercised the modified Worker transport, not only mocked fetch tests.
+
+After merging `origin/next` at `57b35d2`, typecheck and production build passed; the full suite passed **694 tests**, with **14 skipped** (101 passed files, six skipped). Existing test output included localhost:3000 connection diagnostics despite exit 0; the build retained its large-chunk warning.
+
 No assertion here claims the modified Worker is deployed or that remote IMERG warming succeeded. Operator POST followed by exact public GET read-back is still required.

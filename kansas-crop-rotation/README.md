@@ -1,11 +1,13 @@
 # Kansas Crop Rotation Advice: code and data (NASA Space Apps 2026)
 
-> **Copy for the SoilSense repo - frozen snapshot of 2026-11-14 23:45 UTC (data through 2026-11-09).** This folder
-> holds the Kansas crop rotation data pipeline (code, data, reports) as submitted. It is NOT refreshed: the app does not
-> read these files. It reads the live Cloudflare link below, which the weekly refresh updates every Monday. For the newest
-> code (including the security hardening of 2026-11-15) see the live repo. The live, auto-refreshing version - including the weekly GitHub Action that
+> **Copy for the SoilSense repo - bundled reference snapshot.** `data/app_rotation_advice.json` was generated
+> 2026-11-14 23:45 UTC; its NASA POWER data runs through 2026-11-09 (the drought data runs to 2026-11-10). This folder
+> holds the Kansas crop rotation data pipeline (code, data, reports) and is NOT refreshed. The app normally reads the
+> published R2 advice; Second Opinion uses this bundled snapshot as a labelled fallback when the live request fails.
+> A refresh of the published file is scheduled for Mondays and depends on that refresh succeeding. For the newest
+> code (including the security hardening of 2026-11-15) see the upstream repo. The upstream version - including the weekly GitHub Action that
 > publishes the app file - lives in https://github.com/vp822-arch/spaceapps2026-kansas-crop-rotation .
-> The app reads: https://pub-fe3948f31a9c462890b089ed5356c336.r2.dev/app_rotation_advice.json
+> Published advice (R2): https://pub-fe3948f31a9c462890b089ed5356c336.r2.dev/app_rotation_advice.json
 > Run it from inside this folder: `cd kansas-crop-rotation && bash scripts/run_weekly.sh --skip-download --no-load`
 
 

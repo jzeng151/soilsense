@@ -1,4 +1,6 @@
 export const assistantMessages = {
+  "Answer stopped early. Ask Sprout to continue.": "La respuesta se interrumpió. Pide a Sprout que continúe.",
+  "Source unavailable ({id})": "Fuente no disponible ({id})",
   "Details": "Detalles",
   "You": "Tú",
   "Sprout": "Sprout",

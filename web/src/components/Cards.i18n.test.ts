@@ -210,7 +210,8 @@ describe("Spanish plan and evidence cards", () => {
     await render(group(h(ResearchNote, { note }), h(ScoutMessage, { message: { id: "m1", role: "assistant", parts: [{ type: "reasoning", text: "Original model reasoning." }, { type: "text", text: "Original model output about corn." }] }, streaming: false })));
     expect(container.textContent).toContain("Nota de investigación · Investigación consultada");
     expect(container.textContent).toContain("Sorgo de grano, Trigo de invierno");
-    expect(container.textContent).toContain("Proceso de razonamiento");
+    expect(container.textContent).not.toContain("Proceso de razonamiento");
+    expect(container.textContent).not.toContain("Original model reasoning.");
     expect(container.textContent).toContain("Verbatim English research quotation.");
     expect(container.textContent).toContain("Original model output about corn.");
   });

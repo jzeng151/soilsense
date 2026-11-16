@@ -2,8 +2,8 @@
 // SoilSense data source (geocoding, USDA soil + crop history, NASA POWER climate trends,
 // the rotation engine, the crop catalog and plan-usage analytics).
 //
-// The response is an AI SDK UI message stream: the client sees the model's reasoning, each tool
-// call as it starts and finishes (the "analysis"), the answer text, and the data sources used.
+// The response is an AI SDK UI message stream: reasoning is excluded; the client renders
+// a generic pending indicator, the answer, completed tool summaries and verified data sources.
 
 import { firstWorking, googleModel, workersModel, GENERATION_FALLBACK } from "../lib/ai";
 import {
@@ -44,7 +44,7 @@ const DEFAULT_WORKERS_MODEL = "@cf/google/gemma-4-26b-a4b-it";
 const MAX_STEPS = 8;
 const MAX_HISTORY = 40;
 
-const INSTRUCTIONS = `You are Sprout, the friendly AI field scout inside Soil Sense, a climate-aware crop rotation advisor for US farms.
+export const INSTRUCTIONS = `You are Sprout, the friendly AI field scout inside Soil Sense, a climate-aware crop rotation advisor for US farms.
 You can call tools that reach every Soil Sense data source:
 - find_location: turn a 5-digit US ZIP code into coordinates.
 - get_field_data: USDA SSURGO soil and USDA Cropland Data Layer crop history for a point.
@@ -59,7 +59,13 @@ Rules:
 - Use tools whenever a question depends on data. Never invent numbers; quote what the tools return and name the source (NASA POWER, USDA SSURGO, USDA CDL, USDA NASS).
 - Coverage is the contiguous United States only. If the user gives a place without coordinates or a ZIP, ask for a ZIP code or lat/lon.
 - If the user does not say whether a field is irrigated, assume rain-fed and say so. Default priority is "balanced".
-- A climate trend is "real" only if the tool marks it significant (Mann-Kendall p < 0.05).
+- Describe supported climate trends as changes in past weather, not a forecast or proof of cause. A statistical test does not make a trend "real" or certain.
+- Use plain language: "more accumulated warmth" before "growing degree days", "a clear trend in this weather history" before statistical jargon. Lead with why the plan fits the selected water supply and priority, then its trade-off.
+- Risk and reliability represent modeled stress, not observed crop failures or predictions of future failure dates. "21 years" means 21 weather years in the replay, never "in 21 years". Insurance payouts describe regional historical claims, not the chance of this field failing. State the denominator, period and scope when giving a number.
+- Do not claim fewer bad years or reduced failures from rotation alone. Compare modeled stressed years only when the tool supplies both the selected plan and current-practice values, and the selected value is actually lower. Otherwise say the evidence does not establish that improvement.
+- Use Unicode arrows (→), not LaTex. Separate headings and lists with newlines. Never output a thought process, internal deliberation or tool-call narration.
+- Cite only IDs returned by tools this turn: plan fact IDs, research R IDs, history F IDs and fertilizer G IDs. Name the source in prose when possible. Never invent [soil] or another citation ID. Research about fallow water storage is trial-specific, not a measured percentage for this field.
+- Finish the explanation with a complete sentence. Prefer a short complete answer over a long technical answer.
 - Be concise and practical: short paragraphs, bullet lists, and markdown tables when comparing options. Use US units.
 - If someone asks your name, you are Sprout.
 - This is decision support, not a guarantee: remind the user to check the numbers in their plan before acting on them.`;
@@ -110,6 +116,8 @@ export function compactPlan(p: PlanResponse, fertilizer = new FertilizerEvidence
     },
     rankedPlans: p.plans.map((r) => ({
       label: r.label,
+      badYearsIn10: r.badYearsIn10,
+      riskMeaning: "Modeled severe stress in historical weather replay; not observed harvest failures or a forecast.",
       scores: r.scores,
       avgNetReturnPerAcre: r.avgNetReturnPerAcre,
       totalNitrogenLbPerAcre: r.totalNitrogenLbPerAcre,
@@ -126,8 +134,8 @@ export function compactPlan(p: PlanResponse, fertilizer = new FertilizerEvidence
       notes: r.notes,
       fertilizerFacts: fertilizer.add(planFertilizer(r, p)),
     })),
-    currentPractice: p.currentPractice ? { label: p.currentPractice.label, scores: p.currentPractice.scores, avgNetReturnPerAcre: p.currentPractice.avgNetReturnPerAcre } : null,
-    facts: p.facts.map((f) => `[${f.kind}${f.significant ? ", significant" : ""}] ${f.text} (${f.source})`),
+    currentPractice: p.currentPractice ? { badYearsIn10: p.currentPractice.badYearsIn10, label: p.currentPractice.label, scores: p.currentPractice.scores, avgNetReturnPerAcre: p.currentPractice.avgNetReturnPerAcre } : null,
+    facts: p.facts.map(({ id, kind, text, source, significant }) => ({ id, kind, text, source, significant })),
     summary: p.explanation.summary,
     assumptions: p.assumptions,
   };
@@ -224,6 +232,7 @@ export function makeTools(env: Env, writer: UIMessageStreamWriter, research: Cha
         const c = coords(lat, lon);
         const plan = await makePlan(env, { ...c, irrigated: irrigated === true, priority: priority ?? "balanced", language, recentCrops: recent_crops?.length ? recent_crops : undefined });
         cite("build_rotation_plan");
+        writer.write({ type: "data-plan-facts", data: plan.facts.map(({ id, text, source }) => ({ id, text, source })) });
         return compactPlan(plan, fertilizer);
       },
     }),
@@ -337,14 +346,14 @@ ${responseLanguageInstruction(language)}`,
           stopWhen: stepCountIs(MAX_STEPS),
           temperature: 0.3,
           maxRetries: 0,
-          maxOutputTokens: 1200,
-          ...(m.provider === "gemini" ? { providerOptions: { google: { thinkingConfig: { includeThoughts: true } } } } : {}),
+          maxOutputTokens: 2000,
+          ...(m.provider === "gemini" ? { providerOptions: { google: { thinkingConfig: { includeThoughts: false } } } } : {}),
         }).stream,
       );
       writer.merge(
         checkedCitationStream(toUIMessageStream({
           stream,
-          sendReasoning: true,
+          sendReasoning: false,
           sendSources: true,
           // Which model answered (shown under the reply; Workers AI first, Gemini as backup).
           messageMetadata: ({ part }) => (part.type === "start" ? { model: model.id, provider: model.provider } : undefined),

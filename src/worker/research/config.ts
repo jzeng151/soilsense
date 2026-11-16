@@ -40,7 +40,7 @@ export const MIN_SCORE = 0.45;
 export const GENERATION = {
   model: "@cf/google/gemma-4-26b-a4b-it",
   /** Bump when the prompt or output schema changes (part of every comparison key). */
-  promptVersion: "explain-v1",
+  promptVersion: "explain-v2-plain-language",
   maxTokens: 400,
   temperature: 0.2,
   timeoutMs: 12_000,

@@ -1,5 +1,7 @@
 /** Korean copy keyed by the complete English UI text. */
 export const korean: Partial<Record<string, string>> = {
+  "Answer stopped early. Ask Sprout to continue.": "답변이 중간에 멈췄습니다. Sprout에게 계속해 달라고 요청하세요.",
+  "Source unavailable ({id})": "출처를 확인할 수 없음 ({id})",
   "Your crop prices (optional)": "내 작물 가격(선택 사항)",
   "Leave blanks for USDA prices or approximate defaults. Prices change profit scoring and net returns, not weather or yields.": "비워 두면 USDA 가격 또는 대략적인 기본값을 사용합니다. 가격은 수익성 점수와 순수익에 영향을 주며 기상이나 수확량은 바꾸지 않습니다.",
   "$/bu": "$/bu",

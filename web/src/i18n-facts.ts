@@ -74,31 +74,6 @@ const historyCrop = (value: string) => Object.hasOwn(historyCrops, value) ? hist
 const area = (value: string) => value === "county" ? "카운티" : value.endsWith(" district") ? `${value.slice(0, -9)} 지구` : value;
 const practice = (value: string) => value === "rain-fed" ? "천수 재배" : "관개 재배";
 
-const measurementTextures: Record<string, string> = {
-  sand: "사토", sandy_loam: "사양토", loam: "양토",
-  silt_loam: "미사질양토", clay_loam: "식양토", clay: "식토",
-};
-
-/** Whole farmer-measurement templates from engine/plan.ts; citations are never rewritten. */
-function measurementFactText(value: string): string | null {
-  let m = /^Using your soil test (pH|organic matter|available water capacity) (\d+(?:\.\d+)?(?:e[+-]?\d+)?)(%| cm\/cm|) instead of the soil map's (unavailable|\d+(?:\.\d+)?\3)\.(?: Approximate capacity inferred from your (sand|sandy_loam|loam|silt_loam|clay_loam|clay) texture; not measured\.)?$/.exec(value);
-  if (m) {
-    const unit = m[1] === "pH" ? "" : m[1] === "organic matter" ? "%" : " cm/cm";
-    if (m[3] !== unit || (m[5] && m[1] !== "available water capacity")) return null;
-    const label = m[1] === "pH" ? "pH" : m[1] === "organic matter" ? "유기물" : "유효수분 보유능";
-    const mapped = m[4] === "unavailable" ? "자료 없음" : m[4];
-    const text = `토양 지도 값 ${mapped} 대신 입력한 토양 검사 ${label} ${m[2]}${unit} 값을 사용합니다.`;
-    const texture = m[5] ? measurementTextures[m[5]] : null;
-    return text + (texture ? ` 입력한 ${texture} 토성에서 추정한 대략적인 보유능이며 실측값이 아닙니다.` : "");
-  }
-  if (value === "Your organic matter replaces the map value in soil evidence; the model does not infer yield or water capacity changes from organic matter.") return "입력한 유기물 값은 토양 근거에서 지도 값을 대체합니다. 모델은 유기물로부터 수량이나 수분 보유능의 변화를 추정하지 않습니다.";
-  m = /^Calibrated with your (\d+) years of (corn|soybean|winter wheat|oats|alfalfa \(hay\)|grain sorghum) yields \((\d{4}(?:, \d{4})*)\), average (\d+\.\d) (bu\/acre|US short tons\/acre)\. Regional potential (\d+\.\d) → (\d+\.\d): additive 50% adjustment toward average ÷ modeled weather fraction (\d+\.\d{3}), bounded to 60–115% of the state value\. (\d+) years outside weather history use the last-10-year fraction\. Assumes the selected water supply and usual previous crop; not independent validation\.$/.exec(value);
-  if (m) return `입력한 ${crop(m[2]!)} 수량 ${m[1]}년 자료(${m[3]}), 평균 ${m[4]} ${m[5]}로 보정했습니다. 지역 잠재수량 ${m[6]} → ${m[7]}: 평균 ÷ 모델 기상 비율 ${m[8]}을 향해 차이의 50%를 더해 조정하며, 주 기준값의 60–115%로 제한합니다. 기상 이력 밖의 ${m[9]}년에는 최근 10년의 비율을 사용합니다. 선택한 용수 공급과 통상적인 전작을 가정하며, 독립적인 검증이 아닙니다.`;
-  m = /^Your (corn|soybean|winter wheat|oats|alfalfa \(hay\)|grain sorghum) yields are stored in this browser, but this crop is not modeled in this region; no calibration was applied\.$/.exec(value);
-  if (m) return `입력한 ${crop(m[1]!)} 수량은 이 브라우저에 저장되지만, 이 지역에서는 해당 작물을 모델링하지 않으므로 보정을 적용하지 않았습니다.`;
-  return null;
-}
-
 /** Only complete deterministic engine templates are translated; provider prose stays verbatim. */
 export function factText(value: string, language: Language): string {
   if (language === "ko" || language === "zh-Hans") {
@@ -107,8 +82,6 @@ export function factText(value: string, language: Language): string {
   }
   if (language === "zh-Hans") return chineseFactText(value);
   if (language !== "ko") return value;
-  const measurement = measurementFactText(value);
-  if (measurement !== null) return measurement;
   if (Object.hasOwn(staticFacts, value)) return staticFacts[value]!;
 
   let m = /^(.+) is (rising|falling): ([+−-]?\d+(?:\.\d+)?) (in|days|°F·days|heat units|°F|%) per decade since (\d{4})(?: \(statistically significant, p = ([\d.]+)\))?\.$/.exec(value);

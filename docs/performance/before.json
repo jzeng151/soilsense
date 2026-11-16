@@ -6,97 +6,109 @@
       "profile": "desktop",
       "hash": "#/",
       "run": 1,
-      "lcp": 664,
-      "ready": 247.80000019073486,
-      "jsTransferredBytes": 477757
+      "lcp": 604,
+      "ready": 243.5,
+      "jsTransferredBytes": 477758,
+      "planButtonReadyMs": 298.59999990463257
     },
     {
       "profile": "desktop",
       "hash": "#/",
       "run": 2,
-      "lcp": 656,
-      "ready": 282.09999990463257,
-      "jsTransferredBytes": 477749
+      "lcp": 544,
+      "ready": 209.10000038146973,
+      "jsTransferredBytes": 477758,
+      "planButtonReadyMs": 301.30000019073486
     },
     {
       "profile": "desktop",
       "hash": "#/",
       "run": 3,
-      "lcp": 552,
-      "ready": 227.2000002861023,
-      "jsTransferredBytes": 477764
+      "lcp": 588,
+      "ready": 213.69999980926514,
+      "jsTransferredBytes": 477765,
+      "planButtonReadyMs": 281.59999990463257
     },
     {
       "profile": "desktop",
       "hash": "#/how-it-works",
       "run": 1,
-      "lcp": 252,
-      "ready": 222.7999997138977,
-      "jsTransferredBytes": 477749
+      "lcp": 220,
+      "ready": 196.69999980926514,
+      "jsTransferredBytes": 477750,
+      "planButtonReadyMs": null
     },
     {
       "profile": "desktop",
       "hash": "#/how-it-works",
       "run": 2,
-      "lcp": 252,
-      "ready": 226.2000002861023,
-      "jsTransferredBytes": 477744
+      "lcp": 216,
+      "ready": 191.30000019073486,
+      "jsTransferredBytes": 477745,
+      "planButtonReadyMs": null
     },
     {
       "profile": "desktop",
       "hash": "#/how-it-works",
       "run": 3,
-      "lcp": 260,
-      "ready": 229.59999990463257,
-      "jsTransferredBytes": 477749
+      "lcp": 212,
+      "ready": 181.89999961853027,
+      "jsTransferredBytes": 477750,
+      "planButtonReadyMs": null
     },
     {
       "profile": "Fast 3G / 4x CPU",
       "hash": "#/",
       "run": 1,
-      "lcp": 3808,
-      "ready": 3792.2000002861023,
-      "jsTransferredBytes": 477751
+      "lcp": 3688,
+      "ready": 3667.0999999046326,
+      "jsTransferredBytes": 477752,
+      "planButtonReadyMs": 4367.300000190735
     },
     {
       "profile": "Fast 3G / 4x CPU",
       "hash": "#/",
       "run": 2,
-      "lcp": 4464,
-      "ready": 4411.700000286102,
-      "jsTransferredBytes": 477764
+      "lcp": 3788,
+      "ready": 3767.1000003814697,
+      "jsTransferredBytes": 477765,
+      "planButtonReadyMs": 4447.599999904633
     },
     {
       "profile": "Fast 3G / 4x CPU",
       "hash": "#/",
       "run": 3,
-      "lcp": 3864,
-      "ready": 3840.5999999046326,
-      "jsTransferredBytes": 477764
+      "lcp": 3644,
+      "ready": 3621.7000002861023,
+      "jsTransferredBytes": 477765,
+      "planButtonReadyMs": 4181.800000190735
     },
     {
       "profile": "Fast 3G / 4x CPU",
       "hash": "#/how-it-works",
       "run": 1,
-      "lcp": 3680,
-      "ready": 3640.3999996185303,
-      "jsTransferredBytes": 477764
+      "lcp": 3752,
+      "ready": 3719.7999997138977,
+      "jsTransferredBytes": 477765,
+      "planButtonReadyMs": null
     },
     {
       "profile": "Fast 3G / 4x CPU",
       "hash": "#/how-it-works",
       "run": 2,
-      "lcp": 3780,
-      "ready": 3742,
-      "jsTransferredBytes": 477751
+      "lcp": 3648,
+      "ready": 3614.800000190735,
+      "jsTransferredBytes": 477752,
+      "planButtonReadyMs": null
     },
     {
       "profile": "Fast 3G / 4x CPU",
       "hash": "#/how-it-works",
       "run": 3,
-      "lcp": 3696,
-      "ready": 3659.0999999046326,
-      "jsTransferredBytes": 477751
+      "lcp": 3640,
+      "ready": 3601.0999999046326,
+      "jsTransferredBytes": 477752,
+      "planButtonReadyMs": null
     }
   ],
   "chunks": [

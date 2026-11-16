@@ -1,0 +1,3310 @@
+{
+  "timestamp": "2026-11-16T03:09:07.166Z",
+  "revision": "1bd16a4bb8953b5794cdb2730914fb8d4d6b6588",
+  "base": "http://127.0.0.1:8818",
+  "axe": "4.14.0",
+  "browser": "159.0.8154.6",
+  "tags": [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa"
+  ],
+  "fullReport": "axe-full.json.gz",
+  "scans": [
+    {
+      "state": "landing",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Where is your field?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "Plain-language glossary \u2014 what the terms mean",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodeCount": 2
+        },
+        {
+          "id": "link-in-text-block",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 29
+    },
+    {
+      "state": "field-confirmation",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Where is your field?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "Plain-language glossary \u2014 what the terms mean",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 7
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodeCount": 2
+        }
+      ],
+      "passes": 31
+    },
+    {
+      "state": "three-questions",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Three quick questions"
+        ],
+        "details": [
+          {
+            "summary": "Plain-language glossary \u2014 what the terms mean",
+            "open": false
+          },
+          {
+            "summary": "Your farm constraints (optional)",
+            "open": false
+          },
+          {
+            "summary": "Your crop prices (optional)",
+            "open": false
+          },
+          {
+            "summary": "Add your own measurements",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 2
+        }
+      ],
+      "passes": 27
+    },
+    {
+      "state": "two-goals-selected",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Three quick questions"
+        ],
+        "details": [
+          {
+            "summary": "Plain-language glossary \u2014 what the terms mean",
+            "open": false
+          },
+          {
+            "summary": "Your farm constraints (optional)",
+            "open": false
+          },
+          {
+            "summary": "Your crop prices (optional)",
+            "open": false
+          },
+          {
+            "summary": "Add your own measurements",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [
+          "Water conservationPrefer lower modeled pumping; most useful with irrigation",
+          "Organic matterPrefer perennials, cover crops and crop diversity"
+        ],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 2
+        }
+      ],
+      "passes": 27
+    },
+    {
+      "state": "kansas-plan-expanded",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Grow soybean in 2027, corn in 2028, then soybean in 2029.",
+          "In short",
+          "Corn rootworm \u2014 potential benefit, not a guarantee",
+          "Ask your agronomist about\u2026",
+          "Price sensitivity \u2014 not a forecast",
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn",
+          "Current practice: Winter wheat \u2192 Winter wheat \u2192 Winter wheat",
+          "What if your water changes?",
+          "Replay a bad year on your field",
+          "Drought Monitor in those years",
+          "Wind-erosion exposure (screen)",
+          "Soil wind erodibility (SSURGO)",
+          "Cover in Feb\u2013May, by plan year",
+          "What the margin numbers assume",
+          "Vegetation evidence \u00b7 MODIS",
+          "SMAP soil moisture \u00b7 regional context",
+          "Regional water storage & nearby Kansas wells",
+          "Why we suggest this",
+          "How this plan builds your soil",
+          "Second opinion",
+          "Checked against real harvests",
+          "Soybean model test: grown after corn, the usual rotation here",
+          "Corn model test: grown after soybean, the usual rotation here",
+          "Evidence and limitations",
+          "Ask your agronomist about\u2026",
+          "Corn rootworm \u2014 potential benefit, not a guarantee",
+          "Ask your agronomist about\u2026",
+          "Ask your agronomist about\u2026",
+          "Have a question about this plan?"
+        ],
+        "details": [
+          {
+            "summary": "Plain-language glossary \u2014 what the terms mean",
+            "open": true
+          },
+          {
+            "summary": "Goal bonus +0.0588 \u00b7 total score 0.909",
+            "open": true
+          },
+          {
+            "summary": "Pest notes and agronomist checks \u2014 Soybean \u2192 Corn \u2192 Soybean",
+            "open": true
+          },
+          {
+            "summary": "Method, sources and limits",
+            "open": true
+          },
+          {
+            "summary": "Audit the engine's fallback values",
+            "open": true
+          },
+          {
+            "summary": "Corn \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Soybean \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Winter wheat \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Oats \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Alfalfa / hay \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Grain sorghum \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Fallow (no crop) \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Sourced reference: K-State 2025 dryland corn\u2013soybean",
+            "open": true
+          },
+          {
+            "summary": "Dates, QA, sources and limits",
+            "open": true
+          },
+          {
+            "summary": "Surface (0\u20135 cm): 0.070 m\u00b3/m\u00b3",
+            "open": true
+          },
+          {
+            "summary": "Root zone (0\u2013100 cm): 0.174 m\u00b3/m\u00b3",
+            "open": true
+          },
+          {
+            "summary": "Matched-period trend comparison and dated well records",
+            "open": true
+          },
+          {
+            "summary": "Well 380435100422401: falling; regional storage falling \u00b7 same-direction",
+            "open": true
+          },
+          {
+            "summary": "Well 390856100451901: falling; regional storage falling \u00b7 same-direction",
+            "open": true
+          },
+          {
+            "summary": "Well 380333100442901: falling; regional storage falling \u00b7 same-direction",
+            "open": true
+          },
+          {
+            "summary": "Monthly regional storage, uncertainty and gaps",
+            "open": true
+          },
+          {
+            "summary": "Farmer constraints and dryland research library (preview)",
+            "open": true
+          },
+          {
+            "summary": "Data credits",
+            "open": true
+          },
+          {
+            "summary": "Show these numbers as a table",
+            "open": true
+          },
+          {
+            "summary": "Show these numbers as a table",
+            "open": true
+          },
+          {
+            "summary": "Data status \u2014 sources, dates and completeness",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Evidence quality \u2014 observations and missing data",
+            "open": true
+          },
+          {
+            "summary": "Local applicability \u2014 assumptions to review",
+            "open": true
+          },
+          {
+            "summary": "Compare with other options",
+            "open": true
+          },
+          {
+            "summary": "Goal bonus +0.0588 \u00b7 total score 0.909",
+            "open": true
+          },
+          {
+            "summary": "Goal bonus +0.0575 \u00b7 total score 0.874",
+            "open": true
+          },
+          {
+            "summary": "Pest notes and agronomist checks \u2014 Soybean \u2192 Winter wheat \u2192 Soybean",
+            "open": true
+          },
+          {
+            "summary": "Goal bonus +0.0549 \u00b7 total score 0.825",
+            "open": true
+          },
+          {
+            "summary": "Pest notes and agronomist checks \u2014 Corn \u2192 Soybean \u2192 Corn",
+            "open": true
+          },
+          {
+            "summary": "Goal bonus +0.0472 \u00b7 total score 0.498",
+            "open": true
+          },
+          {
+            "summary": "Pest notes and agronomist checks \u2014 Current pattern: Winter wheat \u2192 Winter wheat \u2192 Winter wheat",
+            "open": true
+          },
+          {
+            "summary": "How the weather on your field has changed",
+            "open": true
+          },
+          {
+            "summary": "Show charts",
+            "open": true
+          },
+          {
+            "summary": "What the satellite measures mean",
+            "open": true
+          },
+          {
+            "summary": "Satellite data vs. measurements on the ground",
+            "open": true
+          },
+          {
+            "summary": "All the reasons (23)",
+            "open": true
+          },
+          {
+            "summary": "Estimated corn-stage timing (historical sensitivity)",
+            "open": true
+          },
+          {
+            "summary": "2025: Kansas STATE; estimated silking 2025-07-12; survey 50% bracket 2025-07-06 to 2025-07-13",
+            "open": true
+          },
+          {
+            "summary": "2024: Kansas STATE; estimated silking 2024-07-07; survey 50% bracket 2024-07-07 to 2024-07-14",
+            "open": true
+          },
+          {
+            "summary": "2023: Kansas STATE; estimated silking 2023-07-13; survey 50% bracket 2023-07-09 to 2023-07-16",
+            "open": true
+          },
+          {
+            "summary": "Hot-year exposure and historical event catalog",
+            "open": true
+          },
+          {
+            "summary": "Coverage and conflicts",
+            "open": true
+          },
+          {
+            "summary": "Source bibliography and model assumptions",
+            "open": true
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 5,
+        "vegetation": "Vegetation evidence \u00b7 MODISHistorical coarse/composite point pixel, not field measurements or a prediction for any proposed rotation. Low NDVI does not establish bare soil.2025: 23 of 23 expected composites pass strict QA (complete). Field-area coverage unknown.1.00\u22120.22025-01-01: 0.32682025-01-17: 0.30022025-02-02: 0.31232025-02-18: 0.30302025-03-06: 0.40592025-03-22: 0.57552025-04-07: 0.79172025-04-23: 0.84232025-05-09: 0.87332025-05-25: 0.75272025-06-10: 0.74172025-06-26: 0.31102025-07-12: 0.34062025-07-28: 0.31282025-08-13: 0.30492025-08-29: 0.30692025-09-14: 0.30682025-09-30: 0.25502025-10-16: 0.26112025-11-01: 0.22482025-11-17: 0.23952025-12-03: 0.25762025-12-19: 0.2225JanDecNDVI (dimensionless), 250 m nominal, 16-day composites. Dots only: gaps are not interpolated.Dates, QA, sources and limitsCoarse historical point pixel, not a field measurement or observations of alternative rotations. Low NDVI does not establish bare soil; residue and mixed pixels remain unresolved. No interpolation or cross-sensor merging. Field-area coverage is unknown. MODIS uses provider NDVI, not reflectance-derived field NDVI.MOD13Q1 collection 061 \u00b7 250 m nominal; MODIS sinusoidal grid \u00b7 16-day composite (last interval ends December 31). NDVI scale 0.0001, applied once. Accept only reliability 0 and good land QA without adjacent/mixed cloud, snow or shadow. Marginal observations excluded.Didan, K. (2021), MOD13Q1.061, NASA LP DAAC, doi:10.5067/MODIS/MOD13Q1.061. Subsets: ORNL DAAC TESViS RESTful Web Service (2018), doi:10.3334/ORNLDAAC/1600. Retrieved: 2026-11-16T02:47:36.043Z.Product QA guideAvailable composite datesSubset requestSubset requestSubset requestSingle-pixel coverage per composite; unknown is not zero.Composite startObservedNDVIQA rank2025-01-012025-01-150.326802025-01-172025-01-280.300202025-02-022025-02-070.312302025-02-182025-02-240.303002025-03-062025-03-160.405902025-03-222025-03-280.575502025-04-072025-04-170.791702025-04-232025-05-020.842302025-05-092025-05-120.873302025-05-252025-06-080.752702025-06-102025-06-110.741702025-06-262025-07-080.311002025-07-122025-07-230.340602025-07-282025-07-280.312802025-08-132025-08-140.304902025-08-292025-09-080.306902025-09-142025-09-180.306802025-09-302025-10-030.255002025-10-162025-10-200.261102025-11-012025-11-140.224802025-11-172025-11-270.239502025-12-032025-12-150.257602025-12-192025-12-220.22250",
+        "harvestTables": 2,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 76
+        }
+      ],
+      "passes": 38
+    },
+    {
+      "state": "field-watch",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Where is your field?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "Plain-language glossary \u2014 what the terms mean",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 13
+    },
+    {
+      "state": "admin-docs",
+      "language": "en",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/#/admin/docs",
+      "inventory": {
+        "headings": [
+          "Document review",
+          "Upload",
+          "Add a research document by URL",
+          "Documents"
+        ],
+        "details": [],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 26
+    },
+    {
+      "state": "admin-docs-review-fixture",
+      "language": "en",
+      "width": 1280,
+      "fixture": "Synthetic local-only document API interception; not authenticated server coverage",
+      "url": "http://127.0.0.1:8818/#/admin/docs",
+      "inventory": {
+        "headings": [
+          "Document review",
+          "Upload",
+          "Add a research document by URL",
+          "Documents",
+          "Review Accessibility review fixture",
+          "a11y-chunk-1",
+          "a11y-chunk-2"
+        ],
+        "details": [
+          {
+            "summary": "Extracted chunks (2)",
+            "open": true
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 28
+    },
+    {
+      "state": "landing",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Where is your field?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "Plain-language glossary \u2014 what the terms mean",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodeCount": 2
+        },
+        {
+          "id": "link-in-text-block",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 29
+    },
+    {
+      "state": "field-confirmation",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Where is your field?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "Plain-language glossary \u2014 what the terms mean",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 4
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodeCount": 2
+        }
+      ],
+      "passes": 31
+    },
+    {
+      "state": "three-questions",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Three quick questions"
+        ],
+        "details": [
+          {
+            "summary": "Plain-language glossary \u2014 what the terms mean",
+            "open": false
+          },
+          {
+            "summary": "Your farm constraints (optional)",
+            "open": false
+          },
+          {
+            "summary": "Your crop prices (optional)",
+            "open": false
+          },
+          {
+            "summary": "Add your own measurements",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 2
+        }
+      ],
+      "passes": 27
+    },
+    {
+      "state": "two-goals-selected",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Three quick questions"
+        ],
+        "details": [
+          {
+            "summary": "Plain-language glossary \u2014 what the terms mean",
+            "open": false
+          },
+          {
+            "summary": "Your farm constraints (optional)",
+            "open": false
+          },
+          {
+            "summary": "Your crop prices (optional)",
+            "open": false
+          },
+          {
+            "summary": "Add your own measurements",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [
+          "Water conservationPrefer lower modeled pumping; most useful with irrigation",
+          "Organic matterPrefer perennials, cover crops and crop diversity"
+        ],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 2
+        }
+      ],
+      "passes": 27
+    },
+    {
+      "state": "kansas-plan-expanded",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Grow soybean in 2027, corn in 2028, then soybean in 2029.",
+          "In short",
+          "Corn rootworm \u2014 potential benefit, not a guarantee",
+          "Ask your agronomist about\u2026",
+          "Price sensitivity \u2014 not a forecast",
+          "Soybean \u2192 Corn \u2192 Soybean",
+          "Soybean \u2192 Winter wheat \u2192 Soybean",
+          "Corn \u2192 Soybean \u2192 Corn",
+          "Current practice: Winter wheat \u2192 Winter wheat \u2192 Winter wheat",
+          "What if your water changes?",
+          "Replay a bad year on your field",
+          "Drought Monitor in those years",
+          "Wind-erosion exposure (screen)",
+          "Soil wind erodibility (SSURGO)",
+          "Cover in Feb\u2013May, by plan year",
+          "What the margin numbers assume",
+          "Vegetation evidence \u00b7 MODIS",
+          "SMAP soil moisture \u00b7 regional context",
+          "Regional water storage & nearby Kansas wells",
+          "Why we suggest this",
+          "How this plan builds your soil",
+          "Second opinion",
+          "Checked against real harvests",
+          "Soybean model test: grown after corn, the usual rotation here",
+          "Corn model test: grown after soybean, the usual rotation here",
+          "Evidence and limitations",
+          "Ask your agronomist about\u2026",
+          "Corn rootworm \u2014 potential benefit, not a guarantee",
+          "Ask your agronomist about\u2026",
+          "Ask your agronomist about\u2026",
+          "Have a question about this plan?"
+        ],
+        "details": [
+          {
+            "summary": "Plain-language glossary \u2014 what the terms mean",
+            "open": true
+          },
+          {
+            "summary": "Goal bonus +0.0588 \u00b7 total score 0.909",
+            "open": true
+          },
+          {
+            "summary": "Pest notes and agronomist checks \u2014 Soybean \u2192 Corn \u2192 Soybean",
+            "open": true
+          },
+          {
+            "summary": "Method, sources and limits",
+            "open": true
+          },
+          {
+            "summary": "Audit the engine's fallback values",
+            "open": true
+          },
+          {
+            "summary": "Corn \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Soybean \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Winter wheat \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Oats \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Alfalfa / hay \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Grain sorghum \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Fallow (no crop) \u00b7 approximate default",
+            "open": true
+          },
+          {
+            "summary": "Sourced reference: K-State 2025 dryland corn\u2013soybean",
+            "open": true
+          },
+          {
+            "summary": "Dates, QA, sources and limits",
+            "open": true
+          },
+          {
+            "summary": "Surface (0\u20135 cm): 0.070 m\u00b3/m\u00b3",
+            "open": true
+          },
+          {
+            "summary": "Root zone (0\u2013100 cm): 0.174 m\u00b3/m\u00b3",
+            "open": true
+          },
+          {
+            "summary": "Matched-period trend comparison and dated well records",
+            "open": true
+          },
+          {
+            "summary": "Well 380435100422401: falling; regional storage falling \u00b7 same-direction",
+            "open": true
+          },
+          {
+            "summary": "Well 390856100451901: falling; regional storage falling \u00b7 same-direction",
+            "open": true
+          },
+          {
+            "summary": "Well 380333100442901: falling; regional storage falling \u00b7 same-direction",
+            "open": true
+          },
+          {
+            "summary": "Monthly regional storage, uncertainty and gaps",
+            "open": true
+          },
+          {
+            "summary": "Farmer constraints and dryland research library (preview)",
+            "open": true
+          },
+          {
+            "summary": "Data credits",
+            "open": true
+          },
+          {
+            "summary": "Show these numbers as a table",
+            "open": true
+          },
+          {
+            "summary": "Show these numbers as a table",
+            "open": true
+          },
+          {
+            "summary": "Data status \u2014 sources, dates and completeness",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Method, units and attribution",
+            "open": true
+          },
+          {
+            "summary": "Evidence quality \u2014 observations and missing data",
+            "open": true
+          },
+          {
+            "summary": "Local applicability \u2014 assumptions to review",
+            "open": true
+          },
+          {
+            "summary": "Compare with other options",
+            "open": true
+          },
+          {
+            "summary": "Goal bonus +0.0588 \u00b7 total score 0.909",
+            "open": true
+          },
+          {
+            "summary": "Goal bonus +0.0575 \u00b7 total score 0.874",
+            "open": true
+          },
+          {
+            "summary": "Pest notes and agronomist checks \u2014 Soybean \u2192 Winter wheat \u2192 Soybean",
+            "open": true
+          },
+          {
+            "summary": "Goal bonus +0.0549 \u00b7 total score 0.825",
+            "open": true
+          },
+          {
+            "summary": "Pest notes and agronomist checks \u2014 Corn \u2192 Soybean \u2192 Corn",
+            "open": true
+          },
+          {
+            "summary": "Goal bonus +0.0472 \u00b7 total score 0.498",
+            "open": true
+          },
+          {
+            "summary": "Pest notes and agronomist checks \u2014 Current pattern: Winter wheat \u2192 Winter wheat \u2192 Winter wheat",
+            "open": true
+          },
+          {
+            "summary": "How the weather on your field has changed",
+            "open": true
+          },
+          {
+            "summary": "Show charts",
+            "open": true
+          },
+          {
+            "summary": "What the satellite measures mean",
+            "open": true
+          },
+          {
+            "summary": "Satellite data vs. measurements on the ground",
+            "open": true
+          },
+          {
+            "summary": "All the reasons (23)",
+            "open": true
+          },
+          {
+            "summary": "Estimated corn-stage timing (historical sensitivity)",
+            "open": true
+          },
+          {
+            "summary": "2025: Kansas STATE; estimated silking 2025-07-12; survey 50% bracket 2025-07-06 to 2025-07-13",
+            "open": true
+          },
+          {
+            "summary": "2024: Kansas STATE; estimated silking 2024-07-07; survey 50% bracket 2024-07-07 to 2024-07-14",
+            "open": true
+          },
+          {
+            "summary": "2023: Kansas STATE; estimated silking 2023-07-13; survey 50% bracket 2023-07-09 to 2023-07-16",
+            "open": true
+          },
+          {
+            "summary": "Hot-year exposure and historical event catalog",
+            "open": true
+          },
+          {
+            "summary": "Coverage and conflicts",
+            "open": true
+          },
+          {
+            "summary": "Source bibliography and model assumptions",
+            "open": true
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 5,
+        "vegetation": "Vegetation evidence \u00b7 MODISHistorical coarse/composite point pixel, not field measurements or a prediction for any proposed rotation. Low NDVI does not establish bare soil.2025: 23 of 23 expected composites pass strict QA (complete). Field-area coverage unknown.1.00\u22120.22025-01-01: 0.32682025-01-17: 0.30022025-02-02: 0.31232025-02-18: 0.30302025-03-06: 0.40592025-03-22: 0.57552025-04-07: 0.79172025-04-23: 0.84232025-05-09: 0.87332025-05-25: 0.75272025-06-10: 0.74172025-06-26: 0.31102025-07-12: 0.34062025-07-28: 0.31282025-08-13: 0.30492025-08-29: 0.30692025-09-14: 0.30682025-09-30: 0.25502025-10-16: 0.26112025-11-01: 0.22482025-11-17: 0.23952025-12-03: 0.25762025-12-19: 0.2225JanDecNDVI (dimensionless), 250 m nominal, 16-day composites. Dots only: gaps are not interpolated.Dates, QA, sources and limitsCoarse historical point pixel, not a field measurement or observations of alternative rotations. Low NDVI does not establish bare soil; residue and mixed pixels remain unresolved. No interpolation or cross-sensor merging. Field-area coverage is unknown. MODIS uses provider NDVI, not reflectance-derived field NDVI.MOD13Q1 collection 061 \u00b7 250 m nominal; MODIS sinusoidal grid \u00b7 16-day composite (last interval ends December 31). NDVI scale 0.0001, applied once. Accept only reliability 0 and good land QA without adjacent/mixed cloud, snow or shadow. Marginal observations excluded.Didan, K. (2021), MOD13Q1.061, NASA LP DAAC, doi:10.5067/MODIS/MOD13Q1.061. Subsets: ORNL DAAC TESViS RESTful Web Service (2018), doi:10.3334/ORNLDAAC/1600. Retrieved: 2026-11-16T02:47:36.043Z.Product QA guideAvailable composite datesSubset requestSubset requestSubset requestSingle-pixel coverage per composite; unknown is not zero.Composite startObservedNDVIQA rank2025-01-012025-01-150.326802025-01-172025-01-280.300202025-02-022025-02-070.312302025-02-182025-02-240.303002025-03-062025-03-160.405902025-03-222025-03-280.575502025-04-072025-04-170.791702025-04-232025-05-020.842302025-05-092025-05-120.873302025-05-252025-06-080.752702025-06-102025-06-110.741702025-06-262025-07-080.311002025-07-122025-07-230.340602025-07-282025-07-280.312802025-08-132025-08-140.304902025-08-292025-09-080.306902025-09-142025-09-180.306802025-09-302025-10-030.255002025-10-162025-10-200.261102025-11-012025-11-140.224802025-11-172025-11-270.239502025-12-032025-12-150.257602025-12-192025-12-220.22250",
+        "harvestTables": 2,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 77
+        }
+      ],
+      "passes": 38
+    },
+    {
+      "state": "field-watch",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Where is your field?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "Plain-language glossary \u2014 what the terms mean",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 13
+    },
+    {
+      "state": "admin-docs",
+      "language": "en",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/#/admin/docs",
+      "inventory": {
+        "headings": [
+          "Document review",
+          "Upload",
+          "Add a research document by URL",
+          "Documents"
+        ],
+        "details": [],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 25
+    },
+    {
+      "state": "admin-docs-review-fixture",
+      "language": "en",
+      "width": 375,
+      "fixture": "Synthetic local-only document API interception; not authenticated server coverage",
+      "url": "http://127.0.0.1:8818/#/admin/docs",
+      "inventory": {
+        "headings": [
+          "Document review",
+          "Upload",
+          "Add a research document by URL",
+          "Documents",
+          "Review Accessibility review fixture",
+          "a11y-chunk-1",
+          "a11y-chunk-2"
+        ],
+        "details": [
+          {
+            "summary": "Extracted chunks (2)",
+            "open": true
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "en",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 27
+    },
+    {
+      "state": "landing",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\u00bfD\u00f3nde est\u00e1 tu parcela?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "Glosario en palabras sencillas: qu\u00e9 significan los t\u00e9rminos",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodeCount": 2
+        },
+        {
+          "id": "link-in-text-block",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 29
+    },
+    {
+      "state": "field-confirmation",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\u00bfD\u00f3nde est\u00e1 tu parcela?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "Glosario en palabras sencillas: qu\u00e9 significan los t\u00e9rminos",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 7
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodeCount": 2
+        }
+      ],
+      "passes": 31
+    },
+    {
+      "state": "three-questions",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Tres preguntas r\u00e1pidas"
+        ],
+        "details": [
+          {
+            "summary": "Glosario en palabras sencillas: qu\u00e9 significan los t\u00e9rminos",
+            "open": false
+          },
+          {
+            "summary": "L\u00edmites de tu finca (opcional)",
+            "open": false
+          },
+          {
+            "summary": "Tus precios de cultivos (opcional)",
+            "open": false
+          },
+          {
+            "summary": "A\u00f1ade tus propias mediciones",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 27
+    },
+    {
+      "state": "two-goals-selected",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Tres preguntas r\u00e1pidas"
+        ],
+        "details": [
+          {
+            "summary": "Glosario en palabras sencillas: qu\u00e9 significan los t\u00e9rminos",
+            "open": false
+          },
+          {
+            "summary": "L\u00edmites de tu finca (opcional)",
+            "open": false
+          },
+          {
+            "summary": "Tus precios de cultivos (opcional)",
+            "open": false
+          },
+          {
+            "summary": "A\u00f1ade tus propias mediciones",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [
+          "Conservaci\u00f3n del aguaFavorecer una menor extracci\u00f3n estimada; m\u00e1s \u00fatil con riego",
+          "Materia org\u00e1nicaFavorecer los cultivos perennes, los de cobertura y la diversidad de cultivos"
+        ],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 27
+    },
+    {
+      "state": "kansas-plan-expanded",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Recomendamos cultivar soja en 2027, cultivar ma\u00edz en 2028 y despu\u00e9s cultivar soja en 2029.",
+          "En resumen",
+          "Gusano de la ra\u00edz del ma\u00edz: beneficio potencial, sin garant\u00eda",
+          "Consulta con tu agr\u00f3nomo sobre\u2026",
+          "Sensibilidad a precios \u2014 no es un pron\u00f3stico",
+          "Soja \u2192 Ma\u00edz \u2192 Soja",
+          "Soja \u2192 Trigo de invierno \u2192 Soja",
+          "Ma\u00edz \u2192 Soja \u2192 Ma\u00edz",
+          "Pr\u00e1ctica actual: Trigo de invierno \u2192 Trigo de invierno \u2192 Trigo de invierno",
+          "\u00bfQu\u00e9 pasa si cambia el agua disponible?",
+          "Simula un a\u00f1o dif\u00edcil en tu parcela",
+          "U.S. Drought Monitor en esos a\u00f1os",
+          "Exposici\u00f3n a la erosi\u00f3n e\u00f3lica (evaluaci\u00f3n preliminar)",
+          "Erodabilidad e\u00f3lica del suelo (SSURGO)",
+          "Cobertura de febrero a mayo, por a\u00f1o del plan",
+          "Supuestos de las cifras de margen",
+          "Datos de vegetaci\u00f3n \u00b7 MODIS",
+          "Humedad del suelo de SMAP \u00b7 contexto regional",
+          "Almacenamiento regional de agua y pozos cercanos de Kansas",
+          "Por qu\u00e9 lo recomendamos",
+          "C\u00f3mo mejora el suelo este plan",
+          "Segunda opini\u00f3n",
+          "Contrastado con cosechas reales",
+          "Soja prueba del modelo: cultivado despu\u00e9s de ma\u00edz, la rotaci\u00f3n habitual aqu\u00ed",
+          "Ma\u00edz prueba del modelo: cultivado despu\u00e9s de soja, la rotaci\u00f3n habitual aqu\u00ed",
+          "Datos y limitaciones",
+          "Consulta con tu agr\u00f3nomo sobre\u2026",
+          "Gusano de la ra\u00edz del ma\u00edz: beneficio potencial, sin garant\u00eda",
+          "Consulta con tu agr\u00f3nomo sobre\u2026",
+          "Consulta con tu agr\u00f3nomo sobre\u2026",
+          "\u00bfTienes alguna pregunta sobre este plan?"
+        ],
+        "details": [
+          {
+            "summary": "Glosario en palabras sencillas: qu\u00e9 significan los t\u00e9rminos",
+            "open": true
+          },
+          {
+            "summary": "Bonificaci\u00f3n por objetivos +0.0588 \u00b7 puntuaci\u00f3n total 0.909",
+            "open": true
+          },
+          {
+            "summary": "Notas sobre plagas y revisi\u00f3n agron\u00f3mica \u2014 Soja \u2192 Ma\u00edz \u2192 Soja",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, fuentes y l\u00edmites",
+            "open": true
+          },
+          {
+            "summary": "Revisar los valores predeterminados del modelo",
+            "open": true
+          },
+          {
+            "summary": "Ma\u00edz \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Soja \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Trigo de invierno \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Avena \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Alfalfa / heno \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Sorgo de grano \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Barbecho (sin cultivo) \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Referencia documentada: ma\u00edz\u2013soja de secano de K-State 2025",
+            "open": true
+          },
+          {
+            "summary": "Fechas, calidad, fuentes y l\u00edmites",
+            "open": true
+          },
+          {
+            "summary": "Superficie (0\u20135 cm): 0.070 m\u00b3/m\u00b3",
+            "open": true
+          },
+          {
+            "summary": "Zona radicular (0\u2013100 cm): 0.174 m\u00b3/m\u00b3",
+            "open": true
+          },
+          {
+            "summary": "Comparaci\u00f3n de tendencias en per\u00edodos coincidentes y registros fechados de pozos",
+            "open": true
+          },
+          {
+            "summary": "Pozo 380435100422401: en descenso; almacenamiento regional en descenso \u00b7 misma direcci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "Pozo 390856100451901: en descenso; almacenamiento regional en descenso \u00b7 misma direcci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "Pozo 380333100442901: en descenso; almacenamiento regional en descenso \u00b7 misma direcci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "Almacenamiento regional mensual, incertidumbre y datos faltantes",
+            "open": true
+          },
+          {
+            "summary": "Restricciones del agricultor y biblioteca de ensayos de secano (vista previa)",
+            "open": true
+          },
+          {
+            "summary": "Cr\u00e9ditos de los datos",
+            "open": true
+          },
+          {
+            "summary": "Mostrar estos valores en una tabla",
+            "open": true
+          },
+          {
+            "summary": "Mostrar estos valores en una tabla",
+            "open": true
+          },
+          {
+            "summary": "Estado de los datos: fuentes, fechas e integridad",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "Calidad de los datos: observaciones y datos faltantes",
+            "open": true
+          },
+          {
+            "summary": "Aplicaci\u00f3n local: supuestos que revisar",
+            "open": true
+          },
+          {
+            "summary": "Comparar con otras opciones",
+            "open": true
+          },
+          {
+            "summary": "Bonificaci\u00f3n por objetivos +0.0588 \u00b7 puntuaci\u00f3n total 0.909",
+            "open": true
+          },
+          {
+            "summary": "Bonificaci\u00f3n por objetivos +0.0575 \u00b7 puntuaci\u00f3n total 0.874",
+            "open": true
+          },
+          {
+            "summary": "Notas sobre plagas y revisi\u00f3n agron\u00f3mica \u2014 Soja \u2192 Trigo de invierno \u2192 Soja",
+            "open": true
+          },
+          {
+            "summary": "Bonificaci\u00f3n por objetivos +0.0549 \u00b7 puntuaci\u00f3n total 0.825",
+            "open": true
+          },
+          {
+            "summary": "Notas sobre plagas y revisi\u00f3n agron\u00f3mica \u2014 Ma\u00edz \u2192 Soja \u2192 Ma\u00edz",
+            "open": true
+          },
+          {
+            "summary": "Bonificaci\u00f3n por objetivos +0.0472 \u00b7 puntuaci\u00f3n total 0.498",
+            "open": true
+          },
+          {
+            "summary": "Notas sobre plagas y revisi\u00f3n agron\u00f3mica \u2014 Pr\u00e1ctica actual: Trigo de invierno \u2192 Trigo de invierno \u2192 Trigo de invierno",
+            "open": true
+          },
+          {
+            "summary": "C\u00f3mo ha cambiado el clima en tu parcela",
+            "open": true
+          },
+          {
+            "summary": "Mostrar gr\u00e1ficos",
+            "open": true
+          },
+          {
+            "summary": "Qu\u00e9 significan las mediciones satelitales",
+            "open": true
+          },
+          {
+            "summary": "Datos satelitales frente a mediciones en el terreno",
+            "open": true
+          },
+          {
+            "summary": "Todos los motivos (23)",
+            "open": true
+          },
+          {
+            "summary": "Fechas estimadas de las etapas del ma\u00edz (sensibilidad hist\u00f3rica)",
+            "open": true
+          },
+          {
+            "summary": "2025: Kansas ESTADO; emisi\u00f3n de estigmas estimada 2025-07-12; intervalo de la encuesta alrededor del 50% 2025-07-06 a 2025-07-13",
+            "open": true
+          },
+          {
+            "summary": "2024: Kansas ESTADO; emisi\u00f3n de estigmas estimada 2024-07-07; intervalo de la encuesta alrededor del 50% 2024-07-07 a 2024-07-14",
+            "open": true
+          },
+          {
+            "summary": "2023: Kansas ESTADO; emisi\u00f3n de estigmas estimada 2023-07-13; intervalo de la encuesta alrededor del 50% 2023-07-09 a 2023-07-16",
+            "open": true
+          },
+          {
+            "summary": "Exposici\u00f3n en a\u00f1os calurosos y cat\u00e1logo de eventos hist\u00f3ricos",
+            "open": true
+          },
+          {
+            "summary": "Cobertura y discrepancias",
+            "open": true
+          },
+          {
+            "summary": "Fuentes bibliogr\u00e1ficas y supuestos del modelo",
+            "open": true
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 5,
+        "vegetation": "Datos de vegetaci\u00f3n \u00b7 MODISP\u00edxel puntual hist\u00f3rico de resoluci\u00f3n gruesa y compuesto temporal; no es una medici\u00f3n de la parcela ni una predicci\u00f3n para las rotaciones propuestas. Un NDVI bajo no demuestra que el suelo est\u00e9 descubierto.2025: 23 de 23 compuestos esperados superan el control estricto de calidad (completo). Se desconoce la cobertura de la superficie de la parcela.1.00\u22120.22025-01-01: 0.32682025-01-17: 0.30022025-02-02: 0.31232025-02-18: 0.30302025-03-06: 0.40592025-03-22: 0.57552025-04-07: 0.79172025-04-23: 0.84232025-05-09: 0.87332025-05-25: 0.75272025-06-10: 0.74172025-06-26: 0.31102025-07-12: 0.34062025-07-28: 0.31282025-08-13: 0.30492025-08-29: 0.30692025-09-14: 0.30682025-09-30: 0.25502025-10-16: 0.26112025-11-01: 0.22482025-11-17: 0.23952025-12-03: 0.25762025-12-19: 0.2225enedicNDVI (sin unidades), resoluci\u00f3n nominal de 250 m, compuestos de 16 d\u00edas. Solo puntos: no se interpolan los datos faltantes.Fechas, calidad, fuentes y l\u00edmitesP\u00edxel hist\u00f3rico de un punto a escala amplia, no una medici\u00f3n de la parcela ni observaciones de rotaciones alternativas. Un NDVI bajo no demuestra suelo descubierto; el rastrojo y los p\u00edxeles mixtos siguen sin resolverse. Sin interpolaci\u00f3n ni combinaci\u00f3n de sensores. Se desconoce la cobertura de la superficie de la parcela. MODIS usa el NDVI del proveedor, no un NDVI de parcela calculado a partir de reflectancia.MOD13Q1 colecci\u00f3n 061 \u00b7 250 m nominal; MODIS sinusoidal grid \u00b7 16-day composite (last interval ends December 31). Escala de NDVI 0.0001, aplicada una sola vez. Solo se acepta fiabilidad 0 y buena calidad terrestre, sin nubes adyacentes o mixtas, nieve ni sombra. Se excluyen las observaciones de calidad marginal.Didan, K. (2021), MOD13Q1.061, NASA LP DAAC, doi:10.5067/MODIS/MOD13Q1.061. Subsets: ORNL DAAC TESViS RESTful Web Service (2018), doi:10.3334/ORNLDAAC/1600. Consultado: 2026-11-16T02:47:36.043Z.Gu\u00eda de calidad del productoFechas de compuestos disponiblesConsulta de subconjuntoConsulta de subconjuntoConsulta de subconjuntoCobertura de un p\u00edxel por compuesto; desconocido no equivale a cero.Inicio del compuestoObservadoNDVINivel de calidad2025-01-012025-01-150.326802025-01-172025-01-280.300202025-02-022025-02-070.312302025-02-182025-02-240.303002025-03-062025-03-160.405902025-03-222025-03-280.575502025-04-072025-04-170.791702025-04-232025-05-020.842302025-05-092025-05-120.873302025-05-252025-06-080.752702025-06-102025-06-110.741702025-06-262025-07-080.311002025-07-122025-07-230.340602025-07-282025-07-280.312802025-08-132025-08-140.304902025-08-292025-09-080.306902025-09-142025-09-180.306802025-09-302025-10-030.255002025-10-162025-10-200.261102025-11-012025-11-140.224802025-11-172025-11-270.239502025-12-032025-12-150.257602025-12-192025-12-220.22250",
+        "harvestTables": 2,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 75
+        }
+      ],
+      "passes": 38
+    },
+    {
+      "state": "field-watch",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\u00bfD\u00f3nde est\u00e1 tu parcela?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "Glosario en palabras sencillas: qu\u00e9 significan los t\u00e9rminos",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 13
+    },
+    {
+      "state": "admin-docs",
+      "language": "es",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/#/admin/docs",
+      "inventory": {
+        "headings": [
+          "Revisi\u00f3n de documentos",
+          "Subir",
+          "A\u00f1adir un documento de investigaci\u00f3n por URL",
+          "Documentos"
+        ],
+        "details": [],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 26
+    },
+    {
+      "state": "admin-docs-review-fixture",
+      "language": "es",
+      "width": 1280,
+      "fixture": "Synthetic local-only document API interception; not authenticated server coverage",
+      "url": "http://127.0.0.1:8818/#/admin/docs",
+      "inventory": {
+        "headings": [
+          "Revisi\u00f3n de documentos",
+          "Subir",
+          "A\u00f1adir un documento de investigaci\u00f3n por URL",
+          "Documentos",
+          "Revisar Accessibility review fixture",
+          "a11y-chunk-1",
+          "a11y-chunk-2"
+        ],
+        "details": [
+          {
+            "summary": "Fragmentos extra\u00eddos (2)",
+            "open": true
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 28
+    },
+    {
+      "state": "landing",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\u00bfD\u00f3nde est\u00e1 tu parcela?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "Glosario en palabras sencillas: qu\u00e9 significan los t\u00e9rminos",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodeCount": 2
+        },
+        {
+          "id": "link-in-text-block",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 29
+    },
+    {
+      "state": "field-confirmation",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\u00bfD\u00f3nde est\u00e1 tu parcela?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "Glosario en palabras sencillas: qu\u00e9 significan los t\u00e9rminos",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 3
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodeCount": 2
+        }
+      ],
+      "passes": 31
+    },
+    {
+      "state": "three-questions",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Tres preguntas r\u00e1pidas"
+        ],
+        "details": [
+          {
+            "summary": "Glosario en palabras sencillas: qu\u00e9 significan los t\u00e9rminos",
+            "open": false
+          },
+          {
+            "summary": "L\u00edmites de tu finca (opcional)",
+            "open": false
+          },
+          {
+            "summary": "Tus precios de cultivos (opcional)",
+            "open": false
+          },
+          {
+            "summary": "A\u00f1ade tus propias mediciones",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 27
+    },
+    {
+      "state": "two-goals-selected",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Tres preguntas r\u00e1pidas"
+        ],
+        "details": [
+          {
+            "summary": "Glosario en palabras sencillas: qu\u00e9 significan los t\u00e9rminos",
+            "open": false
+          },
+          {
+            "summary": "L\u00edmites de tu finca (opcional)",
+            "open": false
+          },
+          {
+            "summary": "Tus precios de cultivos (opcional)",
+            "open": false
+          },
+          {
+            "summary": "A\u00f1ade tus propias mediciones",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [
+          "Conservaci\u00f3n del aguaFavorecer una menor extracci\u00f3n estimada; m\u00e1s \u00fatil con riego",
+          "Materia org\u00e1nicaFavorecer los cultivos perennes, los de cobertura y la diversidad de cultivos"
+        ],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 27
+    },
+    {
+      "state": "kansas-plan-expanded",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "Recomendamos cultivar soja en 2027, cultivar ma\u00edz en 2028 y despu\u00e9s cultivar soja en 2029.",
+          "En resumen",
+          "Gusano de la ra\u00edz del ma\u00edz: beneficio potencial, sin garant\u00eda",
+          "Consulta con tu agr\u00f3nomo sobre\u2026",
+          "Sensibilidad a precios \u2014 no es un pron\u00f3stico",
+          "Soja \u2192 Ma\u00edz \u2192 Soja",
+          "Soja \u2192 Trigo de invierno \u2192 Soja",
+          "Ma\u00edz \u2192 Soja \u2192 Ma\u00edz",
+          "Pr\u00e1ctica actual: Trigo de invierno \u2192 Trigo de invierno \u2192 Trigo de invierno",
+          "\u00bfQu\u00e9 pasa si cambia el agua disponible?",
+          "Simula un a\u00f1o dif\u00edcil en tu parcela",
+          "U.S. Drought Monitor en esos a\u00f1os",
+          "Exposici\u00f3n a la erosi\u00f3n e\u00f3lica (evaluaci\u00f3n preliminar)",
+          "Erodabilidad e\u00f3lica del suelo (SSURGO)",
+          "Cobertura de febrero a mayo, por a\u00f1o del plan",
+          "Supuestos de las cifras de margen",
+          "Datos de vegetaci\u00f3n \u00b7 MODIS",
+          "Humedad del suelo de SMAP \u00b7 contexto regional",
+          "Almacenamiento regional de agua y pozos cercanos de Kansas",
+          "Por qu\u00e9 lo recomendamos",
+          "C\u00f3mo mejora el suelo este plan",
+          "Segunda opini\u00f3n",
+          "Contrastado con cosechas reales",
+          "Soja prueba del modelo: cultivado despu\u00e9s de ma\u00edz, la rotaci\u00f3n habitual aqu\u00ed",
+          "Ma\u00edz prueba del modelo: cultivado despu\u00e9s de soja, la rotaci\u00f3n habitual aqu\u00ed",
+          "Datos y limitaciones",
+          "Consulta con tu agr\u00f3nomo sobre\u2026",
+          "Gusano de la ra\u00edz del ma\u00edz: beneficio potencial, sin garant\u00eda",
+          "Consulta con tu agr\u00f3nomo sobre\u2026",
+          "Consulta con tu agr\u00f3nomo sobre\u2026",
+          "\u00bfTienes alguna pregunta sobre este plan?"
+        ],
+        "details": [
+          {
+            "summary": "Glosario en palabras sencillas: qu\u00e9 significan los t\u00e9rminos",
+            "open": true
+          },
+          {
+            "summary": "Bonificaci\u00f3n por objetivos +0.0588 \u00b7 puntuaci\u00f3n total 0.909",
+            "open": true
+          },
+          {
+            "summary": "Notas sobre plagas y revisi\u00f3n agron\u00f3mica \u2014 Soja \u2192 Ma\u00edz \u2192 Soja",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, fuentes y l\u00edmites",
+            "open": true
+          },
+          {
+            "summary": "Revisar los valores predeterminados del modelo",
+            "open": true
+          },
+          {
+            "summary": "Ma\u00edz \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Soja \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Trigo de invierno \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Avena \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Alfalfa / heno \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Sorgo de grano \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Barbecho (sin cultivo) \u00b7 valor predeterminado aproximado",
+            "open": true
+          },
+          {
+            "summary": "Referencia documentada: ma\u00edz\u2013soja de secano de K-State 2025",
+            "open": true
+          },
+          {
+            "summary": "Fechas, calidad, fuentes y l\u00edmites",
+            "open": true
+          },
+          {
+            "summary": "Superficie (0\u20135 cm): 0.070 m\u00b3/m\u00b3",
+            "open": true
+          },
+          {
+            "summary": "Zona radicular (0\u2013100 cm): 0.174 m\u00b3/m\u00b3",
+            "open": true
+          },
+          {
+            "summary": "Comparaci\u00f3n de tendencias en per\u00edodos coincidentes y registros fechados de pozos",
+            "open": true
+          },
+          {
+            "summary": "Pozo 380435100422401: en descenso; almacenamiento regional en descenso \u00b7 misma direcci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "Pozo 390856100451901: en descenso; almacenamiento regional en descenso \u00b7 misma direcci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "Pozo 380333100442901: en descenso; almacenamiento regional en descenso \u00b7 misma direcci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "Almacenamiento regional mensual, incertidumbre y datos faltantes",
+            "open": true
+          },
+          {
+            "summary": "Restricciones del agricultor y biblioteca de ensayos de secano (vista previa)",
+            "open": true
+          },
+          {
+            "summary": "Cr\u00e9ditos de los datos",
+            "open": true
+          },
+          {
+            "summary": "Mostrar estos valores en una tabla",
+            "open": true
+          },
+          {
+            "summary": "Mostrar estos valores en una tabla",
+            "open": true
+          },
+          {
+            "summary": "Estado de los datos: fuentes, fechas e integridad",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "M\u00e9todo, unidades y atribuci\u00f3n",
+            "open": true
+          },
+          {
+            "summary": "Calidad de los datos: observaciones y datos faltantes",
+            "open": true
+          },
+          {
+            "summary": "Aplicaci\u00f3n local: supuestos que revisar",
+            "open": true
+          },
+          {
+            "summary": "Comparar con otras opciones",
+            "open": true
+          },
+          {
+            "summary": "Bonificaci\u00f3n por objetivos +0.0588 \u00b7 puntuaci\u00f3n total 0.909",
+            "open": true
+          },
+          {
+            "summary": "Bonificaci\u00f3n por objetivos +0.0575 \u00b7 puntuaci\u00f3n total 0.874",
+            "open": true
+          },
+          {
+            "summary": "Notas sobre plagas y revisi\u00f3n agron\u00f3mica \u2014 Soja \u2192 Trigo de invierno \u2192 Soja",
+            "open": true
+          },
+          {
+            "summary": "Bonificaci\u00f3n por objetivos +0.0549 \u00b7 puntuaci\u00f3n total 0.825",
+            "open": true
+          },
+          {
+            "summary": "Notas sobre plagas y revisi\u00f3n agron\u00f3mica \u2014 Ma\u00edz \u2192 Soja \u2192 Ma\u00edz",
+            "open": true
+          },
+          {
+            "summary": "Bonificaci\u00f3n por objetivos +0.0472 \u00b7 puntuaci\u00f3n total 0.498",
+            "open": true
+          },
+          {
+            "summary": "Notas sobre plagas y revisi\u00f3n agron\u00f3mica \u2014 Pr\u00e1ctica actual: Trigo de invierno \u2192 Trigo de invierno \u2192 Trigo de invierno",
+            "open": true
+          },
+          {
+            "summary": "C\u00f3mo ha cambiado el clima en tu parcela",
+            "open": true
+          },
+          {
+            "summary": "Mostrar gr\u00e1ficos",
+            "open": true
+          },
+          {
+            "summary": "Qu\u00e9 significan las mediciones satelitales",
+            "open": true
+          },
+          {
+            "summary": "Datos satelitales frente a mediciones en el terreno",
+            "open": true
+          },
+          {
+            "summary": "Todos los motivos (23)",
+            "open": true
+          },
+          {
+            "summary": "Fechas estimadas de las etapas del ma\u00edz (sensibilidad hist\u00f3rica)",
+            "open": true
+          },
+          {
+            "summary": "2025: Kansas ESTADO; emisi\u00f3n de estigmas estimada 2025-07-12; intervalo de la encuesta alrededor del 50% 2025-07-06 a 2025-07-13",
+            "open": true
+          },
+          {
+            "summary": "2024: Kansas ESTADO; emisi\u00f3n de estigmas estimada 2024-07-07; intervalo de la encuesta alrededor del 50% 2024-07-07 a 2024-07-14",
+            "open": true
+          },
+          {
+            "summary": "2023: Kansas ESTADO; emisi\u00f3n de estigmas estimada 2023-07-13; intervalo de la encuesta alrededor del 50% 2023-07-09 a 2023-07-16",
+            "open": true
+          },
+          {
+            "summary": "Exposici\u00f3n en a\u00f1os calurosos y cat\u00e1logo de eventos hist\u00f3ricos",
+            "open": true
+          },
+          {
+            "summary": "Cobertura y discrepancias",
+            "open": true
+          },
+          {
+            "summary": "Fuentes bibliogr\u00e1ficas y supuestos del modelo",
+            "open": true
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 5,
+        "vegetation": "Datos de vegetaci\u00f3n \u00b7 MODISP\u00edxel puntual hist\u00f3rico de resoluci\u00f3n gruesa y compuesto temporal; no es una medici\u00f3n de la parcela ni una predicci\u00f3n para las rotaciones propuestas. Un NDVI bajo no demuestra que el suelo est\u00e9 descubierto.2025: 23 de 23 compuestos esperados superan el control estricto de calidad (completo). Se desconoce la cobertura de la superficie de la parcela.1.00\u22120.22025-01-01: 0.32682025-01-17: 0.30022025-02-02: 0.31232025-02-18: 0.30302025-03-06: 0.40592025-03-22: 0.57552025-04-07: 0.79172025-04-23: 0.84232025-05-09: 0.87332025-05-25: 0.75272025-06-10: 0.74172025-06-26: 0.31102025-07-12: 0.34062025-07-28: 0.31282025-08-13: 0.30492025-08-29: 0.30692025-09-14: 0.30682025-09-30: 0.25502025-10-16: 0.26112025-11-01: 0.22482025-11-17: 0.23952025-12-03: 0.25762025-12-19: 0.2225enedicNDVI (sin unidades), resoluci\u00f3n nominal de 250 m, compuestos de 16 d\u00edas. Solo puntos: no se interpolan los datos faltantes.Fechas, calidad, fuentes y l\u00edmitesP\u00edxel hist\u00f3rico de un punto a escala amplia, no una medici\u00f3n de la parcela ni observaciones de rotaciones alternativas. Un NDVI bajo no demuestra suelo descubierto; el rastrojo y los p\u00edxeles mixtos siguen sin resolverse. Sin interpolaci\u00f3n ni combinaci\u00f3n de sensores. Se desconoce la cobertura de la superficie de la parcela. MODIS usa el NDVI del proveedor, no un NDVI de parcela calculado a partir de reflectancia.MOD13Q1 colecci\u00f3n 061 \u00b7 250 m nominal; MODIS sinusoidal grid \u00b7 16-day composite (last interval ends December 31). Escala de NDVI 0.0001, aplicada una sola vez. Solo se acepta fiabilidad 0 y buena calidad terrestre, sin nubes adyacentes o mixtas, nieve ni sombra. Se excluyen las observaciones de calidad marginal.Didan, K. (2021), MOD13Q1.061, NASA LP DAAC, doi:10.5067/MODIS/MOD13Q1.061. Subsets: ORNL DAAC TESViS RESTful Web Service (2018), doi:10.3334/ORNLDAAC/1600. Consultado: 2026-11-16T02:47:36.043Z.Gu\u00eda de calidad del productoFechas de compuestos disponiblesConsulta de subconjuntoConsulta de subconjuntoConsulta de subconjuntoCobertura de un p\u00edxel por compuesto; desconocido no equivale a cero.Inicio del compuestoObservadoNDVINivel de calidad2025-01-012025-01-150.326802025-01-172025-01-280.300202025-02-022025-02-070.312302025-02-182025-02-240.303002025-03-062025-03-160.405902025-03-222025-03-280.575502025-04-072025-04-170.791702025-04-232025-05-020.842302025-05-092025-05-120.873302025-05-252025-06-080.752702025-06-102025-06-110.741702025-06-262025-07-080.311002025-07-122025-07-230.340602025-07-282025-07-280.312802025-08-132025-08-140.304902025-08-292025-09-080.306902025-09-142025-09-180.306802025-09-302025-10-030.255002025-10-162025-10-200.261102025-11-012025-11-140.224802025-11-172025-11-270.239502025-12-032025-12-150.257602025-12-192025-12-220.22250",
+        "harvestTables": 2,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 75
+        }
+      ],
+      "passes": 38
+    },
+    {
+      "state": "field-watch",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\u00bfD\u00f3nde est\u00e1 tu parcela?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "Glosario en palabras sencillas: qu\u00e9 significan los t\u00e9rminos",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 13
+    },
+    {
+      "state": "admin-docs",
+      "language": "es",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/#/admin/docs",
+      "inventory": {
+        "headings": [
+          "Revisi\u00f3n de documentos",
+          "Subir",
+          "A\u00f1adir un documento de investigaci\u00f3n por URL",
+          "Documentos"
+        ],
+        "details": [],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 25
+    },
+    {
+      "state": "admin-docs-review-fixture",
+      "language": "es",
+      "width": 375,
+      "fixture": "Synthetic local-only document API interception; not authenticated server coverage",
+      "url": "http://127.0.0.1:8818/#/admin/docs",
+      "inventory": {
+        "headings": [
+          "Revisi\u00f3n de documentos",
+          "Subir",
+          "A\u00f1adir un documento de investigaci\u00f3n por URL",
+          "Documentos",
+          "Revisar Accessibility review fixture",
+          "a11y-chunk-1",
+          "a11y-chunk-2"
+        ],
+        "details": [
+          {
+            "summary": "Fragmentos extra\u00eddos (2)",
+            "open": true
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "es",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 27
+    },
+    {
+      "state": "landing",
+      "language": "ko",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\ud3ec\uc7a5\uc774 \uc5b4\ub514\uc5d0 \uc788\ub098\uc694?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "\uc26c\uc6b4 \uc6a9\uc5b4\uc9d1 \u2014 \uc6a9\uc5b4\uc758 \uc758\ubbf8",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodeCount": 2
+        },
+        {
+          "id": "link-in-text-block",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 29
+    },
+    {
+      "state": "field-confirmation",
+      "language": "ko",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\ud3ec\uc7a5\uc774 \uc5b4\ub514\uc5d0 \uc788\ub098\uc694?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "\uc26c\uc6b4 \uc6a9\uc5b4\uc9d1 \u2014 \uc6a9\uc5b4\uc758 \uc758\ubbf8",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 7
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodeCount": 2
+        }
+      ],
+      "passes": 31
+    },
+    {
+      "state": "three-questions",
+      "language": "ko",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\uac04\ub2e8\ud55c \uc9c8\ubb38 \uc138 \uac00\uc9c0"
+        ],
+        "details": [
+          {
+            "summary": "\uc26c\uc6b4 \uc6a9\uc5b4\uc9d1 \u2014 \uc6a9\uc5b4\uc758 \uc758\ubbf8",
+            "open": false
+          },
+          {
+            "summary": "\ub0b4 \ub18d\uc7a5\uc758 \uc81c\uc57d \uc870\uac74 (\uc120\ud0dd \uc0ac\ud56d)",
+            "open": false
+          },
+          {
+            "summary": "\ub0b4 \uc791\ubb3c \uac00\uaca9(\uc120\ud0dd \uc0ac\ud56d)",
+            "open": false
+          },
+          {
+            "summary": "\uc9c1\uc811 \uce21\uc815\ud55c \uac12 \ucd94\uac00",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 27
+    },
+    {
+      "state": "two-goals-selected",
+      "language": "ko",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\uac04\ub2e8\ud55c \uc9c8\ubb38 \uc138 \uac00\uc9c0"
+        ],
+        "details": [
+          {
+            "summary": "\uc26c\uc6b4 \uc6a9\uc5b4\uc9d1 \u2014 \uc6a9\uc5b4\uc758 \uc758\ubbf8",
+            "open": false
+          },
+          {
+            "summary": "\ub0b4 \ub18d\uc7a5\uc758 \uc81c\uc57d \uc870\uac74 (\uc120\ud0dd \uc0ac\ud56d)",
+            "open": false
+          },
+          {
+            "summary": "\ub0b4 \uc791\ubb3c \uac00\uaca9(\uc120\ud0dd \uc0ac\ud56d)",
+            "open": false
+          },
+          {
+            "summary": "\uc9c1\uc811 \uce21\uc815\ud55c \uac12 \ucd94\uac00",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [
+          "\uc6a9\uc218 \uc808\uc57d\ubaa8\ub378 \uc591\uc218\ub7c9\uc774 \uc801\uc740 \uacc4\ud68d \uc120\ud638; \uad00\uac1c \uc2dc \uac00\uc7a5 \uc720\uc6a9",
+          "\uc720\uae30\ubb3c\ub2e4\ub144\uc0dd \uc791\ubb3c, \ud53c\ubcf5\uc791\ubb3c, \uc791\ubb3c \ub2e4\uc591\uc131 \uc120\ud638"
+        ],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 27
+    },
+    {
+      "state": "kansas-plan-expanded",
+      "language": "ko",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\ub2e4\uc74c \uc21c\uc11c\ub97c \uad8c\uc7a5\ud569\ub2c8\ub2e4: 2027\ub144 \ub300\ub450 \uc7ac\ubc30, \uc774\ud6c4 2028\ub144 \uc625\uc218\uc218 \uc7ac\ubc30, \uc774\ud6c4 2029\ub144 \ub300\ub450 \uc7ac\ubc30.",
+          "\uc694\uc57d",
+          "\uc625\uc218\uc218\ubfcc\ub9ac\ubc8c\ub808 \u2014 \uae30\ub300 \ud6a8\uacfc\uc774\uba70 \ubcf4\uc7a5\uc774 \uc544\ub2d8",
+          "\ub18d\ud559 \uc804\ubb38\uac00\uc5d0\uac8c \ub2e4\uc74c\uc744 \ubb38\uc758\ud558\uc138\uc694\u2026",
+          "\uac00\uaca9 \ubbfc\uac10\ub3c4 \u2014 \uc608\uce21\uc774 \uc544\ub2d9\ub2c8\ub2e4",
+          "\ub300\ub450 \u2192 \uc625\uc218\uc218 \u2192 \ub300\ub450",
+          "\ub300\ub450 \u2192 \uaca8\uc6b8\ubc00 \u2192 \ub300\ub450",
+          "\uc625\uc218\uc218 \u2192 \ub300\ub450 \u2192 \uc625\uc218\uc218",
+          "\ud604\uc7ac \uc7ac\ubc30 \ubc29\uc2dd: \uaca8\uc6b8\ubc00 \u2192 \uaca8\uc6b8\ubc00 \u2192 \uaca8\uc6b8\ubc00",
+          "\uc6a9\uc218 \uc870\uac74\uc774 \ubc14\ub010\ub2e4\uba74?",
+          "\ud3ec\uc7a5\uc5d0\uc11c \ud749\uc791\uc778 \ud574 \uc7ac\ud604\ud558\uae30",
+          "\ud574\ub2f9 \uc5f0\ub3c4\uc758 \uac00\ubb44 \ubaa8\ub2c8\ud130",
+          "\ud48d\uc2dd \ub178\ucd9c(\uc120\ubcc4 \ud3c9\uac00)",
+          "\ud1a0\uc591 \ud48d\uc2dd\uc131(SSURGO)",
+          "\uacc4\ud68d \uc5f0\ub3c4\ubcc4 2\u20135\uc6d4 \ud53c\ubcf5",
+          "\ub9c8\uc9c4 \uc218\uce58\uc758 \uac00\uc815",
+          "\uc2dd\uc0dd \uadfc\uac70 \uc790\ub8cc \u00b7 MODIS",
+          "SMAP \ud1a0\uc591 \uc218\ubd84 \u00b7 \uc9c0\uc5ed \ubc30\uacbd \uc815\ubcf4",
+          "\uc9c0\uc5ed \ubb3c \uc800\uc7a5\ub7c9 \ubc0f \uc778\uadfc Kansas \uad00\uc815",
+          "\uc774 \uacc4\ud68d\uc744 \uc81c\uc548\ud558\ub294 \uc774\uc720",
+          "\uc774 \uacc4\ud68d\uc774 \ud1a0\uc591\uc744 \uac1c\uc120\ud558\ub294 \ubc29\ubc95",
+          "\ucd94\uac00 \uac80\ud1a0 \uc758\uacac",
+          "\uc2e4\uc81c \uc218\ud655\ub7c9\uacfc \ub300\uc870 \uac80\uc99d",
+          "\ub300\ub450 \ubaa8\ub378 \uac80\uc99d: \ub2e4\uc74c \uc791\ubb3c \uc774\ud6c4 \uc7ac\ubc30 \uc625\uc218\uc218, \uc774 \uc9c0\uc5ed\uc758 \uc77c\ubc18\uc801\uc778 \uc724\uc791",
+          "\uc625\uc218\uc218 \ubaa8\ub378 \uac80\uc99d: \ub2e4\uc74c \uc791\ubb3c \uc774\ud6c4 \uc7ac\ubc30 \ub300\ub450, \uc774 \uc9c0\uc5ed\uc758 \uc77c\ubc18\uc801\uc778 \uc724\uc791",
+          "\uadfc\uac70 \uc790\ub8cc\uc640 \ud55c\uacc4",
+          "\ub18d\ud559 \uc804\ubb38\uac00\uc5d0\uac8c \ub2e4\uc74c\uc744 \ubb38\uc758\ud558\uc138\uc694\u2026",
+          "\uc625\uc218\uc218\ubfcc\ub9ac\ubc8c\ub808 \u2014 \uae30\ub300 \ud6a8\uacfc\uc774\uba70 \ubcf4\uc7a5\uc774 \uc544\ub2d8",
+          "\ub18d\ud559 \uc804\ubb38\uac00\uc5d0\uac8c \ub2e4\uc74c\uc744 \ubb38\uc758\ud558\uc138\uc694\u2026",
+          "\ub18d\ud559 \uc804\ubb38\uac00\uc5d0\uac8c \ub2e4\uc74c\uc744 \ubb38\uc758\ud558\uc138\uc694\u2026",
+          "\uc774 \uacc4\ud68d\uc5d0 \uad81\uae08\ud55c \uc810\uc774 \uc788\ub098\uc694?"
+        ],
+        "details": [
+          {
+            "summary": "\uc26c\uc6b4 \uc6a9\uc5b4\uc9d1 \u2014 \uc6a9\uc5b4\uc758 \uc758\ubbf8",
+            "open": true
+          },
+          {
+            "summary": "\ubaa9\ud45c \uac00\uc810 +0.0588 \u00b7 \ucd1d\uc810 0.909",
+            "open": true
+          },
+          {
+            "summary": "\ubcd1\ud574\ucda9 \ucc38\uace0 \uc0ac\ud56d \ubc0f \ub18d\ud559 \uc804\ubb38\uac00 \ud655\uc778 \u2014 \ub300\ub450 \u2192 \uc625\uc218\uc218 \u2192 \ub300\ub450",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ucd9c\ucc98, \ud55c\uacc4",
+            "open": true
+          },
+          {
+            "summary": "\uacc4\uc0b0 \uc5d4\uc9c4\uc758 \ub300\uccb4 \uae30\ubcf8\uac12 \uac80\ud1a0",
+            "open": true
+          },
+          {
+            "summary": "\uc625\uc218\uc218 \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\ub300\ub450 \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\uaca8\uc6b8\ubc00 \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\uadc0\ub9ac \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\uc54c\ud314\ud30c / \uac74\ucd08 \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\uc218\uc218 \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\ud734\uacbd(\uc791\ubb3c \uc5c6\uc74c) \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\ucd9c\ucc98\uac00 \uc788\ub294 \uae30\uc900: K-State 2025 \ube44\uad00\uac1c \uc625\uc218\uc218\u2013\ub300\ub450",
+            "open": true
+          },
+          {
+            "summary": "\ub0a0\uc9dc, \ud488\uc9c8 \uad00\ub9ac, \ucd9c\ucc98, \ud55c\uacc4",
+            "open": true
+          },
+          {
+            "summary": "\ud45c\uce35(0\u20135 cm): 0.070 m\u00b3/m\u00b3",
+            "open": true
+          },
+          {
+            "summary": "\uadfc\uad8c(0\u2013100 cm): 0.174 m\u00b3/m\u00b3",
+            "open": true
+          },
+          {
+            "summary": "\uc77c\uce58 \uae30\uac04\uc758 \ucd94\uc138 \ube44\uad50\uc640 \ub0a0\uc9dc\ubcc4 \uad00\uc815 \uae30\ub85d",
+            "open": true
+          },
+          {
+            "summary": "\uad00\uc815 380435100422401: \ud558\ub77d; \uc9c0\uc5ed \uc800\uc7a5\ub7c9 \ud558\ub77d \u00b7 \uac19\uc740 \ubc29\ud5a5",
+            "open": true
+          },
+          {
+            "summary": "\uad00\uc815 390856100451901: \ud558\ub77d; \uc9c0\uc5ed \uc800\uc7a5\ub7c9 \ud558\ub77d \u00b7 \uac19\uc740 \ubc29\ud5a5",
+            "open": true
+          },
+          {
+            "summary": "\uad00\uc815 380333100442901: \ud558\ub77d; \uc9c0\uc5ed \uc800\uc7a5\ub7c9 \ud558\ub77d \u00b7 \uac19\uc740 \ubc29\ud5a5",
+            "open": true
+          },
+          {
+            "summary": "\uc6d4\ubcc4 \uc9c0\uc5ed \uc800\uc7a5\ub7c9, \ubd88\ud655\uc2e4\uc131, \uc790\ub8cc \uacf5\ubc31",
+            "open": true
+          },
+          {
+            "summary": "\ub18d\uac00 \uc81c\uc57d \uc870\uac74 \ubc0f \ucc9c\uc218 \uc7ac\ubc30 \uc5f0\uad6c \uc790\ub8cc\uc2e4(\ubbf8\ub9ac\ubcf4\uae30)",
+            "open": true
+          },
+          {
+            "summary": "\uc790\ub8cc \uc81c\uacf5 \uae30\uad00",
+            "open": true
+          },
+          {
+            "summary": "\uc774 \uc218\uce58\ub97c \ud45c\ub85c \ubcf4\uae30",
+            "open": true
+          },
+          {
+            "summary": "\uc774 \uc218\uce58\ub97c \ud45c\ub85c \ubcf4\uae30",
+            "open": true
+          },
+          {
+            "summary": "\uc790\ub8cc \uc0c1\ud0dc \u2014 \ucd9c\ucc98, \ub0a0\uc9dc, \uc644\uc804\uc131",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\uadfc\uac70 \uc790\ub8cc \ud488\uc9c8 \u2014 \uad00\uce21\uacfc \ub204\ub77d \uc790\ub8cc",
+            "open": true
+          },
+          {
+            "summary": "\ud604\uc9c0 \uc801\uc6a9 \uac00\ub2a5\uc131 \u2014 \uac80\ud1a0\ud560 \uac00\uc815",
+            "open": true
+          },
+          {
+            "summary": "\ub2e4\ub978 \ub300\uc548\uacfc \ube44\uad50",
+            "open": true
+          },
+          {
+            "summary": "\ubaa9\ud45c \uac00\uc810 +0.0588 \u00b7 \ucd1d\uc810 0.909",
+            "open": true
+          },
+          {
+            "summary": "\ubaa9\ud45c \uac00\uc810 +0.0575 \u00b7 \ucd1d\uc810 0.874",
+            "open": true
+          },
+          {
+            "summary": "\ubcd1\ud574\ucda9 \ucc38\uace0 \uc0ac\ud56d \ubc0f \ub18d\ud559 \uc804\ubb38\uac00 \ud655\uc778 \u2014 \ub300\ub450 \u2192 \uaca8\uc6b8\ubc00 \u2192 \ub300\ub450",
+            "open": true
+          },
+          {
+            "summary": "\ubaa9\ud45c \uac00\uc810 +0.0549 \u00b7 \ucd1d\uc810 0.825",
+            "open": true
+          },
+          {
+            "summary": "\ubcd1\ud574\ucda9 \ucc38\uace0 \uc0ac\ud56d \ubc0f \ub18d\ud559 \uc804\ubb38\uac00 \ud655\uc778 \u2014 \uc625\uc218\uc218 \u2192 \ub300\ub450 \u2192 \uc625\uc218\uc218",
+            "open": true
+          },
+          {
+            "summary": "\ubaa9\ud45c \uac00\uc810 +0.0472 \u00b7 \ucd1d\uc810 0.498",
+            "open": true
+          },
+          {
+            "summary": "\ubcd1\ud574\ucda9 \ucc38\uace0 \uc0ac\ud56d \ubc0f \ub18d\ud559 \uc804\ubb38\uac00 \ud655\uc778 \u2014 \ud604\uc7ac \uc7ac\ubc30 \ubc29\uc2dd: \uaca8\uc6b8\ubc00 \u2192 \uaca8\uc6b8\ubc00 \u2192 \uaca8\uc6b8\ubc00",
+            "open": true
+          },
+          {
+            "summary": "\ud3ec\uc7a5\uc758 \uae30\uc0c1\uc774 \uc5b4\ub5bb\uac8c \ubcc0\ud588\ub294\uc9c0",
+            "open": true
+          },
+          {
+            "summary": "\ucc28\ud2b8 \ubcf4\uae30",
+            "open": true
+          },
+          {
+            "summary": "\uc704\uc131 \uce21\uc815\uac12\uc758 \uc758\ubbf8",
+            "open": true
+          },
+          {
+            "summary": "\uc704\uc131 \uc790\ub8cc\uc640 \uc9c0\uc0c1 \uce21\uc815\uac12 \ube44\uad50",
+            "open": true
+          },
+          {
+            "summary": "\uc804\uccb4 \uadfc\uac70 (23)",
+            "open": true
+          },
+          {
+            "summary": "\uc625\uc218\uc218 \uc0dd\uc721 \ub2e8\uacc4 \uc2dc\uae30 \ucd94\uc815(\uacfc\uac70\uc790\ub8cc \ubbfc\uac10\ub3c4)",
+            "open": true
+          },
+          {
+            "summary": "2025: Kansas \uc8fc; \ucd94\uc815 \ucd9c\uc0ac\uae30 2025-07-12; \uc870\uc0ac\uc0c1 50% \ub3c4\ub2ec \uad6c\uac04 2025-07-06 ~ 2025-07-13",
+            "open": true
+          },
+          {
+            "summary": "2024: Kansas \uc8fc; \ucd94\uc815 \ucd9c\uc0ac\uae30 2024-07-07; \uc870\uc0ac\uc0c1 50% \ub3c4\ub2ec \uad6c\uac04 2024-07-07 ~ 2024-07-14",
+            "open": true
+          },
+          {
+            "summary": "2023: Kansas \uc8fc; \ucd94\uc815 \ucd9c\uc0ac\uae30 2023-07-13; \uc870\uc0ac\uc0c1 50% \ub3c4\ub2ec \uad6c\uac04 2023-07-09 ~ 2023-07-16",
+            "open": true
+          },
+          {
+            "summary": "\uace0\uc628 \uc5f0\ub3c4 \ub178\ucd9c \ubc0f \uacfc\uac70 \uc0ac\uac74 \ubaa9\ub85d",
+            "open": true
+          },
+          {
+            "summary": "\uc790\ub8cc \ubc94\uc704\uc640 \ubd88\uc77c\uce58",
+            "open": true
+          },
+          {
+            "summary": "\ucc38\uace0 \ubb38\ud5cc\uacfc \ubaa8\ub378 \uac00\uc815",
+            "open": true
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 5,
+        "vegetation": "\uc2dd\uc0dd \uadfc\uac70 \uc790\ub8cc \u00b7 MODIS\uacfc\uac70\uc758 \uc800\ud574\uc0c1\ub3c4/\ud569\uc131 \uc9c0\uc810 \ud53d\uc140\uc774\uba70 \ud3ec\uc7a5 \uce21\uc815\uac12\uc774\ub098 \uc81c\uc548\ub41c \uc724\uc791\uc758 \uc608\uce21\uc774 \uc544\ub2d9\ub2c8\ub2e4. NDVI\uac00 \ub0ae\ub2e4\uace0 \ub098\uc9c0\ub85c \ub2e8\uc815\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.2025: 23 / 23 \uc608\uc0c1 \ud569\uc131 \uc790\ub8cc \uc911 \uc5c4\uaca9\ud55c \ud488\uc9c8 \uac80\uc0ac\ub97c \ud1b5\uacfc\ud55c \uc218(\uc644\uc804). \ud3ec\uc7a5 \uba74\uc801\uc758 \ud3ec\ud568 \ubc94\uc704\ub294 \ubbf8\uc0c1\uc785\ub2c8\ub2e4.1.00\u22120.22025-01-01: 0.32682025-01-17: 0.30022025-02-02: 0.31232025-02-18: 0.30302025-03-06: 0.40592025-03-22: 0.57552025-04-07: 0.79172025-04-23: 0.84232025-05-09: 0.87332025-05-25: 0.75272025-06-10: 0.74172025-06-26: 0.31102025-07-12: 0.34062025-07-28: 0.31282025-08-13: 0.30492025-08-29: 0.30692025-09-14: 0.30682025-09-30: 0.25502025-10-16: 0.26112025-11-01: 0.22482025-11-17: 0.23952025-12-03: 0.25762025-12-19: 0.22251\uc6d412\uc6d4NDVI(\ubb34\ucc28\uc6d0), \uba85\ubaa9 \ud574\uc0c1\ub3c4 250 m, 16\uc77c \ud569\uc131 \uc790\ub8cc\uc785\ub2c8\ub2e4. \uc810\uc73c\ub85c\ub9cc \ud45c\uc2dc\ud558\uba70 \uacf5\ubc31\uc740 \ubcf4\uac04\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.\ub0a0\uc9dc, \ud488\uc9c8 \uad00\ub9ac, \ucd9c\ucc98, \ud55c\uacc4\uc800\ud574\uc0c1\ub3c4 \uacfc\uac70 \uc9c0\uc810 \ud53d\uc140\uc774\uba70 \ud3ec\uc7a5 \uce21\uc815\uac12\uc774\ub098 \ub300\uccb4 \uc724\uc791\uc758 \uad00\uce21\uac12\uc774 \uc544\ub2d9\ub2c8\ub2e4. \ub0ae\uc740 NDVI\uac00 \ub098\uc9c0\ub97c \uc785\uc99d\ud558\uc9c0 \uc54a\uc73c\uba70 \uc794\uc0ac\uc640 \ud63c\ud569 \ud53d\uc140\uc740 \uad6c\ubd84\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \ubcf4\uac04\uc774\ub098 \uc13c\uc11c \uac04 \ubcd1\ud569\uc740 \ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \ud3ec\uc7a5 \uba74\uc801\uc758 \ud3ec\ud568 \ubc94\uc704\ub294 \ubbf8\uc0c1\uc785\ub2c8\ub2e4. MODIS\ub294 \ubc18\uc0ac\ub3c4\ub85c \uc0b0\ucd9c\ud55c \ud3ec\uc7a5 NDVI\uac00 \uc544\ub2cc \uc81c\uacf5 \uae30\uad00\uc758 NDVI\ub97c \uc0ac\uc6a9\ud569\ub2c8\ub2e4.MOD13Q1 \uceec\ub809\uc158 061 \u00b7 250 m nominal; MODIS sinusoidal grid \u00b7 16-day composite (last interval ends December 31). NDVI \ubc30\uc728 0.0001, \ud55c \ubc88\ub9cc \uc801\uc6a9\ud569\ub2c8\ub2e4. \uc2e0\ub8b0\ub3c4 0\uc774\uba70 \uc778\uc811/\ud63c\ud569 \uad6c\ub984, \ub208, \uadf8\ub9bc\uc790\uac00 \uc5c6\ub294 \uc591\ud638\ud55c \uc721\uc9c0 \ud488\uc9c8 \uc790\ub8cc\ub9cc \ud5c8\uc6a9\ud569\ub2c8\ub2e4. \uacbd\uacc4 \ud488\uc9c8 \uad00\uce21\uac12\uc740 \uc81c\uc678\ud569\ub2c8\ub2e4.Didan, K. (2021), MOD13Q1.061, NASA LP DAAC, doi:10.5067/MODIS/MOD13Q1.061. Subsets: ORNL DAAC TESViS RESTful Web Service (2018), doi:10.3334/ORNLDAAC/1600. \uc870\ud68c\uc77c: 2026-11-16T02:47:36.043Z.\uc81c\ud488 \ud488\uc9c8 \uad00\ub9ac \uc548\ub0b4\uc0ac\uc6a9 \uac00\ub2a5\ud55c \ud569\uc131 \uc790\ub8cc \ub0a0\uc9dc\ubd80\ubd84\uc9d1\ud569 \uc694\uccad\ubd80\ubd84\uc9d1\ud569 \uc694\uccad\ubd80\ubd84\uc9d1\ud569 \uc694\uccad\ud569\uc131 \uc790\ub8cc\ub2f9 \ub2e8\uc77c \ud53d\uc140 \ubc94\uc704\uc785\ub2c8\ub2e4. \ubbf8\uc0c1\uc740 0\uc774 \uc544\ub2d9\ub2c8\ub2e4.\ud569\uc131 \uc2dc\uc791\uc77c\uad00\uce21NDVI\ud488\uc9c8 \ub4f1\uae092025-01-012025-01-150.326802025-01-172025-01-280.300202025-02-022025-02-070.312302025-02-182025-02-240.303002025-03-062025-03-160.405902025-03-222025-03-280.575502025-04-072025-04-170.791702025-04-232025-05-020.842302025-05-092025-05-120.873302025-05-252025-06-080.752702025-06-102025-06-110.741702025-06-262025-07-080.311002025-07-122025-07-230.340602025-07-282025-07-280.312802025-08-132025-08-140.304902025-08-292025-09-080.306902025-09-142025-09-180.306802025-09-302025-10-030.255002025-10-162025-10-200.261102025-11-012025-11-140.224802025-11-172025-11-270.239502025-12-032025-12-150.257602025-12-192025-12-220.22250",
+        "harvestTables": 2,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 75
+        }
+      ],
+      "passes": 38
+    },
+    {
+      "state": "field-watch",
+      "language": "ko",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\ud3ec\uc7a5\uc774 \uc5b4\ub514\uc5d0 \uc788\ub098\uc694?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "\uc26c\uc6b4 \uc6a9\uc5b4\uc9d1 \u2014 \uc6a9\uc5b4\uc758 \uc758\ubbf8",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 13
+    },
+    {
+      "state": "admin-docs",
+      "language": "ko",
+      "width": 1280,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/#/admin/docs",
+      "inventory": {
+        "headings": [
+          "\ubb38\uc11c \uac80\ud1a0",
+          "\uc5c5\ub85c\ub4dc",
+          "URL\ub85c \uc5f0\uad6c \ubb38\uc11c \ucd94\uac00",
+          "\ubb38\uc11c"
+        ],
+        "details": [],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 26
+    },
+    {
+      "state": "admin-docs-review-fixture",
+      "language": "ko",
+      "width": 1280,
+      "fixture": "Synthetic local-only document API interception; not authenticated server coverage",
+      "url": "http://127.0.0.1:8818/#/admin/docs",
+      "inventory": {
+        "headings": [
+          "\ubb38\uc11c \uac80\ud1a0",
+          "\uc5c5\ub85c\ub4dc",
+          "URL\ub85c \uc5f0\uad6c \ubb38\uc11c \ucd94\uac00",
+          "\ubb38\uc11c",
+          "\uac80\ud1a0: Accessibility review fixture",
+          "a11y-chunk-1",
+          "a11y-chunk-2"
+        ],
+        "details": [
+          {
+            "summary": "\ucd94\ucd9c\ub41c \uc870\uac01(2)",
+            "open": true
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 28
+    },
+    {
+      "state": "landing",
+      "language": "ko",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\ud3ec\uc7a5\uc774 \uc5b4\ub514\uc5d0 \uc788\ub098\uc694?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "\uc26c\uc6b4 \uc6a9\uc5b4\uc9d1 \u2014 \uc6a9\uc5b4\uc758 \uc758\ubbf8",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodeCount": 2
+        },
+        {
+          "id": "link-in-text-block",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 29
+    },
+    {
+      "state": "field-confirmation",
+      "language": "ko",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\ud3ec\uc7a5\uc774 \uc5b4\ub514\uc5d0 \uc788\ub098\uc694?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "\uc26c\uc6b4 \uc6a9\uc5b4\uc9d1 \u2014 \uc6a9\uc5b4\uc758 \uc758\ubbf8",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "nodeCount": 2
+        }
+      ],
+      "passes": 31
+    },
+    {
+      "state": "three-questions",
+      "language": "ko",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\uac04\ub2e8\ud55c \uc9c8\ubb38 \uc138 \uac00\uc9c0"
+        ],
+        "details": [
+          {
+            "summary": "\uc26c\uc6b4 \uc6a9\uc5b4\uc9d1 \u2014 \uc6a9\uc5b4\uc758 \uc758\ubbf8",
+            "open": false
+          },
+          {
+            "summary": "\ub0b4 \ub18d\uc7a5\uc758 \uc81c\uc57d \uc870\uac74 (\uc120\ud0dd \uc0ac\ud56d)",
+            "open": false
+          },
+          {
+            "summary": "\ub0b4 \uc791\ubb3c \uac00\uaca9(\uc120\ud0dd \uc0ac\ud56d)",
+            "open": false
+          },
+          {
+            "summary": "\uc9c1\uc811 \uce21\uc815\ud55c \uac12 \ucd94\uac00",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 27
+    },
+    {
+      "state": "two-goals-selected",
+      "language": "ko",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\uac04\ub2e8\ud55c \uc9c8\ubb38 \uc138 \uac00\uc9c0"
+        ],
+        "details": [
+          {
+            "summary": "\uc26c\uc6b4 \uc6a9\uc5b4\uc9d1 \u2014 \uc6a9\uc5b4\uc758 \uc758\ubbf8",
+            "open": false
+          },
+          {
+            "summary": "\ub0b4 \ub18d\uc7a5\uc758 \uc81c\uc57d \uc870\uac74 (\uc120\ud0dd \uc0ac\ud56d)",
+            "open": false
+          },
+          {
+            "summary": "\ub0b4 \uc791\ubb3c \uac00\uaca9(\uc120\ud0dd \uc0ac\ud56d)",
+            "open": false
+          },
+          {
+            "summary": "\uc9c1\uc811 \uce21\uc815\ud55c \uac12 \ucd94\uac00",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [
+          "\uc6a9\uc218 \uc808\uc57d\ubaa8\ub378 \uc591\uc218\ub7c9\uc774 \uc801\uc740 \uacc4\ud68d \uc120\ud638; \uad00\uac1c \uc2dc \uac00\uc7a5 \uc720\uc6a9",
+          "\uc720\uae30\ubb3c\ub2e4\ub144\uc0dd \uc791\ubb3c, \ud53c\ubcf5\uc791\ubb3c, \uc791\ubb3c \ub2e4\uc591\uc131 \uc120\ud638"
+        ],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 1
+        }
+      ],
+      "passes": 27
+    },
+    {
+      "state": "kansas-plan-expanded",
+      "language": "ko",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\ub2e4\uc74c \uc21c\uc11c\ub97c \uad8c\uc7a5\ud569\ub2c8\ub2e4: 2027\ub144 \ub300\ub450 \uc7ac\ubc30, \uc774\ud6c4 2028\ub144 \uc625\uc218\uc218 \uc7ac\ubc30, \uc774\ud6c4 2029\ub144 \ub300\ub450 \uc7ac\ubc30.",
+          "\uc694\uc57d",
+          "\uc625\uc218\uc218\ubfcc\ub9ac\ubc8c\ub808 \u2014 \uae30\ub300 \ud6a8\uacfc\uc774\uba70 \ubcf4\uc7a5\uc774 \uc544\ub2d8",
+          "\ub18d\ud559 \uc804\ubb38\uac00\uc5d0\uac8c \ub2e4\uc74c\uc744 \ubb38\uc758\ud558\uc138\uc694\u2026",
+          "\uac00\uaca9 \ubbfc\uac10\ub3c4 \u2014 \uc608\uce21\uc774 \uc544\ub2d9\ub2c8\ub2e4",
+          "\ub300\ub450 \u2192 \uc625\uc218\uc218 \u2192 \ub300\ub450",
+          "\ub300\ub450 \u2192 \uaca8\uc6b8\ubc00 \u2192 \ub300\ub450",
+          "\uc625\uc218\uc218 \u2192 \ub300\ub450 \u2192 \uc625\uc218\uc218",
+          "\ud604\uc7ac \uc7ac\ubc30 \ubc29\uc2dd: \uaca8\uc6b8\ubc00 \u2192 \uaca8\uc6b8\ubc00 \u2192 \uaca8\uc6b8\ubc00",
+          "\uc6a9\uc218 \uc870\uac74\uc774 \ubc14\ub010\ub2e4\uba74?",
+          "\ud3ec\uc7a5\uc5d0\uc11c \ud749\uc791\uc778 \ud574 \uc7ac\ud604\ud558\uae30",
+          "\ud574\ub2f9 \uc5f0\ub3c4\uc758 \uac00\ubb44 \ubaa8\ub2c8\ud130",
+          "\ud48d\uc2dd \ub178\ucd9c(\uc120\ubcc4 \ud3c9\uac00)",
+          "\ud1a0\uc591 \ud48d\uc2dd\uc131(SSURGO)",
+          "\uacc4\ud68d \uc5f0\ub3c4\ubcc4 2\u20135\uc6d4 \ud53c\ubcf5",
+          "\ub9c8\uc9c4 \uc218\uce58\uc758 \uac00\uc815",
+          "\uc2dd\uc0dd \uadfc\uac70 \uc790\ub8cc \u00b7 MODIS",
+          "SMAP \ud1a0\uc591 \uc218\ubd84 \u00b7 \uc9c0\uc5ed \ubc30\uacbd \uc815\ubcf4",
+          "\uc9c0\uc5ed \ubb3c \uc800\uc7a5\ub7c9 \ubc0f \uc778\uadfc Kansas \uad00\uc815",
+          "\uc774 \uacc4\ud68d\uc744 \uc81c\uc548\ud558\ub294 \uc774\uc720",
+          "\uc774 \uacc4\ud68d\uc774 \ud1a0\uc591\uc744 \uac1c\uc120\ud558\ub294 \ubc29\ubc95",
+          "\ucd94\uac00 \uac80\ud1a0 \uc758\uacac",
+          "\uc2e4\uc81c \uc218\ud655\ub7c9\uacfc \ub300\uc870 \uac80\uc99d",
+          "\ub300\ub450 \ubaa8\ub378 \uac80\uc99d: \ub2e4\uc74c \uc791\ubb3c \uc774\ud6c4 \uc7ac\ubc30 \uc625\uc218\uc218, \uc774 \uc9c0\uc5ed\uc758 \uc77c\ubc18\uc801\uc778 \uc724\uc791",
+          "\uc625\uc218\uc218 \ubaa8\ub378 \uac80\uc99d: \ub2e4\uc74c \uc791\ubb3c \uc774\ud6c4 \uc7ac\ubc30 \ub300\ub450, \uc774 \uc9c0\uc5ed\uc758 \uc77c\ubc18\uc801\uc778 \uc724\uc791",
+          "\uadfc\uac70 \uc790\ub8cc\uc640 \ud55c\uacc4",
+          "\ub18d\ud559 \uc804\ubb38\uac00\uc5d0\uac8c \ub2e4\uc74c\uc744 \ubb38\uc758\ud558\uc138\uc694\u2026",
+          "\uc625\uc218\uc218\ubfcc\ub9ac\ubc8c\ub808 \u2014 \uae30\ub300 \ud6a8\uacfc\uc774\uba70 \ubcf4\uc7a5\uc774 \uc544\ub2d8",
+          "\ub18d\ud559 \uc804\ubb38\uac00\uc5d0\uac8c \ub2e4\uc74c\uc744 \ubb38\uc758\ud558\uc138\uc694\u2026",
+          "\ub18d\ud559 \uc804\ubb38\uac00\uc5d0\uac8c \ub2e4\uc74c\uc744 \ubb38\uc758\ud558\uc138\uc694\u2026",
+          "\uc774 \uacc4\ud68d\uc5d0 \uad81\uae08\ud55c \uc810\uc774 \uc788\ub098\uc694?"
+        ],
+        "details": [
+          {
+            "summary": "\uc26c\uc6b4 \uc6a9\uc5b4\uc9d1 \u2014 \uc6a9\uc5b4\uc758 \uc758\ubbf8",
+            "open": true
+          },
+          {
+            "summary": "\ubaa9\ud45c \uac00\uc810 +0.0588 \u00b7 \ucd1d\uc810 0.909",
+            "open": true
+          },
+          {
+            "summary": "\ubcd1\ud574\ucda9 \ucc38\uace0 \uc0ac\ud56d \ubc0f \ub18d\ud559 \uc804\ubb38\uac00 \ud655\uc778 \u2014 \ub300\ub450 \u2192 \uc625\uc218\uc218 \u2192 \ub300\ub450",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ucd9c\ucc98, \ud55c\uacc4",
+            "open": true
+          },
+          {
+            "summary": "\uacc4\uc0b0 \uc5d4\uc9c4\uc758 \ub300\uccb4 \uae30\ubcf8\uac12 \uac80\ud1a0",
+            "open": true
+          },
+          {
+            "summary": "\uc625\uc218\uc218 \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\ub300\ub450 \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\uaca8\uc6b8\ubc00 \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\uadc0\ub9ac \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\uc54c\ud314\ud30c / \uac74\ucd08 \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\uc218\uc218 \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\ud734\uacbd(\uc791\ubb3c \uc5c6\uc74c) \u00b7 \ub300\ub7b5\uc801\uc778 \uae30\ubcf8\uac12",
+            "open": true
+          },
+          {
+            "summary": "\ucd9c\ucc98\uac00 \uc788\ub294 \uae30\uc900: K-State 2025 \ube44\uad00\uac1c \uc625\uc218\uc218\u2013\ub300\ub450",
+            "open": true
+          },
+          {
+            "summary": "\ub0a0\uc9dc, \ud488\uc9c8 \uad00\ub9ac, \ucd9c\ucc98, \ud55c\uacc4",
+            "open": true
+          },
+          {
+            "summary": "\ud45c\uce35(0\u20135 cm): 0.070 m\u00b3/m\u00b3",
+            "open": true
+          },
+          {
+            "summary": "\uadfc\uad8c(0\u2013100 cm): 0.174 m\u00b3/m\u00b3",
+            "open": true
+          },
+          {
+            "summary": "\uc77c\uce58 \uae30\uac04\uc758 \ucd94\uc138 \ube44\uad50\uc640 \ub0a0\uc9dc\ubcc4 \uad00\uc815 \uae30\ub85d",
+            "open": true
+          },
+          {
+            "summary": "\uad00\uc815 380435100422401: \ud558\ub77d; \uc9c0\uc5ed \uc800\uc7a5\ub7c9 \ud558\ub77d \u00b7 \uac19\uc740 \ubc29\ud5a5",
+            "open": true
+          },
+          {
+            "summary": "\uad00\uc815 390856100451901: \ud558\ub77d; \uc9c0\uc5ed \uc800\uc7a5\ub7c9 \ud558\ub77d \u00b7 \uac19\uc740 \ubc29\ud5a5",
+            "open": true
+          },
+          {
+            "summary": "\uad00\uc815 380333100442901: \ud558\ub77d; \uc9c0\uc5ed \uc800\uc7a5\ub7c9 \ud558\ub77d \u00b7 \uac19\uc740 \ubc29\ud5a5",
+            "open": true
+          },
+          {
+            "summary": "\uc6d4\ubcc4 \uc9c0\uc5ed \uc800\uc7a5\ub7c9, \ubd88\ud655\uc2e4\uc131, \uc790\ub8cc \uacf5\ubc31",
+            "open": true
+          },
+          {
+            "summary": "\ub18d\uac00 \uc81c\uc57d \uc870\uac74 \ubc0f \ucc9c\uc218 \uc7ac\ubc30 \uc5f0\uad6c \uc790\ub8cc\uc2e4(\ubbf8\ub9ac\ubcf4\uae30)",
+            "open": true
+          },
+          {
+            "summary": "\uc790\ub8cc \uc81c\uacf5 \uae30\uad00",
+            "open": true
+          },
+          {
+            "summary": "\uc774 \uc218\uce58\ub97c \ud45c\ub85c \ubcf4\uae30",
+            "open": true
+          },
+          {
+            "summary": "\uc774 \uc218\uce58\ub97c \ud45c\ub85c \ubcf4\uae30",
+            "open": true
+          },
+          {
+            "summary": "\uc790\ub8cc \uc0c1\ud0dc \u2014 \ucd9c\ucc98, \ub0a0\uc9dc, \uc644\uc804\uc131",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\ubc29\ubc95, \ub2e8\uc704, \ucd9c\ucc98 \ud45c\uae30",
+            "open": true
+          },
+          {
+            "summary": "\uadfc\uac70 \uc790\ub8cc \ud488\uc9c8 \u2014 \uad00\uce21\uacfc \ub204\ub77d \uc790\ub8cc",
+            "open": true
+          },
+          {
+            "summary": "\ud604\uc9c0 \uc801\uc6a9 \uac00\ub2a5\uc131 \u2014 \uac80\ud1a0\ud560 \uac00\uc815",
+            "open": true
+          },
+          {
+            "summary": "\ub2e4\ub978 \ub300\uc548\uacfc \ube44\uad50",
+            "open": true
+          },
+          {
+            "summary": "\ubaa9\ud45c \uac00\uc810 +0.0588 \u00b7 \ucd1d\uc810 0.909",
+            "open": true
+          },
+          {
+            "summary": "\ubaa9\ud45c \uac00\uc810 +0.0575 \u00b7 \ucd1d\uc810 0.874",
+            "open": true
+          },
+          {
+            "summary": "\ubcd1\ud574\ucda9 \ucc38\uace0 \uc0ac\ud56d \ubc0f \ub18d\ud559 \uc804\ubb38\uac00 \ud655\uc778 \u2014 \ub300\ub450 \u2192 \uaca8\uc6b8\ubc00 \u2192 \ub300\ub450",
+            "open": true
+          },
+          {
+            "summary": "\ubaa9\ud45c \uac00\uc810 +0.0549 \u00b7 \ucd1d\uc810 0.825",
+            "open": true
+          },
+          {
+            "summary": "\ubcd1\ud574\ucda9 \ucc38\uace0 \uc0ac\ud56d \ubc0f \ub18d\ud559 \uc804\ubb38\uac00 \ud655\uc778 \u2014 \uc625\uc218\uc218 \u2192 \ub300\ub450 \u2192 \uc625\uc218\uc218",
+            "open": true
+          },
+          {
+            "summary": "\ubaa9\ud45c \uac00\uc810 +0.0472 \u00b7 \ucd1d\uc810 0.498",
+            "open": true
+          },
+          {
+            "summary": "\ubcd1\ud574\ucda9 \ucc38\uace0 \uc0ac\ud56d \ubc0f \ub18d\ud559 \uc804\ubb38\uac00 \ud655\uc778 \u2014 \ud604\uc7ac \uc7ac\ubc30 \ubc29\uc2dd: \uaca8\uc6b8\ubc00 \u2192 \uaca8\uc6b8\ubc00 \u2192 \uaca8\uc6b8\ubc00",
+            "open": true
+          },
+          {
+            "summary": "\ud3ec\uc7a5\uc758 \uae30\uc0c1\uc774 \uc5b4\ub5bb\uac8c \ubcc0\ud588\ub294\uc9c0",
+            "open": true
+          },
+          {
+            "summary": "\ucc28\ud2b8 \ubcf4\uae30",
+            "open": true
+          },
+          {
+            "summary": "\uc704\uc131 \uce21\uc815\uac12\uc758 \uc758\ubbf8",
+            "open": true
+          },
+          {
+            "summary": "\uc704\uc131 \uc790\ub8cc\uc640 \uc9c0\uc0c1 \uce21\uc815\uac12 \ube44\uad50",
+            "open": true
+          },
+          {
+            "summary": "\uc804\uccb4 \uadfc\uac70 (23)",
+            "open": true
+          },
+          {
+            "summary": "\uc625\uc218\uc218 \uc0dd\uc721 \ub2e8\uacc4 \uc2dc\uae30 \ucd94\uc815(\uacfc\uac70\uc790\ub8cc \ubbfc\uac10\ub3c4)",
+            "open": true
+          },
+          {
+            "summary": "2025: Kansas \uc8fc; \ucd94\uc815 \ucd9c\uc0ac\uae30 2025-07-12; \uc870\uc0ac\uc0c1 50% \ub3c4\ub2ec \uad6c\uac04 2025-07-06 ~ 2025-07-13",
+            "open": true
+          },
+          {
+            "summary": "2024: Kansas \uc8fc; \ucd94\uc815 \ucd9c\uc0ac\uae30 2024-07-07; \uc870\uc0ac\uc0c1 50% \ub3c4\ub2ec \uad6c\uac04 2024-07-07 ~ 2024-07-14",
+            "open": true
+          },
+          {
+            "summary": "2023: Kansas \uc8fc; \ucd94\uc815 \ucd9c\uc0ac\uae30 2023-07-13; \uc870\uc0ac\uc0c1 50% \ub3c4\ub2ec \uad6c\uac04 2023-07-09 ~ 2023-07-16",
+            "open": true
+          },
+          {
+            "summary": "\uace0\uc628 \uc5f0\ub3c4 \ub178\ucd9c \ubc0f \uacfc\uac70 \uc0ac\uac74 \ubaa9\ub85d",
+            "open": true
+          },
+          {
+            "summary": "\uc790\ub8cc \ubc94\uc704\uc640 \ubd88\uc77c\uce58",
+            "open": true
+          },
+          {
+            "summary": "\ucc38\uace0 \ubb38\ud5cc\uacfc \ubaa8\ub378 \uac00\uc815",
+            "open": true
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 5,
+        "vegetation": "\uc2dd\uc0dd \uadfc\uac70 \uc790\ub8cc \u00b7 MODIS\uacfc\uac70\uc758 \uc800\ud574\uc0c1\ub3c4/\ud569\uc131 \uc9c0\uc810 \ud53d\uc140\uc774\uba70 \ud3ec\uc7a5 \uce21\uc815\uac12\uc774\ub098 \uc81c\uc548\ub41c \uc724\uc791\uc758 \uc608\uce21\uc774 \uc544\ub2d9\ub2c8\ub2e4. NDVI\uac00 \ub0ae\ub2e4\uace0 \ub098\uc9c0\ub85c \ub2e8\uc815\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.2025: 23 / 23 \uc608\uc0c1 \ud569\uc131 \uc790\ub8cc \uc911 \uc5c4\uaca9\ud55c \ud488\uc9c8 \uac80\uc0ac\ub97c \ud1b5\uacfc\ud55c \uc218(\uc644\uc804). \ud3ec\uc7a5 \uba74\uc801\uc758 \ud3ec\ud568 \ubc94\uc704\ub294 \ubbf8\uc0c1\uc785\ub2c8\ub2e4.1.00\u22120.22025-01-01: 0.32682025-01-17: 0.30022025-02-02: 0.31232025-02-18: 0.30302025-03-06: 0.40592025-03-22: 0.57552025-04-07: 0.79172025-04-23: 0.84232025-05-09: 0.87332025-05-25: 0.75272025-06-10: 0.74172025-06-26: 0.31102025-07-12: 0.34062025-07-28: 0.31282025-08-13: 0.30492025-08-29: 0.30692025-09-14: 0.30682025-09-30: 0.25502025-10-16: 0.26112025-11-01: 0.22482025-11-17: 0.23952025-12-03: 0.25762025-12-19: 0.22251\uc6d412\uc6d4NDVI(\ubb34\ucc28\uc6d0), \uba85\ubaa9 \ud574\uc0c1\ub3c4 250 m, 16\uc77c \ud569\uc131 \uc790\ub8cc\uc785\ub2c8\ub2e4. \uc810\uc73c\ub85c\ub9cc \ud45c\uc2dc\ud558\uba70 \uacf5\ubc31\uc740 \ubcf4\uac04\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.\ub0a0\uc9dc, \ud488\uc9c8 \uad00\ub9ac, \ucd9c\ucc98, \ud55c\uacc4\uc800\ud574\uc0c1\ub3c4 \uacfc\uac70 \uc9c0\uc810 \ud53d\uc140\uc774\uba70 \ud3ec\uc7a5 \uce21\uc815\uac12\uc774\ub098 \ub300\uccb4 \uc724\uc791\uc758 \uad00\uce21\uac12\uc774 \uc544\ub2d9\ub2c8\ub2e4. \ub0ae\uc740 NDVI\uac00 \ub098\uc9c0\ub97c \uc785\uc99d\ud558\uc9c0 \uc54a\uc73c\uba70 \uc794\uc0ac\uc640 \ud63c\ud569 \ud53d\uc140\uc740 \uad6c\ubd84\ub418\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \ubcf4\uac04\uc774\ub098 \uc13c\uc11c \uac04 \ubcd1\ud569\uc740 \ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \ud3ec\uc7a5 \uba74\uc801\uc758 \ud3ec\ud568 \ubc94\uc704\ub294 \ubbf8\uc0c1\uc785\ub2c8\ub2e4. MODIS\ub294 \ubc18\uc0ac\ub3c4\ub85c \uc0b0\ucd9c\ud55c \ud3ec\uc7a5 NDVI\uac00 \uc544\ub2cc \uc81c\uacf5 \uae30\uad00\uc758 NDVI\ub97c \uc0ac\uc6a9\ud569\ub2c8\ub2e4.MOD13Q1 \uceec\ub809\uc158 061 \u00b7 250 m nominal; MODIS sinusoidal grid \u00b7 16-day composite (last interval ends December 31). NDVI \ubc30\uc728 0.0001, \ud55c \ubc88\ub9cc \uc801\uc6a9\ud569\ub2c8\ub2e4. \uc2e0\ub8b0\ub3c4 0\uc774\uba70 \uc778\uc811/\ud63c\ud569 \uad6c\ub984, \ub208, \uadf8\ub9bc\uc790\uac00 \uc5c6\ub294 \uc591\ud638\ud55c \uc721\uc9c0 \ud488\uc9c8 \uc790\ub8cc\ub9cc \ud5c8\uc6a9\ud569\ub2c8\ub2e4. \uacbd\uacc4 \ud488\uc9c8 \uad00\uce21\uac12\uc740 \uc81c\uc678\ud569\ub2c8\ub2e4.Didan, K. (2021), MOD13Q1.061, NASA LP DAAC, doi:10.5067/MODIS/MOD13Q1.061. Subsets: ORNL DAAC TESViS RESTful Web Service (2018), doi:10.3334/ORNLDAAC/1600. \uc870\ud68c\uc77c: 2026-11-16T02:47:36.043Z.\uc81c\ud488 \ud488\uc9c8 \uad00\ub9ac \uc548\ub0b4\uc0ac\uc6a9 \uac00\ub2a5\ud55c \ud569\uc131 \uc790\ub8cc \ub0a0\uc9dc\ubd80\ubd84\uc9d1\ud569 \uc694\uccad\ubd80\ubd84\uc9d1\ud569 \uc694\uccad\ubd80\ubd84\uc9d1\ud569 \uc694\uccad\ud569\uc131 \uc790\ub8cc\ub2f9 \ub2e8\uc77c \ud53d\uc140 \ubc94\uc704\uc785\ub2c8\ub2e4. \ubbf8\uc0c1\uc740 0\uc774 \uc544\ub2d9\ub2c8\ub2e4.\ud569\uc131 \uc2dc\uc791\uc77c\uad00\uce21NDVI\ud488\uc9c8 \ub4f1\uae092025-01-012025-01-150.326802025-01-172025-01-280.300202025-02-022025-02-070.312302025-02-182025-02-240.303002025-03-062025-03-160.405902025-03-222025-03-280.575502025-04-072025-04-170.791702025-04-232025-05-020.842302025-05-092025-05-120.873302025-05-252025-06-080.752702025-06-102025-06-110.741702025-06-262025-07-080.311002025-07-122025-07-230.340602025-07-282025-07-280.312802025-08-132025-08-140.304902025-08-292025-09-080.306902025-09-142025-09-180.306802025-09-302025-10-030.255002025-10-162025-10-200.261102025-11-012025-11-140.224802025-11-172025-11-270.239502025-12-032025-12-150.257602025-12-192025-12-220.22250",
+        "harvestTables": 2,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodeCount": 76
+        }
+      ],
+      "passes": 38
+    },
+    {
+      "state": "field-watch",
+      "language": "ko",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/",
+      "inventory": {
+        "headings": [
+          "\ud3ec\uc7a5\uc774 \uc5b4\ub514\uc5d0 \uc788\ub098\uc694?",
+          "Field Watch"
+        ],
+        "details": [
+          {
+            "summary": "\uc26c\uc6b4 \uc6a9\uc5b4\uc9d1 \u2014 \uc6a9\uc5b4\uc758 \uc758\ubbf8",
+            "open": false
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 13
+    },
+    {
+      "state": "admin-docs",
+      "language": "ko",
+      "width": 375,
+      "fixture": null,
+      "url": "http://127.0.0.1:8818/#/admin/docs",
+      "inventory": {
+        "headings": [
+          "\ubb38\uc11c \uac80\ud1a0",
+          "\uc5c5\ub85c\ub4dc",
+          "URL\ub85c \uc5f0\uad6c \ubb38\uc11c \ucd94\uac00",
+          "\ubb38\uc11c"
+        ],
+        "details": [],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 25
+    },
+    {
+      "state": "admin-docs-review-fixture",
+      "language": "ko",
+      "width": 375,
+      "fixture": "Synthetic local-only document API interception; not authenticated server coverage",
+      "url": "http://127.0.0.1:8818/#/admin/docs",
+      "inventory": {
+        "headings": [
+          "\ubb38\uc11c \uac80\ud1a0",
+          "\uc5c5\ub85c\ub4dc",
+          "URL\ub85c \uc5f0\uad6c \ubb38\uc11c \ucd94\uac00",
+          "\ubb38\uc11c",
+          "\uac80\ud1a0: Accessibility review fixture",
+          "a11y-chunk-1",
+          "a11y-chunk-2"
+        ],
+        "details": [
+          {
+            "summary": "\ucd94\ucd9c\ub41c \uc870\uac01(2)",
+            "open": true
+          }
+        ],
+        "fieldWatchRows": 0,
+        "selectedGoals": [],
+        "goalScoreDisclosures": 0,
+        "vegetation": null,
+        "harvestTables": 0,
+        "pageLanguage": "ko",
+        "horizontalOverflow": false
+      },
+      "violations": [],
+      "incompleteRules": [],
+      "passes": 27
+    }
+  ]
+}

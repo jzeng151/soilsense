@@ -52,6 +52,10 @@ try {
     await scan('two-goals-selected');
     await page.getByRole('button', {name:showPlan, exact:true}).click();
     await page.locator('.jr-answer').waitFor();
+    // Split modules can add closed disclosures after the answer. Wait for attachment,
+    // not visibility, then expand the complete disclosure tree before interacting.
+    await page.getByRole('button', {name:copy.timing, exact:true, includeHidden:true}).waitFor({state:'attached'});
+    await page.getByRole('button', {name:copy.history, exact:true, includeHidden:true}).waitFor({state:'attached'});
     // Exercise opt-in evidence cards as well as automatically fetched card contents.
     await page.evaluate(() => document.querySelectorAll('details').forEach(d => { d.open = true; }));
     await page.getByRole('button', {name:copy.timing, exact:true}).click();

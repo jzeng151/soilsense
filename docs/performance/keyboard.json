@@ -1,0 +1,617 @@
+{
+  "timestamp": "2026-11-16T03:10:12.789Z",
+  "observations": [
+    {
+      "language": "en",
+      "width": 1280,
+      "order": [
+        {
+          "tag": "A",
+          "text": "Skip to main content"
+        },
+        {
+          "tag": "A",
+          "text": "Soil SenseTeaching satellites to speak Farmer"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "New chat"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "한국어"
+        },
+        {
+          "tag": "A",
+          "text": "Rotation planner"
+        },
+        {
+          "tag": "A",
+          "text": "SproutAI"
+        },
+        {
+          "tag": "A",
+          "text": "Live call"
+        },
+        {
+          "tag": "A",
+          "text": "Sources"
+        },
+        {
+          "tag": "A",
+          "text": "How it works"
+        },
+        {
+          "tag": "A",
+          "text": "Settings"
+        },
+        {
+          "tag": "A",
+          "text": "Data: NASA · USDA · FCC — see all sources"
+        },
+        {
+          "tag": "A",
+          "text": "Team sign-in"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "한국어"
+        },
+        {
+          "tag": "SUMMARY",
+          "text": "Plain-language glossary — what the terms mean"
+        },
+        {
+          "tag": "INPUT",
+          "text": "ZIP code"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Go"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "📍 Use my location"
+        },
+        {
+          "tag": "DIV",
+          "text": "+− NASA satellite Close-up photo Street map Plant greenness (NASA MODIS NDVI) Soil moistur"
+        },
+        {
+          "tag": "A",
+          "text": "+"
+        },
+        {
+          "tag": "A",
+          "text": "−"
+        },
+        {
+          "tag": "A",
+          "text": ""
+        },
+        {
+          "tag": "A",
+          "text": "Leaflet"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Iowa"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Illinois"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Kansas"
+        }
+      ],
+      "undersizedButtons": [],
+      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Crop rotation planner\"><ol class=\"jr-progress\" aria-label=\"Progress\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</span>Your field</but",
+      "planHeading": "Grow soybean in 2027, corn in 2028, then soybean in 2029.",
+      "mapKeyboardSelection": true
+    },
+    {
+      "language": "en",
+      "width": 375,
+      "order": [
+        {
+          "tag": "A",
+          "text": "Skip to main content"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Open sidebar"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "한국어"
+        },
+        {
+          "tag": "SUMMARY",
+          "text": "Plain-language glossary — what the terms mean"
+        },
+        {
+          "tag": "INPUT",
+          "text": "ZIP code"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Go"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "📍 Use my location"
+        },
+        {
+          "tag": "DIV",
+          "text": "+− NASA satellite Close-up photo Street map Plant greenness (NASA MODIS NDVI) Soil moistur"
+        },
+        {
+          "tag": "A",
+          "text": "+"
+        },
+        {
+          "tag": "A",
+          "text": "−"
+        },
+        {
+          "tag": "A",
+          "text": ""
+        },
+        {
+          "tag": "A",
+          "text": "Leaflet"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Iowa"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Illinois"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Kansas"
+        }
+      ],
+      "undersizedButtons": [],
+      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Crop rotation planner\"><ol class=\"jr-progress\" aria-label=\"Progress\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</span>Your field</but",
+      "planHeading": "Grow soybean in 2027, corn in 2028, then soybean in 2029.",
+      "mapKeyboardSelection": true
+    },
+    {
+      "language": "es",
+      "width": 1280,
+      "order": [
+        {
+          "tag": "A",
+          "text": "Saltar al contenido principal"
+        },
+        {
+          "tag": "A",
+          "text": "Soil SenseEnseñamos a los satélites a hablar el idioma del campo"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Nueva conversación"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "한국어"
+        },
+        {
+          "tag": "A",
+          "text": "Planificador de rotaciones"
+        },
+        {
+          "tag": "A",
+          "text": "SproutIA"
+        },
+        {
+          "tag": "A",
+          "text": "Llamada en directo"
+        },
+        {
+          "tag": "A",
+          "text": "Fuentes"
+        },
+        {
+          "tag": "A",
+          "text": "Cómo funciona"
+        },
+        {
+          "tag": "A",
+          "text": "Configuración"
+        },
+        {
+          "tag": "A",
+          "text": "Datos: NASA · USDA · FCC — ver todas las fuentes"
+        },
+        {
+          "tag": "A",
+          "text": "Acceso del equipo"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "한국어"
+        },
+        {
+          "tag": "SUMMARY",
+          "text": "Glosario en palabras sencillas: qué significan los términos"
+        },
+        {
+          "tag": "INPUT",
+          "text": "Código postal de EE. UU."
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Buscar"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "📍 Usar mi ubicación"
+        },
+        {
+          "tag": "DIV",
+          "text": "+− Satélite de NASA Imagen de detalle Mapa de calles Verdor de la vegetación (NASA MODIS N"
+        },
+        {
+          "tag": "A",
+          "text": "+"
+        },
+        {
+          "tag": "A",
+          "text": "−"
+        },
+        {
+          "tag": "A",
+          "text": ""
+        },
+        {
+          "tag": "A",
+          "text": "Leaflet"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Iowa"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Illinois"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Kansas"
+        }
+      ],
+      "undersizedButtons": [],
+      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Planificador de rotaciones de cultivos\"><ol class=\"jr-progress\" aria-label=\"Progreso\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</spa",
+      "planHeading": "Recomendamos cultivar soja en 2027, cultivar maíz en 2028 y después cultivar soja en 2029.",
+      "mapKeyboardSelection": true
+    },
+    {
+      "language": "es",
+      "width": 375,
+      "order": [
+        {
+          "tag": "A",
+          "text": "Saltar al contenido principal"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Abrir barra lateral"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "한국어"
+        },
+        {
+          "tag": "SUMMARY",
+          "text": "Glosario en palabras sencillas: qué significan los términos"
+        },
+        {
+          "tag": "INPUT",
+          "text": "Código postal de EE. UU."
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Buscar"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "📍 Usar mi ubicación"
+        },
+        {
+          "tag": "DIV",
+          "text": "+− Satélite de NASA Imagen de detalle Mapa de calles Verdor de la vegetación (NASA MODIS N"
+        },
+        {
+          "tag": "A",
+          "text": "+"
+        },
+        {
+          "tag": "A",
+          "text": "−"
+        },
+        {
+          "tag": "A",
+          "text": ""
+        },
+        {
+          "tag": "A",
+          "text": "Leaflet"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Iowa"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Illinois"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Kansas"
+        }
+      ],
+      "undersizedButtons": [],
+      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"Planificador de rotaciones de cultivos\"><ol class=\"jr-progress\" aria-label=\"Progreso\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</spa",
+      "planHeading": "Recomendamos cultivar soja en 2027, cultivar maíz en 2028 y después cultivar soja en 2029.",
+      "mapKeyboardSelection": true
+    },
+    {
+      "language": "ko",
+      "width": 1280,
+      "order": [
+        {
+          "tag": "A",
+          "text": "본문으로 건너뛰기"
+        },
+        {
+          "tag": "A",
+          "text": "Soil Sense위성 데이터를 농부의 언어로"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "새 대화"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "한국어"
+        },
+        {
+          "tag": "A",
+          "text": "윤작 계획"
+        },
+        {
+          "tag": "A",
+          "text": "SproutAI"
+        },
+        {
+          "tag": "A",
+          "text": "실시간 통화"
+        },
+        {
+          "tag": "A",
+          "text": "출처"
+        },
+        {
+          "tag": "A",
+          "text": "작동 방식"
+        },
+        {
+          "tag": "A",
+          "text": "설정"
+        },
+        {
+          "tag": "A",
+          "text": "자료: NASA · USDA · FCC — 모든 출처 보기"
+        },
+        {
+          "tag": "A",
+          "text": "팀 로그인"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "한국어"
+        },
+        {
+          "tag": "SUMMARY",
+          "text": "쉬운 용어집 — 용어의 의미"
+        },
+        {
+          "tag": "INPUT",
+          "text": "미국 우편번호"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "찾기"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "📍 내 위치 사용"
+        },
+        {
+          "tag": "DIV",
+          "text": "+− NASA satellite Close-up photo Street map Plant greenness (NASA MODIS NDVI) Soil moistur"
+        },
+        {
+          "tag": "A",
+          "text": "+"
+        },
+        {
+          "tag": "A",
+          "text": "−"
+        },
+        {
+          "tag": "A",
+          "text": ""
+        },
+        {
+          "tag": "A",
+          "text": "Leaflet"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Iowa"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Illinois"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Kansas"
+        }
+      ],
+      "undersizedButtons": [],
+      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"윤작 계획 도구\"><ol class=\"jr-progress\" aria-label=\"진행 상황\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</span>내 포장</button></li><li class=\"no",
+      "planHeading": "다음 순서를 권장합니다: 2027년 대두 재배, 이후 2028년 옥수수 재배, 이후 2029년 대두 재배.",
+      "mapKeyboardSelection": true
+    },
+    {
+      "language": "ko",
+      "width": 375,
+      "order": [
+        {
+          "tag": "A",
+          "text": "본문으로 건너뛰기"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "사이드바 열기"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "EN"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "ES"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "한국어"
+        },
+        {
+          "tag": "SUMMARY",
+          "text": "쉬운 용어집 — 용어의 의미"
+        },
+        {
+          "tag": "INPUT",
+          "text": "미국 우편번호"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "찾기"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "📍 내 위치 사용"
+        },
+        {
+          "tag": "DIV",
+          "text": "+− NASA satellite Close-up photo Street map Plant greenness (NASA MODIS NDVI) Soil moistur"
+        },
+        {
+          "tag": "A",
+          "text": "+"
+        },
+        {
+          "tag": "A",
+          "text": "−"
+        },
+        {
+          "tag": "A",
+          "text": ""
+        },
+        {
+          "tag": "A",
+          "text": "Leaflet"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Iowa"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Illinois"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Kansas"
+        }
+      ],
+      "undersizedButtons": [],
+      "questionFocus": "<main class=\"jr-main\" tabindex=\"-1\" aria-label=\"윤작 계획 도구\"><ol class=\"jr-progress\" aria-label=\"진행 상황\"><li class=\"done\"><button type=\"button\"><span class=\"jr-dot\">✓</span>내 포장</button></li><li class=\"no",
+      "planHeading": "다음 순서를 권장합니다: 2027년 대두 재배, 이후 2028년 옥수수 재배, 이후 2029년 대두 재배.",
+      "mapKeyboardSelection": true
+    }
+  ]
+}

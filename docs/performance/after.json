@@ -6,110 +6,122 @@
       "profile": "desktop",
       "hash": "#/",
       "run": 1,
-      "lcp": 988,
-      "ready": 582.5999999046326,
-      "jsTransferredBytes": 252939
+      "lcp": 636,
+      "ready": 269.2000002861023,
+      "jsTransferredBytes": 252890,
+      "planButtonReadyMs": 359.40000009536743
     },
     {
       "profile": "desktop",
       "hash": "#/",
       "run": 2,
-      "lcp": 772,
-      "ready": 469.09999990463257,
-      "jsTransferredBytes": 252881
+      "lcp": 624,
+      "ready": 237.39999961853027,
+      "jsTransferredBytes": 252895,
+      "planButtonReadyMs": 300.09999990463257
     },
     {
       "profile": "desktop",
       "hash": "#/",
       "run": 3,
-      "lcp": 816,
-      "ready": 464.30000019073486,
-      "jsTransferredBytes": 252886
+      "lcp": 544,
+      "ready": 222.59999990463257,
+      "jsTransferredBytes": 252902,
+      "planButtonReadyMs": 331.19999980926514
     },
     {
       "profile": "desktop",
       "hash": "#/how-it-works",
       "run": 1,
-      "lcp": 488,
-      "ready": 474.1000003814697,
-      "jsTransferredBytes": 189839
+      "lcp": 212,
+      "ready": 186.90000009536743,
+      "jsTransferredBytes": 189845,
+      "planButtonReadyMs": null
     },
     {
       "profile": "desktop",
       "hash": "#/how-it-works",
       "run": 2,
-      "lcp": 452,
-      "ready": 436.80000019073486,
-      "jsTransferredBytes": 189810
+      "lcp": 212,
+      "ready": 188.30000019073486,
+      "jsTransferredBytes": 189843,
+      "planButtonReadyMs": null
     },
     {
       "profile": "desktop",
       "hash": "#/how-it-works",
       "run": 3,
-      "lcp": 464,
-      "ready": 451,
-      "jsTransferredBytes": 189820
+      "lcp": 264,
+      "ready": 234.90000009536743,
+      "jsTransferredBytes": 189849,
+      "planButtonReadyMs": null
     },
     {
       "profile": "Fast 3G / 4x CPU",
       "hash": "#/",
       "run": 1,
-      "lcp": 2836,
-      "ready": 2813.7999997138977,
-      "jsTransferredBytes": 252886
+      "lcp": 2808,
+      "ready": 2782.3999996185303,
+      "jsTransferredBytes": 252903,
+      "planButtonReadyMs": 3383.5999999046326
     },
     {
       "profile": "Fast 3G / 4x CPU",
       "hash": "#/",
       "run": 2,
-      "lcp": 2828,
-      "ready": 2800.5,
-      "jsTransferredBytes": 252886
+      "lcp": 2740,
+      "ready": 2722.4000000953674,
+      "jsTransferredBytes": 252890,
+      "planButtonReadyMs": 4608.5
     },
     {
       "profile": "Fast 3G / 4x CPU",
       "hash": "#/",
       "run": 3,
-      "lcp": 2696,
-      "ready": 2680,
-      "jsTransferredBytes": 252886
+      "lcp": 3316,
+      "ready": 3286.7000002861023,
+      "jsTransferredBytes": 252895,
+      "planButtonReadyMs": 3189.3999996185303
     },
     {
       "profile": "Fast 3G / 4x CPU",
       "hash": "#/how-it-works",
       "run": 1,
-      "lcp": 2104,
-      "ready": 2072.2000002861023,
-      "jsTransferredBytes": 189835
+      "lcp": 2212,
+      "ready": 2170.199999809265,
+      "jsTransferredBytes": 189843,
+      "planButtonReadyMs": null
     },
     {
       "profile": "Fast 3G / 4x CPU",
       "hash": "#/how-it-works",
       "run": 2,
-      "lcp": 2080,
-      "ready": 2046.5999999046326,
-      "jsTransferredBytes": 189826
+      "lcp": 2232,
+      "ready": 2189.300000190735,
+      "jsTransferredBytes": 189854,
+      "planButtonReadyMs": null
     },
     {
       "profile": "Fast 3G / 4x CPU",
       "hash": "#/how-it-works",
       "run": 3,
-      "lcp": 2116,
-      "ready": 2071.0999999046326,
-      "jsTransferredBytes": 189834
+      "lcp": 2252,
+      "ready": 2214.0999999046326,
+      "jsTransferredBytes": 189861,
+      "planButtonReadyMs": null
     }
   ],
   "chunks": [
     {
-      "name": "api-BQRM3piy.js",
+      "name": "api-DqEL6uou.js",
       "bytes": 2701
     },
     {
-      "name": "App-DVStNgfg.js",
-      "bytes": 185045
+      "name": "App-xj56clS-.js",
+      "bytes": 185006
     },
     {
-      "name": "AuthPage-pPh2RVv6.js",
+      "name": "AuthPage-CoMSV3Li.js",
       "bytes": 4092
     },
     {
@@ -117,31 +129,31 @@
       "bytes": 4147
     },
     {
-      "name": "CropTimingEvidence-BTn93Cjj.js",
+      "name": "CropTimingEvidence-CtXfk4Ug.js",
       "bytes": 4639
     },
     {
-      "name": "DocsAdmin-BKu1YZYA.js",
+      "name": "DocsAdmin-BBkO-HLr.js",
       "bytes": 21177
     },
     {
-      "name": "EconomicsCard-Dh7zB6Gv.js",
+      "name": "EconomicsCard-E66o5FsZ.js",
       "bytes": 8977
     },
     {
-      "name": "FarmerConstraintEvidence-Y2RCgrzT.js",
+      "name": "FarmerConstraintEvidence-eeOyrDhW.js",
       "bytes": 7311
     },
     {
-      "name": "GraceWellsCard-DFjNzOwd.js",
+      "name": "GraceWellsCard-D2bNk5gv.js",
       "bytes": 6310
     },
     {
-      "name": "HistoricalScenarios-De-fkvK9.js",
+      "name": "HistoricalScenarios-CDHsXWhN.js",
       "bytes": 3418
     },
     {
-      "name": "HowItWorksPage-y7AgxdQV.js",
+      "name": "HowItWorksPage-Db6CwY9r.js",
       "bytes": 9932
     },
     {
@@ -149,67 +161,71 @@
       "bytes": 174790
     },
     {
-      "name": "i18n-pages-BtfJdBcF.js",
-      "bytes": 41986
+      "name": "i18n-pages-B0b9_c9r.js",
+      "bytes": 28090
     },
     {
-      "name": "index-DSBgSB6_.js",
-      "bytes": 203203
+      "name": "i18n-pages-ko-DtrNeSy7.js",
+      "bytes": 24730
+    },
+    {
+      "name": "index-obkirZoY.js",
+      "bytes": 203425
     },
     {
       "name": "lang-DMtHqMJ3.js",
       "bytes": 109608
     },
     {
-      "name": "LivePage-QMVnPwOu.js",
+      "name": "LivePage-B87Ldift.js",
       "bytes": 13746
     },
     {
-      "name": "PriceRobustnessCard-DMo8KhBd.js",
-      "bytes": 1801
+      "name": "PriceRobustnessCard-D5x9kYv8.js",
+      "bytes": 1806
     },
     {
-      "name": "rolldown-runtime-XKyaHtl9.js",
-      "bytes": 726
+      "name": "rolldown-runtime-WkwZ5CU-.js",
+      "bytes": 599
     },
     {
-      "name": "ScoutPage-DCMhkgSs.js",
+      "name": "ScoutPage-cfthAmR4.js",
       "bytes": 199753
     },
     {
-      "name": "SensorFitCard-Q4Ot9ChM.js",
+      "name": "SensorFitCard-3O_jF8lZ.js",
       "bytes": 9415
     },
     {
-      "name": "SettingsPage-DBrN_xD-.js",
+      "name": "SettingsPage-wM6LFoLe.js",
       "bytes": 17510
     },
     {
-      "name": "SmapCard-Bo73Vzpn.js",
+      "name": "SmapCard-CcHVoa_E.js",
       "bytes": 2869
     },
     {
-      "name": "SourcesPage-CBDc7wZI.js",
+      "name": "SourcesPage-BpY-SxKC.js",
       "bytes": 7643
     },
     {
-      "name": "Sprout-Cx_xUhgn.js",
+      "name": "Sprout-BORgpbSf.js",
       "bytes": 20697
     },
     {
-      "name": "VegetationCard-BqCUyR5S.js",
+      "name": "VegetationCard-DIYQnUgf.js",
       "bytes": 3991
     },
     {
-      "name": "vendor-map-DI4ACfwM.js",
+      "name": "vendor-map-B3UsmcBt.js",
       "bytes": 148652
     },
     {
-      "name": "vendor-react-KPuNr9iS.js",
+      "name": "vendor-react-DctBZRDK.js",
       "bytes": 218797
     },
     {
-      "name": "WindScreenCard-C5zrfjMI.js",
+      "name": "WindScreenCard-Ctr0MeUU.js",
       "bytes": 9482
     }
   ]

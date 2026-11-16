@@ -1,0 +1,108 @@
+{
+  "timestamp": "2026-11-16T03:09:02.942Z",
+  "revision": "1bd16a4bb8953b5794cdb2730914fb8d4d6b6588",
+  "base": "http://127.0.0.1:8818/",
+  "browser": "159.0.8154.6",
+  "replayEnabled": false,
+  "aiEnabled": false,
+  "counts": {
+    "passed": 3,
+    "failed": 0,
+    "skipped": 2
+  },
+  "tests": [
+    {
+      "name": "landing-language",
+      "status": "passed",
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+      ],
+      "pageErrors": [],
+      "failedResponses": [
+        {
+          "url": "http://127.0.0.1:8818/api/fields/status",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:8818/api/fields/status",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:8818/api/auth/me",
+          "status": 401
+        }
+      ],
+      "blockedWrites": [],
+      "durationMs": 535
+    },
+    {
+      "name": "kansas-plan",
+      "status": "passed",
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "pageErrors": [],
+      "failedResponses": [
+        {
+          "url": "http://127.0.0.1:8818/api/fields/status",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:8818/api/fields/status",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:8818/api/auth/me",
+          "status": 401
+        },
+        {
+          "url": "http://127.0.0.1:8818/api/fields/status",
+          "status": 404
+        }
+      ],
+      "blockedWrites": [],
+      "durationMs": 1236
+    },
+    {
+      "name": "field-watch",
+      "status": "skipped",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "failedResponses": [],
+      "blockedWrites": [],
+      "reason": "Read-only default: set E2E_REPLAY=1 to schedule one finney-ks demo replay.",
+      "durationMs": 1
+    },
+    {
+      "name": "sprout",
+      "status": "skipped",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "failedResponses": [],
+      "blockedWrites": [],
+      "reason": "Read-only default: set E2E_AI=1 to send one AI question (may incur inference cost).",
+      "durationMs": 3
+    },
+    {
+      "name": "admin-token-gate",
+      "status": "passed",
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+      ],
+      "pageErrors": [],
+      "failedResponses": [
+        {
+          "url": "http://127.0.0.1:8818/api/auth/me",
+          "status": 401
+        }
+      ],
+      "blockedWrites": [],
+      "durationMs": 478
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 import { useI18n } from "./i18n";
-import { lazy, Suspense, useCallback, useEffect, useState } from "react";
-const App = lazy(() => import("./App").then(m => ({ default: m.App })));
+import { lazy, Suspense, type ComponentType, useCallback, useEffect, useState } from "react";
+let App: ComponentType = lazy(() => import("./App").then(m => ({ default: m.App })));
 import { LanguageProvider } from "./i18n";
-const HowItWorksPage = lazy(() => import("./pages/HowItWorksPage").then(m => ({ default: m.HowItWorksPage })));
+let HowItWorksPage: ComponentType<Parameters<typeof import("./pages/HowItWorksPage").HowItWorksPage>[0]> = lazy(() => import("./pages/HowItWorksPage").then(m => ({ default: m.HowItWorksPage })));
 const DocsAdmin = lazy(() => import("./components/DocsAdmin").then(m => ({ default: m.DocsAdmin })));
 import type { UIMessage } from "ai";
 import { firstUserText, GUEST_ID, loadChats, newChatId, saveChats, titleFrom, type ScoutChat } from "./chats";
@@ -26,6 +26,13 @@ const routeFromHash = (): WorkspaceRoute => {
   if (h.startsWith("#/signin")) return "signin";
   return "planner";
 };
+
+/** Bootstrap only the requested critical route, never the other workspace tools. */
+export async function preloadInitialRoute() {
+  const route = routeFromHash();
+  if (route === "planner") App = (await import("./App")).App;
+  if (route === "how-it-works") HowItWorksPage = (await import("./pages/HowItWorksPage")).HowItWorksPage;
+}
 
 /**
  * The app opens straight away for everyone: no account needed for the planner, Scout or Sources.

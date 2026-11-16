@@ -4,13 +4,14 @@ import type { CropId } from "../../src/shared/types";
 import { constraintMessages } from './i18n-constraints';
 import { fieldMessages } from "./i18n-fields";
 import { cardMessages } from "./i18n-cards";
+import { korean, pageKorean } from "./i18n-dictionaries";
 // Only the selected language is fetched; failures keep the English fallback usable.
-let korean: Partial<Record<string, string>> = {};
 let koreanLoad: Promise<void> | undefined;
 export function loadLanguage(language: Language): Promise<void> {
   if (language !== "ko") return Promise.resolve();
-  return koreanLoad ??= import("./i18n-ko").then(module => {
-    Object.assign(korean, module.korean);
+  return koreanLoad ??= Promise.all([import("./i18n-ko"), import("./i18n-pages-ko")]).then(([main, pages]) => {
+    Object.assign(korean, main.korean);
+    Object.assign(pageKorean, pages.pageKorean);
   }).catch(error => { koreanLoad = undefined; throw error; });
 }
 import { LANGUAGES, parseLanguage, type Language } from "../../src/shared/language";

@@ -1,5 +1,5 @@
 export interface Env {
-  /** Opt-in public CSB fields and capability agents; absent means disabled. */
+  /** Optional public CSB fields and capability agents. Off unless explicitly "on". */
   FIELDS_ENABLED?: string;
   /** Earthdata bearer token: server-side only, never exposed in evidence URLs. */
   EARTHDATA_TOKEN?: string;

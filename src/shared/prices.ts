@@ -2,10 +2,15 @@ import type { CropId } from "./types";
 
 /** Farmer prices in $/bu, or $/US short ton for hay. Fallow has no saleable product. */
 export type FarmerPrices = Partial<Record<CropId, number>>;
+export const PRICE_SCENARIO_VERSION = "ks-2016-2025-v1";
 export interface PriceSensitivity {
   kind: "sensitivity-not-forecast";
   scenarioCount: number;
   source: string;
+  scenarioYears: number[];
+  varyingCrops: CropId[];
+  /** No historical series: held at the request's price or default, not invented. */
+  fixedPriceCrops: CropId[];
   /** All tied highest-net candidates count as best; these counts need not sum to N. */
   plans: { planId: string; bestCount: number; minNetPerAcre: number; maxNetPerAcre: number }[];
 }

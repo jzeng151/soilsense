@@ -19,7 +19,7 @@ try {
     const page = await context.newPage(); const errors = [];
     page.on('pageerror', e => errors.push(String(e)));
     await page.goto(base, { waitUntil: 'domcontentloaded' });
-    if (language === 'es') await page.getByRole('button', { name: 'ES Español', exact: true }).click();
+    if (language === 'es') await page.locator('#content').getByRole('button', { name: 'ES Español', exact: true }).click();
     await page.getByRole('button', { name: language === 'es' ? 'Kansas' : 'Kansas', exact: true }).click();
     await page.getByRole('button', { name: language === 'es' ? 'Sí, esta es mi parcela →' : 'Yes, this is my field →', exact: true }).click({ timeout: 60000 });
     await page.getByRole('button', { name: /Full irrigation|Riego completo/ }).click();

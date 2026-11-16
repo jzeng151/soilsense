@@ -2,6 +2,9 @@
 // so the whole engine is unit-testable with fixtures.
 
 import type { CountyInfo, CountyLosses, CropHistory, CropId, CropValidation, DroughtReplay, EtMonth, NassData, PlanRequest, PlanResponse, SoilProfile, WaterCheck, WaterLevel, WaterOption } from "../shared/types";
+import { validateConstraints } from '../shared/validateConstraints';
+import { constraintWater } from '../shared/constraintWater';
+import { validatePrices } from "../shared/prices";
 import { effectiveSoil, validateMeasurements } from "../shared/measurements";
 import { buildIndicators, type DailyClimate } from "./climate";
 import { buildExplanation, buildFacts, CROP_ES } from "./explain";
@@ -107,12 +110,18 @@ const WATER_WORDS: Record<WaterLevel, string> = {
 
 export function buildPlan(inputs: PlanInputs): PlanResponse {
   const { request, climate, cropHistory, county, planStartYear, now } = inputs;
+  const constraintCheck = validateConstraints(request.constraints, ALL_CROPS);
+  if (typeof constraintCheck === "string") throw new Error(constraintCheck);
   const checked = validateMeasurements({ soilTest: request.soilTest, yieldRecords: request.yieldRecords }, now.getUTCFullYear());
   if (typeof checked === "string") throw new Error(checked);
+  const priceInput = validatePrices({ prices: request.prices, priceScenarios: request.priceScenarios });
+  if (typeof priceInput === "string") throw new Error(priceInput);
   const soil = effectiveSoil(inputs.soil, checked.soilTest);
   const history = effectiveHistory(cropHistory, request.recentCrops);
   const targetYear = planStartYear + 1;
-  const level = waterLevelOf(request);
+  const selectedLevel = waterLevelOf(request);
+  const waterCap = constraintWater(request.constraints);
+  const level: WaterLevel = waterCap ? (waterCap.seasonalCapInches > 0 ? "limited" : "rain") : selectedLevel;
 
   const climateSummary = buildIndicators(climate, { lat: request.lat, lon: request.lon });
 
@@ -131,7 +140,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   const dryRegion = annualRain < FALLOW_MAX_ANNUAL_RAIN_MM;
   const region = availableCrops(county?.stateCode, ALL_CROPS);
   const prices = inputs.nass?.prices ?? {};
-  const priceMap = Object.fromEntries(Object.entries(prices).map(([c, p]) => [c, p!.price])) as Partial<Record<CropId, number>>;
+  const priceMap = { ...Object.fromEntries(Object.entries(prices).map(([c, p]) => [c, p!.price])), ...priceInput.prices } as Partial<Record<CropId, number>>;
 
   // Weather work is shared: the crop climate depends only on full irrigation (canopy cooling) and on
   // whether trends are applied, so compute each variant once per plan.
@@ -159,7 +168,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   const recentFrac = (crop: CropId) => fracOf(replays.get(crop) ?? []);
   const table = statePotential(county?.stateCode);
   // Records describe the selected practice. Keep one inferred local potential across water comparisons.
-  const localReplay = level === "full" ? fullReplay : level === "limited" ? makeReplay(climate, soil, false, LIMITED_IRRIGATION_MM, cropClimateFor(false, false), waterFor("limited")) : replay;
+  const localReplay = selectedLevel === "full" ? fullReplay : selectedLevel === "limited" ? makeReplay(climate, soil, false, LIMITED_IRRIGATION_MM, cropClimateFor(false, false), waterFor("limited")) : replay;
   const local = new Map<CropId, { count: number; average: number; fraction: number; fallback: number; years: number[] }>();
   for (const crop of region.crops) {
     const records = checked.yieldRecords?.filter((r) => r.crop === crop) ?? [];
@@ -174,10 +183,11 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
 
   /** Everything that depends on how much water the field gets. */
   const plansFor = (w: WaterLevel, quick = false) => {
-    const full = w === "full";
-    const allowance = w === "limited" ? LIMITED_IRRIGATION_MM : 0;
+    const cap = waterCap;
+    const full = w === "full" && !cap;
+    const allowance = cap ? cap.seasonalCapInches * 25.4 : w === "limited" ? LIMITED_IRRIGATION_MM : 0;
     const cropClimate = cropClimateFor(full, true);
-    const water = waterFor(w);
+    const water = cap ? { ...waterFor(w), irrigated: false, allowanceMm: allowance } : waterFor(w);
     // Fallow where it is a real practice (dry, rain-fed), or where the farmer already uses it.
     const fallowAllowed = (w === "rain" && dryRegion) || history.includes("fallow");
     const crops = fallowAllowed ? [...region.crops, "fallow" as CropId] : region.crops;
@@ -210,6 +220,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       history,
       priority: request.priority,
       goals: request.goals,
+      constraints: request.constraints,
       planStartYear,
       baseYieldOverrides: yieldOverrides,
       firstYearWheatAllowed,
@@ -217,6 +228,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       irrigated: full,
       water,
       prices: priceMap,
+      ...(priceInput.priceScenarios && w === level ? { priceScenarios: true } : {}),
       ...(quick ? { quickSearch: 30 } : {}),
     });
     return { ...result, cropClimate, crops, fallowAllowed, recentYields, usda, allowance, calibrations };
@@ -226,7 +238,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   const { plans, currentPractice, cropClimate, crops, fallowAllowed, recentYields } = main;
 
   // What if the water changes? Best plan for each level (the requested one is reused).
-  const waterOptions: WaterOption[] = (["rain", "limited", "full"] as WaterLevel[]).flatMap((w) => {
+  const waterOptions: WaterOption[] = (waterCap ? [] : ["rain", "limited", "full"] as WaterLevel[]).flatMap((w) => {
     // Quick search for the comparison, except for soil priority, where cover crops decide the ranking.
     const best = (w === level ? main : plansFor(w, request.priority !== "soil")).plans[0];
     return best
@@ -251,7 +263,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   validation.sort((a, b) => b.years.length - a.years.length || b.correlation - a.correlation);
 
   // The field's water level, replayed on real past years (no trend shifting).
-  const fieldReplay = level === "full" ? fullReplay : level === "limited" ? makeReplay(climate, soil, false, LIMITED_IRRIGATION_MM, cropClimateFor(false, false), waterFor("limited")) : replay;
+  const fieldReplay = selectedLevel === "full" ? fullReplay : selectedLevel === "limited" ? makeReplay(climate, soil, false, LIMITED_IRRIGATION_MM, cropClimateFor(false, false), waterFor("limited")) : replay;
 
   // Water check: our crop water use vs. OpenET's measured water use, for the crops actually grown here.
   let waterCheck: WaterCheck | null = null;
@@ -263,7 +275,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
   const droughtReplays: DroughtReplay[] = plans[0]
     ? buildDroughtReplays({
         climate: climateSummary,
-        replay: fieldReplay,
+        replay: waterCap ? makeReplay(climate, soil, false, waterCap.seasonalCapInches * 25.4, cropClimateFor(false, false), { ...waterFor(level), irrigated: false, allowanceMm: waterCap.seasonalCapInches * 25.4 }) : fieldReplay,
         plan: plans[0],
         current: currentPractice,
         lastCrop: history[history.length - 1] ?? null,
@@ -297,7 +309,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     effectiveHistory: history,
     plans,
     currentPractice,
-    irrigated: level === "full",
+    irrigated: level === "full" && !waterCap,
     losses: inputs.losses ?? null,
     countyName: county?.countyName ?? null,
   });
@@ -344,6 +356,15 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     if (advice.undocumentedBenefit) facts.push({ id: "pest-undocumented", kind: "agronomy", source: "Plan crop phases", text: advice.undocumentedBenefit });
   }
 
+  for (const [crop, price] of Object.entries(priceInput.prices ?? {}) as [CropId, number][]) {
+    const es = request.language === "es";
+    const unit = CROPS[crop].yieldUnit.startsWith("tons") ? "$/US short ton" : "$/bu";
+    facts.push({ id: `farmer-price-${crop}`, kind: "economics", source: es ? "Precio ingresado por el agricultor (sin verificar)" : "Farmer-entered price (unverified)",
+      text: es
+        ? `${CROP_ES[crop]}: se usa tu precio ${price} ${unit} en lugar del precio USDA o predeterminado. Rendimientos y costos no cambian.`
+        : `${CROPS[crop].name}: using your price ${price} ${unit} instead of the USDA or default price. Yields and costs are unchanged.` });
+  }
+
   const explanation = buildExplanation({
     plans,
     currentPractice,
@@ -356,7 +377,9 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
 
   return {
     request: { ...request, water: level, irrigated: level !== "rain" },
+    ...(main.priceSensitivity ? {priceSensitivity:main.priceSensitivity} : {}),
     generatedAt: now.toISOString(),
+    ...(main.constraints ? { constraints: main.constraints } : {}),
     location: { county, lat: request.lat, lon: request.lon },
     soil: inputs.soil,
     cropHistory,
@@ -364,12 +387,19 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
     plans,
     currentPractice,
     facts,
-    explanation,
+    explanation: main.constraints?.status === 'infeasible'
+      ? (() => {
+          const message = request.language === 'es'
+            ? `Ninguna rotación cumple estos límites: ${main.constraints.binding.join(', ')}. No se relajó ningún límite. La práctica actual se conserva como comparación.`
+            : `${main.constraints.message} Current practice is retained as a comparison.`;
+          return { summary: message, speech: message, sms: message };
+        })()
+      : explanation,
     assumptions: [
       ...ASSUMPTIONS,
       ...(plans[0]?.scores.goals?.length ? ["Optional farmer goals add at most +0.1 total to the unchanged priority score, shared equally between the selected goals. Metrics are min–max normalized across feasible candidate plans before choosing covers; ties earn no bonus. Feasibility and crop-reliability gates still take precedence. Water uses simulated pumping (rain-only: main-crop water use); N uses lower fertilizer after credits (70%) and legume seasons (30%); erosion and organic matter use explicit rotation proxies, not measured outcomes. Forage-market bonus requires that goal; hay economics are unchanged."] : []),
       ...region.notes,
-      `Water: ${WATER_WORDS[level]}.${level === "limited" ? " Limited irrigation covers the crop's shortfall first, up to about 10 inches a season, as in K-State's Tribune limited-irrigation trial; stored soil water covers the rest." : ""} Pumping costs about $8 per inch of water per acre.`,
+      ...(waterCap ? [`Farmer-entered seasonal irrigation cap: ${waterCap.seasonalCapInches.toFixed(2)} inches per planned year; overrides the selected water mode for both recommendations and current-practice comparison. Gross water is treated as available to roots; application losses and peak-day capacity are not modeled. Pumping costs about $8 per inch per acre.`] : [`Water: ${WATER_WORDS[level]}.${level === "limited" ? " Limited irrigation covers the crop's shortfall first, up to about 10 inches a season, as in K-State's Tribune limited-irrigation trial; stored soil water covers the rest." : ""} Pumping costs about $8 per inch of water per acre.`]),
       "Bad years out of 10: how often a crop would have been badly stressed when replayed through the 35 years of NASA weather (shifted to today's climate trends), averaged over the plan's crops.",
       Object.keys(recentYields).length
         ? `Yield potential is calibrated to real USDA NASS harvests for ${level === "rain" ? "rain-fed" : "irrigated"} fields: recent average ÷ the share of potential the model says recent weather allowed (kept within 60–115% of the state value).`
@@ -377,6 +407,7 @@ export function buildPlan(inputs: PlanInputs): PlanResponse {
       ...(Object.entries(recentYields) as [CropId, RecentYield][])
         .filter(([c]) => (crops as CropId[]).includes(c))
         .map(([c, r]) => `${CROPS[c].name} yield basis: ${r.basis}.`),
+      ...(priceInput.prices ? [`Farmer price overrides take precedence over the USDA/default prices listed below: ${(Object.entries(priceInput.prices) as [CropId, number][]).map(([c,p]) => `${CROPS[c].name} ${p} ${CROPS[c].yieldUnit.startsWith("tons") ? "$/US short ton" : "$/bu"}`).join(", ")}. Costs and yields are unchanged; farmer prices are unverified.`] : []),
       ...(Object.keys(prices).length
         ? [
             `Prices: USDA NASS prices received, average of the latest months — ${(Object.entries(prices) as [CropId, NonNullable<(typeof prices)[CropId]>][])

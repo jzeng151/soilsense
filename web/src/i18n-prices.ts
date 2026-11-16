@@ -1,0 +1,18 @@
+export const priceMessages = {
+  "Your crop prices (optional)": "Tus precios de cultivos (opcional)",
+  "Leave blanks for USDA prices or approximate defaults. Prices change profit scoring and net returns, not weather or yields.": "Deja en blanco para usar precios USDA o valores aproximados. Los precios cambian la puntuación de rentabilidad y el margen neto, no el clima ni los rendimientos.",
+  "$/bu": "$/bushel",
+  "$/US short ton": "$/tonelada corta de EE. UU.",
+  "Enter prices from 0 to 10000; no currency symbols.": "Introduce precios de 0 a 10000; sin símbolos de moneda.",
+  "Reset prices": "Restablecer precios",
+  "Price sensitivity — not a forecast": "Sensibilidad a precios — no es un pronóstico",
+  "Best net in {best} of {total} scenarios": "Mejor margen en {best} de {total} escenarios",
+  "Net range: {min} to {max}/acre/year": "Margen: {min} a {max}/acre/año",
+  "Only these selected plans and current practice are compared. All ties count as best. Historical prices are not probabilities or a forecast.": "Solo se comparan estos planes seleccionados y la práctica actual. Todos los empates cuentan como mejores. Los precios históricos no son probabilidades ni un pronóstico.",
+  "Ten paired Kansas marketing-year price sets (2016–2025), USDA NASS, replace entered prices for this analysis. Modeled yields, costs, water and covers stay fixed. All-wheat prices proxy winter wheat.": "Diez conjuntos de precios del mismo año comercial de Kansas (2016–2025), USDA NASS, reemplazan los precios ingresados para este análisis. Rendimientos modelados, costos, agua y coberturas permanecen fijos. Los precios de todo el trigo representan el trigo de invierno.",
+  "Crops without historical prices stay at the entered or default price: {crops}.": "Cultivos sin precios históricos conservan el precio ingresado o predeterminado: {crops}.",
+  "Expected yield": "Rendimiento esperado",
+  "Net $/acre": "Margen neto $/acre",
+  "No harvest": "Sin cosecha",
+  "Current practice": "Práctica actual",
+} as const;

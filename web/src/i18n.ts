@@ -5,14 +5,18 @@ import { exploreMessages } from "./i18n-explore";
 import { fieldMessages } from "./i18n-fields";
 import { cardMessages } from "./i18n-cards";
 import { assistantMessages } from "./i18n-assistant";
+import { constraintMessages } from './i18n-constraints';
+import { priceMessages } from "./i18n-prices";
 import { myFieldsMessages } from "./i18n-myfields";
 
 /** English strings are the typed keys; every entry requires a Spanish translation. */
 export const messages = {
   ...exploreMessages,
   ...assistantMessages,
+  ...constraintMessages,
   ...fieldMessages,
   ...cardMessages,
+  ...priceMessages,
   ...myFieldsMessages,
   "District outlook (next ~4 weeks, team's Kansas model)": "Perspectiva del distrito (próximas ~4 semanas, modelo de Kansas del equipo)",
   "drought likely to continue.": "es probable que la sequía continúe.",

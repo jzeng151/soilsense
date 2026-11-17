@@ -1,0 +1,3404 @@
+{
+  "schema": "soilsense.field-watch-checks-design-evidence/v1",
+  "scope": "Design-only live terminal probes, not implemented check results. All point data requested for Finney (38.1095,-100.706), except labelled California NWS schema sample and regional climatology examples.",
+  "capturedAt": "2026-11-16T02:37:23.402146+00:00",
+  "rawHashScope": "sha256 hashes raw HTTP response bytes unless explicitly named decodedWindowSha256. Summaries are not byte-identical raw responses. Raw climate series kept in local scratch, not in this repository.",
+  "requests": [
+    {
+      "name": "power-daily-core",
+      "retrievedAt": "2026-11-16T02:22:13.285793+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?community=AG&latitude=38.1095&longitude=-100.706&format=JSON&time-standard=LST&parameters=T2M_MAX%2CT2M_MIN%2CPRECTOTCORR%2CGWETROOT%2CGWETTOP%2CWS2M&start=20261001&end=20261115",
+      "status": 200,
+      "seconds": 0.632,
+      "sha256": "6e02d65ab21c9436c8593d0261292ec3fe9f806ff67afbac39a884373254eea8",
+      "bytes": 5346,
+      "headers": {
+        "Content-Type": "application/json",
+        "Date": "Mon, 16 Nov 2026 02:22:13 GMT"
+      },
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Daily Data",
+        "api": {
+          "version": "v2.10.3",
+          "name": "POWER Daily API"
+        },
+        "sources": [
+          "GEOSIT",
+          "POWER"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "LST",
+        "start": "20261001",
+        "end": "20261115"
+      },
+      "messages": [],
+      "parameters": {
+        "T2M_MAX": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters Maximum"
+        },
+        "T2M_MIN": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters Minimum"
+        },
+        "PRECTOTCORR": {
+          "units": "mm/day",
+          "longname": "Precipitation Corrected"
+        },
+        "GWETROOT": {
+          "units": "1",
+          "longname": "Root Zone Soil Wetness"
+        },
+        "GWETTOP": {
+          "units": "1",
+          "longname": "Surface Soil Wetness"
+        },
+        "WS2M": {
+          "units": "m/s",
+          "longname": "Wind Speed at 2 Meters"
+        }
+      },
+      "series": {
+        "T2M_MAX": {
+          "labels": 46,
+          "valid": 43,
+          "missing": 3,
+          "first": [
+            "20261001",
+            18.42
+          ],
+          "last": [
+            "20261112",
+            18.78
+          ],
+          "min": 13.38,
+          "max": 33.73
+        },
+        "T2M_MIN": {
+          "labels": 46,
+          "valid": 43,
+          "missing": 3,
+          "first": [
+            "20261001",
+            12.33
+          ],
+          "last": [
+            "20261112",
+            6.61
+          ],
+          "min": 2.61,
+          "max": 22.24
+        },
+        "PRECTOTCORR": {
+          "labels": 46,
+          "valid": 43,
+          "missing": 3,
+          "first": [
+            "20261001",
+            12.13
+          ],
+          "last": [
+            "20261112",
+            0.0
+          ],
+          "min": 0.0,
+          "max": 14.03
+        },
+        "GWETROOT": {
+          "labels": 46,
+          "valid": 43,
+          "missing": 3,
+          "first": [
+            "20261001",
+            0.44
+          ],
+          "last": [
+            "20261112",
+            0.38
+          ],
+          "min": 0.35,
+          "max": 0.44
+        },
+        "GWETTOP": {
+          "labels": 46,
+          "valid": 43,
+          "missing": 3,
+          "first": [
+            "20261001",
+            0.53
+          ],
+          "last": [
+            "20261112",
+            0.29
+          ],
+          "min": 0.21,
+          "max": 0.53
+        },
+        "WS2M": {
+          "labels": 46,
+          "valid": 43,
+          "missing": 3,
+          "first": [
+            "20261001",
+            5.19
+          ],
+          "last": [
+            "20261112",
+            2.27
+          ],
+          "min": 1.18,
+          "max": 6.22
+        }
+      }
+    },
+    {
+      "name": "power-daily-snow",
+      "retrievedAt": "2026-11-16T02:22:13.286283+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?community=AG&latitude=38.1095&longitude=-100.706&format=JSON&time-standard=LST&parameters=SNODP&start=20260101&end=20260107",
+      "status": 200,
+      "seconds": 0.441,
+      "sha256": "c317094b329b433430f7d9fca9a24b72f630f585835cd1b38275e426d69fb077",
+      "bytes": 562,
+      "headers": {
+        "Content-Type": "application/json",
+        "Date": "Mon, 16 Nov 2026 02:22:12 GMT"
+      },
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Daily Data",
+        "api": {
+          "version": "v2.10.3",
+          "name": "POWER Daily API"
+        },
+        "sources": [
+          "MERRA2"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "LST",
+        "start": "20260101",
+        "end": "20260107"
+      },
+      "messages": [],
+      "parameters": {
+        "SNODP": {
+          "units": "cm",
+          "longname": "Snow Depth"
+        }
+      },
+      "series": {
+        "SNODP": {
+          "labels": 7,
+          "valid": 7,
+          "missing": 0,
+          "first": [
+            "20260101",
+            0.0
+          ],
+          "last": [
+            "20260107",
+            0.0
+          ],
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "name": "power-daily-ts",
+      "retrievedAt": "2026-11-16T02:22:13.286616+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?community=AG&latitude=38.1095&longitude=-100.706&format=JSON&time-standard=LST&parameters=TS&start=20260101&end=20260107",
+      "status": 200,
+      "seconds": 0.456,
+      "sha256": "c6feaa2bf4a6245d2a6a4f938bff52991747d898eaa98aa34b0bc2ed9c69ed34",
+      "bytes": 575,
+      "headers": {
+        "Content-Type": "application/json",
+        "Date": "Mon, 16 Nov 2026 02:22:12 GMT"
+      },
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Daily Data",
+        "api": {
+          "version": "v2.10.3",
+          "name": "POWER Daily API"
+        },
+        "sources": [
+          "MERRA2"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "LST",
+        "start": "20260101",
+        "end": "20260107"
+      },
+      "messages": [],
+      "parameters": {
+        "TS": {
+          "units": "C",
+          "longname": "Earth Skin Temperature"
+        }
+      },
+      "series": {
+        "TS": {
+          "labels": 7,
+          "valid": 7,
+          "missing": 0,
+          "first": [
+            "20260101",
+            4.05
+          ],
+          "last": [
+            "20260107",
+            7.86
+          ],
+          "min": 4.05,
+          "max": 9.01
+        }
+      }
+    },
+    {
+      "name": "power-hourly",
+      "retrievedAt": "2026-11-16T02:22:13.286908+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?community=AG&latitude=38.1095&longitude=-100.706&format=JSON&time-standard=LST&parameters=T2M&start=20260101&end=20260103",
+      "status": 200,
+      "seconds": 0.336,
+      "sha256": "37523c776a55666b4e31ba4301cd49dcea57251789f3703b8aba846ccdede5bc",
+      "bytes": 1769,
+      "headers": {
+        "Content-Type": "application/json",
+        "Date": "Mon, 16 Nov 2026 02:22:12 GMT"
+      },
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Hourly Data",
+        "api": {
+          "version": "v2.10.4",
+          "name": "POWER Hourly API"
+        },
+        "sources": [
+          "MERRA2"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "LST",
+        "start": "20260101",
+        "end": "20260103"
+      },
+      "messages": [],
+      "parameters": {
+        "T2M": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters"
+        }
+      },
+      "series": {
+        "T2M": {
+          "labels": 72,
+          "valid": 72,
+          "missing": 0,
+          "first": [
+            "2026010100",
+            5.22
+          ],
+          "last": [
+            "2026010323",
+            6.16
+          ],
+          "min": -0.7,
+          "max": 16.22
+        }
+      }
+    },
+    {
+      "name": "nws-finney",
+      "retrievedAt": "2026-11-16T02:22:13.287421+00:00",
+      "url": "https://api.weather.gov/alerts/active?point=38.1095%2C-100.706",
+      "status": 200,
+      "seconds": 0.247,
+      "sha256": "719846da7bcc7c866ae8ce69d33627c2b26331d914976b6e1d05778df80e480a",
+      "bytes": 233,
+      "headers": {
+        "Content-Type": "application/geo+json",
+        "Cache-Control": "public, max-age=5, s-maxage=5",
+        "Expires": "Mon, 16 Nov 2026 02:22:17 GMT",
+        "Date": "Mon, 16 Nov 2026 02:22:12 GMT"
+      },
+      "keys": [
+        "@context",
+        "type",
+        "features",
+        "title",
+        "updated"
+      ],
+      "type": "FeatureCollection",
+      "featureCount": 0,
+      "updated": "2026-11-16T02:19:31+00:00",
+      "sample": null
+    },
+    {
+      "name": "nws-ks",
+      "retrievedAt": "2026-11-16T02:22:13.536341+00:00",
+      "url": "https://api.weather.gov/alerts/active?area=KS",
+      "status": 200,
+      "seconds": 0.169,
+      "sha256": "5b17ea43ee0f2ae675c6c2af7eeaee8da03a737c21f97f7c7a80a327c3da49b4",
+      "bytes": 219,
+      "headers": {
+        "Content-Type": "application/geo+json",
+        "Cache-Control": "public, max-age=5, s-maxage=5",
+        "Expires": "Mon, 16 Nov 2026 02:22:17 GMT",
+        "Date": "Mon, 16 Nov 2026 02:22:12 GMT"
+      },
+      "keys": [
+        "@context",
+        "type",
+        "features",
+        "title",
+        "updated"
+      ],
+      "type": "FeatureCollection",
+      "featureCount": 0,
+      "updated": "2026-11-16T02:19:31+00:00",
+      "sample": null
+    },
+    {
+      "name": "modis-dates",
+      "retrievedAt": "2026-11-16T02:22:13.626100+00:00",
+      "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/dates?latitude=38.1095&longitude=-100.706",
+      "status": 200,
+      "seconds": 6.873,
+      "sha256": "f373f0968cc81004e2879ac14a266516a51d333daa31e369d70ed1775523f5f9",
+      "bytes": 36238,
+      "headers": {
+        "Date": "Mon, 16 Nov 2026 02:22:12 GMT",
+        "Content-Type": "application/json"
+      },
+      "count": 614,
+      "first": [
+        {
+          "modis_date": "A2000049",
+          "calendar_date": "2000-02-18"
+        }
+      ],
+      "last": [
+        {
+          "modis_date": "A2026257",
+          "calendar_date": "2026-09-14"
+        },
+        {
+          "modis_date": "A2026273",
+          "calendar_date": "2026-09-30"
+        },
+        {
+          "modis_date": "A2026289",
+          "calendar_date": "2026-10-16"
+        }
+      ]
+    },
+    {
+      "name": "hls-cmr",
+      "retrievedAt": "2026-11-16T02:22:13.708540+00:00",
+      "url": "https://cmr.earthdata.nasa.gov/search/granules.json?short_name=HLSL30&version=2.0&point=-100.706%2C38.1095&page_size=1&sort_key=-start_date",
+      "status": 200,
+      "seconds": 0.333,
+      "sha256": "018acb8eb7e6973aec4aa36bf6a70c71418e9fa89cad86bb14b2a88a0b3ef234",
+      "bytes": 13790,
+      "headers": {
+        "Content-Type": "application/json;charset=utf-8",
+        "Date": "Mon, 16 Nov 2026 02:22:13 GMT"
+      },
+      "entries": [
+        {
+          "id": "G4403956702-LPCLOUD",
+          "title": "HLS.L30.T14SLH.2026308T171916.v2.0",
+          "time_start": "2026-11-04T17:19:16.533Z",
+          "time_end": "2026-11-04T17:19:40.419Z",
+          "updated": "2026-11-07T01:21:48.868Z"
+        }
+      ]
+    },
+    {
+      "name": "smap-cmr",
+      "retrievedAt": "2026-11-16T02:22:13.729795+00:00",
+      "url": "https://cmr.earthdata.nasa.gov/search/granules.json?collection_concept_id=C3480440870-NSIDC_CPRD&point=-100.706%2C38.1095&page_size=1&sort_key=-start_date",
+      "status": 200,
+      "seconds": 0.194,
+      "sha256": "c1a828588ef0bf3dc1d51270434b565f903bed28c60727930b97c50429d1af58",
+      "bytes": 4841,
+      "headers": {
+        "Content-Type": "application/json;charset=utf-8",
+        "Date": "Mon, 16 Nov 2026 02:22:13 GMT"
+      },
+      "entries": [
+        {
+          "id": "G4412797755-NSIDC_CPRD",
+          "title": "SMAP_L4_SM_gph_20261113T223000_Vv8013_001.h5_u9loH5HD",
+          "time_start": "2026-11-13T21:00:00.000Z",
+          "time_end": "2026-11-14T00:00:00.000Z",
+          "updated": "2026-11-15T17:30:55.397Z"
+        }
+      ]
+    },
+    {
+      "name": "imerg-cmr",
+      "retrievedAt": "2026-11-16T02:22:13.745840+00:00",
+      "url": "https://cmr.earthdata.nasa.gov/search/granules.json?short_name=GPM_3IMERGDL&version=07&point=-100.706%2C38.1095&page_size=1&sort_key=-start_date",
+      "status": 200,
+      "seconds": 0.193,
+      "sha256": "7e30448f4cbc129efc786606e8115f9883a8fce7c50450fa81a9314d1b5a4d4c",
+      "bytes": 4812,
+      "headers": {
+        "Content-Type": "application/json;charset=utf-8",
+        "Date": "Mon, 16 Nov 2026 02:22:13 GMT"
+      },
+      "entries": [
+        {
+          "id": "G4412705778-GES_DISC",
+          "title": "GPM_3IMERGDL.07:3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4",
+          "time_start": "2026-11-14T00:00:00.000Z",
+          "time_end": "2026-11-14T23:59:59.999Z",
+          "updated": "2026-11-15T14:28:44.000Z"
+        }
+      ]
+    },
+    {
+      "name": "power-snow-ts-recent",
+      "retrievedAt": "2026-11-16T02:24:22.565717+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?community=AG&latitude=38.1095&longitude=-100.706&format=JSON&time-standard=LST&start=20261101&end=20261115&parameters=SNODP%2CTS",
+      "status": 200,
+      "seconds": 0.322,
+      "sha256": "638b7a90f0a352dd59c9cca2f9e79ca42d67d131491514818a5a309f10106587",
+      "bytes": 1008,
+      "parameters": {
+        "SNODP": {
+          "units": "cm",
+          "longname": "Snow Depth"
+        },
+        "TS": {
+          "units": "C",
+          "longname": "Earth Skin Temperature"
+        }
+      },
+      "series": {
+        "SNODP": {
+          "labels": 15,
+          "valid": 12,
+          "missing": 3,
+          "last": [
+            "20261112",
+            0.0
+          ]
+        },
+        "TS": {
+          "labels": 15,
+          "valid": 12,
+          "missing": 3,
+          "last": [
+            "20261112",
+            11.9
+          ]
+        }
+      }
+    },
+    {
+      "name": "power-hourly-recent",
+      "retrievedAt": "2026-11-16T02:24:22.566174+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?community=AG&latitude=38.1095&longitude=-100.706&format=JSON&time-standard=LST&start=20261101&end=20261115&parameters=T2M",
+      "status": 200,
+      "seconds": 0.489,
+      "sha256": "86f2e2b64727df996d85ec464c88eed6cac75fb5592a4642d8b4451d09139216",
+      "bytes": 7243,
+      "parameters": {
+        "T2M": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters"
+        }
+      },
+      "series": {
+        "T2M": {
+          "labels": 360,
+          "valid": 288,
+          "missing": 72,
+          "last": [
+            "2026111223",
+            6.61
+          ]
+        }
+      }
+    },
+    {
+      "name": "smap-point",
+      "retrievedAt": "2026-11-16T02:24:22.566469+00:00",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20261113T223000_Vv8013_001.h5_u9loH5HD.ascii?cell_lat%5B310:1:310%5D%5B849:1:849%5D,cell_lon%5B310:1:310%5D%5B849:1:849%5D,/Geophysical_Data/sm_surface%5B310:1:310%5D%5B849:1:849%5D,/Geophysical_Data/sm_rootzone%5B310:1:310%5D%5B849:1:849%5D,/Geophysical_Data/soil_temp_layer1%5B310:1:310%5D%5B849:1:849%5D,/Geophysical_Data/snow_mass%5B310:1:310%5D%5B849:1:849%5D",
+      "status": 200,
+      "seconds": 1.83,
+      "sha256": "3c3cc0f65e20a334eb2cdfcdf7bbdefb81ed52a1304db2bda3de1612dfb94889",
+      "bytes": 262,
+      "body": "Dataset: SMAP_L4_SM_gph_20261113T223000_Vv8013_001.h5\ncell_lon[0], -100.69\ncell_lat[0], 38.0969\n/Geophysical_Data/sm_rootzone[0], 0.256495\n/Geophysical_Data/snow_mass[0], 0\n/Geophysical_Data/sm_surface[0], 0.218093\n/Geophysical_Data/soil_temp_layer1[0], 283.875\n"
+    },
+    {
+      "name": "smap-attrs",
+      "retrievedAt": "2026-11-16T02:24:22.566796+00:00",
+      "url": "https://opendap.earthdata.nasa.gov/collections/C3480440870-NSIDC_CPRD/granules/SMAP_L4_SM_gph_20261113T223000_Vv8013_001.h5_u9loH5HD.das",
+      "status": 200,
+      "seconds": 0.362,
+      "sha256": "7c34a8b564a02900bb09d36a635305a0fbd76fc527404e5005502b0c2e460d35",
+      "bytes": 164445
+    },
+    {
+      "name": "imerg-ascii",
+      "retrievedAt": "2026-11-16T02:24:22.892049+00:00",
+      "url": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.ascii?precipitation%5B0:1:0%5D%5B792:1:792%5D%5B1281:1:1281%5D,precipitation_cnt%5B0:1:0%5D%5B792:1:792%5D%5B1281:1:1281%5D,lat%5B1281:1:1281%5D,lon%5B792:1:792%5D,time%5B0:1:0%5D",
+      "status": 200,
+      "seconds": 7.457,
+      "sha256": "a3f45bea959c2f29a3e87c06876736743be7f88272e94435bf064a3bf35a01dd",
+      "bytes": 345,
+      "body": "Dataset: 3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4\nprecipitation.lat, 38.15\nprecipitation.precipitation[precipitation.time=17114][precipitation.lon=-100.75], 3.485\nprecipitation_cnt.lat, 38.15\nprecipitation_cnt.precipitation_cnt[precipitation_cnt.time=17114][precipitation_cnt.lon=-100.75], 48\nlon, -100.75\nlat, 38.15\ntime, 17114\n"
+    },
+    {
+      "name": "imerg-dmr",
+      "retrievedAt": "2026-11-16T02:24:22.933431+00:00",
+      "url": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.07/2026/11/3B-DAY-L.MS.MRG.3IMERG.20261114-S000000-E235959.V07C.nc4.dmr.xml",
+      "status": 200,
+      "seconds": 7.332,
+      "sha256": "69312a86ff0294e2c09d571230c6b80f632b3f983d9edaf7c7e855d4cc4fc54a",
+      "bytes": 12385
+    },
+    {
+      "name": "modis-subset",
+      "retrievedAt": "2026-11-16T02:24:23.058311+00:00",
+      "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=38.1095&longitude=-100.706&startDate=A2026289&endDate=A2026289&kmAboveBelow=0&kmLeftRight=0",
+      "status": 200,
+      "seconds": 3.865,
+      "sha256": "311bc9aff6e1b25c3c3c8fb2c7e6d82b05d9a6a48afb66e74f7c434caf3c80d5",
+      "bytes": 1659,
+      "body": "MOD13Q1.A2026289.h10v05.061.2026307123846.250m_16_days_blue_reflectance,MOD13Q1,A2026289,Lat38.1095Lon-100.706Samp1Line1,2026307123846,677\nMOD13Q1.A2026289.h10v05.061.2026307123846.250m_16_days_MIR_reflectance,MOD13Q1,A2026289,Lat38.1095Lon-100.706Samp1Line1,2026307123846,2041\nMOD13Q1.A2026289.h10v05.061.2026307123846.250m_16_days_NIR_reflectance,MOD13Q1,A2026289,Lat38.1095Lon-100.706Samp1Line1,2026307123846,3032\nMOD13Q1.A2026289.h10v05.061.2026307123846.250m_16_days_pixel_reliability,MOD13Q1,A2026289,Lat38.1095Lon-100.706Samp1Line1,2026307123846,0\nMOD13Q1.A2026289.h10v05.061.2026307123846.250m_16_days_red_reflectance,MOD13Q1,A2026289,Lat38.1095Lon-100.706Samp1Line1,2026307123846,1890\nMOD13Q1.A2026289.h10v05.061.2026307123846.250m_16_days_relative_azimuth_angle,MOD13Q1,A2026289,Lat38.1095Lon-100.706Samp1Line1,2026307123846,-3269\nMOD13Q1.A2026289.h10v05.061.2026307123846.250m_16_days_sun_zenith_angle,MOD13Q1,A2026289,Lat38.1095Lon-100.706Samp1Line1,2026307123846,6757\nMOD13Q1.A2026289.h10v05.061.2026307123846.250m_16_days_view_zenith_angle,MOD13Q1,A2026289,Lat38.1095Lon-100.706Samp1Line1,2026307123846,4087\nMOD13Q1.A2026289.h10v05.061.2026307123846.250m_16_days_VI_Quality,MOD13Q1,A2026289,Lat38.1095Lon-100.706Samp1Line1,2026307123846,2124\nMOD13Q1.A2026289.h10v05.061.2026307123846.250m_16_days_NDVI,MOD13Q1,A2026289,Lat38.1095Lon-100.706Samp1Line1,2026307123846,2320\nMOD13Q1.A2026289.h10v05.061.2026307123846.250m_16_days_EVI,MOD13Q1,A2026289,Lat38.1095Lon-100.706Samp1Line1,2026307123846,1479\nMOD13Q1.A2026289.h10v05.061.2026307123846.250m_16_days_composite_day_of_the_year,MOD13Q1,A2026289,Lat38.1095Lon-100.706Samp1Line1,2026307123846,301\n"
+    },
+    {
+      "name": "nws-us",
+      "retrievedAt": "2026-11-16T02:24:24.399949+00:00",
+      "url": "https://api.weather.gov/alerts/active?status=actual&limit=1",
+      "status": 400,
+      "seconds": 0.177,
+      "sha256": "186197f6be2e0c4a64f2698e7a403cdfc5c87603500ad5ab38a14b2868d2e1a6",
+      "bytes": 390,
+      "error": "HTTP failure or authentication redirect; response not stored",
+      "note": "Invalid limit=1 filter returned 400; corrected with area=CA, not evidence of provider outage."
+    },
+    {
+      "url": "https://api.weather.gov/alerts/active?area=CA",
+      "status": 200,
+      "seconds": 0.239,
+      "sha256": "32af0375d12cdc84c6d54e30019a6a4ba83b392caff6d8e54d1cfbee816cfe83",
+      "keys": [
+        "@context",
+        "type",
+        "features",
+        "title",
+        "updated"
+      ],
+      "featureCount": 26,
+      "sample": [
+        {
+          "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.ed29f6fdf46e59dae87d5ebbfe68c31c3945bb72.002.1",
+          "type": "Feature",
+          "geometry": null,
+          "properties": {
+            "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.ed29f6fdf46e59dae87d5ebbfe68c31c3945bb72.002.1",
+            "@type": "wx:Alert",
+            "id": "urn:oid:2.49.0.1.840.0.ed29f6fdf46e59dae87d5ebbfe68c31c3945bb72.002.1",
+            "areaDesc": "Indian Wells Valley; Mojave Desert",
+            "geocode": {
+              "SAME": [
+                "006029"
+              ],
+              "UGC": [
+                "CAZ337",
+                "CAZ339"
+              ]
+            },
+            "affectedZones": [
+              "https://api.weather.gov/zones/forecast/CAZ337",
+              "https://api.weather.gov/zones/forecast/CAZ339"
+            ],
+            "references": [],
+            "sent": "2026-11-15T18:08:00-08:00",
+            "effective": "2026-11-15T18:08:00-08:00",
+            "onset": "2026-11-17T19:00:00-08:00",
+            "expires": "2026-11-16T02:15:00-08:00",
+            "ends": "2026-11-18T09:00:00-08:00",
+            "status": "Actual",
+            "messageType": "Alert",
+            "category": "Met",
+            "severity": "Severe",
+            "certainty": "Possible",
+            "urgency": "Future",
+            "event": "Freeze Watch",
+            "sender": "w-nws.webmaster@noaa.gov",
+            "senderName": "NWS Hanford CA",
+            "headline": "Freeze Watch issued November 15 at 6:08PM PST until November 18 at 9:00AM PST by NWS Hanford CA",
+            "description": "* WHAT...Sub-freezing temperatures as low as 29 possible.\n\n* WHERE...Indian Wells Valley and Mojave Desert.\n\n* WHEN...From Tuesday evening through Wednesday morning.\n\n* IMPACTS...Frost and freeze conditions could kill crops, other\nsensitive vegetation and possibly damage unprotected outdoor\nplumbing.",
+            "instruction": "Take steps now to protect tender plants from the cold.",
+            "response": "Prepare",
+            "note": null,
+            "parameters": {
+              "AWIPSidentifier": [
+                "NPWHNX"
+              ],
+              "WMOidentifier": [
+                "WWUS76 KHNX 160208"
+              ],
+              "NWSheadline": [
+                "FREEZE WATCH IN EFFECT FROM TUESDAY EVENING THROUGH WEDNESDAY MORNING"
+              ],
+              "BLOCKCHANNEL": [
+                "EAS",
+                "NWEM",
+                "CMAS"
+              ],
+              "VTEC": [
+                "/O.NEW.KHNX.FZ.A.0002.261118T0300Z-261118T1700Z/"
+              ],
+              "eventEndingTime": [
+                "2026-11-18T09:00:00-08:00"
+              ]
+            },
+            "scope": "Public",
+            "code": "IPAWSv1.0",
+            "language": "en-US",
+            "web": "http://www.weather.gov",
+            "eventCode": {
+              "SAME": [
+                "NWS"
+              ],
+              "NationalWeatherService": [
+                "FZA"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "powerDailyCore": {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        -100.706,
+        38.109,
+        858.35
+      ]
+    },
+    "properties": {
+      "parameter": {
+        "T2M_MAX": {
+          "20261001": 18.42,
+          "20261002": 21.31,
+          "20261003": 26.18,
+          "20261004": 26.21,
+          "20261005": 27.43,
+          "20261006": 31.68,
+          "20261007": 32.28,
+          "20261008": 31.51,
+          "20261009": 31.61,
+          "20261010": 31.1,
+          "20261011": 33.6,
+          "20261012": 33.73,
+          "20261013": 32.09,
+          "20261014": 15.46,
+          "20261015": 17.92,
+          "20261016": 13.38,
+          "20261017": 19.74,
+          "20261018": 23.26,
+          "20261019": 23.5,
+          "20261020": 24.6,
+          "20261021": 26.82,
+          "20261022": 29.02,
+          "20261023": 27.51,
+          "20261024": 24.61,
+          "20261025": 15.65,
+          "20261026": 20.42,
+          "20261027": 22.55,
+          "20261028": 24.52,
+          "20261029": 21.9,
+          "20261030": 20.71,
+          "20261031": 17.06,
+          "20261101": 20.02,
+          "20261102": 25.04,
+          "20261103": 16.08,
+          "20261104": 19.24,
+          "20261105": 15.55,
+          "20261106": 16.84,
+          "20261107": 20.1,
+          "20261108": 21.09,
+          "20261109": 22.46,
+          "20261110": 22.22,
+          "20261111": 20.93,
+          "20261112": 18.78,
+          "20261113": -999.0,
+          "20261114": -999.0,
+          "20261115": -999.0
+        },
+        "T2M_MIN": {
+          "20261001": 12.33,
+          "20261002": 9.11,
+          "20261003": 9.4,
+          "20261004": 12.79,
+          "20261005": 12.2,
+          "20261006": 15.3,
+          "20261007": 15.18,
+          "20261008": 17.07,
+          "20261009": 16.65,
+          "20261010": 18.19,
+          "20261011": 19.65,
+          "20261012": 22.24,
+          "20261013": 15.98,
+          "20261014": 12.62,
+          "20261015": 8.93,
+          "20261016": 4.98,
+          "20261017": 2.61,
+          "20261018": 6.26,
+          "20261019": 9.49,
+          "20261020": 13.02,
+          "20261021": 12.55,
+          "20261022": 13.05,
+          "20261023": 16.12,
+          "20261024": 16.16,
+          "20261025": 13.37,
+          "20261026": 13.04,
+          "20261027": 13.14,
+          "20261028": 12.64,
+          "20261029": 9.85,
+          "20261030": 12.48,
+          "20261031": 11.0,
+          "20261101": 12.36,
+          "20261102": 9.44,
+          "20261103": 7.53,
+          "20261104": 5.74,
+          "20261105": 6.71,
+          "20261106": 4.22,
+          "20261107": 5.11,
+          "20261108": 6.38,
+          "20261109": 6.38,
+          "20261110": 5.98,
+          "20261111": 7.08,
+          "20261112": 6.61,
+          "20261113": -999.0,
+          "20261114": -999.0,
+          "20261115": -999.0
+        },
+        "PRECTOTCORR": {
+          "20261001": 12.13,
+          "20261002": 0.0,
+          "20261003": 0.0,
+          "20261004": 0.0,
+          "20261005": 0.0,
+          "20261006": 0.06,
+          "20261007": 0.31,
+          "20261008": 0.03,
+          "20261009": 0.0,
+          "20261010": 0.0,
+          "20261011": 0.0,
+          "20261012": 0.13,
+          "20261013": 1.03,
+          "20261014": 12.1,
+          "20261015": 2.87,
+          "20261016": 0.0,
+          "20261017": 0.0,
+          "20261018": 0.0,
+          "20261019": 0.0,
+          "20261020": 0.99,
+          "20261021": 0.0,
+          "20261022": 0.29,
+          "20261023": 0.0,
+          "20261024": 2.63,
+          "20261025": 14.03,
+          "20261026": 3.85,
+          "20261027": 0.88,
+          "20261028": 0.0,
+          "20261029": 1.03,
+          "20261030": 2.07,
+          "20261031": 0.91,
+          "20261101": 3.16,
+          "20261102": 3.48,
+          "20261103": 6.63,
+          "20261104": 2.26,
+          "20261105": 7.78,
+          "20261106": 0.0,
+          "20261107": 0.0,
+          "20261108": 0.0,
+          "20261109": 0.0,
+          "20261110": 0.0,
+          "20261111": 0.0,
+          "20261112": 0.0,
+          "20261113": -999.0,
+          "20261114": -999.0,
+          "20261115": -999.0
+        },
+        "GWETROOT": {
+          "20261001": 0.44,
+          "20261002": 0.42,
+          "20261003": 0.41,
+          "20261004": 0.4,
+          "20261005": 0.39,
+          "20261006": 0.38,
+          "20261007": 0.37,
+          "20261008": 0.37,
+          "20261009": 0.36,
+          "20261010": 0.36,
+          "20261011": 0.35,
+          "20261012": 0.35,
+          "20261013": 0.35,
+          "20261014": 0.36,
+          "20261015": 0.38,
+          "20261016": 0.37,
+          "20261017": 0.37,
+          "20261018": 0.37,
+          "20261019": 0.36,
+          "20261020": 0.36,
+          "20261021": 0.36,
+          "20261022": 0.36,
+          "20261023": 0.36,
+          "20261024": 0.36,
+          "20261025": 0.37,
+          "20261026": 0.39,
+          "20261027": 0.39,
+          "20261028": 0.38,
+          "20261029": 0.38,
+          "20261030": 0.38,
+          "20261031": 0.38,
+          "20261101": 0.38,
+          "20261102": 0.38,
+          "20261103": 0.4,
+          "20261104": 0.39,
+          "20261105": 0.4,
+          "20261106": 0.4,
+          "20261107": 0.39,
+          "20261108": 0.39,
+          "20261109": 0.38,
+          "20261110": 0.38,
+          "20261111": 0.38,
+          "20261112": 0.38,
+          "20261113": -999.0,
+          "20261114": -999.0,
+          "20261115": -999.0
+        },
+        "GWETTOP": {
+          "20261001": 0.53,
+          "20261002": 0.42,
+          "20261003": 0.35,
+          "20261004": 0.32,
+          "20261005": 0.29,
+          "20261006": 0.28,
+          "20261007": 0.26,
+          "20261008": 0.26,
+          "20261009": 0.24,
+          "20261010": 0.23,
+          "20261011": 0.22,
+          "20261012": 0.21,
+          "20261013": 0.22,
+          "20261014": 0.39,
+          "20261015": 0.45,
+          "20261016": 0.36,
+          "20261017": 0.33,
+          "20261018": 0.29,
+          "20261019": 0.27,
+          "20261020": 0.28,
+          "20261021": 0.3,
+          "20261022": 0.29,
+          "20261023": 0.28,
+          "20261024": 0.3,
+          "20261025": 0.47,
+          "20261026": 0.45,
+          "20261027": 0.42,
+          "20261028": 0.37,
+          "20261029": 0.35,
+          "20261030": 0.39,
+          "20261031": 0.41,
+          "20261101": 0.41,
+          "20261102": 0.43,
+          "20261103": 0.46,
+          "20261104": 0.39,
+          "20261105": 0.47,
+          "20261106": 0.39,
+          "20261107": 0.36,
+          "20261108": 0.33,
+          "20261109": 0.32,
+          "20261110": 0.3,
+          "20261111": 0.3,
+          "20261112": 0.29,
+          "20261113": -999.0,
+          "20261114": -999.0,
+          "20261115": -999.0
+        },
+        "WS2M": {
+          "20261001": 5.19,
+          "20261002": 2.48,
+          "20261003": 1.88,
+          "20261004": 2.0,
+          "20261005": 3.28,
+          "20261006": 2.59,
+          "20261007": 1.64,
+          "20261008": 2.19,
+          "20261009": 4.49,
+          "20261010": 6.22,
+          "20261011": 5.93,
+          "20261012": 5.11,
+          "20261013": 3.98,
+          "20261014": 3.3,
+          "20261015": 4.56,
+          "20261016": 4.16,
+          "20261017": 3.92,
+          "20261018": 5.38,
+          "20261019": 2.88,
+          "20261020": 4.02,
+          "20261021": 1.39,
+          "20261022": 3.37,
+          "20261023": 5.69,
+          "20261024": 3.59,
+          "20261025": 2.12,
+          "20261026": 2.85,
+          "20261027": 3.67,
+          "20261028": 3.2,
+          "20261029": 1.58,
+          "20261030": 3.36,
+          "20261031": 3.82,
+          "20261101": 5.22,
+          "20261102": 6.22,
+          "20261103": 5.5,
+          "20261104": 1.91,
+          "20261105": 2.9,
+          "20261106": 1.18,
+          "20261107": 1.63,
+          "20261108": 1.56,
+          "20261109": 1.85,
+          "20261110": 1.27,
+          "20261111": 1.78,
+          "20261112": 2.27,
+          "20261113": -999.0,
+          "20261114": -999.0,
+          "20261115": -999.0
+        }
+      }
+    },
+    "header": {
+      "title": "NASA/POWER Source Native Resolution Daily Data",
+      "api": {
+        "version": "v2.10.3",
+        "name": "POWER Daily API"
+      },
+      "sources": [
+        "GEOSIT",
+        "POWER"
+      ],
+      "fill_value": -999.0,
+      "time_standard": "LST",
+      "start": "20261001",
+      "end": "20261115"
+    },
+    "messages": [],
+    "parameters": {
+      "T2M_MAX": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters Maximum"
+      },
+      "T2M_MIN": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters Minimum"
+      },
+      "PRECTOTCORR": {
+        "units": "mm/day",
+        "longname": "Precipitation Corrected"
+      },
+      "GWETROOT": {
+        "units": "1",
+        "longname": "Root Zone Soil Wetness"
+      },
+      "GWETTOP": {
+        "units": "1",
+        "longname": "Surface Soil Wetness"
+      },
+      "WS2M": {
+        "units": "m/s",
+        "longname": "Wind Speed at 2 Meters"
+      }
+    },
+    "times": {
+      "data": 0.305,
+      "process": 0.01
+    }
+  },
+  "powerSnowSoilRecent": {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        -100.706,
+        38.109,
+        858.35
+      ]
+    },
+    "properties": {
+      "parameter": {
+        "SNODP": {
+          "20261101": 0.0,
+          "20261102": 0.0,
+          "20261103": 0.0,
+          "20261104": 0.0,
+          "20261105": 0.0,
+          "20261106": 0.0,
+          "20261107": 0.0,
+          "20261108": 0.0,
+          "20261109": 0.0,
+          "20261110": 0.0,
+          "20261111": 0.0,
+          "20261112": 0.0,
+          "20261113": -999.0,
+          "20261114": -999.0,
+          "20261115": -999.0
+        },
+        "TS": {
+          "20261101": 16.11,
+          "20261102": 18.32,
+          "20261103": 10.87,
+          "20261104": 12.48,
+          "20261105": 9.8,
+          "20261106": 9.54,
+          "20261107": 11.79,
+          "20261108": 12.45,
+          "20261109": 12.78,
+          "20261110": 12.78,
+          "20261111": 13.06,
+          "20261112": 11.9,
+          "20261113": -999.0,
+          "20261114": -999.0,
+          "20261115": -999.0
+        }
+      }
+    },
+    "header": {
+      "title": "NASA/POWER Source Native Resolution Daily Data",
+      "api": {
+        "version": "v2.10.3",
+        "name": "POWER Daily API"
+      },
+      "sources": [
+        "GEOSIT"
+      ],
+      "fill_value": -999.0,
+      "time_standard": "LST",
+      "start": "20261101",
+      "end": "20261115"
+    },
+    "messages": [],
+    "parameters": {
+      "SNODP": {
+        "units": "cm",
+        "longname": "Snow Depth"
+      },
+      "TS": {
+        "units": "C",
+        "longname": "Earth Skin Temperature"
+      }
+    },
+    "times": {
+      "data": 0.103,
+      "process": 0.01
+    }
+  },
+  "nwsFinney": {
+    "@context": {
+      "@version": "1.1"
+    },
+    "type": "FeatureCollection",
+    "features": [],
+    "title": "Current watches, warnings, and advisories for 38.1095 N, 100.706 W",
+    "updated": "2026-11-16T02:19:31+00:00"
+  },
+  "smapNativeAttributes": {
+    "sm_surface": "String long_name \"Top layer soil moisture (0-5 cm)\";\n        Float32 valid_max 0.8999999762;\n        Float32 _FillValue -9999.;\n        Float32 fmissing_value -9999.;\n        Float32 missing_value -9999.;\n        String DIMENSION_LABELS \"y\", \"x\";\n        String units \"m3 m-3\";\n        String grid_mapping \"EASE2_global_projection\";\n        String coordinates \"/cell_lat /cell_lon\";\n        Float32 valid_min 0.;",
+    "sm_rootzone": "String long_name \"Root zone soil moisture (0-100 cm)\";\n        Float32 valid_max 0.8999999762;\n        Float32 _FillValue -9999.;\n        Float32 fmissing_value -9999.;\n        Float32 missing_value -9999.;\n        String DIMENSION_LABELS \"y\", \"x\";\n        String units \"m3 m-3\";\n        String grid_mapping \"EASE2_global_projection\";\n        String coordinates \"/cell_lat /cell_lon\";\n        Float32 valid_min 0.;",
+    "soil_temp_layer1": "String long_name \"Soil temperature in layer 1 of soil heat diffusion model\";\n        Float32 valid_max 340.;\n        Float32 _FillValue -9999.;\n        Float32 fmissing_value -9999.;\n        Float32 missing_value -9999.;\n        String DIMENSION_LABELS \"y\", \"x\";\n        String units \"K\";\n        String grid_mapping \"EASE2_global_projection\";\n        String coordinates \"/cell_lat /cell_lon\";\n        Float32 valid_min 210.;",
+    "snow_mass": "String long_name \"Average snow mass (or snow water equivalent) over land fraction of grid cell (excluding areas of open water and permanent ice)\";\n        Float32 valid_max 10000.;\n        Float32 _FillValue -9999.;\n        Float32 fmissing_value -9999.;\n        Float32 missing_value -9999.;\n        String DIMENSION_LABELS \"y\", \"x\";\n        String units \"kg m-2\";\n        String grid_mapping \"EASE2_global_projection\";\n        String coordinates \"/cell_lat /cell_lon\";\n        Float32 valid_min 0.;"
+  },
+  "hlsPoint": {
+    "granule": "HLS.L30.T14SLH.2026308T171916.v2.0",
+    "point": [
+      38.1095,
+      -100.706
+    ],
+    "bands": [
+      {
+        "band": "B04",
+        "url": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14SLH.2026308T171916.v2.0/HLS.L30.T14SLH.2026308T171916.v2.0.B04.tif",
+        "retrievedAt": "2026-11-16T02:25:47.213689+00:00",
+        "initialStatus": 303,
+        "redirectHost": "d1nklfio7vscoe.cloudfront.net",
+        "crs": "EPSG:32614",
+        "row": 2689,
+        "column": 1681,
+        "nodata": -9999.0,
+        "dtype": "int16",
+        "values": [
+          [
+            1530,
+            1492,
+            1495
+          ],
+          [
+            1564,
+            1543,
+            1518
+          ],
+          [
+            1585,
+            1530,
+            1499
+          ]
+        ],
+        "decodedWindowSha256": "322d563238022c15834b9c9624233d9ee6f153919a3c4a6c62247be8fd28c4b6",
+        "seconds": 3.001
+      },
+      {
+        "band": "B05",
+        "url": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14SLH.2026308T171916.v2.0/HLS.L30.T14SLH.2026308T171916.v2.0.B05.tif",
+        "retrievedAt": "2026-11-16T02:25:50.214671+00:00",
+        "initialStatus": 303,
+        "redirectHost": "d1nklfio7vscoe.cloudfront.net",
+        "crs": "EPSG:32614",
+        "row": 2689,
+        "column": 1681,
+        "nodata": -9999.0,
+        "dtype": "int16",
+        "values": [
+          [
+            2231,
+            2199,
+            2186
+          ],
+          [
+            2282,
+            2258,
+            2214
+          ],
+          [
+            2316,
+            2228,
+            2184
+          ]
+        ],
+        "decodedWindowSha256": "4247762aab42d8bf9490cd85469ec58c778a2090ce1eedeecbffbda682c8620c",
+        "seconds": 2.584
+      },
+      {
+        "band": "Fmask",
+        "url": "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T14SLH.2026308T171916.v2.0/HLS.L30.T14SLH.2026308T171916.v2.0.Fmask.tif",
+        "retrievedAt": "2026-11-16T02:25:52.798217+00:00",
+        "initialStatus": 303,
+        "redirectHost": "d1nklfio7vscoe.cloudfront.net",
+        "crs": "EPSG:32614",
+        "row": 2689,
+        "column": 1681,
+        "nodata": 255.0,
+        "dtype": "uint8",
+        "values": [
+          [
+            64,
+            64,
+            64
+          ],
+          [
+            64,
+            64,
+            64
+          ],
+          [
+            64,
+            64,
+            64
+          ]
+        ],
+        "decodedWindowSha256": "5954827bda021033e9c538cb09b89dc84a20fa35faf46fdcad553efd5fa18139",
+        "seconds": 2.456
+      }
+    ]
+  },
+  "regionPolicy": {
+    "version": 1,
+    "baseline": "1991-2025 inclusive; complete calendar years for all four variables only",
+    "parameters": [
+      "PRECTOTCORR",
+      "T2M_MAX",
+      "T2M_MIN",
+      "WS2M"
+    ],
+    "et0": "FAO-56 Eq 52 Hargreaves, 0.0023*(Tmean+17.8)*sqrt(Tmax-Tmin)*Ra*0.408; Ra in MJ m-2 day-1; ET0 clipped at zero",
+    "thresholdsDemonstration": {
+      "waterLimitedAnnualPOverET0Below": 0.65,
+      "coldWinterMeanFreezeDaysAtLeast": 90,
+      "hotSummerMeanDaysTmax35CAtLeast": 30,
+      "windExposedMeanDaysWS2M5msAtLeast": 30
+    },
+    "tagNaming": "The stored preliminary humid tag means moisture-balanced, not a formal humidity classification."
+  },
+  "regions": [
+    {
+      "place": "finney-ks",
+      "point": [
+        38.1095,
+        -100.706
+      ],
+      "retrievedAt": "2026-11-16T02:23:10.207765+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR%2CT2M_MAX%2CT2M_MIN%2CWS2M&community=AG&latitude=38.1095&longitude=-100.706&start=19910101&end=20251231&format=JSON&time-standard=LST",
+      "sha256": "cbc5dea4fba785b29ef53572f596612c0c730df80ee66842e11f26e9e0e4f376",
+      "completeYears": 35,
+      "excludedYears": [],
+      "mean": {
+        "P": 549.03,
+        "ET0": 1286.08,
+        "freezeDays": 113.37,
+        "hotDays": 41.51,
+        "windDays": 51.14,
+        "aridityRatio": 0.427
+      },
+      "tags": [
+        "water-limited",
+        "cold-winter",
+        "hot-summer",
+        "wind-exposed"
+      ],
+      "seconds": 1.082,
+      "annual": [
+        {
+          "year": 1991,
+          "P": 481.09,
+          "ET0": 1280.4569181073525,
+          "freezeDays": 123,
+          "hotDays": 30,
+          "windDays": 54
+        },
+        {
+          "year": 1992,
+          "P": 537.85,
+          "ET0": 1227.617556774226,
+          "freezeDays": 109,
+          "hotDays": 14,
+          "windDays": 42
+        },
+        {
+          "year": 1993,
+          "P": 638.9300000000001,
+          "ET0": 1195.9854264657151,
+          "freezeDays": 141,
+          "hotDays": 27,
+          "windDays": 50
+        },
+        {
+          "year": 1994,
+          "P": 449.32,
+          "ET0": 1318.3089917934356,
+          "freezeDays": 117,
+          "hotDays": 44,
+          "windDays": 55
+        },
+        {
+          "year": 1995,
+          "P": 493.07,
+          "ET0": 1267.4373641937696,
+          "freezeDays": 106,
+          "hotDays": 45,
+          "windDays": 53
+        },
+        {
+          "year": 1996,
+          "P": 649.56,
+          "ET0": 1246.3866931404762,
+          "freezeDays": 127,
+          "hotDays": 28,
+          "windDays": 46
+        },
+        {
+          "year": 1997,
+          "P": 670.17,
+          "ET0": 1221.5210199433945,
+          "freezeDays": 124,
+          "hotDays": 26,
+          "windDays": 44
+        },
+        {
+          "year": 1998,
+          "P": 576.78,
+          "ET0": 1288.759590258731,
+          "freezeDays": 109,
+          "hotDays": 52,
+          "windDays": 40
+        },
+        {
+          "year": 1999,
+          "P": 590.65,
+          "ET0": 1258.5659541013895,
+          "freezeDays": 103,
+          "hotDays": 31,
+          "windDays": 56
+        },
+        {
+          "year": 2000,
+          "P": 564.4,
+          "ET0": 1330.4244474569377,
+          "freezeDays": 126,
+          "hotDays": 68,
+          "windDays": 51
+        },
+        {
+          "year": 2001,
+          "P": 529.01,
+          "ET0": 1319.657736685779,
+          "freezeDays": 113,
+          "hotDays": 50,
+          "windDays": 46
+        },
+        {
+          "year": 2002,
+          "P": 394.53,
+          "ET0": 1327.767317595279,
+          "freezeDays": 128,
+          "hotDays": 55,
+          "windDays": 57
+        },
+        {
+          "year": 2003,
+          "P": 470.14,
+          "ET0": 1297.5221464692079,
+          "freezeDays": 112,
+          "hotDays": 47,
+          "windDays": 48
+        },
+        {
+          "year": 2004,
+          "P": 693.13,
+          "ET0": 1258.5880486046995,
+          "freezeDays": 106,
+          "hotDays": 31,
+          "windDays": 49
+        },
+        {
+          "year": 2005,
+          "P": 543.71,
+          "ET0": 1287.7389077819685,
+          "freezeDays": 95,
+          "hotDays": 32,
+          "windDays": 58
+        },
+        {
+          "year": 2006,
+          "P": 583.24,
+          "ET0": 1315.9597542557308,
+          "freezeDays": 103,
+          "hotDays": 50,
+          "windDays": 56
+        },
+        {
+          "year": 2007,
+          "P": 609.09,
+          "ET0": 1215.531475701902,
+          "freezeDays": 116,
+          "hotDays": 28,
+          "windDays": 47
+        },
+        {
+          "year": 2008,
+          "P": 546.9,
+          "ET0": 1268.358112457922,
+          "freezeDays": 126,
+          "hotDays": 35,
+          "windDays": 62
+        },
+        {
+          "year": 2009,
+          "P": 603.83,
+          "ET0": 1217.3503226129158,
+          "freezeDays": 123,
+          "hotDays": 25,
+          "windDays": 47
+        },
+        {
+          "year": 2010,
+          "P": 485.89,
+          "ET0": 1286.8397806016374,
+          "freezeDays": 124,
+          "hotDays": 47,
+          "windDays": 60
+        },
+        {
+          "year": 2011,
+          "P": 382.6,
+          "ET0": 1383.6955628012586,
+          "freezeDays": 118,
+          "hotDays": 75,
+          "windDays": 57
+        },
+        {
+          "year": 2012,
+          "P": 370.27,
+          "ET0": 1409.0882463290943,
+          "freezeDays": 92,
+          "hotDays": 64,
+          "windDays": 58
+        },
+        {
+          "year": 2013,
+          "P": 475.56,
+          "ET0": 1297.346937184711,
+          "freezeDays": 132,
+          "hotDays": 51,
+          "windDays": 66
+        },
+        {
+          "year": 2014,
+          "P": 526.7,
+          "ET0": 1283.6385720188223,
+          "freezeDays": 122,
+          "hotDays": 42,
+          "windDays": 58
+        },
+        {
+          "year": 2015,
+          "P": 757.17,
+          "ET0": 1259.7637782533727,
+          "freezeDays": 94,
+          "hotDays": 35,
+          "windDays": 45
+        },
+        {
+          "year": 2016,
+          "P": 602.9,
+          "ET0": 1265.4299356227466,
+          "freezeDays": 96,
+          "hotDays": 27,
+          "windDays": 45
+        },
+        {
+          "year": 2017,
+          "P": 673.65,
+          "ET0": 1266.724169499301,
+          "freezeDays": 96,
+          "hotDays": 32,
+          "windDays": 40
+        },
+        {
+          "year": 2018,
+          "P": 731.46,
+          "ET0": 1261.0110664318565,
+          "freezeDays": 133,
+          "hotDays": 33,
+          "windDays": 63
+        },
+        {
+          "year": 2019,
+          "P": 558.87,
+          "ET0": 1230.0384618511207,
+          "freezeDays": 130,
+          "hotDays": 37,
+          "windDays": 50
+        },
+        {
+          "year": 2020,
+          "P": 495.06,
+          "ET0": 1316.8627217192634,
+          "freezeDays": 119,
+          "hotDays": 50,
+          "windDays": 54
+        },
+        {
+          "year": 2021,
+          "P": 522.71,
+          "ET0": 1286.116698128952,
+          "freezeDays": 99,
+          "hotDays": 47,
+          "windDays": 52
+        },
+        {
+          "year": 2022,
+          "P": 282.23,
+          "ET0": 1368.4891345649119,
+          "freezeDays": 118,
+          "hotDays": 68,
+          "windDays": 57
+        },
+        {
+          "year": 2023,
+          "P": 611.65,
+          "ET0": 1294.8540992317573,
+          "freezeDays": 112,
+          "hotDays": 37,
+          "windDays": 31
+        },
+        {
+          "year": 2024,
+          "P": 519.92,
+          "ET0": 1375.8484940730734,
+          "freezeDays": 84,
+          "hotDays": 57,
+          "windDays": 49
+        },
+        {
+          "year": 2025,
+          "P": 594.05,
+          "ET0": 1283.2819667174656,
+          "freezeDays": 92,
+          "hotDays": 33,
+          "windDays": 44
+        }
+      ]
+    },
+    {
+      "place": "story-ia",
+      "point": [
+        42.0563,
+        -93.495
+      ],
+      "retrievedAt": "2026-11-16T02:23:10.381853+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR%2CT2M_MAX%2CT2M_MIN%2CWS2M&community=AG&latitude=42.0563&longitude=-93.495&start=19910101&end=20251231&format=JSON&time-standard=LST",
+      "sha256": "a3967740c8bb6a443aa9736f2b57508a70cbac25fba9fe0d9f4ebe460b0af215",
+      "completeYears": 35,
+      "excludedYears": [],
+      "mean": {
+        "P": 861.42,
+        "ET0": 992.29,
+        "freezeDays": 143.71,
+        "hotDays": 4.71,
+        "windDays": 45.57,
+        "aridityRatio": 0.868
+      },
+      "tags": [
+        "humid",
+        "cold-winter",
+        "wind-exposed"
+      ],
+      "seconds": 1.265,
+      "annual": [
+        {
+          "year": 1991,
+          "P": 1060.88,
+          "ET0": 958.8059978549933,
+          "freezeDays": 148,
+          "hotDays": 0,
+          "windDays": 40
+        },
+        {
+          "year": 1992,
+          "P": 911.1,
+          "ET0": 934.8522131170147,
+          "freezeDays": 150,
+          "hotDays": 0,
+          "windDays": 28
+        },
+        {
+          "year": 1993,
+          "P": 1355.59,
+          "ET0": 842.2276668163539,
+          "freezeDays": 159,
+          "hotDays": 0,
+          "windDays": 33
+        },
+        {
+          "year": 1994,
+          "P": 764.14,
+          "ET0": 950.3912317351615,
+          "freezeDays": 144,
+          "hotDays": 0,
+          "windDays": 38
+        },
+        {
+          "year": 1995,
+          "P": 841.67,
+          "ET0": 926.692633890595,
+          "freezeDays": 149,
+          "hotDays": 1,
+          "windDays": 55
+        },
+        {
+          "year": 1996,
+          "P": 941.08,
+          "ET0": 927.6472299830212,
+          "freezeDays": 159,
+          "hotDays": 0,
+          "windDays": 59
+        },
+        {
+          "year": 1997,
+          "P": 712.53,
+          "ET0": 997.1858766504381,
+          "freezeDays": 159,
+          "hotDays": 7,
+          "windDays": 52
+        },
+        {
+          "year": 1998,
+          "P": 970.8199999999999,
+          "ET0": 982.0160624209796,
+          "freezeDays": 122,
+          "hotDays": 0,
+          "windDays": 41
+        },
+        {
+          "year": 1999,
+          "P": 823.66,
+          "ET0": 1013.5201458293062,
+          "freezeDays": 131,
+          "hotDays": 5,
+          "windDays": 50
+        },
+        {
+          "year": 2000,
+          "P": 689.07,
+          "ET0": 1088.8238068116214,
+          "freezeDays": 139,
+          "hotDays": 8,
+          "windDays": 48
+        },
+        {
+          "year": 2001,
+          "P": 871.17,
+          "ET0": 1006.4665057726812,
+          "freezeDays": 139,
+          "hotDays": 7,
+          "windDays": 41
+        },
+        {
+          "year": 2002,
+          "P": 774.5600000000001,
+          "ET0": 1041.5476145955154,
+          "freezeDays": 164,
+          "hotDays": 11,
+          "windDays": 51
+        },
+        {
+          "year": 2003,
+          "P": 727.16,
+          "ET0": 1041.5533572450404,
+          "freezeDays": 140,
+          "hotDays": 10,
+          "windDays": 43
+        },
+        {
+          "year": 2004,
+          "P": 805.0,
+          "ET0": 985.6828428512489,
+          "freezeDays": 139,
+          "hotDays": 0,
+          "windDays": 47
+        },
+        {
+          "year": 2005,
+          "P": 695.34,
+          "ET0": 1074.2664059488327,
+          "freezeDays": 139,
+          "hotDays": 12,
+          "windDays": 46
+        },
+        {
+          "year": 2006,
+          "P": 752.74,
+          "ET0": 1058.34337465681,
+          "freezeDays": 137,
+          "hotDays": 12,
+          "windDays": 47
+        },
+        {
+          "year": 2007,
+          "P": 1031.84,
+          "ET0": 994.211900237222,
+          "freezeDays": 143,
+          "hotDays": 1,
+          "windDays": 56
+        },
+        {
+          "year": 2008,
+          "P": 1105.41,
+          "ET0": 911.1586396477596,
+          "freezeDays": 158,
+          "hotDays": 0,
+          "windDays": 57
+        },
+        {
+          "year": 2009,
+          "P": 951.65,
+          "ET0": 929.2141019760261,
+          "freezeDays": 145,
+          "hotDays": 0,
+          "windDays": 48
+        },
+        {
+          "year": 2010,
+          "P": 1187.68,
+          "ET0": 938.7458878836311,
+          "freezeDays": 132,
+          "hotDays": 0,
+          "windDays": 36
+        },
+        {
+          "year": 2011,
+          "P": 726.12,
+          "ET0": 966.8090848794318,
+          "freezeDays": 145,
+          "hotDays": 1,
+          "windDays": 41
+        },
+        {
+          "year": 2012,
+          "P": 585.21,
+          "ET0": 1166.8317515955473,
+          "freezeDays": 128,
+          "hotDays": 35,
+          "windDays": 44
+        },
+        {
+          "year": 2013,
+          "P": 756.98,
+          "ET0": 964.2509238409755,
+          "freezeDays": 164,
+          "hotDays": 8,
+          "windDays": 49
+        },
+        {
+          "year": 2014,
+          "P": 979.69,
+          "ET0": 921.1505977092689,
+          "freezeDays": 150,
+          "hotDays": 0,
+          "windDays": 55
+        },
+        {
+          "year": 2015,
+          "P": 1083.53,
+          "ET0": 976.9055769824027,
+          "freezeDays": 133,
+          "hotDays": 0,
+          "windDays": 38
+        },
+        {
+          "year": 2016,
+          "P": 858.8000000000001,
+          "ET0": 974.8889477367035,
+          "freezeDays": 129,
+          "hotDays": 0,
+          "windDays": 37
+        },
+        {
+          "year": 2017,
+          "P": 734.43,
+          "ET0": 1045.78977671807,
+          "freezeDays": 132,
+          "hotDays": 6,
+          "windDays": 48
+        },
+        {
+          "year": 2018,
+          "P": 1076.3799999999999,
+          "ET0": 954.7499123828667,
+          "freezeDays": 168,
+          "hotDays": 2,
+          "windDays": 37
+        },
+        {
+          "year": 2019,
+          "P": 950.0600000000001,
+          "ET0": 895.1782628304384,
+          "freezeDays": 161,
+          "hotDays": 0,
+          "windDays": 45
+        },
+        {
+          "year": 2020,
+          "P": 663.91,
+          "ET0": 999.1614857344252,
+          "freezeDays": 154,
+          "hotDays": 7,
+          "windDays": 48
+        },
+        {
+          "year": 2021,
+          "P": 648.02,
+          "ET0": 1072.6307769464638,
+          "freezeDays": 133,
+          "hotDays": 9,
+          "windDays": 41
+        },
+        {
+          "year": 2022,
+          "P": 676.86,
+          "ET0": 1039.507044713392,
+          "freezeDays": 152,
+          "hotDays": 8,
+          "windDays": 65
+        },
+        {
+          "year": 2023,
+          "P": 627.62,
+          "ET0": 1084.9824839313023,
+          "freezeDays": 140,
+          "hotDays": 13,
+          "windDays": 40
+        },
+        {
+          "year": 2024,
+          "P": 894.8100000000001,
+          "ET0": 1067.192970749086,
+          "freezeDays": 118,
+          "hotDays": 2,
+          "windDays": 49
+        },
+        {
+          "year": 2025,
+          "P": 914.14,
+          "ET0": 996.6480881410306,
+          "freezeDays": 127,
+          "hotDays": 0,
+          "windDays": 42
+        }
+      ]
+    },
+    {
+      "place": "champaign-il",
+      "point": [
+        40.048,
+        -88.33
+      ],
+      "retrievedAt": "2026-11-16T02:23:10.452141+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR%2CT2M_MAX%2CT2M_MIN%2CWS2M&community=AG&latitude=40.048&longitude=-88.33&start=19910101&end=20251231&format=JSON&time-standard=LST",
+      "sha256": "7ddd735bd48a560d355f67fa1411d860cfd407481d7f88005e006c5e80a2954c",
+      "completeYears": 35,
+      "excludedYears": [],
+      "mean": {
+        "P": 1009.48,
+        "ET0": 1035.6,
+        "freezeDays": 121.57,
+        "hotDays": 2.69,
+        "windDays": 41.14,
+        "aridityRatio": 0.975
+      },
+      "tags": [
+        "humid",
+        "cold-winter",
+        "wind-exposed"
+      ],
+      "seconds": 1.328,
+      "annual": [
+        {
+          "year": 1991,
+          "P": 868.03,
+          "ET0": 1041.9678313789173,
+          "freezeDays": 125,
+          "hotDays": 3,
+          "windDays": 50
+        },
+        {
+          "year": 1992,
+          "P": 1076.05,
+          "ET0": 979.0006351967764,
+          "freezeDays": 129,
+          "hotDays": 0,
+          "windDays": 28
+        },
+        {
+          "year": 1993,
+          "P": 1302.61,
+          "ET0": 910.9603701193474,
+          "freezeDays": 136,
+          "hotDays": 0,
+          "windDays": 36
+        },
+        {
+          "year": 1994,
+          "P": 912.86,
+          "ET0": 1005.4800396031867,
+          "freezeDays": 125,
+          "hotDays": 0,
+          "windDays": 36
+        },
+        {
+          "year": 1995,
+          "P": 936.43,
+          "ET0": 1016.3876878669668,
+          "freezeDays": 129,
+          "hotDays": 0,
+          "windDays": 42
+        },
+        {
+          "year": 1996,
+          "P": 1007.2,
+          "ET0": 1010.0535432289561,
+          "freezeDays": 141,
+          "hotDays": 0,
+          "windDays": 57
+        },
+        {
+          "year": 1997,
+          "P": 919.91,
+          "ET0": 1012.0980674753165,
+          "freezeDays": 134,
+          "hotDays": 3,
+          "windDays": 37
+        },
+        {
+          "year": 1998,
+          "P": 1124.85,
+          "ET0": 1019.4436849018291,
+          "freezeDays": 96,
+          "hotDays": 0,
+          "windDays": 38
+        },
+        {
+          "year": 1999,
+          "P": 907.87,
+          "ET0": 1082.9780313453664,
+          "freezeDays": 119,
+          "hotDays": 6,
+          "windDays": 45
+        },
+        {
+          "year": 2000,
+          "P": 975.18,
+          "ET0": 1078.5551799582931,
+          "freezeDays": 121,
+          "hotDays": 2,
+          "windDays": 35
+        },
+        {
+          "year": 2001,
+          "P": 965.35,
+          "ET0": 1075.5642561978245,
+          "freezeDays": 117,
+          "hotDays": 3,
+          "windDays": 31
+        },
+        {
+          "year": 2002,
+          "P": 1028.06,
+          "ET0": 1031.4926371998658,
+          "freezeDays": 130,
+          "hotDays": 0,
+          "windDays": 42
+        },
+        {
+          "year": 2003,
+          "P": 994.94,
+          "ET0": 1062.1614030557685,
+          "freezeDays": 126,
+          "hotDays": 5,
+          "windDays": 45
+        },
+        {
+          "year": 2004,
+          "P": 1057.6,
+          "ET0": 1014.816690793319,
+          "freezeDays": 113,
+          "hotDays": 0,
+          "windDays": 37
+        },
+        {
+          "year": 2005,
+          "P": 886.23,
+          "ET0": 1090.715166848584,
+          "freezeDays": 117,
+          "hotDays": 10,
+          "windDays": 33
+        },
+        {
+          "year": 2006,
+          "P": 1033.37,
+          "ET0": 1051.7786771104159,
+          "freezeDays": 120,
+          "hotDays": 3,
+          "windDays": 43
+        },
+        {
+          "year": 2007,
+          "P": 976.1,
+          "ET0": 1060.986413269112,
+          "freezeDays": 128,
+          "hotDays": 3,
+          "windDays": 42
+        },
+        {
+          "year": 2008,
+          "P": 1363.89,
+          "ET0": 957.4469953184063,
+          "freezeDays": 136,
+          "hotDays": 0,
+          "windDays": 59
+        },
+        {
+          "year": 2009,
+          "P": 1289.98,
+          "ET0": 951.6371673066315,
+          "freezeDays": 115,
+          "hotDays": 0,
+          "windDays": 49
+        },
+        {
+          "year": 2010,
+          "P": 989.85,
+          "ET0": 1023.190855496455,
+          "freezeDays": 118,
+          "hotDays": 0,
+          "windDays": 38
+        },
+        {
+          "year": 2011,
+          "P": 1046.94,
+          "ET0": 1038.5627943217905,
+          "freezeDays": 112,
+          "hotDays": 5,
+          "windDays": 45
+        },
+        {
+          "year": 2012,
+          "P": 761.39,
+          "ET0": 1177.4716934252945,
+          "freezeDays": 112,
+          "hotDays": 30,
+          "windDays": 45
+        },
+        {
+          "year": 2013,
+          "P": 966.29,
+          "ET0": 988.3817244116822,
+          "freezeDays": 140,
+          "hotDays": 3,
+          "windDays": 30
+        },
+        {
+          "year": 2014,
+          "P": 1036.31,
+          "ET0": 966.6848933877143,
+          "freezeDays": 138,
+          "hotDays": 0,
+          "windDays": 47
+        },
+        {
+          "year": 2015,
+          "P": 1125.4,
+          "ET0": 1013.4247915628098,
+          "freezeDays": 109,
+          "hotDays": 0,
+          "windDays": 39
+        },
+        {
+          "year": 2016,
+          "P": 988.41,
+          "ET0": 1017.2441034784242,
+          "freezeDays": 113,
+          "hotDays": 0,
+          "windDays": 39
+        },
+        {
+          "year": 2017,
+          "P": 852.82,
+          "ET0": 1094.4206272055644,
+          "freezeDays": 101,
+          "hotDays": 1,
+          "windDays": 42
+        },
+        {
+          "year": 2018,
+          "P": 1105.61,
+          "ET0": 1021.3189800664909,
+          "freezeDays": 140,
+          "hotDays": 0,
+          "windDays": 41
+        },
+        {
+          "year": 2019,
+          "P": 1085.56,
+          "ET0": 993.3149104464669,
+          "freezeDays": 135,
+          "hotDays": 0,
+          "windDays": 45
+        },
+        {
+          "year": 2020,
+          "P": 1017.77,
+          "ET0": 1022.6183208214713,
+          "freezeDays": 122,
+          "hotDays": 0,
+          "windDays": 38
+        },
+        {
+          "year": 2021,
+          "P": 1130.85,
+          "ET0": 1017.0890324617254,
+          "freezeDays": 122,
+          "hotDays": 0,
+          "windDays": 34
+        },
+        {
+          "year": 2022,
+          "P": 919.91,
+          "ET0": 1068.1634754038428,
+          "freezeDays": 124,
+          "hotDays": 2,
+          "windDays": 52
+        },
+        {
+          "year": 2023,
+          "P": 856.2,
+          "ET0": 1136.6021030136953,
+          "freezeDays": 106,
+          "hotDays": 8,
+          "windDays": 36
+        },
+        {
+          "year": 2024,
+          "P": 1043.94,
+          "ET0": 1117.5110485019507,
+          "freezeDays": 97,
+          "hotDays": 4,
+          "windDays": 39
+        },
+        {
+          "year": 2025,
+          "P": 777.87,
+          "ET0": 1096.3699225657895,
+          "freezeDays": 109,
+          "hotDays": 3,
+          "windDays": 45
+        }
+      ]
+    },
+    {
+      "place": "lancaster-ne",
+      "point": [
+        40.73,
+        -96.55
+      ],
+      "retrievedAt": "2026-11-16T02:23:10.575620+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR%2CT2M_MAX%2CT2M_MIN%2CWS2M&community=AG&latitude=40.73&longitude=-96.55&start=19910101&end=20251231&format=JSON&time-standard=LST",
+      "sha256": "36fdbb0ed3b4f2d879d24e331dd798e825a7a6a704fb7b6f82b8e90251546b37",
+      "completeYears": 35,
+      "excludedYears": [],
+      "mean": {
+        "P": 813.58,
+        "ET0": 1097.9,
+        "freezeDays": 131.0,
+        "hotDays": 16.26,
+        "windDays": 45.69,
+        "aridityRatio": 0.741
+      },
+      "tags": [
+        "humid",
+        "cold-winter",
+        "wind-exposed"
+      ],
+      "seconds": 1.449,
+      "annual": [
+        {
+          "year": 1991,
+          "P": 763.96,
+          "ET0": 1158.225715675786,
+          "freezeDays": 137,
+          "hotDays": 29,
+          "windDays": 38
+        },
+        {
+          "year": 1992,
+          "P": 1020.13,
+          "ET0": 1019.5924447575,
+          "freezeDays": 132,
+          "hotDays": 0,
+          "windDays": 27
+        },
+        {
+          "year": 1993,
+          "P": 1370.48,
+          "ET0": 913.9523808828139,
+          "freezeDays": 153,
+          "hotDays": 0,
+          "windDays": 34
+        },
+        {
+          "year": 1994,
+          "P": 718.34,
+          "ET0": 1068.661524488185,
+          "freezeDays": 138,
+          "hotDays": 6,
+          "windDays": 38
+        },
+        {
+          "year": 1995,
+          "P": 833.59,
+          "ET0": 1010.9084380283169,
+          "freezeDays": 132,
+          "hotDays": 6,
+          "windDays": 51
+        },
+        {
+          "year": 1996,
+          "P": 994.91,
+          "ET0": 1013.1971803606797,
+          "freezeDays": 150,
+          "hotDays": 1,
+          "windDays": 51
+        },
+        {
+          "year": 1997,
+          "P": 783.35,
+          "ET0": 1099.9610416995301,
+          "freezeDays": 145,
+          "hotDays": 20,
+          "windDays": 42
+        },
+        {
+          "year": 1998,
+          "P": 960.66,
+          "ET0": 1072.7426724711165,
+          "freezeDays": 114,
+          "hotDays": 15,
+          "windDays": 45
+        },
+        {
+          "year": 1999,
+          "P": 770.58,
+          "ET0": 1090.9479714779566,
+          "freezeDays": 118,
+          "hotDays": 12,
+          "windDays": 54
+        },
+        {
+          "year": 2000,
+          "P": 663.77,
+          "ET0": 1205.4965785265024,
+          "freezeDays": 133,
+          "hotDays": 37,
+          "windDays": 56
+        },
+        {
+          "year": 2001,
+          "P": 947.6899999999999,
+          "ET0": 1106.9404956456704,
+          "freezeDays": 132,
+          "hotDays": 20,
+          "windDays": 46
+        },
+        {
+          "year": 2002,
+          "P": 617.04,
+          "ET0": 1175.5084283856274,
+          "freezeDays": 145,
+          "hotDays": 36,
+          "windDays": 44
+        },
+        {
+          "year": 2003,
+          "P": 675.54,
+          "ET0": 1150.8780623858138,
+          "freezeDays": 131,
+          "hotDays": 30,
+          "windDays": 43
+        },
+        {
+          "year": 2004,
+          "P": 716.91,
+          "ET0": 1093.8017968057475,
+          "freezeDays": 122,
+          "hotDays": 5,
+          "windDays": 49
+        },
+        {
+          "year": 2005,
+          "P": 729.35,
+          "ET0": 1147.2231763785774,
+          "freezeDays": 134,
+          "hotDays": 23,
+          "windDays": 43
+        },
+        {
+          "year": 2006,
+          "P": 784.26,
+          "ET0": 1148.1536497091945,
+          "freezeDays": 128,
+          "hotDays": 24,
+          "windDays": 47
+        },
+        {
+          "year": 2007,
+          "P": 1087.57,
+          "ET0": 1048.6446247091428,
+          "freezeDays": 130,
+          "hotDays": 5,
+          "windDays": 51
+        },
+        {
+          "year": 2008,
+          "P": 960.23,
+          "ET0": 1006.8788713960597,
+          "freezeDays": 146,
+          "hotDays": 2,
+          "windDays": 57
+        },
+        {
+          "year": 2009,
+          "P": 773.21,
+          "ET0": 1056.5987157409988,
+          "freezeDays": 129,
+          "hotDays": 6,
+          "windDays": 49
+        },
+        {
+          "year": 2010,
+          "P": 885.52,
+          "ET0": 1062.8499122911387,
+          "freezeDays": 125,
+          "hotDays": 11,
+          "windDays": 50
+        },
+        {
+          "year": 2011,
+          "P": 710.08,
+          "ET0": 1133.2317807051575,
+          "freezeDays": 133,
+          "hotDays": 28,
+          "windDays": 47
+        },
+        {
+          "year": 2012,
+          "P": 562.88,
+          "ET0": 1272.5477935853721,
+          "freezeDays": 111,
+          "hotDays": 48,
+          "windDays": 50
+        },
+        {
+          "year": 2013,
+          "P": 747.51,
+          "ET0": 1068.9315197352055,
+          "freezeDays": 155,
+          "hotDays": 20,
+          "windDays": 45
+        },
+        {
+          "year": 2014,
+          "P": 795.15,
+          "ET0": 1077.7095123628326,
+          "freezeDays": 141,
+          "hotDays": 13,
+          "windDays": 63
+        },
+        {
+          "year": 2015,
+          "P": 1048.06,
+          "ET0": 1052.0187024717745,
+          "freezeDays": 112,
+          "hotDays": 1,
+          "windDays": 38
+        },
+        {
+          "year": 2016,
+          "P": 816.37,
+          "ET0": 1097.773279338655,
+          "freezeDays": 116,
+          "hotDays": 9,
+          "windDays": 40
+        },
+        {
+          "year": 2017,
+          "P": 775.05,
+          "ET0": 1146.7438324737802,
+          "freezeDays": 118,
+          "hotDays": 18,
+          "windDays": 49
+        },
+        {
+          "year": 2018,
+          "P": 926.62,
+          "ET0": 1084.5943811254117,
+          "freezeDays": 150,
+          "hotDays": 20,
+          "windDays": 44
+        },
+        {
+          "year": 2019,
+          "P": 988.85,
+          "ET0": 963.4117118918265,
+          "freezeDays": 144,
+          "hotDays": 0,
+          "windDays": 38
+        },
+        {
+          "year": 2020,
+          "P": 649.17,
+          "ET0": 1077.7235683257395,
+          "freezeDays": 136,
+          "hotDays": 9,
+          "windDays": 46
+        },
+        {
+          "year": 2021,
+          "P": 731.63,
+          "ET0": 1141.8008521304519,
+          "freezeDays": 115,
+          "hotDays": 26,
+          "windDays": 31
+        },
+        {
+          "year": 2022,
+          "P": 569.27,
+          "ET0": 1160.1266085119792,
+          "freezeDays": 143,
+          "hotDays": 30,
+          "windDays": 68
+        },
+        {
+          "year": 2023,
+          "P": 656.77,
+          "ET0": 1181.6727428667798,
+          "freezeDays": 128,
+          "hotDays": 22,
+          "windDays": 38
+        },
+        {
+          "year": 2024,
+          "P": 694.84,
+          "ET0": 1205.546981027064,
+          "freezeDays": 103,
+          "hotDays": 28,
+          "windDays": 44
+        },
+        {
+          "year": 2025,
+          "P": 746.04,
+          "ET0": 1111.6238558582486,
+          "freezeDays": 106,
+          "hotDays": 9,
+          "windDays": 43
+        }
+      ]
+    },
+    {
+      "place": "fargo-nd",
+      "point": [
+        46.8772,
+        -96.7898
+      ],
+      "retrievedAt": "2026-11-16T02:23:11.544895+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR%2CT2M_MAX%2CT2M_MIN%2CWS2M&community=AG&latitude=46.8772&longitude=-96.7898&start=19910101&end=20251231&format=JSON&time-standard=LST",
+      "sha256": "854506bea92c90f218b1e90854bfd95a48cea63e95c1fedcd1ab627d379b36ea",
+      "completeYears": 35,
+      "excludedYears": [],
+      "mean": {
+        "P": 619.3,
+        "ET0": 906.05,
+        "freezeDays": 171.51,
+        "hotDays": 4.23,
+        "windDays": 48.94,
+        "aridityRatio": 0.684
+      },
+      "tags": [
+        "humid",
+        "cold-winter",
+        "wind-exposed"
+      ],
+      "seconds": 1.335,
+      "annual": [
+        {
+          "year": 1991,
+          "P": 582.36,
+          "ET0": 934.4382860429314,
+          "freezeDays": 181,
+          "hotDays": 6,
+          "windDays": 64
+        },
+        {
+          "year": 1992,
+          "P": 623.41,
+          "ET0": 893.5981736974105,
+          "freezeDays": 181,
+          "hotDays": 0,
+          "windDays": 45
+        },
+        {
+          "year": 1993,
+          "P": 691.13,
+          "ET0": 830.5827029412734,
+          "freezeDays": 178,
+          "hotDays": 0,
+          "windDays": 46
+        },
+        {
+          "year": 1994,
+          "P": 681.99,
+          "ET0": 884.4014901099653,
+          "freezeDays": 166,
+          "hotDays": 0,
+          "windDays": 49
+        },
+        {
+          "year": 1995,
+          "P": 701.37,
+          "ET0": 849.9089107377565,
+          "freezeDays": 177,
+          "hotDays": 1,
+          "windDays": 49
+        },
+        {
+          "year": 1996,
+          "P": 607.2,
+          "ET0": 861.675216143893,
+          "freezeDays": 196,
+          "hotDays": 1,
+          "windDays": 45
+        },
+        {
+          "year": 1997,
+          "P": 629.24,
+          "ET0": 874.4956874700217,
+          "freezeDays": 180,
+          "hotDays": 0,
+          "windDays": 48
+        },
+        {
+          "year": 1998,
+          "P": 722.66,
+          "ET0": 928.176604436538,
+          "freezeDays": 155,
+          "hotDays": 2,
+          "windDays": 42
+        },
+        {
+          "year": 1999,
+          "P": 606.3,
+          "ET0": 904.8932465059565,
+          "freezeDays": 168,
+          "hotDays": 2,
+          "windDays": 51
+        },
+        {
+          "year": 2000,
+          "P": 686.33,
+          "ET0": 924.2304222626244,
+          "freezeDays": 164,
+          "hotDays": 5,
+          "windDays": 48
+        },
+        {
+          "year": 2001,
+          "P": 562.66,
+          "ET0": 929.3464025321165,
+          "freezeDays": 163,
+          "hotDays": 8,
+          "windDays": 44
+        },
+        {
+          "year": 2002,
+          "P": 539.1,
+          "ET0": 932.4940610247485,
+          "freezeDays": 200,
+          "hotDays": 10,
+          "windDays": 52
+        },
+        {
+          "year": 2003,
+          "P": 557.48,
+          "ET0": 938.298280758926,
+          "freezeDays": 164,
+          "hotDays": 8,
+          "windDays": 54
+        },
+        {
+          "year": 2004,
+          "P": 661.79,
+          "ET0": 884.6603607127283,
+          "freezeDays": 173,
+          "hotDays": 1,
+          "windDays": 47
+        },
+        {
+          "year": 2005,
+          "P": 747.7,
+          "ET0": 896.1961045725626,
+          "freezeDays": 165,
+          "hotDays": 4,
+          "windDays": 63
+        },
+        {
+          "year": 2006,
+          "P": 452.91,
+          "ET0": 968.4167867067329,
+          "freezeDays": 169,
+          "hotDays": 13,
+          "windDays": 47
+        },
+        {
+          "year": 2007,
+          "P": 635.01,
+          "ET0": 934.1501495237176,
+          "freezeDays": 159,
+          "hotDays": 6,
+          "windDays": 54
+        },
+        {
+          "year": 2008,
+          "P": 735.09,
+          "ET0": 882.1092050537834,
+          "freezeDays": 175,
+          "hotDays": 0,
+          "windDays": 62
+        },
+        {
+          "year": 2009,
+          "P": 624.55,
+          "ET0": 841.9510857231293,
+          "freezeDays": 173,
+          "hotDays": 1,
+          "windDays": 48
+        },
+        {
+          "year": 2010,
+          "P": 759.65,
+          "ET0": 884.6981424529181,
+          "freezeDays": 148,
+          "hotDays": 1,
+          "windDays": 43
+        },
+        {
+          "year": 2011,
+          "P": 630.01,
+          "ET0": 853.5248744886193,
+          "freezeDays": 172,
+          "hotDays": 0,
+          "windDays": 47
+        },
+        {
+          "year": 2012,
+          "P": 415.08,
+          "ET0": 1027.480236864049,
+          "freezeDays": 155,
+          "hotDays": 17,
+          "windDays": 53
+        },
+        {
+          "year": 2013,
+          "P": 704.79,
+          "ET0": 865.5591764193891,
+          "freezeDays": 195,
+          "hotDays": 8,
+          "windDays": 45
+        },
+        {
+          "year": 2014,
+          "P": 583.08,
+          "ET0": 831.2607009627603,
+          "freezeDays": 174,
+          "hotDays": 0,
+          "windDays": 65
+        },
+        {
+          "year": 2015,
+          "P": 495.79,
+          "ET0": 952.7573933656396,
+          "freezeDays": 152,
+          "hotDays": 6,
+          "windDays": 51
+        },
+        {
+          "year": 2016,
+          "P": 684.23,
+          "ET0": 943.9101711312443,
+          "freezeDays": 151,
+          "hotDays": 1,
+          "windDays": 53
+        },
+        {
+          "year": 2017,
+          "P": 483.11,
+          "ET0": 946.1286644107431,
+          "freezeDays": 168,
+          "hotDays": 4,
+          "windDays": 43
+        },
+        {
+          "year": 2018,
+          "P": 564.35,
+          "ET0": 925.5303504328659,
+          "freezeDays": 192,
+          "hotDays": 6,
+          "windDays": 44
+        },
+        {
+          "year": 2019,
+          "P": 759.05,
+          "ET0": 824.7796823956008,
+          "freezeDays": 184,
+          "hotDays": 0,
+          "windDays": 35
+        },
+        {
+          "year": 2020,
+          "P": 558.01,
+          "ET0": 880.4550452668188,
+          "freezeDays": 189,
+          "hotDays": 0,
+          "windDays": 32
+        },
+        {
+          "year": 2021,
+          "P": 528.79,
+          "ET0": 1010.8238679071895,
+          "freezeDays": 165,
+          "hotDays": 23,
+          "windDays": 46
+        },
+        {
+          "year": 2022,
+          "P": 634.48,
+          "ET0": 872.7444272118612,
+          "freezeDays": 180,
+          "hotDays": 3,
+          "windDays": 58
+        },
+        {
+          "year": 2023,
+          "P": 537.78,
+          "ET0": 944.3800574800119,
+          "freezeDays": 174,
+          "hotDays": 8,
+          "windDays": 41
+        },
+        {
+          "year": 2024,
+          "P": 662.62,
+          "ET0": 921.9132596194331,
+          "freezeDays": 155,
+          "hotDays": 2,
+          "windDays": 51
+        },
+        {
+          "year": 2025,
+          "P": 626.39,
+          "ET0": 931.9542761933377,
+          "freezeDays": 162,
+          "hotDays": 1,
+          "windDays": 48
+        }
+      ]
+    },
+    {
+      "place": "tifton-ga",
+      "point": [
+        31.4505,
+        -83.5085
+      ],
+      "retrievedAt": "2026-11-16T02:23:11.688141+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR%2CT2M_MAX%2CT2M_MIN%2CWS2M&community=AG&latitude=31.4505&longitude=-83.5085&start=19910101&end=20251231&format=JSON&time-standard=LST",
+      "sha256": "43b6ebfa5967d2d0e1d1ba33cf58425dc7dec7633fe668114e86b181aa6aaf90",
+      "completeYears": 35,
+      "excludedYears": [],
+      "mean": {
+        "P": 1255.91,
+        "ET0": 1348.34,
+        "freezeDays": 23.34,
+        "hotDays": 20.14,
+        "windDays": 6.09,
+        "aridityRatio": 0.931
+      },
+      "tags": [
+        "humid"
+      ],
+      "seconds": 1.234,
+      "annual": [
+        {
+          "year": 1991,
+          "P": 1579.54,
+          "ET0": 1207.6078301032271,
+          "freezeDays": 18,
+          "hotDays": 0,
+          "windDays": 5
+        },
+        {
+          "year": 1992,
+          "P": 1434.86,
+          "ET0": 1252.4144999368796,
+          "freezeDays": 18,
+          "hotDays": 2,
+          "windDays": 4
+        },
+        {
+          "year": 1993,
+          "P": 1272.68,
+          "ET0": 1356.6777151742979,
+          "freezeDays": 22,
+          "hotDays": 28,
+          "windDays": 2
+        },
+        {
+          "year": 1994,
+          "P": 1728.89,
+          "ET0": 1214.4442789594048,
+          "freezeDays": 21,
+          "hotDays": 0,
+          "windDays": 4
+        },
+        {
+          "year": 1995,
+          "P": 1134.11,
+          "ET0": 1362.8404085077009,
+          "freezeDays": 38,
+          "hotDays": 28,
+          "windDays": 8
+        },
+        {
+          "year": 1996,
+          "P": 1231.56,
+          "ET0": 1348.9800807855672,
+          "freezeDays": 36,
+          "hotDays": 18,
+          "windDays": 11
+        },
+        {
+          "year": 1997,
+          "P": 1524.7,
+          "ET0": 1312.3318187297382,
+          "freezeDays": 23,
+          "hotDays": 16,
+          "windDays": 1
+        },
+        {
+          "year": 1998,
+          "P": 1371.59,
+          "ET0": 1344.2536544248942,
+          "freezeDays": 10,
+          "hotDays": 35,
+          "windDays": 10
+        },
+        {
+          "year": 1999,
+          "P": 906.75,
+          "ET0": 1448.6498800621434,
+          "freezeDays": 20,
+          "hotDays": 31,
+          "windDays": 10
+        },
+        {
+          "year": 2000,
+          "P": 1088.34,
+          "ET0": 1444.3758886935293,
+          "freezeDays": 35,
+          "hotDays": 37,
+          "windDays": 6
+        },
+        {
+          "year": 2001,
+          "P": 1066.18,
+          "ET0": 1348.503905812216,
+          "freezeDays": 18,
+          "hotDays": 2,
+          "windDays": 5
+        },
+        {
+          "year": 2002,
+          "P": 1284.56,
+          "ET0": 1397.7206455565388,
+          "freezeDays": 24,
+          "hotDays": 26,
+          "windDays": 3
+        },
+        {
+          "year": 2003,
+          "P": 1392.17,
+          "ET0": 1220.6642480656872,
+          "freezeDays": 36,
+          "hotDays": 0,
+          "windDays": 5
+        },
+        {
+          "year": 2004,
+          "P": 1333.1299999999999,
+          "ET0": 1332.4084453303253,
+          "freezeDays": 25,
+          "hotDays": 11,
+          "windDays": 9
+        },
+        {
+          "year": 2005,
+          "P": 1357.75,
+          "ET0": 1278.5156750550207,
+          "freezeDays": 17,
+          "hotDays": 5,
+          "windDays": 10
+        },
+        {
+          "year": 2006,
+          "P": 1043.53,
+          "ET0": 1452.4548503877488,
+          "freezeDays": 18,
+          "hotDays": 44,
+          "windDays": 6
+        },
+        {
+          "year": 2007,
+          "P": 1014.8,
+          "ET0": 1432.1384769465603,
+          "freezeDays": 16,
+          "hotDays": 29,
+          "windDays": 5
+        },
+        {
+          "year": 2008,
+          "P": 1286.79,
+          "ET0": 1358.6994437575179,
+          "freezeDays": 32,
+          "hotDays": 23,
+          "windDays": 10
+        },
+        {
+          "year": 2009,
+          "P": 1465.14,
+          "ET0": 1272.1642415868023,
+          "freezeDays": 32,
+          "hotDays": 3,
+          "windDays": 9
+        },
+        {
+          "year": 2010,
+          "P": 1084.67,
+          "ET0": 1360.2262901621314,
+          "freezeDays": 55,
+          "hotDays": 36,
+          "windDays": 5
+        },
+        {
+          "year": 2011,
+          "P": 926.01,
+          "ET0": 1501.1994961344626,
+          "freezeDays": 23,
+          "hotDays": 70,
+          "windDays": 4
+        },
+        {
+          "year": 2012,
+          "P": 1064.13,
+          "ET0": 1388.8852284252175,
+          "freezeDays": 15,
+          "hotDays": 10,
+          "windDays": 8
+        },
+        {
+          "year": 2013,
+          "P": 1557.8,
+          "ET0": 1236.285333641683,
+          "freezeDays": 23,
+          "hotDays": 0,
+          "windDays": 7
+        },
+        {
+          "year": 2014,
+          "P": 1418.43,
+          "ET0": 1290.3358457331944,
+          "freezeDays": 34,
+          "hotDays": 9,
+          "windDays": 5
+        },
+        {
+          "year": 2015,
+          "P": 1259.15,
+          "ET0": 1334.5395615650361,
+          "freezeDays": 23,
+          "hotDays": 24,
+          "windDays": 2
+        },
+        {
+          "year": 2016,
+          "P": 1206.92,
+          "ET0": 1377.8790062961173,
+          "freezeDays": 22,
+          "hotDays": 19,
+          "windDays": 5
+        },
+        {
+          "year": 2017,
+          "P": 1191.05,
+          "ET0": 1354.4240562449727,
+          "freezeDays": 13,
+          "hotDays": 6,
+          "windDays": 7
+        },
+        {
+          "year": 2018,
+          "P": 1504.5,
+          "ET0": 1299.6761480457671,
+          "freezeDays": 27,
+          "hotDays": 3,
+          "windDays": 7
+        },
+        {
+          "year": 2019,
+          "P": 1105.27,
+          "ET0": 1404.9506306433796,
+          "freezeDays": 16,
+          "hotDays": 47,
+          "windDays": 4
+        },
+        {
+          "year": 2020,
+          "P": 1331.06,
+          "ET0": 1351.4309725054025,
+          "freezeDays": 18,
+          "hotDays": 27,
+          "windDays": 6
+        },
+        {
+          "year": 2021,
+          "P": 1375.06,
+          "ET0": 1291.5933730358372,
+          "freezeDays": 11,
+          "hotDays": 2,
+          "windDays": 6
+        },
+        {
+          "year": 2022,
+          "P": 998.56,
+          "ET0": 1403.1148777726949,
+          "freezeDays": 20,
+          "hotDays": 28,
+          "windDays": 8
+        },
+        {
+          "year": 2023,
+          "P": 1166.69,
+          "ET0": 1406.3671645641577,
+          "freezeDays": 14,
+          "hotDays": 30,
+          "windDays": 5
+        },
+        {
+          "year": 2024,
+          "P": 1377.18,
+          "ET0": 1354.6603623307387,
+          "freezeDays": 16,
+          "hotDays": 25,
+          "windDays": 6
+        },
+        {
+          "year": 2025,
+          "P": 873.17,
+          "ET0": 1450.368483829532,
+          "freezeDays": 28,
+          "hotDays": 31,
+          "windDays": 5
+        }
+      ]
+    },
+    {
+      "place": "fresno-ca",
+      "point": [
+        36.7378,
+        -119.7871
+      ],
+      "retrievedAt": "2026-11-16T02:23:11.809587+00:00",
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR%2CT2M_MAX%2CT2M_MIN%2CWS2M&community=AG&latitude=36.7378&longitude=-119.7871&start=19910101&end=20251231&format=JSON&time-standard=LST",
+      "sha256": "5eaf0784254b2f268155eecfbd9d8eeb6b58eb64db46333120c92ee9a9fee989",
+      "completeYears": 35,
+      "excludedYears": [],
+      "mean": {
+        "P": 333.47,
+        "ET0": 1588.62,
+        "freezeDays": 3.91,
+        "hotDays": 100.86,
+        "windDays": 2.54,
+        "aridityRatio": 0.21
+      },
+      "tags": [
+        "water-limited",
+        "hot-summer"
+      ],
+      "seconds": 1.352,
+      "annual": [
+        {
+          "year": 1991,
+          "P": 330.1,
+          "ET0": 1564.1045418823794,
+          "freezeDays": 1,
+          "hotDays": 97,
+          "windDays": 2
+        },
+        {
+          "year": 1992,
+          "P": 420.37,
+          "ET0": 1583.628312409117,
+          "freezeDays": 5,
+          "hotDays": 96,
+          "windDays": 1
+        },
+        {
+          "year": 1993,
+          "P": 440.02,
+          "ET0": 1523.199467938539,
+          "freezeDays": 3,
+          "hotDays": 82,
+          "windDays": 0
+        },
+        {
+          "year": 1994,
+          "P": 299.63,
+          "ET0": 1601.5673512406454,
+          "freezeDays": 5,
+          "hotDays": 96,
+          "windDays": 1
+        },
+        {
+          "year": 1995,
+          "P": 545.79,
+          "ET0": 1511.2630092360614,
+          "freezeDays": 0,
+          "hotDays": 88,
+          "windDays": 4
+        },
+        {
+          "year": 1996,
+          "P": 522.84,
+          "ET0": 1604.56279966557,
+          "freezeDays": 2,
+          "hotDays": 98,
+          "windDays": 3
+        },
+        {
+          "year": 1997,
+          "P": 279.92,
+          "ET0": 1600.8950417345825,
+          "freezeDays": 6,
+          "hotDays": 100,
+          "windDays": 5
+        },
+        {
+          "year": 1998,
+          "P": 591.83,
+          "ET0": 1431.0723124486042,
+          "freezeDays": 8,
+          "hotDays": 67,
+          "windDays": 1
+        },
+        {
+          "year": 1999,
+          "P": 257.92,
+          "ET0": 1559.3195380831023,
+          "freezeDays": 4,
+          "hotDays": 86,
+          "windDays": 1
+        },
+        {
+          "year": 2000,
+          "P": 368.07,
+          "ET0": 1575.3532675619238,
+          "freezeDays": 1,
+          "hotDays": 99,
+          "windDays": 2
+        },
+        {
+          "year": 2001,
+          "P": 362.49,
+          "ET0": 1625.3817454280802,
+          "freezeDays": 4,
+          "hotDays": 108,
+          "windDays": 1
+        },
+        {
+          "year": 2002,
+          "P": 219.02,
+          "ET0": 1626.3668204973915,
+          "freezeDays": 7,
+          "hotDays": 102,
+          "windDays": 2
+        },
+        {
+          "year": 2003,
+          "P": 239.19,
+          "ET0": 1599.6870692923344,
+          "freezeDays": 1,
+          "hotDays": 107,
+          "windDays": 1
+        },
+        {
+          "year": 2004,
+          "P": 295.07,
+          "ET0": 1626.442711422505,
+          "freezeDays": 4,
+          "hotDays": 106,
+          "windDays": 5
+        },
+        {
+          "year": 2005,
+          "P": 378.41,
+          "ET0": 1538.1523233634136,
+          "freezeDays": 0,
+          "hotDays": 83,
+          "windDays": 0
+        },
+        {
+          "year": 2006,
+          "P": 379.6,
+          "ET0": 1547.8153284636498,
+          "freezeDays": 7,
+          "hotDays": 98,
+          "windDays": 0
+        },
+        {
+          "year": 2007,
+          "P": 164.68,
+          "ET0": 1619.3463618200697,
+          "freezeDays": 14,
+          "hotDays": 100,
+          "windDays": 5
+        },
+        {
+          "year": 2008,
+          "P": 258.0,
+          "ET0": 1626.3457375585003,
+          "freezeDays": 5,
+          "hotDays": 113,
+          "windDays": 6
+        },
+        {
+          "year": 2009,
+          "P": 289.63,
+          "ET0": 1595.473476750578,
+          "freezeDays": 5,
+          "hotDays": 105,
+          "windDays": 7
+        },
+        {
+          "year": 2010,
+          "P": 545.55,
+          "ET0": 1511.9842543203886,
+          "freezeDays": 2,
+          "hotDays": 90,
+          "windDays": 3
+        },
+        {
+          "year": 2011,
+          "P": 325.29,
+          "ET0": 1506.590021619957,
+          "freezeDays": 5,
+          "hotDays": 93,
+          "windDays": 3
+        },
+        {
+          "year": 2012,
+          "P": 314.41,
+          "ET0": 1639.764168172911,
+          "freezeDays": 5,
+          "hotDays": 117,
+          "windDays": 4
+        },
+        {
+          "year": 2013,
+          "P": 81.86,
+          "ET0": 1647.1813670546653,
+          "freezeDays": 13,
+          "hotDays": 107,
+          "windDays": 4
+        },
+        {
+          "year": 2014,
+          "P": 228.08,
+          "ET0": 1672.7566123222146,
+          "freezeDays": 1,
+          "hotDays": 126,
+          "windDays": 2
+        },
+        {
+          "year": 2015,
+          "P": 201.81,
+          "ET0": 1632.406755133449,
+          "freezeDays": 6,
+          "hotDays": 107,
+          "windDays": 3
+        },
+        {
+          "year": 2016,
+          "P": 353.13,
+          "ET0": 1617.2550915880513,
+          "freezeDays": 5,
+          "hotDays": 104,
+          "windDays": 1
+        },
+        {
+          "year": 2017,
+          "P": 402.4,
+          "ET0": 1574.9029897344465,
+          "freezeDays": 2,
+          "hotDays": 104,
+          "windDays": 4
+        },
+        {
+          "year": 2018,
+          "P": 289.37,
+          "ET0": 1622.4188944697858,
+          "freezeDays": 3,
+          "hotDays": 100,
+          "windDays": 2
+        },
+        {
+          "year": 2019,
+          "P": 426.3,
+          "ET0": 1548.1699057408468,
+          "freezeDays": 5,
+          "hotDays": 99,
+          "windDays": 2
+        },
+        {
+          "year": 2020,
+          "P": 177.68,
+          "ET0": 1621.7637067119367,
+          "freezeDays": 0,
+          "hotDays": 111,
+          "windDays": 2
+        },
+        {
+          "year": 2021,
+          "P": 302.41,
+          "ET0": 1651.1837096380052,
+          "freezeDays": 1,
+          "hotDays": 112,
+          "windDays": 4
+        },
+        {
+          "year": 2022,
+          "P": 220.11,
+          "ET0": 1643.8298685895663,
+          "freezeDays": 2,
+          "hotDays": 118,
+          "windDays": 2
+        },
+        {
+          "year": 2023,
+          "P": 458.37,
+          "ET0": 1514.9327150060917,
+          "freezeDays": 4,
+          "hotDays": 85,
+          "windDays": 2
+        },
+        {
+          "year": 2024,
+          "P": 348.42,
+          "ET0": 1638.79245301951,
+          "freezeDays": 1,
+          "hotDays": 117,
+          "windDays": 3
+        },
+        {
+          "year": 2025,
+          "P": 353.53,
+          "ET0": 1597.7433046119081,
+          "freezeDays": 0,
+          "hotDays": 109,
+          "windDays": 1
+        }
+      ]
+    }
+  ],
+  "sourcePdf": {
+    "url": "https://bookstore.ksre.ksu.edu/pubs/spring-freeze-injury-to-kansas-wheat_C646.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "bytes": 317734,
+    "sha256": "a219d853843e1c7b5c5b0c9d7382179b726b631c23a20b170f3ca66d7f76999f",
+    "locator": "Table 1, approximate injurious temperatures, two hours exposure"
+  }
+}

@@ -1,4 +1,6 @@
 export interface Env {
+  /** Optional paid-plan demo prewarming. Free/cache-only uses the external runner instead. */
+  PLAN_PREWARM?: Workflow<Record<string, never>>;
   /** Explore is never the default unless explicitly enabled at runtime. */
   EXPLORE_LANDING?: string;
   /** Experimental southwest Kansas crop portfolio; absent/off preserves the original engine. */

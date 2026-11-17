@@ -1,0 +1,51 @@
+name: Prewarm demo plans
+on:
+  schedule:
+    - cron: '5 0,4,8,12,16,20 * * *'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Optional target URL (must run the same next engine version)'
+        required: false
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: soilsense-demo-prewarm
+  cancel-in-progress: false
+jobs:
+  prewarm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+      WRANGLER_SEND_METRICS: 'false'
+      SOILSENSE_TARGET: ${{ inputs.target || vars.SOILSENSE_PREWARM_TARGET || 'https://soilsense-jason.jason-zeng151.workers.dev' }}
+    steps:
+      - name: Check owner setup
+        id: setup
+        shell: bash
+        run: |
+          if [ -z "$ADMIN_TOKEN" ]; then
+            printf 'enabled=false\n' >> "$GITHUB_OUTPUT"
+            printf 'Add the ADMIN_TOKEN repository secret to enable prewarming. No requests made.\n'
+          else
+            printf 'enabled=true\n' >> "$GITHUB_OUTPUT"
+          fi
+      # Schedules execute only on the default branch. Install this workflow there;
+      # checkout next explicitly so source and the next test deployment agree.
+      - uses: actions/checkout@v4
+        if: steps.setup.outputs.enabled == 'true'
+        with:
+          ref: next
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        if: steps.setup.outputs.enabled == 'true'
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+        if: steps.setup.outputs.enabled == 'true'
+      - name: Compute locally, import and read back every matrix entry
+        if: steps.setup.outputs.enabled == 'true'
+        run: npm run prewarm -- --target "$SOILSENSE_TARGET"

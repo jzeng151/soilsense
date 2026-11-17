@@ -289,7 +289,8 @@ api.post("/ask", async (c) => {
 });
 
 api.get("/logs", async (c) => {
-  if (c.env.ADMIN_TOKEN && c.req.header("Authorization") !== `Bearer ${c.env.ADMIN_TOKEN}`) return c.json({ error: "unauthorized" }, 401);
+  // Fail closed: without an ADMIN_TOKEN secret the plan/call log (masked callers, coordinates) is not served at all.
+  if (!adminTokenMatches(c.req.header("Authorization"), c.env.ADMIN_TOKEN)) return c.json({ error: "Admin token required" }, 401);
   if (!c.env.DB) return c.json({ logs: [] });
   const limit = Math.min(100, Math.max(1, Number(c.req.query("limit") ?? 25)));
   const { results } = await c.env.DB.prepare(

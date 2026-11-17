@@ -1,0 +1,57 @@
+{
+  "schema": "soilsense.imerg-point/v1",
+  "product": {
+    "shortName": "GPM_3IMERGDF",
+    "version": "07",
+    "stream": "Final",
+    "latency": "Up to four months plus about 24 hours",
+    "doi": "10.5067/GPM/IMERGDF/DAY/07"
+  },
+  "stream": "final",
+  "grid": {
+    "lat": 38.05,
+    "lon": -101.25,
+    "yi": 1280,
+    "xi": 787,
+    "key": "1280_787",
+    "resolution": "0.1\u00b0 \u00d7 0.1\u00b0",
+    "support": "Grid-cell point estimate, not a field-area measurement"
+  },
+  "units": "mm/day",
+  "timeStandard": "UTC",
+  "start": "2023-05-09",
+  "end": "2023-05-12",
+  "observations": [
+    {
+      "date": "2023-05-09",
+      "mm": 0.07000000029802322,
+      "count": 48,
+      "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDF.07/2023/05/3B-DAY.MS.MRG.3IMERG.20230509-S000000-E235959.V07B.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B787%3A1%3A787%5D%5B1280%3A1%3A1280%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B787%3A1%3A787%5D%5B1280%3A1%3A1280%5D%3B%2Flat%5B1280%3A1%3A1280%5D%3B%2Flon%5B787%3A1%3A787%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+      "revision": "3B-DAY.MS.MRG.3IMERG.20230509-S000000-E235959.V07B.nc4"
+    },
+    {
+      "date": "2023-05-10",
+      "mm": 0,
+      "count": 48,
+      "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDF.07/2023/05/3B-DAY.MS.MRG.3IMERG.20230510-S000000-E235959.V07B.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B787%3A1%3A787%5D%5B1280%3A1%3A1280%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B787%3A1%3A787%5D%5B1280%3A1%3A1280%5D%3B%2Flat%5B1280%3A1%3A1280%5D%3B%2Flon%5B787%3A1%3A787%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+      "revision": "3B-DAY.MS.MRG.3IMERG.20230510-S000000-E235959.V07B.nc4"
+    },
+    {
+      "date": "2023-05-11",
+      "mm": 2.669999837875366,
+      "count": 48,
+      "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDF.07/2023/05/3B-DAY.MS.MRG.3IMERG.20230511-S000000-E235959.V07B.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B787%3A1%3A787%5D%5B1280%3A1%3A1280%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B787%3A1%3A787%5D%5B1280%3A1%3A1280%5D%3B%2Flat%5B1280%3A1%3A1280%5D%3B%2Flon%5B787%3A1%3A787%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+      "revision": "3B-DAY.MS.MRG.3IMERG.20230511-S000000-E235959.V07B.nc4"
+    },
+    {
+      "date": "2023-05-12",
+      "mm": 0.014999999664723873,
+      "count": 48,
+      "sourceUrl": "https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDF.07/2023/05/3B-DAY.MS.MRG.3IMERG.20230512-S000000-E235959.V07B.nc4.dap?dap4.ce=%2Fprecipitation%5B0%3A1%3A0%5D%5B787%3A1%3A787%5D%5B1280%3A1%3A1280%5D%3B%2Fprecipitation_cnt%5B0%3A1%3A0%5D%5B787%3A1%3A787%5D%5B1280%3A1%3A1280%5D%3B%2Flat%5B1280%3A1%3A1280%5D%3B%2Flon%5B787%3A1%3A787%5D%3B%2Ftime%5B0%3A1%3A0%5D",
+      "revision": "3B-DAY.MS.MRG.3IMERG.20230512-S000000-E235959.V07B.nc4"
+    }
+  ],
+  "retrievedAt": "2026-11-15T23:17:20.535Z",
+  "attribution": "NASA GES DISC; Huffman, G.J.; Stocker, E.F.; Bolvin, D.T.; Nelkin, E.J.; Tan, J. GPM IMERG daily V07. See product DOI for citation.",
+  "source": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDF_07/summary"
+}

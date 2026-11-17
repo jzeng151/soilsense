@@ -323,6 +323,8 @@ api.post("/vegetation/prefetch", async (c, next) => {
 
 // Cited research retrieval (Vectorize) and grounded explanations (Workers AI): see docs/RESEARCH.md.
 api.route("/research", research);
+import { prismCrosscheck } from "./prismCrosscheck";
+api.route("/prism-crosscheck", prismCrosscheck);
 api.route("/crop-timing", cropTiming);
 // U.S. Drought Monitor weekly county context (issue #31): /api/usdm/category, /timeline, /replay.
 import { usdm } from "./usdm";
